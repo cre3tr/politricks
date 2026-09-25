@@ -9,25 +9,35 @@ Build mode: fast — with human-readable comments in the code (learner request)
 
 ## Slices
 
-- [ ] **1. The official Finance Bill 2026 becomes fingerprinted, word-for-word clauses**
-  Becomes usable: `politricks fetch` and `politricks extract` turn the official Finance Bill 2026 PDF (and the Finance Act 2026) into a bill JSON of clauses. Each clause is verbatim-checked against the PDF and carries its own fingerprint. `politricks verify --self-test` proves the fingerprint catches a one-byte change.
+- [x] **1. The official Finance Act 2026 becomes fingerprinted, word-for-word clauses**
+  Becomes usable: `politricks fetch` and `politricks extract` turn the official Finance Act 2026 PDF (Kenya Law) into a bill JSON of clauses. Each clause is verbatim-checked against the PDF and carries its own fingerprint. `politricks verify --self-test` proves the fingerprint catches a one-byte change.
   Why now: This is the single biggest unverified risk in the whole plan: do official, text-extractable PDFs exist, and can clauses be pulled out word for word? It's the one allowed technical-first slice, because it independently proves that risk and leaves runnable evidence. It bootstraps the Python pipeline, and every later slice stands on it.
   PRD ref: `prd.md > Product Decisions` (Finance Bill hand-loaded from a hashed copy), `prd.md > Open Questions`
   Spec ref: `spec.md > Fetch & Fingerprint`, `spec.md > Extract Clauses`, `spec.md > Verify`, `spec.md > Data Model`, `spec.md > Parliament of Kenya (parliament.go.ke)`, `spec.md > Kenya Law (kenyalaw.org)`
   Build: `git init`. Scaffold `pipeline/` with uv (pdfplumber, pydantic, httpx, typer or argparse). Find and pin the official Finance Bill 2026 and Finance Act 2026 URLs on the allowlisted domains in `sources.yaml`. Write `hashing.py` (`normalise()`, SHA-256), `fetch.py` (allowlist, stores to `sources/`), `extract.py` (clause split, verbatim check, `overrides/`), `verify.py` (with `--self-test`), `models.py` (Bill/Clause per the Data Model) and `cli.py`.
-  Verify (mechanical): `politricks fetch finance-bill-2026` prints a SHA-256, and `certutil -hashfile` on the saved file prints the same value. `extract` exits 0 with a clause count above 0, and a printed sample clause matches the PDF text. `verify --self-test` prints `unchanged` for the intact copy and `CHANGED` for the one-byte-altered copy. A deliberately corrupted clause in a scratch copy makes `extract`'s verbatim check fail.
-  Learner check: Open `src/data/bills/finance-bill-2026.json`, pick any clause, find it in the official PDF, and confirm it's word for word. Then run `certutil -hashfile` on the PDF yourself and compare it with the fingerprint in the JSON.
-  Commit: `Fetch, fingerprint and extract Finance Bill 2026 clauses`
+  Verify (mechanical): `politricks fetch finance-act-2026` prints a SHA-256, and `certutil -hashfile` on the saved file prints the same value. `extract` exits 0 with a clause count above 0, and a printed sample clause matches the PDF text. `verify --self-test` prints `unchanged` for the intact copy and `CHANGED` for the one-byte-altered copy. A deliberately corrupted clause in a scratch copy makes `extract`'s verbatim check fail.
+  Learner check: Open `src/data/bills/finance-act-2026.json`, pick any clause, find it in the official PDF, and confirm it's word for word. Then run `certutil -hashfile` on the PDF yourself and compare it with the fingerprint in the JSON.
+  Commit: `Fetch, fingerprint and extract Finance Act 2026 sections`
 
-- [ ] **2. A Finance Bill clause in Sheng, right next to the legal text**
-  Becomes usable: `npm run dev` → `/bills/finance-bill-2026` shows the bill's summary and clause cards. Each card has the legal text beside its Claude explanation, with a global EN / SW / Sheng toggle, a per-card flip, *AI draft* badges and the source fingerprint footer, all in the PoliTricks look.
-  Why now: This is the unique kernel and the demo's "oh, that's cool" moment. It comes early so everything else is built around a proven kernel. It also proves the second risk: Claude via Batches with structured outputs.
+- [ ] **2a. A Finance Bill clause in Sheng, right next to the legal text (sample explanations)**
+  Becomes usable: `npm run dev` → `/bills/finance-act-2026` shows the bill's clause cards. Each card has the legal text beside its explanation, with a global EN / SW / Sheng toggle, a per-card flip and the source fingerprint footer, all in the PoliTricks look. Three pocket-hitting clauses and the summary carry **hand-written sample** explanations, badged *Sample text — placeholder*. The rest show *Explanation not ready yet*. `generate.py` exists and passes an offline self-test.
+  Why now: This is the unique kernel and the demo's "oh, that's cool" moment, so everything else gets built around a proven kernel. There's no API key yet (the learner chose to build without it first), so the page runs on clearly labelled samples and the Claude pipeline is proven offline.
   PRD ref: `prd.md > What It Does`, `prd.md > Language Switching`, `prd.md > Look and Feel`
-  Spec ref: `spec.md > Generate (Claude)`, `spec.md > Bill Page (/bills/[id])`, `spec.md > Clause Card`, `spec.md > Language Toggle`, `spec.md > Head Script (src/components/HeadScript.astro)`, `spec.md > Look and Feel`, `spec.md > Anthropic Messages API`, `spec.md > File Structure`
-  Build: The learner creates the API key and puts it in `.env`. Scaffold Astro 7 + `@astrojs/vercel` + Tailwind v4, and confirm the versions install together. Write `generate.py` (Batches, `messages.parse`, Pydantic output, refusal fallback, `prompts/explainer.md`; `suggested_articles` left empty until slice 9). Write `schema.ts` mirroring `models.py`, the bill page (What it does tab only), `ClauseCard`, `LanguageToggle`, `HeadScript` (language only for now), `SourceFingerprint`, `Header`, `global.css` tokens and highlighter, and the Anton font.
-  Verify (mechanical): One tiny `claude-opus-5` call returns non-empty text. The test batch returns parsed structured output; if Batches reject it, record a revision and fall back to direct `messages.parse`. `generate` fills every clause's `explanation` and all `review.status` are `"draft"`. The Zod schema validates the JSON. `npm run build` succeeds. The built page HTML contains a clause's legal text and its Sheng explanation. The toggle changes `data-lang` in a browser check.
-  Learner check: Open `http://localhost:4321/bills/finance-bill-2026` on your phone-sized window. Find a clause that hits your pocket, read it in Sheng beside the legal text, flip the whole page to Kiswahili, then flip just one card back to Sheng. Does it look and sound like PoliTricks?
-  Commit: `Show Finance Bill clauses beside trilingual explanations`
+  Spec ref: `spec.md > Generate (Claude)`, `spec.md > Bill Page (/bills/[id])`, `spec.md > Clause Card`, `spec.md > Language Toggle`, `spec.md > Head Script (src/components/HeadScript.astro)`, `spec.md > Look and Feel`, `spec.md > Data Model`, `spec.md > File Structure`
+  Build: Scaffold Astro 7 + `@astrojs/vercel` + Tailwind v4 + Zod, and confirm the versions install together. Write `schema.ts` (the Zod twin of `models.py`), `politricks samples` + `pipeline/samples/finance-act-2026.yaml`, `generate.py` (Batches with `output_config` JSON schema, no fallbacks in batch, direct refusal retry with `fallbacks: "default"`) + `prompts/explainer.md` + an offline fixture self-test. Build `BaseLayout`, `HeadScript`, `Header`, `LanguageToggle`, `ClauseCard`, `SourceFingerprint`, `highlight.ts`, `global.css` (tokens, highlighter, CSS-only language switching), `bills/[id].astro` (Zod-validated at build) and `scripts/check-build.mjs`.
+  Verify (mechanical): `npm ls` is clean for the trio. `samples` applies, and then `extract --check-json` still passes. `generate --self-test` passes with a dead proxy and an empty key. `npm run build` exits 0. A broken bill JSON fails the build and names the file. `check:build` passes: every clause's legal text is present, the sample Sheng is present, sample badge count = samples + 1, "AI draft" and "Reviewed" appear 0 times, and both SHA-256s are present. Browser check: the global and per-card language flips work and persist; the legal text sits above on mobile and beside on desktop; the font is served from the same origin.
+  Learner check: Open `http://localhost:4321/bills/finance-act-2026` in a phone-sized window. Read a sample clause in Sheng beside the legal text, flip the whole page to Kiswahili, then flip one card back to Sheng. Does it look and sound like PoliTricks? (The Sheng here is sample text; you'll review the real generated Sheng in slice 3.)
+  Commit: `Show Finance Bill clauses beside sample trilingual explanations`
+
+- [ ] **2b. Real Claude explanations for every clause**
+  Becomes usable: Every Finance Bill clause and the summary carry Claude-generated EN/SW/Sheng explanations (badged *AI draft*), replacing the samples.
+  Why now: This runs as soon as the API key exists, and before slice 3's review gate, which needs real drafts to review. It proves the second risk: Claude via Batches with structured outputs.
+  PRD ref: `prd.md > What It Does`
+  Spec ref: `spec.md > Generate (Claude)`, `spec.md > Anthropic Messages API`
+  Build: The learner creates the API key and puts it in `.env`. Run a tiny live call, a 1-item test batch, then `generate finance-act-2026`, retrying refusals directly.
+  Verify (mechanical): A tiny `claude-opus-5` call returns non-empty text. The 1-item batch returns output that parses with the Pydantic model; if the schema is rejected, record a revision and fall back to direct `messages.parse`. After `generate`, every clause has an `explanation`, no item is `"sample"`, all are `"draft"`, the Zod schema validates, and `check:build` shows "AI draft" on every card.
+  Learner check: Reload the Finance Bill page and read three clauses in Sheng. Do Claude's explanations sound natural and neutral? Note anything to fix in review.
+  Commit: `Generate Claude explanations for Finance Act 2026`
 
 - [ ] **3. Nothing ships without your review, and banned phrases can't get in**
   Becomes usable: `politricks lint` fails on any banned phrase or neutrality flag. `politricks review` walks every draft text, flagged items first, and marks each one reviewed. The page shows *Reviewed* badges for reviewed clauses and *AI draft* for the rest.
@@ -36,7 +46,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   Spec ref: `spec.md > Lint`, `spec.md > Review`, `spec.md > Data Model`
   Build: Write `lint.py`, `prompts/banned.txt`, `review.py` (terminal walk: accept / edit / skip, flagged first, refuses to finish while lint fails), and the badge rendering in `ClauseCard`.
   Verify (mechanical): Plant "kinyume cha katiba" in one explanation in a scratch copy: `lint` exits non-zero and names the clause. The clean file passes. After reviewing one clause, its JSON shows `"reviewed"` and the built page shows the *Reviewed* badge on that card only.
-  Learner check: Run `politricks review finance-bill-2026` and review the Sheng for 3–5 clauses you'd put in the demo, editing anything that sounds off. Reload the page and see those cards say *Reviewed*.
+  Learner check: Run `politricks review finance-act-2026` and review the Sheng for 3–5 clauses you'd put in the demo, editing anything that sounds off. Reload the page and see those cards say *Reviewed*.
   Commit: `Add lint and review gate for all generated text`
 
 - [ ] **4. PoliTricks knows who you are, and puts what hits you first**
@@ -45,7 +55,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   PRD ref: `prd.md > First-Visit Profile`, `prd.md > What It Does`, `prd.md > States and Boundaries`
   Spec ref: `spec.md > Welcome Page (/welcome)`, `spec.md > Head Script (src/components/HeadScript.astro)`, `spec.md > Bill Page (/bills/[id])`, `spec.md > Match API (POST /api/match)`, `spec.md > Explain API (POST /api/explain)`, `spec.md > Data Model` (Reader profile)
   Build: `guard.ts`, `storage.ts`, `ProfileSchema`, `claude.ts` (loads the shared prompts and banned list), `welcome.astro`, `ProfileChips`, `GroupsPanel`, HeadScript (groups + redirect), `api/match.ts`, `api/explain.ts`, `prompts/matcher.md`. Re-run `generate` so group entries and clause `groups[]` exist.
-  Verify (mechanical): With cleared storage, `/bills/finance-bill-2026` redirects to `/welcome`. After saving "trader", the trader block comes first in the served HTML plus head-script output (browser check). `curl` Match with "I sell mitumba Gikomba" returns 200 with valid clause IDs; empty words return 400; a bad key (simulated) makes the page show the quiet fallback. Explain returns 409 for an explained clause and 200 with the draft label for a blanked one. A banned-phrase output is discarded (unit check with a stubbed response).
+  Verify (mechanical): With cleared storage, `/bills/finance-act-2026` redirects to `/welcome`. After saving "trader", the trader block comes first in the served HTML plus head-script output (browser check). `curl` Match with "I sell mitumba Gikomba" returns 200 with valid clause IDs; empty words return 400; a bad key (simulated) makes the page show the quiet fallback. Explain returns 409 for an explained clause and 200 with the draft label for a blanked one. A banned-phrase output is discarded (unit check with a stubbed response).
   Learner check: In a private window, open the bill page, go through the welcome screen as yourself (pick groups, type a few of your own words), and see what floats to the top. Then open "See everyone" and confirm nothing is hidden.
   Commit: `Add first-visit profile, groups-first view and live helpers`
 
@@ -75,19 +85,19 @@ Build mode: fast — with human-readable comments in the code (learner request)
   PRD ref: `prd.md > What We're Building` (steps 1–2)
   Spec ref: `spec.md > Where It Runs and How Someone Tries It`, `spec.md > Vercel`
   Build: The learner creates a GitHub repo and a Vercel project and sets `ANTHROPIC_API_KEY` in Vercel. Push, deploy, and add a README with run steps and "how to verify a fingerprint".
-  Verify (mechanical): The deployment succeeds. `curl` on the production home returns 200 and contains both bill titles. A production `POST /api/match` returns 200. A production `/bills/finance-bill-2026` contains the fingerprint.
+  Verify (mechanical): The deployment succeeds. `curl` on the production home returns 200 and contains both bill titles. A production `POST /api/match` returns 200. A production `/bills/finance-act-2026` contains the fingerprint.
   Learner check: Open the public link on your actual phone, over mobile data, and walk the demo path: welcome → Finance Bill → a Sheng clause → Have your say on a live bill.
   Commit: `Deploy to Vercel with README`
 
-- [ ] **8. What changed: drafts, current law, and bill vs Act**
-  Becomes usable: *What changed* shows Finance Bill 2026 vs Finance Act 2026 (what survived and what was dropped). For a bill amending an Act, it shows the current law beside the amendment. Bills with one version show the honest note plus a current-law comparison.
+- [ ] **8. What changed: drafts and current law**
+  Becomes usable: *What changed* shows, for each Finance Act 2026 section that amends another Act, the current law beside the amendment. For a bill amending an Act, it shows the current law beside the amendment. Bills with one version show the honest note plus a current-law comparison.
   Why now: This is PRD build step 3, and it depends on the fetch, extract and review machinery from slices 1–3.
   PRD ref: `prd.md > What Changed`
   Spec ref: `spec.md > Compare`, `spec.md > Data Model` (changes), `spec.md > Kenya Law (kenyalaw.org)`
   Build: Pin the Kenya Law URLs for the Acts the Finance Bill amends. Write `compare.py` (clause matching, `null` for added/dropped, amended-section lookup with the verbatim rule, Claude notes as drafts), `ChangeRow` and the *What changed* tab. Then run `review`.
-  Verify (mechanical): `compare finance-bill-2026` produces `changes[]`, including at least one `kind: "act"` and one `kind: "current_law"` entry. Every `before`/`after` is verbatim in its source PDF (scripted check). `lint` passes. The built tab shows the rows and the empty-state note on a single-version bill.
+  Verify (mechanical): `compare finance-act-2026` produces `changes[]`, including at least one `kind: "current_law"` entry. Every `before`/`after` is verbatim in its source PDF (scripted check). `lint` passes. The built tab shows the rows and the empty-state note on a single-version bill.
   Learner check: Open the Finance Bill's *What changed* tab and pick one change you remember from the 2026 debate. Does the before/after and its note match what actually happened?
-  Commit: `Add What changed: bill vs Act and current law`
+  Commit: `Add What changed: drafts and current law`
 
 - [ ] **9. Una'tafuta? and passed-bill pages**
   Becomes usable: Search on home finds bills by name or keyword in any language. Passed bills show the **Passed** label, and their *Have your say* tab becomes *Where it can still be challenged* (from civic YAML). `intake --check` proposes new items as a `sources.yaml` diff.
@@ -152,3 +162,13 @@ Reflection:
 Activity mode: 
 
 ## Revisions
+
+- Slice 2 split into 2a (sample explanations) and 2b (live generation). The learner has no Anthropic API key yet and chose to build without it first. `Review.status` gains `"sample"`, rendered as *Sample text — placeholder* and never as "AI draft" or "Reviewed".
+- Batch requests carry no `fallbacks`, and refusals are retried directly with `fallbacks: "default"`. The Claude API reference states server-side fallbacks are rejected on the Batches API, and `messages.parse` can't be used inside a batch, so batch items use `output_config` JSON schema plus Pydantic validation.
+- Files added beyond the spec's tree: `src/layouts/BaseLayout.astro` (shared page shell), `src/lib/highlight.ts`, `scripts/check-build.mjs` (built-HTML assertions), and the pipeline commands `probe` (PDF layout calibration) and `samples` (applies labelled sample explanations).
+- The Finance demo uses the **Finance Act 2026** (Kenya Law) instead of the Finance Bill, and its ID is `finance-act-2026`. Every official copy of the Bill was a scan (parliament.go.ke original 0/124 pages with text, compressed copy 0/124), and Kenya Law doesn't host it. The learner chose the Act, shown exactly as in the file, over OCR or switching bills. Slice 8's "bill vs Act" for Finance moves to Later (see `prd.md > Product Decisions`).
+- Prefer **Kenya Law** copies for every bill (slice 5 on). Parliament often publishes scans. Kenya Law copies had a text layer in every case checked.
+- The Act's own text layer comes from a scan: small glitches ("Date ofA ssent", "( a)", a stray "�") and one drafting slip in the printed law ("the end of at item (a)", confirmed against the rendered page image). It's shown as-is, per the learner's choice. The site needs a short note saying the official file's text came from a scan (slice 2a).
+- Pipeline pinned to **Python 3.14**, not 3.13. uv couldn't finish installing 3.13 here (a link-creation error), and 3.14 was already installed with wheels for every dependency.
+- `Clause` gains `pages` (the PDF pages a section spans), so anyone can find it in the PDF. Section headings are read from the Act's **marginal notes**, not invented.
+- Two-digit section numbers print with no space after the dot ("10.Section 15…"). The section-start pattern allows that, and the monotonic guard still rejects stray numbered items (e.g. "161.Bioethanol…").

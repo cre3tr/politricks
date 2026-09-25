@@ -73,7 +73,7 @@ Develops `scope.md > Inspiration & Identity`.
 Develops `scope.md > The POC Boundary` step 3.
 - [ ] With two published versions: changed clauses appear side by side (before → after), each with a plain-language note in the chosen language.
 - [ ] With only one version: an honest note ("Only one version so far — we'll show changes when the next draft is published"), **plus** a comparison of the bill's clauses against the **current law** they amend.
-- [ ] For a passed bill: the comparison is **bill as introduced vs Act as passed**, showing what survived and what was dropped.
+- [ ] For a passed bill: the comparison is **bill as introduced vs Act as passed**, showing what survived and what was dropped, *when the bill as introduced exists as a text-layer official file*. **Deferred for Finance 2026:** every official copy of the Bill is a scan (see Product Decisions).
 
 ### Have Your Say
 Develops `scope.md > The POC Boundary` step 2.
@@ -122,7 +122,8 @@ Develops `scope.md > The POC Boundary` steps 4 and 6.
 - **County covers both bills and motions**: bills get the bill UI, and motions get a simpler card suited to their shape.
 - **Active Bills uses a bill genuinely before Parliament now**, and Finance Bill 2026 appears as a passed bill, because Finance Bills normally pass by 30 June. To be verified in `4-spec`.
 - **"Last checked" stamp on deadlines and stages**: the value of the product depends on dates being current.
-- **The passed Finance Bill 2026 page is loaded by hand in step 1, from a hashed copy**: this keeps the Finance-in-Sheng moment inside the minimum demoable line without waiting for step 4's search, and the hash proves the hand-loaded text matches the official source. **Rule: every piece of source text in the app (bill, Act, constitution) is verifiably official.** *How* it's hashed and verified is for `4-spec`.
+- **Build finding (2026-09-25): the Finance demo uses the Finance Act 2026, not the Bill.** Every official copy of the Finance Bill 2026 (parliament.go.ke original and compressed copy) is a scan with no text layer, and Kenya Law doesn't host it. The Finance Act 2026 on Kenya Law has a text layer. The learner chose the Act, shown exactly as in the file (including small scan glitches, with a note on the page), over adding OCR or switching bills. "Bill vs Act" for Finance 2026 moves to Later.
+- **The passed Finance Bill 2026 page is loaded by hand in step 1, from a hashed copy** *(now the Finance Act 2026 page, per the build finding above)*: this keeps the Finance-in-Sheng moment inside the minimum demoable line without waiting for step 4's search, and the hash proves the hand-loaded text matches the official source. **Rule: every piece of source text in the app (bill, Act, constitution) is verifiably official.** *How* it's hashed and verified is for `4-spec`.
 - **Assumption, not a learner decision:** passed bills show a simple **Passed** label. The learner didn't pick the "now law" option, but something must stop people trying to make a submission on a passed bill.
 
 ## What We're Building
@@ -139,6 +140,7 @@ In the approved build order (`scope.md > The POC Boundary`):
 - **Notifications** ("a new draft dropped"): the loop implies them, but the proof of concept relies on the reader coming back on their own.
 
 ## Possible Later Enhancements
+- **Finance Bill 2026 vs Act comparison:** needs the Bill as text. That means OCR, or a text-layer official copy appearing later.
 - **Fiscal flag:** before → after figures on changes to a tax, levy, rate or fee.
 - **Drafted comment / memorandum** for submissions.
 - **WhatsApp / SMS digest** for reach on cheap data and feature phones.

@@ -1,0 +1,27 @@
+# Layout rules for the Finance Act 2026 PDF (Kenya Law), calibrated from
+# `politricks probe finance-act-2026`. These may only move boundaries or remove
+# running headers/page numbers — never add or change legal text.
+
+# Page 1 is the Kenya Gazette cover (scan noise, not the Act); page 39 is blank.
+skip_pages: [1]
+
+# Marginal notes are small type (6.5–8pt) starting at x ≈ 400; body text is
+# 11–11.5pt and ends before that. Anything small AND right of this line is a note.
+margin_x: 395
+
+# Running headers seen at the top of each page: the Gazette page number
+# ("349") and "No.19 Finance 2026" / "2026 Finance No.19" (alternating).
+# The header's last word is small type past the margin line, so the margin
+# filter takes it and what's left is a fragment: "No.19 Finance", "2026 Finance",
+# "Finance 2026" + "No.19", or "Finance" + "No.19". Whole-line matches only,
+# edge lines only, max 4 per page (enforced by extract.py).
+strip_patterns:
+  - '^\d{1,4}$'
+  - '^No\.?\s?19(\s+Finance(\s+2026)?)?$'
+  - '^(2026\s+)?Finance(\s+2026)?(\s+No\.?\s?19)?$'
+
+start_after: 'ENACTED by the Parliament of Kenya'
+
+# Sections 1..55 run unbroken in the body stream; 55 ends on page 38 and
+# page 39 is blank. Pinning the count makes any future mis-split fail loudly.
+expected_clause_count: 55

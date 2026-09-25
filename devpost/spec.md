@@ -87,7 +87,7 @@ uv run --project pipeline politricks intake --check        # also look at Parlia
 uv run --project pipeline politricks verify                # re-download all sources, compare fingerprints
 ```
 
-**Demo recording (required):** run `npm run dev`, or use the Vercel URL. Walk the minimum demoable line: welcome → home → the passed **Finance Bill 2026** page → a clause in **Sheng** beside its legal text → toggle languages → the source fingerprint → an active education bill's **Have your say** tab.
+**Demo recording (required):** run `npm run dev`, or use the Vercel URL. Walk the minimum demoable line: welcome → home → the passed **Finance Act 2026** page → a clause in **Sheng** beside its legal text → toggle languages → the source fingerprint → an active education bill's **Have your say** tab.
 
 **Deployment (your choice: Vercel):** connect the GitHub repo in Vercel and set `ANTHROPIC_API_KEY`. Each push to `main` deploys. It's free-tier sized.
 
@@ -128,7 +128,9 @@ Implements `prd.md > Automatic Bill Intake`, `prd.md > What It Does` (content), 
 - Per bill, it returns `summary {en, sw, sheng}` and group entries `{group, text {en,sw,sheng}, clause_ids[]}`.
 - **System prompt rules** live in `pipeline/prompts/explainer.md`, and the live Explain API loads the same file. Say what the clause does, never whether it's good or bad. **Never state or imply that anything is unconstitutional, illegal or invalid.** No advice. Sheng for everyday clarity, never mockery.
 - **Suggested article numbers are validated** against `constitution.json`. Unknown numbers are dropped, never shown.
-- **Refusal fallback:** requests carry the server-side fallback option (`fallbacks: "default"`, beta `server-side-fallback-2026-07-01`), and the pipeline checks `stop_reason` before reading content.
+- **Batch requests use `output_config: {format: {type: "json_schema", schema}}`**, and results are validated with the Pydantic model's `model_validate_json`. `messages.parse` isn't available inside a batch.
+- **Refusal fallback:** server-side `fallbacks` are **rejected on the Batches API**, so batch items carry none. An item that comes back with `stop_reason: "refusal"` is retried **directly** via `messages.parse`, with `fallbacks: "default"` and beta `server-side-fallback-2026-07-01`. `stop_reason` is always checked before content is read.
+- `politricks generate --self-test` checks request building and result parsing offline against a recorded fixture.
 - Everything it writes gets `review.status: "draft"`: clause explanations, the summary, and group entries.
 
 #### Compare
@@ -199,7 +201,7 @@ Implements `prd.md > What It Does`, `prd.md > What Changed`, `prd.md > Have Your
 #### Clause Card
 Implements `prd.md > What It Does`, `prd.md > Language Switching`, `prd.md > Constitution Check`.
 - The legal text, with highlighter marks, sits **beside** (on desktop) or **directly above** (on mobile) the explanation.
-- Per-card EN/SW/Sheng flip, plus a review badge (*Reviewed* / *AI draft — not yet reviewed*).
+- Per-card EN/SW/Sheng flip, plus a review badge (*Reviewed* / *AI draft — not yet reviewed* / *Sample text — placeholder*). One exhaustive switch picks the label, so a sample can never show either of the other two.
 - "Suggested articles" chips open the Article Sheet.
 - If there's no explanation, it calls the **Explain API**.
 
@@ -250,7 +252,7 @@ Implements `prd.md > Automatic Bill Intake` (maintenance). `.github/workflows/up
 
 **Bill file** — `src/data/bills/<bill-id>.json`, validated by `pipeline/politricks/models.py` (Pydantic) and `src/lib/schema.ts` (Zod):
 ```text
-Review   = { status: "draft" | "reviewed", at: ISO-date | null }
+Review   = { status: "draft" | "reviewed" | "sample", at: ISO-date | null }   // "sample" = hand-written placeholder (slice 2a), never shown as AI draft or Reviewed
 Tri      = { en: string, sw: string, sheng: string }
 
 Bill {
@@ -262,7 +264,7 @@ Bill {
   sources: [{ label, url, official: bool, fetched_at, sha256, file }],
   summary: { text: Tri, review: Review },
   groups: [{ group: "employee"|"trader"|"transport"|"student", text: Tri, clause_ids: string[], review: Review }],
-  clauses: [{ id, number, heading, text /* normalised */, text_sha256,
+  clauses: [{ id, number, heading /* from the marginal note */, text /* normalised */, text_sha256, pages: number[] /* PDF pages it spans */,
               explanation: Tri | null, review: Review,
               neutral_check: { ok: bool, note: string },
               groups: string[], suggested_articles: number[] }],
@@ -324,7 +326,9 @@ politricks/
 │   │   ├── MotionCard.astro
 │   │   ├── LastChecked.astro
 │   │   └── SourceFingerprint.astro
+│   ├── layouts/BaseLayout.astro # Shared page shell: head script, fonts, header
 │   ├── lib/
+│   │   ├── highlight.ts         # Splits legal text into plain / change / amount segments
 │   │   ├── schema.ts            # Zod: Bill, Constitution, Profile (mirrors models.py)
 │   │   ├── storage.ts           # Safe localStorage get/set (try/catch)
 │   │   ├── guard.ts             # Word cleaning, shared by welcome page + APIs
@@ -345,13 +349,16 @@ politricks/
 │   │   ├── matcher.md           # Match rules (words are data)
 │   │   ├── translator.md        # Civic translation (translate, never add)
 │   │   └── banned.txt           # Banned phrases (shared with the Explain API)
+│   ├── samples/                 # Hand-written, labelled sample explanations (slice 2a, until an API key exists)
+│   ├── tests/fixtures/          # Recorded batch results for the offline generate self-test
 │   └── politricks/
-│       ├── cli.py               # constitution / intake / fetch / extract / generate / compare / civic / lint / review / verify
+│       ├── cli.py               # constitution / intake / fetch / probe / extract / samples / generate / compare / civic / lint / review / verify
 │       ├── models.py            # Pydantic models (mirror schema.ts)
 │       ├── fetch.py  extract.py  generate.py  compare.py  civic.py
 │       ├── lint.py  review.py  verify.py  intake.py  constitution.py
 │       └── hashing.py           # normalise() + SHA-256 of files and clause text
 ├── sources/<bill-id>/*.pdf      # Fingerprinted official PDFs
+├── scripts/check-build.mjs      # Assertions on the built HTML (legal text, badges, fingerprints)
 ├── .github/workflows/update.yml # Weekly intake + verify → PR
 ├── astro.config.mjs             # Vercel adapter, Tailwind
 ├── package.json
@@ -366,13 +373,14 @@ politricks/
 ### Anthropic Messages API
 - **Endpoint:** `POST https://api.anthropic.com/v1/messages`, through the SDKs. Auth is `ANTHROPIC_API_KEY`.
 - **Structured output:** `output_config: {format: <schema>}` via `messages.parse` (Python: Pydantic model; TS: `zodOutputFormat(schema)` from `@anthropic-ai/sdk/helpers/zod`).
-- **Model:** `claude-opus-5`, with adaptive thinking and `fallbacks: "default"` plus beta `server-side-fallback-2026-07-01` for refusals. Always check `stop_reason` before reading content.
+- **Model:** `claude-opus-5`, with adaptive thinking. On **direct** calls (live APIs, refusal retries), add `fallbacks: "default"` plus beta `server-side-fallback-2026-07-01`. **Not on batches, which reject it.** Always check `stop_reason` before reading content.
 - **Batches (pipeline):** `POST /v1/messages/batches`. The pipeline polls until `ended` and matches results by `custom_id` (= clause ID). Results arrive in any order. That structured outputs and the fallback option are accepted inside batch requests is **to be confirmed with one test batch in step 0 [MEDIUM]**. If not, fall back to plain `messages.parse` calls (full price, still cheap at this scale).
 - **Pricing:** Opus 5 is $5 in / $25 out per million tokens, halved on Batches ([pricing](https://platform.claude.com/docs/en/about-claude/pricing.md)).
 - **Rough estimate [LOW]:** about **$1–3 per bill** in the pipeline, and **under $0.02 per live Match call**.
 - **Docs:** [Messages](https://platform.claude.com/docs/en/api/messages), [Structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs.md), [Batches](https://platform.claude.com/docs/en/build-with-claude/batch-processing).
 
 ### Parliament of Kenya (parliament.go.ke)
+- **Build finding:** Parliament often publishes bills as **scans with no text layer** (the Finance Bill 2026 was 0/124 pages). **Prefer the Kenya Law copy of any bill**, which has had a text layer in every case checked. Use Parliament's copy only if it passes the text-layer probe.
 - **Used for:** official bill PDFs, and the listing pages that `intake --check` reads for new bills.
 - **No API:** it's plain HTTPS downloads and HTML parsing. The listing structure is **[UNKNOWN]**, so the registry is the reliable path and the scraper only proposes.
 
@@ -416,7 +424,7 @@ politricks/
 ## Decisions and Open Issues
 
 ### Learner decisions (this session)
-- **Active Bills:** *Tertiary Education, Placement and Funding Bill, 2026* and the *Public Participation Bill, 2025 (Senate)*, with **Finance Bill 2026 / Finance Act 2026** as the passed, hand-loaded, hashed demo bill.
+- **Active Bills:** *Tertiary Education, Placement and Funding Bill, 2026* and the *Public Participation Bill, 2025 (Senate)*, with the **Finance Act 2026** (Kenya Law, text layer) as the passed, hand-loaded, hashed demo item. *(Build finding: every official Finance Bill 2026 copy is a scan; the learner chose the Act, shown exactly as in the file.)*
 - **Shape:** precomputed and reviewed content is the default, and live AI is only a **fallback labelled draft**.
 - **New tool: Astro.**
 - **Pipeline language: Python.**

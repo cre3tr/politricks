@@ -1,0 +1,7 @@
+# Keep text files LF everywhere, so the pipeline's byte-identical output
+# (bill JSON, audit .txt files) stays identical on Windows checkouts too.
+* text=auto eol=lf
+
+# Fingerprinted source files must never be rewritten by git (line endings etc.)
+*.pdf   binary
+*.woff2 binary

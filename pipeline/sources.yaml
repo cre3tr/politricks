@@ -1,0 +1,26 @@
+# The registry of bills PoliTricks knows about, and where their OFFICIAL
+# documents live. `politricks fetch <bill-id>` downloads every source listed
+# here, fingerprints it, and records it in src/data/bills/<bill-id>.json.
+#
+# Rules:
+#   - `official: true` sources must be on an allowlisted government domain
+#     (see fetch.py). A third-party mirror can never become an official source.
+#   - `file` is the local filename we save to, under sources/<bill-id>/.
+#     We never derive it from the URL (URLs contain spaces, commas, brackets).
+
+finance-act-2026:
+  # Build finding (2026-09-25): every official copy of the Finance BILL 2026
+  # (parliament.go.ke original and "Compressed Copy") is a scan with no text
+  # layer, and Kenya Law does not host the Bill. The learner chose to demo the
+  # Finance ACT 2026 instead: official, on Kenya Law, with a text layer.
+  title: "The Finance Act, 2026"
+  chamber: national
+  kind: bill
+  status: passed
+  stage: "Law — assented 23 June 2026 (Act No. 19 of 2026)"
+  stage_checked_at: "2026-09-25"
+  sources:
+    - label: "Finance Act, 2026 (Act No. 19 of 2026)"
+      url: "https://new.kenyalaw.org/akn/ke/act/2026/19/eng@2026-06-26/source.pdf"
+      official: true
+      file: act.pdf

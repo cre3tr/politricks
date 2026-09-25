@@ -5,3 +5,12 @@
 .env
 .env.*
 !.env.example
+
+# Build output and dependencies
+node_modules/
+dist/
+.vercel/
+.astro/
+pipeline/.venv/
+__pycache__/
+pipeline/.cache/

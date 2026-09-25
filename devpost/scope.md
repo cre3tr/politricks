@@ -29,7 +29,7 @@ In a one-minute demo, someone picks a real national bill and immediately sees wh
 
 ## The POC Boundary
 The learner chose to keep all of the following, and says time is not a hard constraint:
-1. **Explain one bill.** A real national bill (one genuinely before Parliament; Finance Bill 2026 appears as a passed bill, see `prd.md`), with what it does and what it means for you, in EN / SW / Sheng, shown beside the clause text.
+1. **Explain one bill.** A real national bill (one genuinely before Parliament; the Finance Act 2026 appears as the passed Finance item, because every official copy of the Finance Bill is a scan; see `prd.md > Product Decisions`), with what it does and what it means for you, in EN / SW / Sheng, shown beside the clause text.
 2. **Public participation, how and when.** Deadline, where to submit, and what a submission needs. **Every date and channel links to the official notice it came from.**
 3. **Diff two versions.** A real published pair of the same national bill, with changed clauses side by side and a trilingual note per change.
 4. **Gazette scraper.** Fetch bills and notices automatically, not by hand.
