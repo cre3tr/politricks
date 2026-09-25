@@ -178,3 +178,10 @@ Activity mode:
   - `check-build.mjs` strips tags to nothing rather than a space, because the inline highlight spans sit flush against the text. A one-character mutation in the data was confirmed to make it FAIL.
   - **Gap:** there's no full `astro check`/`tsc` gate yet, because `@astrojs/check` and `typescript` weren't installed. For now the only type check is Astro's build.
 - The Browser pane was hidden during the 2a checks, so it painted no frames: a rAF-count control never finished and screenshots timed out. Style and layout measurements were used instead (viewport 1280×900 / 428×927, not 0×0). The visual look is checked by the learner at the hands-on checkpoint.
+- **Sonnet diff review of slices 1–2a** (`4447870..666dbb6`): 0 blockers, 1 should-fix and 2 nits. All three were confirmed in the code and fixed:
+  - `<meta charset>` now comes before the head script (built page: charset at byte 236, first script at 411);
+  - the `\b` word boundary was added to the written-amount highlight regex;
+  - bill IDs are validated (`^[a-z0-9]+(-[a-z0-9]+)*$`) wherever they become a path. `../etc`, `a/b` and `Finance` are refused.
+
+  The reviewer noted it's from the same model family as the builder. The lead (a different model) independently read the doctrine-critical files (badge, clause card, page data gate, highlighter, explainer prompt).
+- While fixing the regex, a shell-to-Python escaping slip wrote two raw backspace bytes (0x08) instead of `\b`, and the edit reported success. It was caught by reading the bytes back. It was fixed via byte codes, and a scan of 38 source files found no other control bytes.

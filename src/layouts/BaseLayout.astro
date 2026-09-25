@@ -17,10 +17,13 @@ const { title } = Astro.props;
 ---
 <html lang="en">
   <head>
-    <!-- HeadScript is FIRST in <head>, before anything else, so it can set
-         data-lang on <html> before the browser paints a single pixel. -->
-    <HeadScript />
+    <!-- The charset must come first in <head> (the HTML spec wants it in the
+         first 1024 bytes, before any script), so Kenyan legal text's dashes
+         and curly quotes never get misread. -->
     <meta charset="utf-8" />
+    <!-- HeadScript comes straight after: it's a blocking inline script, so it
+         still sets data-lang on <html> before the browser paints a pixel. -->
+    <HeadScript />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <!-- Preloading the display font means it's already downloading before

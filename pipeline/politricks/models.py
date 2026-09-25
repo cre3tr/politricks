@@ -10,6 +10,7 @@ See `devpost/spec.md > Data Model` for the full description.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Literal, Optional
 
@@ -118,8 +119,20 @@ class Bill(BaseModel):
     challenge: Optional[dict] = None
 
 
+# Bill ids become folder and file names (sources/<id>/, bills/<id>.json), so
+# they're restricted to lowercase letters, digits and hyphens. That rules out
+# "../" tricks before any id ever arrives from a web request (slice 4's APIs).
+_BILL_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+
+
+def validate_bill_id(bill_id: str) -> str:
+    if not _BILL_ID.fullmatch(bill_id):
+        raise ValueError(f"invalid bill id {bill_id!r}: use lowercase letters, digits and hyphens")
+    return bill_id
+
+
 def bill_path(repo_root: Path, bill_id: str) -> Path:
-    return repo_root / "src" / "data" / "bills" / f"{bill_id}.json"
+    return repo_root / "src" / "data" / "bills" / f"{validate_bill_id(bill_id)}.json"
 
 
 def load_bill(path: Path) -> Bill:

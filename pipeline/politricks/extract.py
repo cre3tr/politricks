@@ -38,7 +38,7 @@ import pdfplumber
 import yaml
 
 from .hashing import normalise, sha256_text
-from .models import Bill, Clause, bill_path, load_bill, save_bill
+from .models import Bill, Clause, bill_path, load_bill, save_bill, validate_bill_id
 
 # Header/footer patterns used unless an override replaces them.
 DEFAULT_STRIP_PATTERNS = [
@@ -205,7 +205,7 @@ def _heading_for(section: Segment, next_section: Segment | None, margin_lines: d
 def extract(repo_root: Path, bill_id: str, pdf_file: str, write: bool = True) -> tuple[list[Clause], dict]:
     """Run extraction and all three checks. Returns (clauses, report)."""
     overrides = load_overrides(repo_root, bill_id)
-    pdf_path = repo_root / "sources" / bill_id / pdf_file
+    pdf_path = repo_root / "sources" / validate_bill_id(bill_id) / pdf_file
     lines, margin_lines, stripped_log = read_pdf(pdf_path, overrides)
     source_text = normalise("\n".join(line.text for line in lines))
 

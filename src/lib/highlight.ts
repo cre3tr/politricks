@@ -53,7 +53,8 @@ const AMOUNT_ALTERNATIVES = [
   // like "one shilling and fifty cents" becomes two separate amount
   // segments either side of the plain word "and", which is fine: both
   // numbers still get marked.
-  String.raw`(?:${NUMBER_WORDS})(?:[ -](?:${NUMBER_WORDS}))*\s+(?:shillings?|cents?)`,
+  // \b stops a match starting mid-word (e.g. "someone shilling" -> "one shilling").
+  String.raw`\b(?:${NUMBER_WORDS})(?:[ -](?:${NUMBER_WORDS}))*\s+(?:shillings?|cents?)`,
   // Full dates like "1st July, 2026" (comma optional).
   String.raw`\d{1,2}(?:st|nd|rd|th)\s+(?:${MONTHS}),?\s+\d{4}`,
 ].join("|");
