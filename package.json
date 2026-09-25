@@ -1,0 +1,21 @@
+{
+  "name": "politricks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check:build": "node scripts/check-build.mjs"
+  },
+  "dependencies": {
+    "astro": "^7",
+    "@astrojs/vercel": "^11",
+    "tailwindcss": "^4",
+    "@tailwindcss/vite": "^4",
+    "zod": "^4"
+  },
+  "devDependencies": {
+    "@fontsource/anton": "^5"
+  }
+}

@@ -1,0 +1,59 @@
+---
+// The site header: the Anton wordmark, the thin flag stripe, and the global
+// language toggle. See devpost/spec.md > Look and Feel — Anton for the
+// wordmark, the flag palette tokens for the stripe, "no orange/yellow as a
+// dominant colour" is why the stripe is black/red/green with white
+// separators rather than a literal Kenyan-flag black/red/green/white block.
+import LanguageToggle from "./LanguageToggle.astro";
+---
+<header class="site-header">
+  <div class="flag-stripe" aria-hidden="true">
+    <span class="stripe stripe-black"></span>
+    <span class="stripe stripe-sep"></span>
+    <span class="stripe stripe-red"></span>
+    <span class="stripe stripe-sep"></span>
+    <span class="stripe stripe-green"></span>
+  </div>
+  <div class="header-row">
+    <a href="/" class="wordmark">POLITRICKS</a>
+    <LanguageToggle />
+  </div>
+</header>
+
+<style>
+  .flag-stripe {
+    display: flex;
+    height: 6px;
+  }
+  .stripe {
+    flex: 1;
+  }
+  .stripe-sep {
+    flex: 0 0 2px;
+    background: var(--paper);
+  }
+  .stripe-black {
+    background: var(--flag-black);
+  }
+  .stripe-red {
+    background: var(--flag-red);
+  }
+  .stripe-green {
+    background: var(--flag-green);
+  }
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+  }
+  .wordmark {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.04em;
+    color: var(--flag-black);
+    text-decoration: none;
+    line-height: 1;
+  }
+</style>

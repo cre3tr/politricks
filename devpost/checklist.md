@@ -19,7 +19,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   Learner check: Open `src/data/bills/finance-act-2026.json`, pick any clause, find it in the official PDF, and confirm it's word for word. Then run `certutil -hashfile` on the PDF yourself and compare it with the fingerprint in the JSON.
   Commit: `Fetch, fingerprint and extract Finance Act 2026 sections`
 
-- [ ] **2a. A Finance Bill clause in Sheng, right next to the legal text (sample explanations)**
+- [x] **2a. A Finance Bill clause in Sheng, right next to the legal text (sample explanations)**
   Becomes usable: `npm run dev` → `/bills/finance-act-2026` shows the bill's clause cards. Each card has the legal text beside its explanation, with a global EN / SW / Sheng toggle, a per-card flip and the source fingerprint footer, all in the PoliTricks look. Three pocket-hitting clauses and the summary carry **hand-written sample** explanations, badged *Sample text — placeholder*. The rest show *Explanation not ready yet*. `generate.py` exists and passes an offline self-test.
   Why now: This is the unique kernel and the demo's "oh, that's cool" moment, so everything else gets built around a proven kernel. There's no API key yet (the learner chose to build without it first), so the page runs on clearly labelled samples and the Claude pipeline is proven offline.
   PRD ref: `prd.md > What It Does`, `prd.md > Language Switching`, `prd.md > Look and Feel`
@@ -172,3 +172,9 @@ Activity mode:
 - Pipeline pinned to **Python 3.14**, not 3.13. uv couldn't finish installing 3.13 here (a link-creation error), and 3.14 was already installed with wheels for every dependency.
 - `Clause` gains `pages` (the PDF pages a section spans), so anyone can find it in the PDF. Section headings are read from the Act's **marginal notes**, not invented.
 - Two-digit section numbers print with no space after the dot ("10.Section 15…"). The section-start pattern allows that, and the monotonic guard still rejects stray numbered items (e.g. "161.Bioethanol…").
+- Slice 2a builder deviations, verified by the lead:
+  - `badge.ts` holds the one badge switch that both the clause cards and the summary use.
+  - Live `generate` passes `betas`/`fallbacks` as normal keyword arguments, because SDK 1.8's `beta.messages.parse` accepts them. It drops `output_config` when it uses `output_format`, because the SDK rejects both at once.
+  - `check-build.mjs` strips tags to nothing rather than a space, because the inline highlight spans sit flush against the text. A one-character mutation in the data was confirmed to make it FAIL.
+  - **Gap:** there's no full `astro check`/`tsc` gate yet, because `@astrojs/check` and `typescript` weren't installed. For now the only type check is Astro's build.
+- The Browser pane was hidden during the 2a checks, so it painted no frames: a rAF-count control never finished and screenshots timed out. Style and layout measurements were used instead (viewport 1280×900 / 428×927, not 0×0). The visual look is checked by the learner at the hands-on checkpoint.

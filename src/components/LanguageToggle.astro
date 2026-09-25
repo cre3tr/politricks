@@ -1,0 +1,50 @@
+---
+// The global language switch (devpost/spec.md > Language Toggle).
+//
+// Writes `pt.lang` and sets `<html data-lang>`, which is what global.css's
+// CSS-only language rules key off. It deliberately never touches any
+// clause-card's OWN `data-lang` attribute (set by ClauseCard's per-card flip
+// buttons) — a card that's been flipped individually stays flipped even when
+// the reader changes the global language, per the spec: "Cards follow via
+// CSS, except those flipped individually, which get their own data-lang on
+// the card."
+---
+<div class="lang-toggle" role="group" aria-label="Language">
+  <button type="button" data-lang-btn="en" aria-pressed="false">EN</button>
+  <button type="button" data-lang-btn="sw" aria-pressed="false">SW</button>
+  <button type="button" data-lang-btn="sheng" aria-pressed="false">SHENG</button>
+</div>
+
+<script>
+  import { setLang, type Lang } from "../lib/storage";
+
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-lang-btn]");
+
+  function syncPressedState() {
+    const current = document.documentElement.getAttribute("data-lang") || "en";
+    buttons.forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.langBtn === current));
+    });
+  }
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const lang = button.dataset.langBtn as Lang;
+      // Sets the GLOBAL language only. Individual clause cards that were
+      // flipped on their own keep their own data-lang (see ClauseCard.astro)
+      // — this line never touches [data-clause-id] elements.
+      document.documentElement.dataset.lang = lang;
+      setLang(lang);
+      syncPressedState();
+    });
+  });
+
+  syncPressedState();
+</script>
+
+<style>
+  .lang-toggle {
+    display: flex;
+    gap: 0.35rem;
+  }
+</style>

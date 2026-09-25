@@ -1,0 +1,28 @@
+---
+// Minimal placeholder home page. Slice 5 replaces this with the real Active
+// Bills list + Una'tafuta? search (devpost/spec.md > Home Page). For now it
+// just gets a reader to the one bill that exists.
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout title="PoliTricks">
+  <main class="home-placeholder">
+    <h1>PoliTricks</h1>
+    <p>Kenyan law, explained beside the official text — in English, Kiswahili and Sheng.</p>
+    <p>
+      <a href="/bills/finance-act-2026">Open the Finance Act, 2026 →</a>
+    </p>
+  </main>
+</BaseLayout>
+
+<style>
+  .home-placeholder {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  .home-placeholder h1 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    font-size: 2rem;
+  }
+</style>

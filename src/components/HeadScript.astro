@@ -1,0 +1,33 @@
+---
+// The pre-paint head script (devpost/spec.md > Head Script).
+//
+// This has to run and finish BEFORE the browser paints anything, or the page
+// flashes in English and then jumps to the reader's saved language — the
+// "visible re-shuffle" the spec explicitly rules out. Astro defers ordinary
+// <script> tags (they run after parsing, as modules), so this one is marked
+// `is:inline` to force it to run synchronously, inline, exactly where it sits
+// in <head> — before the rest of the page is even parsed.
+---
+<script is:inline>
+  (function () {
+    // NOTE: the localStorage key "pt.lang" is duplicated here rather than
+    // imported from src/lib/storage.ts on purpose. An `is:inline` script
+    // can't use ES module imports (that would make Astro treat it as a
+    // module and defer it, defeating the whole point of this file) — so this
+    // one small piece of shared knowledge (the key name, and the three valid
+    // languages) has to be copied by hand. If you rename the key or add a
+    // language, change it in BOTH places: here and storage.ts.
+    var KEY = "pt.lang";
+    var lang = "en";
+    try {
+      var saved = window.localStorage.getItem(KEY);
+      if (saved === "en" || saved === "sw" || saved === "sheng") {
+        lang = saved;
+      }
+    } catch (err) {
+      // Storage blocked (private mode, locked-down browser, etc.) — fall
+      // back to English rather than letting the page break.
+    }
+    document.documentElement.setAttribute("data-lang", lang);
+  })();
+</script>

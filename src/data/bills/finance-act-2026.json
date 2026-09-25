@@ -17,7 +17,17 @@
       "file": "sources/finance-act-2026/act.pdf"
     }
   ],
-  "summary": null,
+  "summary": {
+    "text": {
+      "en": "The Finance Act, 2026 changes several of Kenya's tax laws at once: the Income Tax Act, the Value Added Tax Act, the Excise Duty Act, the Tax Procedures Act, the Miscellaneous Fees and Levies Act, the Affordable Housing Act, the Stamp Duty Act and the Road Maintenance Levy Fund Act. Most changes started on 1 July 2026; a few start later.",
+      "sw": "Sheria ya Fedha, 2026 inabadilisha sheria kadhaa za kodi za Kenya kwa pamoja: Sheria ya Kodi ya Mapato, Sheria ya VAT, Sheria ya Ushuru wa Bidhaa, Sheria ya Taratibu za Kodi, Sheria ya Ada na Tozo Mbalimbali, Sheria ya Nyumba za Bei Nafuu, Sheria ya Ushuru wa Stempu na Sheria ya Mfuko wa Tozo ya Matengenezo ya Barabara. Mabadiliko mengi yalianza tarehe 1 Julai 2026; machache yanaanza baadaye.",
+      "sheng": "Finance Act ya 2026 inabadilisha sheria kibao za ushuru mara moja: Income Tax, VAT, Excise Duty, Tax Procedures, fees na levies, Affordable Housing, Stamp Duty na ile levy ya kurepair barabara. Mingi zilianza kuwork 1st July 2026; zingine zinaanza baadaye."
+    },
+    "review": {
+      "status": "sample",
+      "at": null
+    }
+  },
   "groups": [],
   "clauses": [
     {
@@ -29,12 +39,19 @@
       "pages": [
         2
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This is the Act's name and start dates. Most of the Act took effect on 1 July 2026. Section 43 takes effect on 1 September 2026, and sections 17, 18 and 24 take effect on 1 January 2027.",
+        "sw": "Hiki ni jina la Sheria na tarehe zake za kuanza. Sehemu kubwa ya Sheria ilianza kutumika tarehe 1 Julai 2026. Kifungu cha 43 kinaanza tarehe 1 Septemba 2026, na vifungu vya 17, 18 na 24 vinaanza tarehe 1 Januari 2027.",
+        "sheng": "Hii ni jina ya hii Act na lini inaanza kuwork. Mingi ilianza 1st July 2026. Section 43 inaanza 1st September 2026, na sections 17, 18 na 24 zinaanza 1st January 2027."
+      },
       "review": {
-        "status": "draft",
+        "status": "sample",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Hand-written sample"
+      },
       "groups": [],
       "suggested_articles": []
     },
@@ -48,12 +65,19 @@
         2,
         3
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This changes definitions in the Income Tax Act. \"Management or professional fee\" now includes the interchange fees and merchant service fees charged when a card is used to pay. \"Royalty\" gets a new definition covering payments for using copyright works and software, including licence, development, training, maintenance or support fees. Which definition a payment falls under affects how it is taxed.",
+        "sw": "Kifungu hiki kinabadilisha maana za maneno katika Sheria ya Kodi ya Mapato. \"Ada ya usimamizi au ya kitaaluma\" sasa inajumuisha ada za interchange na ada za huduma kwa wafanyabiashara zinazotozwa kadi inapotumika kulipa. \"Mrabaha\" unapata maana mpya inayojumuisha malipo ya kutumia kazi zenye hakimiliki na programu za kompyuta, pamoja na ada za leseni, utengenezaji, mafunzo, matengenezo au usaidizi. Maana ambayo malipo yanaangukia huathiri jinsi yanavyotozwa kodi.",
+        "sheng": "Hii inabadilisha maana ya maneno kwa Income Tax Act. \"Management or professional fee\" sasa inaingiza zile fees za interchange na merchant service zinakatwa ukilipa na card. \"Royalty\" imepewa maana mpya: malipo ya kutumia kazi ya copyright na software, pamoja na fees za licence, development, training, maintenance ama support. Malipo ikiingia kwa definition gani ndio inaamua itakatwa ushuru aje."
+      },
       "review": {
-        "status": "draft",
+        "status": "sample",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Hand-written sample"
+      },
       "groups": [],
       "suggested_articles": []
     },
@@ -1034,12 +1058,19 @@
       "pages": [
         38
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This changes the Road Maintenance Levy set in section 3(2) of the Road Maintenance Levy Fund Act from three shillings to one shilling and fifty cents.",
+        "sw": "Kifungu hiki kinabadilisha Tozo ya Matengenezo ya Barabara iliyowekwa katika kifungu cha 3(2) cha Sheria ya Mfuko wa Tozo ya Matengenezo ya Barabara, kutoka shilingi tatu hadi shilingi moja na senti hamsini.",
+        "sheng": "Hii inabadilisha ile levy ya kurepair barabara iko kwa section 3(2) ya Road Maintenance Levy Fund Act, kutoka bob tatu hadi bob moja na senti hamsini."
+      },
       "review": {
-        "status": "draft",
+        "status": "sample",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Hand-written sample"
+      },
       "groups": [],
       "suggested_articles": []
     }

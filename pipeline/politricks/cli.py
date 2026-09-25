@@ -7,6 +7,8 @@ Run from anywhere; paths are resolved from the repo root, not your current folde
     uv run --project pipeline politricks probe finance-act-2026
     uv run --project pipeline politricks extract finance-act-2026 [--check-json <path>]
     uv run --project pipeline politricks verify [--self-test]
+    uv run --project pipeline politricks samples finance-act-2026
+    uv run --project pipeline politricks generate finance-act-2026 [--self-test]
 """
 
 from __future__ import annotations
@@ -41,6 +43,15 @@ def main() -> None:
 
     p_verify = sub.add_parser("verify", help="re-download sources and compare fingerprints")
     p_verify.add_argument("--self-test", action="store_true", help="offline one-byte positive control")
+
+    p_samples = sub.add_parser("samples", help="apply hand-written sample explanations (slice 2a)")
+    p_samples.add_argument("bill_id")
+
+    p_generate = sub.add_parser("generate", help="ask Claude to explain every clause (Batches API)")
+    p_generate.add_argument("bill_id", nargs="?")
+    p_generate.add_argument(
+        "--self-test", action="store_true", help="offline check of request-building and result-parsing (no network)"
+    )
 
     args = parser.parse_args()
 
@@ -83,6 +94,26 @@ def main() -> None:
         if args.self_test:
             sys.exit(0 if verify.self_test(REPO_ROOT) else 1)
         verify.verify_all(REPO_ROOT)
+
+    elif args.command == "samples":
+        from . import samples
+
+        try:
+            samples.run(REPO_ROOT, args.bill_id)
+        except samples.SamplesError as error:
+            print(f"FAILED: {error}")
+            sys.exit(1)
+
+    elif args.command == "generate":
+        from . import generate
+
+        if args.self_test:
+            sys.exit(0 if generate.self_test(REPO_ROOT) else 1)
+        if not args.bill_id:
+            parser.error("generate needs a bill id (or --self-test)")
+        # Live generation is not exercised in slice 2a — it needs a real
+        # ANTHROPIC_API_KEY and network egress, neither of which exist here.
+        generate.run(REPO_ROOT, args.bill_id)
 
 
 if __name__ == "__main__":

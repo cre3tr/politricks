@@ -1,0 +1,179 @@
+---
+// One clause: legal text beside its explanation (devpost/spec.md > Clause
+// Card). The legal text sits FIRST in the DOM — in a normal CSS grid that
+// makes it the top-left cell, which is "above on mobile" (one column) and
+// "beside, on the left, on desktop" (two columns) for free, with no extra
+// ordering rules needed.
+import type { Clause } from "../lib/schema";
+import { splitHighlights } from "../lib/highlight";
+import { badgeFor } from "../lib/badge";
+
+interface Props {
+  clause: Clause;
+}
+
+const { clause } = Astro.props;
+const segments = splitHighlights(clause.text);
+
+// No explanation yet: no badge at all (there is nothing to badge), just the
+// trilingual "not ready" placeholder — see devpost/spec.md > Clause Card.
+const badge = clause.explanation ? badgeFor(clause.review.status) : null;
+---
+<article class="clause-card" data-clause-id={clause.id} data-text-sha256={clause.text_sha256}>
+  <header class="clause-header">
+    <h3>
+      <span class="clause-number">Section {clause.number}</span>
+      <span class="clause-heading">{clause.heading}</span>
+    </h3>
+    <div class="clause-header-row">
+      {badge && <span class={`badge ${badge.className}`}>{badge.label}</span>}
+      <div class="card-lang-flip" role="group" aria-label={`Language for section ${clause.number}`}>
+        <button type="button" data-card-lang-btn="en">EN</button>
+        <button type="button" data-card-lang-btn="sw">SW</button>
+        <button type="button" data-card-lang-btn="sheng">SHENG</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="clause-grid">
+    <blockquote lang="en" class="legal-text">
+      {segments.map((segment) => {
+        if (segment.kind === "change") return <span class="hl-change">{segment.text}</span>;
+        if (segment.kind === "amount") return <span class="hl-amount">{segment.text}</span>;
+        return segment.text;
+      })}
+    </blockquote>
+
+    <div class="explanation">
+      {
+        clause.explanation ? (
+          <>
+            <p data-l="en" lang="en">
+              {clause.explanation.en}
+            </p>
+            <p data-l="sw" lang="sw">
+              {clause.explanation.sw}
+            </p>
+            <p data-l="sheng" lang="sw-x-sheng">
+              {clause.explanation.sheng}
+            </p>
+          </>
+        ) : (
+          <>
+            <p data-l="en" lang="en">
+              Explanation not ready yet.
+            </p>
+            <p data-l="sw" lang="sw">
+              Maelezo bado hayajakamilika.
+            </p>
+            <p data-l="sheng" lang="sw-x-sheng">
+              Maelezo bado hayako ready.
+            </p>
+          </>
+        )
+      }
+    </div>
+  </div>
+</article>
+
+<script>
+  // One script, deduped by Astro across every ClauseCard on the page —
+  // wires ALL cards' per-card flip buttons via a single querySelectorAll
+  // pass rather than one closure per card instance.
+  document.querySelectorAll<HTMLElement>(".clause-card").forEach((card) => {
+    const buttons = card.querySelectorAll<HTMLButtonElement>("[data-card-lang-btn]");
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        // Sets ONLY this card's own data-lang — the global toggle and every
+        // other card are untouched. See global.css's specificity comment
+        // for why this wins over the page-wide language rule.
+        card.dataset.lang = button.dataset.cardLangBtn;
+      });
+    });
+  });
+</script>
+
+<style>
+  .clause-card {
+    border: 1px solid var(--muted);
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .clause-header h3 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 1.1rem;
+    margin: 0 0 0.4rem;
+  }
+  .clause-number {
+    color: var(--flag-red);
+    margin-right: 0.5rem;
+  }
+  .clause-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+  }
+  .badge-draft {
+    border-color: var(--matatu-brown);
+    color: var(--matatu-brown);
+  }
+  .badge-reviewed {
+    border-color: var(--flag-green);
+    color: var(--flag-green);
+  }
+  /* Sample items are visually distinct from the other two on purpose — a
+     dashed border reads as "placeholder", never as a finished state. */
+  .badge-sample {
+    border-style: dashed;
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+  .card-lang-flip {
+    display: flex;
+    gap: 0.25rem;
+  }
+  .card-lang-flip button {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--muted);
+    background: var(--paper);
+    cursor: pointer;
+  }
+  .clause-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 768px) {
+    .clause-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .legal-text {
+    max-height: 24rem; /* Tailwind's max-h-96, written directly since this
+                            block sits outside Tailwind's class scanning. */
+    overflow: auto;
+    margin: 0;
+    padding: 0.5rem;
+    background: color-mix(in srgb, var(--paper) 92%, var(--flag-black));
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+  }
+  .explanation p {
+    margin: 0 0 0.5rem;
+  }
+</style>

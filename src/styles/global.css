@@ -1,0 +1,141 @@
+/* Global styles: Tailwind, the palette tokens, the display font, the
+   "matatu highlighter" for legal text, and the CSS-ONLY language switch.
+   See devpost/spec.md > Look and Feel and > Language Toggle. */
+@import "tailwindcss";
+
+/* --- Palette tokens (devpost/spec.md > Look and Feel) -------------------
+   These are the raw values. No orange/yellow as a dominant colour, kept for
+   neutrality — this is a civic tool explaining law, not campaigning for a
+   side, and yellow/orange read as party colours in Kenyan politics. */
+:root {
+  --flag-black: #111111;
+  --flag-red: #bb0000;
+  --flag-green: #006600;
+  --paper: #ffffff;
+  --matatu-brown: #6b3f22;
+  --muted: #5f5a52;
+}
+
+/* Bridge the raw tokens into Tailwind's theme, so `bg-flag-red` etc. work,
+   and expose the display font as a CSS variable too. `@theme inline` (v4)
+   means these are DEFINED from the :root values above, not duplicated. */
+@theme inline {
+  --color-flag-black: var(--flag-black);
+  --color-flag-red: var(--flag-red);
+  --color-flag-green: var(--flag-green);
+  --color-paper: var(--paper);
+  --color-matatu-brown: var(--matatu-brown);
+  --color-muted: var(--muted);
+  --font-display: "Anton", Impact, "Arial Narrow", sans-serif;
+}
+
+/* Anton, self-hosted, Latin subset only (see public/fonts/anton-latin.woff2,
+   copied from @fontsource/anton — licence: public/fonts/ANTON-OFL.txt).
+   `font-display: swap` shows the fallback font immediately and swaps in
+   Anton once it loads, so text is never invisible while waiting on a font —
+   important on the cheap mobile data this site is built for. */
+@font-face {
+  font-family: "Anton";
+  src: url("/fonts/anton-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  /* System font stack for body text: costs zero bytes to load, per the
+     spec's "civic-tech clean" base. Anton is reserved for headers/labels. */
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  font-size: 16px;
+  background: var(--paper);
+  color: var(--flag-black);
+}
+
+/* --- The matatu highlighter (devpost/spec.md > Look and Feel) -----------
+   Marked text is ALWAYS also bold. This is deliberate, not decorative: a
+   colour-only mark fails for colour-blind readers and washes out in direct
+   Nairobi sun on a cheap phone screen. Bold survives both. The underline
+   colour is what tells the two KINDS of mark apart (red = what changes,
+   black = amounts/dates); the brown band underneath is shared so the two
+   marks still read as "the same feature" at a glance. */
+.hl-change {
+  font-weight: 700;
+  background: linear-gradient(
+    transparent 58%,
+    color-mix(in srgb, var(--matatu-brown) 30%, transparent) 58%
+  );
+  text-decoration: underline 3px var(--flag-red);
+  text-underline-offset: 2px;
+}
+.hl-amount {
+  font-weight: 700;
+  background: linear-gradient(
+    transparent 58%,
+    color-mix(in srgb, var(--matatu-brown) 30%, transparent) 58%
+  );
+  text-decoration: underline 3px var(--flag-black);
+  text-underline-offset: 2px;
+}
+
+/* --- Language switching, CSS only (devpost/spec.md > Head Script, Clause
+   Card, Language Toggle) ---------------------------------------------------
+   All three languages are ALWAYS present in the HTML — nothing is added or
+   removed by JavaScript. Only `display` changes. This means the page is
+   correct even with JavaScript disabled or slow to run (it just shows
+   English, the default), and a search engine / screen reader that ignores
+   `display:none` still gets real text instead of an empty placeholder. */
+
+/* Default: hide every language-tagged element... */
+[data-l] {
+  display: none;
+}
+/* ...then show the one matching <html data-lang>, with a fallback to
+   English if HeadScript hasn't run yet (e.g. no-JS) or found nothing saved. */
+html:not([data-lang]) [data-l="en"],
+html[data-lang="en"] [data-l="en"],
+html[data-lang="sw"] [data-l="sw"],
+html[data-lang="sheng"] [data-l="sheng"] {
+  display: block;
+}
+
+/* A clause card can be flipped INDIVIDUALLY (its own [data-lang] attribute,
+   set by ClauseCard's per-card buttons), independent of the page-wide
+   language. These two rules win over the page-wide rules above for any
+   [data-l] element INSIDE such a card, because they are MORE SPECIFIC: three
+   attribute/class selectors deep (`.clause-card[data-lang="sw"] [data-l="sw"]`)
+   beats two (`html[data-lang="sw"] [data-l="sw"]`), regardless of source
+   order. That's what lets one card stay in Sheng while the rest of the page
+   is Kiswahili. */
+.clause-card[data-lang] [data-l] {
+  display: none;
+}
+.clause-card[data-lang="en"] [data-l="en"],
+.clause-card[data-lang="sw"] [data-l="sw"],
+.clause-card[data-lang="sheng"] [data-l="sheng"] {
+  display: block;
+}
+
+/* Language-toggle buttons show which language is active from the SAME
+   `<html data-lang>` attribute HeadScript sets before first paint — so the
+   correct button is already highlighted on the very first frame, with no
+   JS needed to get it right (the toggle's own <script> only keeps it in
+   sync after a click). */
+[data-lang-btn] {
+  border: 1px solid var(--muted);
+  background: var(--paper);
+  color: var(--flag-black);
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
+html[data-lang="en"] [data-lang-btn="en"],
+html[data-lang="sw"] [data-lang-btn="sw"],
+html[data-lang="sheng"] [data-lang-btn="sheng"],
+html:not([data-lang]) [data-lang-btn="en"] {
+  background: var(--flag-black);
+  color: var(--paper);
+  border-color: var(--flag-black);
+}

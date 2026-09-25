@@ -1,0 +1,195 @@
+---
+// The bill page (devpost/spec.md > Bill Page). Slice 2a builds just "What
+// it does" — no tabs yet (What changed / Have your say arrive in slices 6
+// and 8). Every bill JSON is Zod-validated HERE, at build time: a broken
+// file fails `npm run build` and names exactly which file broke, rather than
+// shipping a page that silently renders `undefined`.
+import { z } from "zod";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ClauseCard from "../../components/ClauseCard.astro";
+import SourceFingerprint from "../../components/SourceFingerprint.astro";
+import { BillSchema, type Bill } from "../../lib/schema";
+import { badgeFor } from "../../lib/badge";
+
+export async function getStaticPaths() {
+  // Eager: every bill file is read and validated right now, at build time —
+  // not lazily per-request, since the whole site is prebuilt (devpost/spec.md
+  // > How This Works).
+  const modules = import.meta.glob("../../data/bills/*.json", { eager: true }) as Record<
+    string,
+    { default: unknown }
+  >;
+
+  return Object.entries(modules).map(([path, mod]) => {
+    const result = BillSchema.safeParse(mod.default);
+    if (!result.success) {
+      // Thrown during the Astro build, so this stops `npm run build` cold —
+      // this IS the "broken bill JSON fails the build and names the file"
+      // behaviour the checklist verifies.
+      throw new Error(`Invalid bill data in ${path}:\n${z.prettifyError(result.error)}`);
+    }
+    const bill = result.data;
+    // The filename stem is the bill's id everywhere else in the pipeline
+    // (pipeline/politricks/models.py > bill_path). A file that doesn't
+    // agree with its own contents is exactly the kind of drift Iron Law VI
+    // exists to catch — check it here too, not just by convention.
+    const stem = path.split("/").pop()!.replace(/\.json$/, "");
+    if (bill.id !== stem) {
+      throw new Error(`Invalid bill data in ${path}:\nbill.id ("${bill.id}") does not match filename ("${stem}")`);
+    }
+    return { params: { id: bill.id }, props: { bill } };
+  });
+}
+
+interface Props {
+  bill: Bill;
+}
+
+const { bill } = Astro.props;
+
+// "Any item is a sample" drives the sample-explainer banner. Slice 2a only
+// ever populates `summary` and `clauses` (groups/changes/participation are
+// later slices), so those two are what's checked.
+const hasSample =
+  bill.summary?.review.status === "sample" ||
+  bill.clauses.some((clause) => clause.review.status === "sample");
+
+const summaryBadge = bill.summary ? badgeFor(bill.summary.review.status) : null;
+---
+<BaseLayout title={`${bill.title} — PoliTricks`}>
+  <main class="bill-page">
+    <div class="bill-title-row">
+      <h1>{bill.title}</h1>
+      <span class={`status-label status-${bill.status}`}>
+        {bill.status === "passed" ? "Passed" : "Active"}
+      </span>
+    </div>
+    <p class="stage">{bill.stage}</p>
+
+    {
+      bill.source_changed && (
+        <p class="banner banner-changed" role="status">
+          The official document changed since we last checked. Explanations may be
+          out of date.
+        </p>
+      )
+    }
+
+    {
+      hasSample && (
+        <p class="banner banner-sample" role="status">
+          Explanations marked Sample are hand-written placeholders — not AI output
+          and not yet reviewed.
+        </p>
+      )
+    }
+
+    <h2 class="section-heading">What it does</h2>
+
+    {
+      bill.summary && (
+        <section class="summary-card" aria-label="Summary">
+          {summaryBadge && (
+            <span class={`badge ${summaryBadge.className}`}>{summaryBadge.label}</span>
+          )}
+          <p data-l="en" lang="en">
+            {bill.summary.text.en}
+          </p>
+          <p data-l="sw" lang="sw">
+            {bill.summary.text.sw}
+          </p>
+          <p data-l="sheng" lang="sw-x-sheng">
+            {bill.summary.text.sheng}
+          </p>
+        </section>
+      )
+    }
+
+    {bill.clauses.map((clause) => <ClauseCard clause={clause} />)}
+
+    <SourceFingerprint sources={bill.sources} />
+  </main>
+</BaseLayout>
+
+<style>
+  .bill-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  .bill-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .bill-title-row h1 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 1.8rem;
+    margin: 0;
+  }
+  .status-label {
+    font-size: 0.8rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    border: 1px solid currentColor;
+  }
+  .status-passed {
+    color: var(--flag-green);
+  }
+  .status-active {
+    color: var(--matatu-brown);
+  }
+  .stage {
+    color: var(--muted);
+    margin-top: 0.25rem;
+  }
+  .banner {
+    border: 1px solid var(--flag-red);
+    background: color-mix(in srgb, var(--flag-red) 8%, var(--paper));
+    padding: 0.6rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    margin-top: 0.75rem;
+  }
+  .banner-sample {
+    border-color: var(--muted);
+    background: color-mix(in srgb, var(--muted) 8%, var(--paper));
+  }
+  .section-heading {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-top: 2rem;
+  }
+  .summary-card {
+    border: 1px solid var(--flag-black);
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .badge-draft {
+    border-color: var(--matatu-brown);
+    color: var(--matatu-brown);
+  }
+  .badge-reviewed {
+    border-color: var(--flag-green);
+    color: var(--flag-green);
+  }
+  .badge-sample {
+    border-style: dashed;
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+</style>

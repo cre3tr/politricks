@@ -1,0 +1,87 @@
+---
+// The "how do I know this is real" footer (devpost/spec.md > Bill Page,
+// > Source Pipeline > Fetch & Fingerprint). One block per official source:
+// where it came from, when it was fetched, its SHA-256, and exactly how a
+// reader can re-check that fingerprint on their own machine.
+import type { Source } from "../lib/schema";
+
+interface Props {
+  sources: Source[];
+}
+
+const { sources } = Astro.props;
+---
+<section class="source-fingerprint" aria-label="Source fingerprint">
+  <h2>Source fingerprint</h2>
+  <p class="scan-note">
+    This official file's text was produced from a scan, so it may contain
+    small typing glitches; PoliTricks shows it exactly as published.
+  </p>
+  {
+    sources.map((source) => {
+      const fetchedDate = new Date(source.fetched_at).toLocaleDateString("en-KE", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      const shortHash = source.sha256.slice(0, 12);
+      return (
+        <div class="source-entry">
+          <p class="source-label">
+            {source.label} — <a href={source.url}>{source.url}</a>
+          </p>
+          <p class="source-fetched">Fetched: {fetchedDate}</p>
+          <details>
+            <summary>SHA-256 {shortHash}…</summary>
+            <code>{source.sha256}</code>
+          </details>
+          <details class="verify-steps">
+            <summary>Verify it yourself</summary>
+            <ol>
+              <li>
+                Download the file from <a href={source.url}>{source.url}</a>.
+              </li>
+              <li>
+                Windows: run <code>certutil -hashfile &lt;file&gt; SHA256</code> in a
+                terminal.
+              </li>
+              <li>
+                macOS/Linux: run <code>shasum -a 256 &lt;file&gt;</code> in a
+                terminal.
+              </li>
+              <li>Compare the result to the SHA-256 above — it should match exactly.</li>
+            </ol>
+          </details>
+        </div>
+      );
+    })
+  }
+</section>
+
+<style>
+  .source-fingerprint {
+    border-top: 1px solid var(--muted);
+    margin-top: 2rem;
+    padding-top: 1rem;
+  }
+  .source-fingerprint h2 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 1.1rem;
+  }
+  .scan-note {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .source-entry {
+    margin-top: 0.75rem;
+  }
+  .source-fetched {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  code {
+    word-break: break-all;
+  }
+</style>
