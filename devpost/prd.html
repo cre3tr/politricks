@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PoliTricks PRD</title>
+<style>
+  :root {
+    --bg: #f7f5f0; --surface: #ffffff; --ink: #1c1b19; --muted: #6b675f;
+    --line: #dcd7cc; --accent: #0b6e4f; --accent-soft: #e2f1eb;
+    --warn: #9a5b00; --warn-soft: #fbefd9; --later: #4a5a8a; --later-soft: #e6eaf5;
+    --brown: #6b3f22;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #151513; --surface: #1f1e1b; --ink: #ecebe6; --muted: #a39f95;
+      --line: #3a3833; --accent: #4cc39a; --accent-soft: #173229;
+      --warn: #f0b458; --warn-soft: #3a2c14; --later: #9fb0e6; --later-soft: #232a40;
+      --brown: #c08457;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #151513; --surface: #1f1e1b; --ink: #ecebe6; --muted: #a39f95;
+    --line: #3a3833; --accent: #4cc39a; --accent-soft: #173229;
+    --warn: #f0b458; --warn-soft: #3a2c14; --later: #9fb0e6; --later-soft: #232a40;
+    --brown: #c08457;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+  .tag { display: inline-block; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--warn); background: var(--warn-soft); padding: 2px 8px; border-radius: 99px; }
+  h1 { font-size: 34px; margin: 10px 0 4px; }
+  .lede { color: var(--muted); font-size: 18px; margin: 0 0 12px; }
+  h2 { font-size: 15px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin: 36px 0 10px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+  .expand { border-left: 4px solid var(--accent); background: var(--accent-soft); padding: 12px 16px; border-radius: 10px; }
+  .expand b { color: var(--accent); }
+  svg { width: 100%; height: auto; display: block; }
+  svg .box { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+  svg .box.hl { fill: var(--accent-soft); stroke: var(--accent); }
+  svg .box.on { stroke: var(--brown); stroke-width: 3; }
+  svg text { fill: var(--ink); font: 13px system-ui, sans-serif; }
+  svg text.sub { fill: var(--muted); font-size: 11px; }
+  svg .arrow { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+  svg .loop { stroke: var(--accent); stroke-dasharray: 5 4; stroke-width: 1.5; fill: none; }
+  .stepper { margin-top: 14px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .stepper button { font: inherit; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--surface); color: var(--ink); cursor: pointer; }
+  .stepper button:disabled { opacity: .4; cursor: default; }
+  .stepper .count { color: var(--muted); font-size: 14px; }
+  .steptext { margin-top: 10px; padding: 12px 16px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); min-height: 74px; }
+  .steptext b { display: block; margin-bottom: 2px; }
+  details { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 8px; }
+  summary { cursor: pointer; padding: 12px 16px; font-weight: 600; }
+  summary small { font-weight: 400; color: var(--muted); margin-left: 6px; }
+  details > div { padding: 0 16px 14px; }
+  ul.crit { list-style: none; padding: 0; margin: 0; }
+  ul.crit li { padding: 6px 0 6px 28px; position: relative; border-top: 1px solid var(--line); }
+  ul.crit li:first-child { border-top: 0; }
+  ul.crit li::before { content: ""; position: absolute; left: 2px; top: 10px; width: 14px; height: 14px;
+    border: 2px solid var(--accent); border-radius: 3px; }
+  .story { color: var(--muted); font-style: italic; margin: 0 0 8px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 28px; } }
+  .swatches { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+  .sw { width: 44px; height: 44px; border-radius: 8px; border: 1px solid var(--line); }
+  .hl-demo { font-family: Georgia, serif; font-size: 15px; line-height: 1.9; }
+  .mk1 { background: linear-gradient(transparent 55%, #b0412e 55%); color: inherit; padding: 0 2px; box-shadow: inset 0 -2px 0 #6b3f22; }
+  .mk2 { background: linear-gradient(transparent 55%, #6b3f22 55%); padding: 0 2px; box-shadow: inset 0 -2px 0 #111; }
+  ol.ladder { list-style: none; padding: 0; margin: 0; }
+  ol.ladder li { position: relative; padding: 12px 14px 12px 52px; border: 1px solid var(--line); border-radius: 10px;
+    background: var(--surface); margin-bottom: 8px; }
+  ol.ladder li .n { position: absolute; left: 14px; top: 11px; width: 26px; height: 26px; border-radius: 50%;
+    display: grid; place-items: center; font-weight: 600; font-size: 14px; background: var(--line); }
+  ol.ladder li.core { border-color: var(--accent); }
+  ol.ladder li.core .n { background: var(--accent); color: var(--surface); }
+  ol.ladder li small { display: block; color: var(--muted); }
+  .cutline { display: flex; align-items: center; gap: 10px; margin: 6px 0 14px; color: var(--accent);
+    font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  .cutline::before, .cutline::after { content: ""; flex: 1; border-top: 2px dashed var(--accent); }
+  .pill { font-size: 12px; padding: 1px 8px; border-radius: 99px; margin-left: 6px; font-weight: 500; }
+  .pill.q { background: var(--warn-soft); color: var(--warn); }
+  .pill.a { background: var(--later-soft); color: var(--later); }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  td { padding: 8px 6px; border-top: 1px solid var(--line); vertical-align: top; }
+  td:first-child { font-weight: 600; width: 38%; }
+  footer { margin-top: 40px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <span class="tag">PRD · approved</span>
+  <h1>PoliTricks</h1>
+  <p class="lede">A mobile-first guide to Kenyan bills: what it does, who it hits, what changed, and how to have your say, in EN, SW and Sheng, always beside the source.</p>
+  <div class="expand"><b>Scope → PRD.</b> Scope said "pick a bill, read what it means for you." Now we know exactly what that means: a one-time "who are you?", two ways in (Active Bills and Una'tafuta?), and three tabs per bill, with your groups first and every note beside its clause.</div>
+
+  <h2>The core journey</h2>
+  <div class="card">
+    <svg id="journey" viewBox="0 0 800 300" role="img" aria-label="Journey: first-visit profile, home, bill page with three tabs (What it does, What changed, Have your say), looping back when a new bill drops.">
+      <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+      <g data-s="1"><rect class="box" x="10" y="40" width="130" height="70" rx="10"/><text x="75" y="70" text-anchor="middle">Who are you?</text><text class="sub" x="75" y="88" text-anchor="middle">first visit · skippable</text></g>
+      <g data-s="2"><rect class="box" x="175" y="40" width="130" height="70" rx="10"/><text x="240" y="66" text-anchor="middle">Home</text><text class="sub" x="240" y="84" text-anchor="middle">Active Bills</text><text class="sub" x="240" y="98" text-anchor="middle">Una'tafuta?</text></g>
+      <g data-s="3"><rect class="box" x="340" y="40" width="130" height="70" rx="10"/><text x="405" y="70" text-anchor="middle">Bill page</text><text class="sub" x="405" y="88" text-anchor="middle">3 tabs</text></g>
+      <g data-s="4 5"><rect class="box hl" x="505" y="10" width="160" height="56" rx="10"/><text x="585" y="34" text-anchor="middle">What it does</text><text class="sub" x="585" y="52" text-anchor="middle">your groups · summary · clauses</text></g>
+      <g data-s="6"><rect class="box" x="505" y="82" width="160" height="56" rx="10"/><text x="585" y="106" text-anchor="middle">What changed</text><text class="sub" x="585" y="124" text-anchor="middle">drafts · current law</text></g>
+      <g data-s="7"><rect class="box hl" x="505" y="154" width="160" height="56" rx="10"/><text x="585" y="178" text-anchor="middle">Have your say</text><text class="sub" x="585" y="196" text-anchor="middle">deadline · where · sourced</text></g>
+      <g data-s="8"><rect class="box" x="695" y="82" width="95" height="56" rx="10"/><text x="742" y="106" text-anchor="middle">Acts in</text><text class="sub" x="742" y="124" text-anchor="middle">time</text></g>
+      <path class="arrow" d="M140 75 H173" marker-end="url(#ah)"/>
+      <path class="arrow" d="M305 75 H338" marker-end="url(#ah)"/>
+      <path class="arrow" d="M470 75 L503 40" marker-end="url(#ah)"/>
+      <path class="arrow" d="M470 75 L503 108" marker-end="url(#ah)"/>
+      <path class="arrow" d="M470 75 L503 180" marker-end="url(#ah)"/>
+      <path class="arrow" d="M665 182 L740 140" marker-end="url(#ah)"/>
+      <path class="loop" d="M742 140 V250 H240 V112" marker-end="url(#ah)"/>
+      <text class="sub" x="490" y="270" text-anchor="middle">comes back when the next bill or draft drops</text>
+      <text class="sub" x="400" y="292" text-anchor="middle">Green = minimum demoable line (build steps 1–2)</text>
+    </svg>
+    <div class="stepper">
+      <button id="prev" type="button">← Back</button>
+      <button id="next" type="button">Next →</button>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="steptext" id="steptext" aria-live="polite"></div>
+    <noscript><ol>
+      <li>First visit: "who are you?", with groups plus your own words; skippable and remembered.</li>
+      <li>Home: Active Bills and Una'tafuta?</li><li>Pick a bill: three tabs.</li>
+      <li>What it does: your groups first, then summary, then clause cards, EN/SW/Sheng.</li>
+      <li>Adjust "I am…" chips for this bill, or see everyone.</li>
+      <li>What changed: drafts, or bill vs current law.</li>
+      <li>Have your say: deadline, where, what's needed, all sourced.</li>
+      <li>Loop closes: they act in time and come back for the next bill.</li></ol></noscript>
+  </div>
+
+  <h2>Features &amp; acceptance criteria</h2>
+  <details open><summary>First-Visit Profile <small>step 1</small></summary><div>
+    <p class="story">As a citizen, I want to say once who I am so every bill shows me what affects people like me first.</p>
+    <ul class="crit">
+      <li>Groups: Employee / salaried · Small trader / hustler · Boda / matatu / driver · Student / youth. More than one can be picked.</li>
+      <li>Short free text in their own words ("I sell mitumba Gikomba"): length-limited, sanitised, not rewritten.</li>
+      <li><b>Their own words drive matching:</b> clauses matching what they wrote float up alongside their groups.</li>
+      <li>Skip works; a skipped profile shows all groups.</li>
+      <li>On a return visit the screen doesn't appear and the profile is applied.</li>
+    </ul></div></details>
+  <details><summary>Home: Active Bills &amp; Una'tafuta? <small>steps 1 &amp; 4</small></summary><div><ul class="crit">
+      <li>Active Bills: title, stage, and a deadline if participation is open.</li>
+      <li>Una'tafuta?: search recently passed bills by name or keyword; results carry a <b>Passed</b> label.</li>
+    </ul></div></details>
+  <details><summary>What It Does <small>step 1 · the kernel</small></summary><div>
+    <p class="story">As a citizen, I want to understand a bill in my language so I can judge it myself.</p>
+    <ul class="crit">
+      <li>Your groups first, each linking to the clauses behind it.</li>
+      <li>"See everyone" plus editable "I am…" chips for this bill.</li>
+      <li>Short whole-bill summary above the clause cards.</li>
+      <li><b>Every clause card shows the legal text beside its note.</b> Nothing is explained without its source.</li>
+      <li>Neutral: says what it does, never what to think.</li>
+    </ul></div></details>
+  <details><summary>Language Switching <small>step 1</small></summary><div><ul class="crit">
+      <li>A global EN / SW / Sheng toggle switches all explanations and is remembered.</li>
+      <li>A single card can be flipped on its own.</li>
+      <li>Legal source text stays as published.</li>
+    </ul></div></details>
+  <details><summary>Have Your Say <small>step 2</small></summary><div><ul class="crit">
+      <li>Open: deadline, where to submit, and what's needed, each linked to its official notice.</li>
+      <li>Every deadline and stage shows a <b>"last checked"</b> date.</li>
+      <li>Not open: "Participation not open", the current stage, and what usually happens next, sourced.</li>
+      <li>Passed bill: becomes <b>Where it can still be challenged</b>; general, sourced, never legal advice.</li>
+    </ul></div></details>
+  <details><summary>What Changed <small>step 3</small></summary><div><ul class="crit">
+      <li>Two versions: side-by-side changed clauses, each with a note.</li>
+      <li>One version: an honest note <b>plus</b> the bill compared with the current law it amends.</li>
+      <li>Passed: bill as introduced vs Act as passed, showing what survived and what was dropped.</li>
+    </ul></div></details>
+  <details><summary>Automatic Bill Intake &amp; County <small>steps 4 &amp; 6</small></summary><div><ul class="crit">
+      <li>New national bills and Gazette notices appear without manual entry.</li>
+      <li>Nairobi County Assembly items appear, labelled as county. <b>County bills</b> use the bill page; <b>motions</b> use a simpler card (resolution text plus trilingual note).</li>
+    </ul></div></details>
+  <details><summary>Constitution Check <small>step 5</small></summary><div><ul class="crit">
+      <li>Clause cards list <b>generated</b> article suggestions, always labelled <b>"Suggested articles"</b>.</li>
+      <li>Tapping one opens the article <b>in the app</b>, with a link to the official source.</li>
+      <li>The in-app text is <b>verifiably official</b>: a hashed copy proves it's unaltered. The mechanism is for <code>4-spec</code>.</li>
+      <li>Never states or implies "unconstitutional"; the reader judges.</li>
+    </ul></div></details>
+
+  <h2>States &amp; edge cases</h2>
+  <div class="card"><table>
+    <tr><td>First use</td><td>"Who are you?" appears; skippable.</td></tr>
+    <tr><td>No group matches a clause</td><td>The clause still shows under "see everyone". Nothing is hidden by the profile.</td></tr>
+    <tr><td>Junk free text</td><td>Sanitised and length-limited; if nothing usable remains, treated as skipped. <span class="pill a">assumption</span></td></tr>
+    <tr><td>Participation not open</td><td>Stage and what usually happens next, sourced.</td></tr>
+    <tr><td>One version only</td><td>Honest note plus a comparison against current law.</td></tr>
+    <tr><td>Passed bill</td><td>Passed label, bill vs Act, where it can still be challenged. <span class="pill a">assumption: label</span></td></tr>
+    <tr><td>Search finds nothing</td><td>"Hatujapata kitu", in the reader's language, with a way back. <span class="pill a">assumption</span></td></tr>
+    <tr><td>Explanation unavailable</td><td>The clause text still shows, with an "explanation not ready" note. <span class="pill a">assumption</span></td></tr>
+    <tr><td>Persists</td><td>Profile and language on this device. No accounts.</td></tr>
+  </table></div>
+
+  <h2>Look &amp; feel</h2>
+  <div class="grid">
+    <div class="card"><b>Civic-tech clean + street energy</b><p style="margin:6px 0 0;color:var(--muted)">Calm and readable on a cheap phone, with poster-like moments of matatu attitude. Mobile-first. Flag palette, and no party-coded orange or yellow.</p>
+      <div class="swatches" aria-label="Palette: black, red, green, white, matatu brown">
+        <div class="sw" style="background:#111"></div><div class="sw" style="background:#b0412e"></div>
+        <div class="sw" style="background:#1f6b3a"></div><div class="sw" style="background:#fff"></div>
+        <div class="sw" style="background:#6b3f22"></div></div></div>
+    <div class="card"><b>Signature: matatu highlighter</b>
+      <p class="hl-demo">Section 12 of the Excise Duty Act is amended by <span class="mk1">deleting the words "twenty per cent"</span> and substituting <span class="mk2">"twenty-five per cent"</span>.</p>
+      <p style="margin:0;color:var(--muted);font-size:14px">Brown/red and brown/black pairings. Indicative only; <code>4-spec</code> sets the exact values.</p></div>
+  </div>
+
+  <h2>Build order</h2>
+  <ol class="ladder">
+    <li class="core"><span class="n">1</span>Explain one bill<small>Profile with free-text matching · home with ≥1 bill genuinely before Parliament · passed Finance Bill 2026 page hand-loaded from a hashed copy · What it does · language switching</small></li>
+    <li class="core"><span class="n">2</span>Have your say<small>Open and not-open states, sourced</small></li>
+  </ol>
+  <div class="cutline">Minimum demoable line</div>
+  <div class="expand" style="margin-bottom:14px"><b>Rule:</b> every piece of source text in the app (bill, Act, constitution) is verifiably official, through a hashed copy checked against the official source.</div>
+  <ol class="ladder">
+    <li><span class="n">3</span>What changed<small>Drafts · bill vs current law · honest empty state</small></li>
+    <li><span class="n">4</span>Automatic bill intake<small>Scraper · Una'tafuta? · passed-bill pages</small></li>
+    <li><span class="n">5</span>Constitution check<small>Tappable articles, in-app hashed copy of the constitution</small></li>
+    <li><span class="n">6</span>County<small>Nairobi County bills (bill UI) and motions (simpler card)</small></li>
+  </ol>
+
+  <h2>Deferred, later, non-goals, open</h2>
+  <details><summary>Deferred from the POC</summary><div><ul>
+    <li><b>Accounts / sync</b>: "remembered" means this device only.</li>
+    <li><b>Notifications</b>: the reader comes back on their own for now.</li></ul></div></details>
+  <details><summary>Possible later</summary><div><ul>
+    <li>Fiscal flag · Drafted memorandum · WhatsApp/SMS digest · Production path</li></ul></div></details>
+  <details><summary>Non-goals</summary><div><ul>
+    <li>Constitutionality verdicts · Advocacy · Legal advice · Translating the law itself</li></ul></div></details>
+  <details open><summary>Open questions <span class="pill q">1</span></summary><div><ul>
+    <li><b>Verify the bill calendar</b> (in <code>4-spec</code>, before step 1): has Finance Bill 2026 passed, and which bill is genuinely before Parliament now? [UNKNOWN]</li></ul></div></details>
+  <details><summary>Acknowledged complexity <span class="pill a">5</span></summary><div><ul>
+    <li><b>Free-text matching</b> is classification work; "see everyone" is the guard.</li>
+    <li><b>Generated articles</b> can be wrong; the "Suggested" label and the official text are the mitigation.</li>
+    <li><b>Automatic intake</b> meets scanned PDFs.</li>
+    <li><b>Groups-first is interpretive.</b></li>
+    <li><b>Readers may not check the source</b>, so keep it compact and highlighted.</li></ul></div></details>
+
+  <footer>Companion to <code>devpost/prd.md</code>. The Markdown file is canonical.</footer>
+</main>
+<script>
+(function () {
+  var steps = [
+    ["First visit", "\"Who are you?\": tap any groups, add a few words of your own, or skip. Remembered on this device."],
+    ["Home", "Two ways in: Active Bills (everything before Parliament) and Una'tafuta? (search recently passed bills)."],
+    ["Pick a bill", "The bill page opens with three tabs: What it does / What changed / Have your say."],
+    ["What it does", "Your groups first, then a short summary, then clause cards, each note beside its legal text. EN / SW / Sheng, switchable for the whole page or per card."],
+    ["Adjust", "Change your \"I am…\" chips for this bill, or expand to see every group."],
+    ["What changed", "Published drafts side by side, or the bill against the current law it amends."],
+    ["Have your say", "Deadline, where to submit and what's needed, each linked to its official notice. If it isn't open: the stage and what's next."],
+    ["Loop closes", "They know what it does to them and how to respond in time, and they come back when the next bill or draft drops."]
+  ];
+  var i = 0, groups = document.querySelectorAll('#journey g[data-s]');
+  var prev = document.getElementById('prev'), next = document.getElementById('next');
+  function render() {
+    document.getElementById('steptext').innerHTML = '<b>' + (i + 1) + '. ' + steps[i][0] + '</b>' + steps[i][1];
+    document.getElementById('count').textContent = 'Step ' + (i + 1) + ' of ' + steps.length;
+    prev.disabled = i === 0; next.disabled = i === steps.length - 1;
+    groups.forEach(function (g) {
+      var on = g.getAttribute('data-s').split(' ').indexOf(String(i + 1)) !== -1;
+      g.querySelector('rect').classList.toggle('on', on);
+    });
+  }
+  prev.onclick = function () { if (i > 0) { i--; render(); } };
+  next.onclick = function () { if (i < steps.length - 1) { i++; render(); } };
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PoliTricks Spec</title>
+<style>
+  :root {
+    --bg: #f7f5f0; --surface: #ffffff; --ink: #1c1b19; --muted: #6b675f;
+    --line: #dcd7cc; --accent: #0b6e4f; --accent-soft: #e2f1eb;
+    --warn: #9a5b00; --warn-soft: #fbefd9; --later: #4a5a8a; --later-soft: #e6eaf5;
+    --brown: #6b3f22; --brown-soft: #f1e6dc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #151513; --surface: #1f1e1b; --ink: #ecebe6; --muted: #a39f95;
+      --line: #3a3833; --accent: #4cc39a; --accent-soft: #173229;
+      --warn: #f0b458; --warn-soft: #3a2c14; --later: #9fb0e6; --later-soft: #232a40;
+      --brown: #c08457; --brown-soft: #33261c;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #151513; --surface: #1f1e1b; --ink: #ecebe6; --muted: #a39f95;
+    --line: #3a3833; --accent: #4cc39a; --accent-soft: #173229;
+    --warn: #f0b458; --warn-soft: #3a2c14; --later: #9fb0e6; --later-soft: #232a40;
+    --brown: #c08457; --brown-soft: #33261c;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 900px; margin: 0 auto; padding: 32px 16px 64px; }
+  .tag { display: inline-block; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--warn); background: var(--warn-soft); padding: 2px 8px; border-radius: 99px; }
+  h1 { font-size: 34px; margin: 10px 0 4px; }
+  .lede { color: var(--muted); font-size: 18px; margin: 0 0 12px; }
+  h2 { font-size: 15px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin: 36px 0 10px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 28px; } }
+  .half h3 { margin: 0 0 6px; font-size: 17px; }
+  .half p { margin: 0; color: var(--muted); }
+  .half.ws { border-top: 4px solid var(--brown); }
+  .half.sw { border-top: 4px solid var(--accent); }
+  svg { width: 100%; height: auto; display: block; }
+  svg .box { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+  svg .box.ws { fill: var(--brown-soft); stroke: var(--brown); }
+  svg .box.sw { fill: var(--accent-soft); stroke: var(--accent); }
+  svg .box.live { fill: var(--warn-soft); stroke: var(--warn); }
+  svg .box.on { stroke-width: 3.5; }
+  svg text { fill: var(--ink); font: 13px system-ui, sans-serif; }
+  svg text.sub { fill: var(--muted); font-size: 11px; }
+  svg text.zone { fill: var(--muted); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+  svg .arrow { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+  svg .dash { stroke: var(--warn); stroke-dasharray: 5 4; stroke-width: 1.5; fill: none; }
+  svg .loop { stroke: var(--brown); stroke-dasharray: 5 4; stroke-width: 1.5; fill: none; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; border: 2px solid; }
+  .lg-ws::before { background: var(--brown-soft); border-color: var(--brown) !important; }
+  .lg-sw::before { background: var(--accent-soft); border-color: var(--accent) !important; }
+  .lg-live::before { background: var(--warn-soft); border-color: var(--warn) !important; }
+  .stepper { margin-top: 14px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .stepper button { font: inherit; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+  .stepper button:disabled { opacity: .4; cursor: default; }
+  .count { color: var(--muted); font-size: 14px; }
+  .steptext { margin-top: 10px; padding: 12px 16px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); min-height: 96px; }
+  .steptext b { display: block; margin-bottom: 2px; }
+  .steptext .files { margin-top: 6px; font-size: 13px; color: var(--muted); }
+  code { font: 13px ui-monospace, SFMono-Regular, Consolas, monospace; background: var(--bg); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--line); }
+  details { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 8px; }
+  summary { cursor: pointer; padding: 12px 16px; font-weight: 600; }
+  summary small { font-weight: 400; color: var(--muted); margin-left: 6px; }
+  details > div { padding: 0 16px 14px; }
+  details ul { margin: 0; padding-left: 20px; }
+  .prd { font-size: 13px; color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 8px 6px; border-top: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; border-top: 0; }
+  .hash { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .hash div { padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); font-size: 14px; }
+  .hash .ok { border-color: var(--accent); }
+  .hash .bad { border-color: #b0412e; }
+  .hash code { word-break: break-all; }
+  .pill { font-size: 12px; padding: 1px 8px; border-radius: 99px; margin-left: 6px; font-weight: 500; }
+  .pill.q { background: var(--warn-soft); color: var(--warn); }
+  .pill.d { background: var(--later-soft); color: var(--later); }
+  .tree { font: 13px/1.6 ui-monospace, Consolas, monospace; white-space: pre; overflow-x: auto; margin: 0; }
+  footer { margin-top: 40px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <span class="tag">Spec · approved</span>
+  <h1>PoliTricks: how it's built</h1>
+  <p class="lede">A Python <b>workshop</b> makes reviewed, fingerprinted content. An Astro <b>shop window</b> serves it as fast, prebuilt pages. Two small live helpers fill the gaps.</p>
+
+  <div class="grid">
+    <div class="card half ws"><h3>Workshop · Python pipeline</h3><p>Download the official PDF → fingerprint it → pull out the clauses word for word → Claude explains them in EN/SW/Sheng → one JSON file per bill → <b>you review</b> → commit.</p></div>
+    <div class="card half sw"><h3>Shop window · Astro on Vercel</h3><p>Pages are built ahead of time from the JSON, so they're light on cheap data. A little JS for toggles and tabs. Your profile and language live on the browser's sticky note.</p></div>
+  </div>
+
+  <h2>Architecture</h2>
+  <div class="card">
+    <svg id="arch" viewBox="0 0 860 380" role="img" aria-label="Architecture: parliament and Kenya Law PDFs flow into the Python pipeline, which writes bill JSON that you review and commit; Astro builds pages deployed on Vercel; the browser keeps profile and language, and calls two live APIs that call Claude; a weekly GitHub Action reruns intake and verify and opens a PR.">
+      <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+      <text class="zone" x="10" y="18">Official sources</text>
+      <text class="zone" x="200" y="18">Workshop (your machine)</text>
+      <text class="zone" x="600" y="18">Shop window (Vercel)</text>
+      <g data-k="src"><rect class="box" x="10" y="30" width="160" height="60" rx="10"/><text x="90" y="56" text-anchor="middle">parliament.go.ke</text><text class="sub" x="90" y="74" text-anchor="middle">bill PDFs</text></g>
+      <g data-k="src"><rect class="box" x="10" y="104" width="160" height="60" rx="10"/><text x="90" y="130" text-anchor="middle">kenyalaw.org</text><text class="sub" x="90" y="148" text-anchor="middle">Constitution · Acts</text></g>
+      <g data-k="pipe"><rect class="box ws" x="200" y="30" width="190" height="134" rx="10"/><text x="295" y="54" text-anchor="middle">Python pipeline</text>
+        <text class="sub" x="295" y="76" text-anchor="middle">fetch + SHA-256</text><text class="sub" x="295" y="94" text-anchor="middle">extract (verbatim check)</text>
+        <text class="sub" x="295" y="112" text-anchor="middle">generate (Claude, Batches)</text><text class="sub" x="295" y="130" text-anchor="middle">compare · verify</text><text class="sub" x="295" y="148" text-anchor="middle">review (your Sheng gate)</text></g>
+      <g data-k="json"><rect class="box ws" x="420" y="60" width="150" height="74" rx="10"/><text x="495" y="88" text-anchor="middle">bills/*.json</text><text class="sub" x="495" y="106" text-anchor="middle">constitution.json</text><text class="sub" x="495" y="122" text-anchor="middle">committed in git</text></g>
+      <g data-k="site"><rect class="box sw" x="600" y="30" width="250" height="134" rx="10"/><text x="725" y="54" text-anchor="middle">Astro prebuilt pages</text>
+        <text class="sub" x="725" y="76" text-anchor="middle">/welcome · / (Active Bills, Una'tafuta?)</text><text class="sub" x="725" y="94" text-anchor="middle">/bills/[id] (3 tabs)</text>
+        <text class="sub" x="725" y="112" text-anchor="middle">clause cards · article sheet</text><text class="sub" x="725" y="130" text-anchor="middle">source fingerprint footer</text><text class="sub" x="725" y="148" text-anchor="middle">search-index.json</text></g>
+      <g data-k="api"><rect class="box live" x="600" y="200" width="250" height="64" rx="10"/><text x="725" y="226" text-anchor="middle">Live API (Vercel functions)</text><text class="sub" x="725" y="246" text-anchor="middle">POST /api/match · POST /api/explain</text></g>
+      <g data-k="claude"><rect class="box live" x="420" y="200" width="150" height="64" rx="10"/><text x="495" y="226" text-anchor="middle">Claude API</text><text class="sub" x="495" y="246" text-anchor="middle">claude-opus-5</text></g>
+      <g data-k="browser"><rect class="box sw" x="600" y="296" width="250" height="64" rx="10"/><text x="725" y="322" text-anchor="middle">Reader's browser</text><text class="sub" x="725" y="342" text-anchor="middle">localStorage: profile · language · caches</text></g>
+      <g data-k="action"><rect class="box ws" x="200" y="296" width="190" height="64" rx="10"/><text x="295" y="322" text-anchor="middle">Weekly GitHub Action</text><text class="sub" x="295" y="342" text-anchor="middle">intake + verify → PR for you</text></g>
+      <path class="arrow" d="M170 60 H198" marker-end="url(#ah)"/>
+      <path class="arrow" d="M170 134 H198" marker-end="url(#ah)"/>
+      <path class="arrow" d="M390 97 H418" marker-end="url(#ah)"/>
+      <path class="arrow" d="M570 97 H598" marker-end="url(#ah)"/>
+      <path class="arrow" d="M725 164 V294" marker-end="url(#ah)"/>
+      <path class="dash" d="M780 296 V266" marker-end="url(#ah)"/>
+      <path class="dash" d="M600 232 H572" marker-end="url(#ah)"/>
+      <path class="arrow" d="M295 234 V166" marker-end="url(#ah)" style="stroke:var(--brown)"/>
+      <path class="loop" d="M295 296 V236"/>
+      <path class="dash" d="M420 250 C 400 260, 400 225, 392 150" marker-end="url(#ah)"/>
+      <text class="sub" x="300" y="280" text-anchor="start">reruns pipeline</text>
+      <text class="sub" x="650" y="182" text-anchor="middle">served pages</text>
+    </svg>
+    <div class="legend"><span class="lg-ws">Workshop (you run / review)</span><span class="lg-sw">Shop window (prebuilt)</span><span class="lg-live">Live (fallback only)</span></div>
+  </div>
+
+  <h2>A reader's journey through the system</h2>
+  <div class="card">
+    <div class="stepper"><button id="prev" type="button">← Back</button><button id="next" type="button">Next →</button><span class="count" id="count"></span></div>
+    <div class="steptext" id="steptext" aria-live="polite"></div>
+    <noscript><ol>
+      <li>First visit: no <code>pt.profile</code>, so go to /welcome, save profile.</li><li>Home: prebuilt Active Bills and in-browser search.</li>
+      <li>Bill page: prebuilt, reordered by profile and language.</li><li>Own words: Match API, once, cached.</li>
+      <li>Missing explanation: Explain API, labelled draft.</li><li>What changed and Have your say: prebuilt, sourced, last checked.</li>
+      <li>Weekly Action: intake + verify, then a PR for your review.</li></ol></noscript>
+  </div>
+
+  <h2>Components → PRD</h2>
+  <details open><summary>Source Pipeline <small>Python · pipeline/politricks/</small></summary><div>
+    <p class="prd">Implements prd.md › Automatic Bill Intake, What It Does, What Changed, Constitution Check (content)</p>
+    <ul>
+      <li><b>Fetch &amp; Fingerprint</b>: official domains only, SHA-256 of the file bytes, stored in <code>sources/</code>.</li>
+      <li><b>Extract Clauses</b>: pdfplumber plus overrides; every clause verified <b>word for word</b> against the PDF; no OCR.</li>
+      <li><b>Generate</b>: Claude via Batches, structured outputs (Pydantic), neutral prompt, article numbers validated, refusal fallback on; everything starts as <i>draft</i>.</li>
+      <li><b>Compare</b>: draft vs draft, bill vs current law (the named Act section), bill vs Act; <code>null</code> marks added or dropped.</li>
+      <li><b>Civic Data</b>: <b>you</b> type deadlines, channels and challenge avenues from the official notice into <code>civic/&lt;bill&gt;.yaml</code>; Claude only translates.</li>
+      <li><b>Lint</b>: banned phrases ("unconstitutional", "kinyume cha katiba", "you should"…) and neutrality flags fail the run.</li>
+      <li><b>Review</b>: walks <b>every</b> draft text (clauses, summary, groups, change notes, civic translations), flagged items first. The Sheng gate.</li>
+      <li><b>Verify</b>: re-download and compare fingerprints: unchanged / CHANGED / unreachable; <code>--self-test</code> proves it catches a one-byte change.</li>
+      <li><b>Intake</b>: <code>intake</code> for the first load; <code>intake --check</code> (weekly) only <i>proposes</i> new items from Parliament, Gazette and County listings.</li>
+    </ul></div></details>
+  <details><summary>Welcome Page <small>src/pages/welcome.astro</small></summary><div><p class="prd">prd.md › First-Visit Profile</p>
+    <ul><li>Four chips, free text of at most 80 characters with a counter, and a data notice that your words go to an AI service. Skip. Writes <code>pt.profile</code>.</li></ul></div></details>
+  <details><summary>Home Page <small>src/pages/index.astro</small></summary><div><p class="prd">prd.md › Home: Active Bills and Una'tafuta?</p>
+    <ul><li>Active Bills: stage, deadline countdown, last checked.</li><li>Una'tafuta? filters <code>search-index.json</code> in the browser; "Hatujapata kitu" when empty; Passed label.</li></ul></div></details>
+  <details><summary>Bill Page + Clause Card + Article Sheet <small>src/pages/bills/[id].astro</small></summary><div><p class="prd">prd.md › What It Does · What Changed · Have Your Say · Language Switching · Constitution Check</p>
+    <ul><li><b>Head script</b> sets language and your groups <b>before first paint</b>, so nothing visibly reshuffles.</li>
+      <li>Three tabs; the passed-bill variant shows "Where it can still be challenged". <b>"See everyone"</b> expands all groups and every clause.</li>
+      <li>Only this bill's suggested constitution articles ship with the page, never the whole constitution.</li>
+      <li>Clause card: legal text <b>beside or above</b> the note, highlighter marks, per-card language flip, <i>Reviewed</i> / <i>AI draft</i> badge.</li>
+      <li>Article sheet: "Suggested article — you judge", full text, Kenya Law link, constitution fingerprint.</li>
+      <li>Source fingerprint footer, plus a "document changed" banner when a fingerprint stops matching.</li></ul></div></details>
+  <details><summary>Live API <small>src/pages/api/match.ts · explain.ts</small></summary><div><p class="prd">prd.md › First-Visit Profile (matching) · States and Boundaries (explanation unavailable)</p>
+    <ul><li><b>Match</b>: <code>{bill_id, words}</code> → cleaned → Claude (words as quoted data) → <code>200 {clause_ids ≤8}</code> · <code>400</code> · <code>502</code>; fallback handled in the browser.</li>
+      <li><b>Explain</b>: only for clauses with no explanation → <code>200 {text, label}</code> · <code>409</code> · <code>400</code> · <code>502</code>; banned phrases are discarded.</li>
+      <li>15-second timeout; each falls back gracefully.</li></ul></div></details>
+  <details><summary>Scheduled Update <small>.github/workflows/update.yml</small></summary><div><p class="prd">prd.md › Automatic Bill Intake (maintenance)</p>
+    <ul><li>Weekly: intake --check → verify → generate → lint → PR labelled <i>needs review</i>. Never auto-merges.</li>
+      <li>Needs <code>permissions: contents/pull-requests: write</code> and the repo setting <i>Allow GitHub Actions to create PRs</i>.</li></ul></div></details>
+
+  <h2>What a hash proves: the build's positive control</h2>
+  <div class="card">
+    <p style="margin:0">A fingerprint proves the text came from <i>this exact file</i>, from <i>this URL</i>, on <i>this date</i>. It doesn't prove "official" beyond the URL's authority. The build proves the checker works by feeding it a one-byte change:</p>
+    <div class="hash">
+      <div class="ok"><b>Intact file</b><br><code>verify</code> → <b>unchanged</b></div>
+      <div class="bad"><b>Same file, one byte altered</b><br><code>verify</code> → <b>CHANGED</b></div>
+    </div>
+  </div>
+
+  <h2>Where data lives</h2>
+  <div class="card" style="overflow-x:auto"><table>
+    <tr><th>Data</th><th>Lives in</th><th>When the reader returns</th></tr>
+    <tr><td>Bills, clauses, explanations, sources</td><td>Committed JSON → prebuilt pages</td><td>Unchanged until the next deploy</td></tr>
+    <tr><td>Profile + language</td><td><code>localStorage</code> <code>pt.profile</code>, <code>pt.lang</code></td><td>Remembered on this device</td></tr>
+    <tr><td>Match results, live drafts</td><td><code>localStorage</code> <code>pt.match.*</code>, <code>pt.draft.*</code></td><td>Reused, no repeat call</td></tr>
+    <tr><td>Official PDFs</td><td><code>sources/&lt;bill-id&gt;/</code></td><td>Kept so anyone can re-hash (redistribution terms <span class="pill q">unknown</span>)</td></tr>
+  </table></div>
+
+  <h2>File structure</h2>
+  <details><summary>Annotated tree</summary><div><pre class="tree">politricks/
+├── src/pages/          index · welcome · bills/[id] · api/match · api/explain
+├── src/components/     Header, LanguageToggle, ProfileChips, BillTabs, ClauseCard,
+│                       ArticleSheet, ChangeRow, ParticipationPanel, MotionCard,
+│                       LastChecked, SourceFingerprint
+├── src/lib/            schema.ts (Zod) · storage.ts · guard.ts · claude.ts
+├── src/data/           bills/*.json · constitution.json · search-index.json
+├── src/styles/         global.css (Tailwind, palette tokens, highlighter)
+├── pipeline/           pyproject · sources.yaml · overrides/ · prompts/
+│   └── politricks/     cli · models · fetch · extract · generate · review
+│                       compare · verify · intake · constitution · hashing
+├── sources/            fingerprinted official PDFs
+├── .github/workflows/  update.yml (weekly → PR)
+└── devpost/            planning docs</pre></div></details>
+
+  <h2>Failure modes &amp; fallbacks</h2>
+  <div class="card" style="overflow-x:auto"><table>
+    <tr><td>Scanned PDF</td><td>Pipeline stops loudly; the bill isn't published.</td></tr>
+    <tr><td>Model alters clause text</td><td>Verbatim check fails the run.</td></tr>
+    <tr><td>Live API down or slow</td><td>Match → fixed groups plus a quiet note; Explain → "not ready" state.</td></tr>
+    <tr><td>Stale participation data</td><td>Last checked always shown; over 7 days adds a warning.</td></tr>
+    <tr><td>Official PDF silently changed</td><td>Verify flags it, banner on the page, weekly PR.</td></tr>
+    <tr><td>API spam</td><td>Caps, ID checks, console spend limit, per-IP limit (best effort).</td></tr>
+  </table></div>
+
+  <h2>Decisions &amp; open issues</h2>
+  <details><summary>Your decisions <span class="pill d">8</span></summary><div><ul>
+    <li>Active: Tertiary Education Bill 2026 + Public Participation Bill 2025; passed demo: Finance Bill/Act 2026 (hand-loaded, hashed)</li>
+    <li>Precomputed + reviewed by default; live AI only as a labelled fallback draft</li>
+    <li>Astro (new tool) · Python pipeline · Vercel</li>
+    <li>Manual intake for setup, weekly Action for updates · Create an API key in step 0</li>
+    <li><b>Civic data: hand-entered facts, AI translation only</b> (from the cold review)</li></ul></div></details>
+  <details><summary>Derived details, open to change <span class="pill d">4</span></summary><div><ul>
+    <li>Tailwind v4, plain-TS islands, pdfplumber, uv, Anton display font; pre-paint head script; lint stage</li>
+    <li>80-char cap, 15-second timeouts, 7-day staleness threshold</li>
+    <li>PDFs stored in the repo (check redistribution first)</li>
+    <li><b>claude-opus-5</b> everywhere with refusal fallback. Haiku for live calls is your call.</li></ul></div></details>
+  <details open><summary>Open, for build step 0 <span class="pill q">7</span></summary><div><ul>
+    <li>Official, text-extractable PDFs for all bills, Finance Act 2026 and the amended Acts [UNKNOWN]</li>
+    <li>Kenya Law URLs for the constitution, Acts and Gazette [UNKNOWN]</li>
+    <li>Astro 7.x + adapter 11.x + Tailwind v4 install together [MEDIUM]</li>
+    <li>Batches accept structured outputs + fallbacks: one test batch [MEDIUM]</li>
+    <li>Listing-page structures for <code>intake --check</code> [UNKNOWN]; doesn't block steps 1–3</li>
+    <li>Nairobi County Assembly domain [UNKNOWN]; before step 6</li>
+    <li>Sheng review workload: clauses, summaries, groups, notes, civic text × 3 languages</li></ul></div></details>
+  <details><summary>Cold review (Sonnet) <span class="pill d">fixed</span></summary><div><p style="margin:0">5 blockers and ~20 should-fix items found by an independent read-only review, all fixed in this revision: missing CLI commands, county/Gazette domains, profile schema, "See everyone", civic data source, constitution payload, pre-paint script, full Sheng review coverage, banned-phrase lint, Action permissions, pinned hash input, API contracts.</p></div></details>
+
+  <footer>Companion to <code>devpost/spec.md</code>. The Markdown file is canonical.</footer>
+</main>
+<script>
+(function () {
+  var steps = [
+    ["First visit", "The browser has no pt.profile sticky note, so the home page sends the reader to /welcome. They tap groups and type a few words; the page saves pt.profile and returns home.", ["browser", "site"], "src/pages/welcome.astro · src/lib/storage.ts"],
+    ["Home", "Astro prebuilt this page from every bill JSON. Una'tafuta? filters a small index in the browser, with no server call.", ["site", "json"], "src/pages/index.astro · src/data/search-index.json"],
+    ["Bill page", "Prebuilt, with all three languages already inside. A small script reads the profile and language, then reorders and shows content to match.", ["site", "browser"], "src/pages/bills/[id].astro · ClauseCard.astro · LanguageToggle.astro"],
+    ["Their own words", "If they typed their own words, the page calls Match once. Claude returns clause IDs, which float up and get cached on the device.", ["browser", "api", "claude"], "src/pages/api/match.ts · src/lib/guard.ts · src/lib/claude.ts"],
+    ["Missing explanation", "A clause with no explanation calls Explain. The result is labelled 'AI draft — not yet reviewed' and cached on the device until the pipeline ships a reviewed one.", ["api", "claude", "browser"], "src/pages/api/explain.ts"],
+    ["What changed & Have your say", "Both are prebuilt from pipeline data: comparisons, deadlines, channels, each with an official link and a last-checked date.", ["site", "json"], "ChangeRow.astro · ParticipationPanel.astro · LastChecked.astro"],
+    ["Where the content came from", "The pipeline downloaded the official PDF, fingerprinted it, pulled out the clauses word for word, and had Claude explain them. You reviewed the result and committed it.", ["src", "pipe", "json"], "pipeline/politricks/fetch.py · extract.py · generate.py · review.py"],
+    ["Staying current", "A weekly GitHub Action reruns intake and verify. New bills or changed fingerprints become a PR for you. Nothing publishes without you.", ["action", "pipe"], ".github/workflows/update.yml · pipeline/politricks/verify.py"]
+  ];
+  var i = 0, groups = document.querySelectorAll('#arch g[data-k]');
+  var prev = document.getElementById('prev'), next = document.getElementById('next');
+  function render() {
+    var s = steps[i];
+    document.getElementById('steptext').innerHTML = '<b>' + (i + 1) + '. ' + s[0] + '</b>' + s[1] + '<div class="files">Files: <code>' + s[3] + '</code></div>';
+    document.getElementById('count').textContent = 'Step ' + (i + 1) + ' of ' + steps.length;
+    prev.disabled = i === 0; next.disabled = i === steps.length - 1;
+    groups.forEach(function (g) { g.querySelector('rect').classList.toggle('on', s[2].indexOf(g.getAttribute('data-k')) !== -1); });
+  }
+  prev.onclick = function () { if (i > 0) { i--; render(); } };
+  next.onclick = function () { if (i < steps.length - 1) { i++; render(); } };
+  render();
+})();
+</script>
+</body>
+</html>
