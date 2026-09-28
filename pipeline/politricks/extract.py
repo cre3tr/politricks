@@ -336,6 +336,13 @@ def extract(repo_root: Path, bill_id: str, pdf_file: str, write: bool = True) ->
     if expected_count is not None and len(sections) != int(expected_count):
         raise ExtractError(f"found {len(sections)} sections, expected {expected_count}")
 
+    # Hand-transcribed headings, for scans whose marginal notes come out garbled.
+    # Every id must be a real section — a typo'd id would silently do nothing.
+    transcriptions: dict[str, str] = overrides.get("heading_transcriptions", {}) or {}
+    unknown = set(transcriptions) - {f"c{s.number}" for s in sections}
+    if unknown:
+        raise ExtractError(f"heading_transcriptions name sections that don't exist: {sorted(unknown)}")
+
     clauses: list[Clause] = []
     for index, section in enumerate(sections):
         text = section.text
@@ -344,7 +351,10 @@ def extract(repo_root: Path, bill_id: str, pdf_file: str, write: bool = True) ->
             Clause(
                 id=f"c{section.number}",
                 number=str(section.number),
-                heading=_heading_for(section, following, margin_lines),
+                # A hand-transcribed heading (overrides) wins over the scan's
+                # marginal note. Headings are signposts, never legal text.
+                heading=transcriptions.get(f"c{section.number}") or _heading_for(section, following, margin_lines),
+                heading_source="transcribed" if f"c{section.number}" in transcriptions else "margin",
                 text=text,
                 text_sha256=sha256_text(text),
                 pages=sorted({line.page for line in section.lines}),
@@ -407,7 +417,9 @@ def run(repo_root: Path, bill_id: str, pdf_file: str) -> None:
         old = previous.get(clause.id)
         if old and old.text_sha256 == clause.text_sha256:
             # Same words as before: keep explanations, reviews and samples.
-            clause = old.model_copy(update={"heading": clause.heading, "pages": clause.pages})
+            clause = old.model_copy(
+                update={"heading": clause.heading, "heading_source": clause.heading_source, "pages": clause.pages}
+            )
         merged.append(clause)
     bill.clauses = merged
     save_bill(bill, path)

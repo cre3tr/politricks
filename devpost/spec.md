@@ -264,7 +264,7 @@ Bill {
   sources: [{ label, url, official: bool, fetched_at, sha256, file, scanned: bool /* text layer came from a scan */ }],
   summary: { text: Tri, review: Review },
   groups: [{ group: "employee"|"trader"|"transport"|"student", text: Tri, clause_ids: string[], review: Review }],
-  clauses: [{ id, number, heading /* from the marginal note */, text /* normalised */, text_sha256, pages: number[] /* PDF pages it spans */,
+  clauses: [{ id, number, heading, heading_source: "margin" | "transcribed" /* marginal note, or hand-typed from the printed page when a scan garbles it */, text /* normalised */, text_sha256, pages: number[] /* PDF pages it spans */,
               explanation: Tri | null, review: Review,
               neutral_check: { ok: bool, note: string },
               groups: string[], suggested_articles: number[] }],

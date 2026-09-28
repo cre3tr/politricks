@@ -63,6 +63,9 @@ export const ClauseSchema = z
     id: z.string(),
     number: z.string(),
     heading: z.string(),
+    // "margin" = read from the PDF's marginal note; "transcribed" = typed by
+    // hand from the printed page because the scan garbled it (models.py twin).
+    heading_source: z.enum(["margin", "transcribed"]),
     text: z.string(),
     text_sha256: z.string(),
     pages: z.array(z.number()),

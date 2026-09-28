@@ -76,6 +76,10 @@ class Clause(BaseModel):
     id: str  # "c12", or "c12-1" when a long clause is split
     number: str  # the clause number as printed, e.g. "12"
     heading: str
+    # Where the heading came from: "margin" = read from the PDF's marginal note;
+    # "transcribed" = typed by hand from the printed page (used when a scan's
+    # margin text is garbled). Headings are signposts, never legal text.
+    heading_source: Literal["margin", "transcribed"] = "margin"
     text: str  # normalised legal text (see hashing.normalise)
     text_sha256: str  # fingerprint of `text`
     pages: list[int]  # PDF page numbers the clause spans (for checking by eye)

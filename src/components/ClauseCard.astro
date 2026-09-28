@@ -24,6 +24,14 @@ const badge = clause.explanation ? badgeFor(clause.review.status) : null;
     <h3>
       <span class="clause-number">Section {clause.number}</span>
       <span class="clause-heading">{clause.heading}</span>
+      {/* A transcribed heading was typed by hand from the printed page (the
+          scan garbled it). Say so quietly — honesty about provenance, even for
+          a signpost that isn't legal text. */}
+      {clause.heading_source === "transcribed" && (
+        <span class="heading-note" title="The scan garbled this heading, so it was typed by hand from the printed page. The legal text below is unchanged.">
+          heading transcribed from the printed page
+        </span>
+      )}
     </h3>
     <div class="clause-header-row">
       {badge && <span class={`badge ${badge.className}`}>{badge.label}</span>}
@@ -94,6 +102,17 @@ const badge = clause.explanation ? badgeFor(clause.review.status) : null;
 </script>
 
 <style>
+  /* Small, muted provenance note under a hand-transcribed heading. Normal
+     case and body font so it reads as a footnote, not part of the heading. */
+  .heading-note {
+    display: block;
+    font-family: system-ui, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--muted);
+  }
   .clause-card {
     border: 1px solid var(--muted);
     border-radius: 4px;

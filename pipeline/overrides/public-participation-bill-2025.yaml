@@ -39,3 +39,32 @@ gutter_min: 6
 # before the number. Up to two junk characters are allowed before clause 13's
 # number ONLY (named, so it can't fire anywhere else); the text is unchanged.
 start_noise: [13]
+
+# Clause headings TRANSCRIBED by hand from the bill's own Arrangement of
+# Clauses (printed page 1125 = PDF page 2), because this scan's marginal-note
+# text is garbled (e.g. "oeveiopmer^tof specificguidelines forpubii 1C").
+# Headings are signposts, NOT legal text — the legal text itself is never
+# edited. Each clause gets heading_source "transcribed" in the data, and anyone
+# can check these against PDF page 2. Transcribed 2026-09-28 (learner-approved).
+heading_transcriptions:
+  c1: "Short title."
+  c2: "Interpretation."
+  c3: "Object of the Act."
+  c4: "Application of the Act."
+  c5: "Principles of public participation."
+  c6: "Responsible authorities in public participation."
+  c7: "Considerations in undertaking public participation."
+  c8: "Notice for public participation."
+  c9: "Modes of notifying the public."
+  c10: "Submissions during public participation."
+  c11: "Reasonable time."
+  c12: "Processing of responses."
+  c13: "Access to public participation processes."
+  c14: "Access to documents."
+  c15: "Conduct in a forum of public participation."
+  c16: "Development of specific guidelines for public participation."
+  c17: "Publication of specific public participation guidelines."
+  c18: "Public participation by Parliament."
+  c19: "Certain information not to be disclosed."
+  c20: "General penalty."
+  c21: "Transitional provision."

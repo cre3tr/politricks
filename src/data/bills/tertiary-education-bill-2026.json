@@ -25,6 +25,7 @@
       "id": "c1",
       "number": "1",
       "heading": "Short title and commencement.",
+      "heading_source": "margin",
       "text": "1. This Act may be cited as the Tertiary Education Placement and Funding Act, 2026.",
       "text_sha256": "bba3bed3f50b7e2176a2b1bf9d0cebc804335a7d2a3eeb8f6d6c9f222515369c",
       "pages": [
@@ -43,6 +44,7 @@
       "id": "c2",
       "number": "2",
       "heading": "Interpretation.",
+      "heading_source": "margin",
       "text": "2. In this Act, unless the context otherwise requires– “accepting institution” means a tertiary institution that accepts a student who has been placed by the Kenya Universities and Colleges Central Placement Service in a different tertiary institution during the inter institution transfers; “admission” means the process of accepting an applicant who meets the minimum requirements set by the relevant authorities for the programme applied for in a tertiary institution; “Authority” means the Tertiary Education Funding Authority established under section 28; “Cabinet Secretary” means the Cabinet Secretary for the time being responsible for matters relating to tertiary education; “Chief Executive Officer means the Chief Executive Officer of the Kenya Universities and Colleges Central Placement Service or the Tertiary Education Funding Authority; “Commission” means the Commission for University Education established under section 4 of the Universities Act; “eligible person” means any person, who being a Kenyan citizen has attained a minimum entry requirement and has been admitted to a recognized tertiary institution or any other person being a Kenyan citizen, is willing to access tertiary education loan for the benefit of a student admitted in a tertiary institution; “emolument” means any salary, wages, remuneration, allowances, bonus, commission, gratuity, benefit or other payments or benefit whether in cash or in-kind payable to a beneficiary in respect to employment or services rendered; “enrolment” means the total number of students and trainees admitted in a tertiary institution to undertake a course or programme in a given period; “Fund” means the Tertiary Education Fund established under section 43; “loan” means financial aid granted to a student or a trainee undertaking tertiary education; “loanee” means a person who has received a loan facility for tertiary education; “placement” means allocating qualified students and trainees to specific programmes or courses in various tertiary institutions; “Placement Service” means the Kenya Universities and Colleges Central Placement Service established under section 6; “regulatory bodies” means the Commission of University Education established under section 4 of the Universities Act and the Technical and Vocational Education and Training Authority established under section 6 of the Technical and Vocational Education and Training Act; “saving scheme” means a savings plan, specifically designed by the Tertiary Education Funding Authority to enable a person to plan or invest for the tertiary education of a student’s or trainee; “scholarship” means the financial aid awarded to student or trainee, based on their need to support tertiary education; “student” means any person undertaking tertiary education in a university; “tertiary education” means formal post-secondary education offered in a tertiary institution; “tertiary institution” means a university, college, and technical and vocational education training institution recognized by the relevant regulatory bodies; and “trainee” means any person undertaking tertiary education in a college.",
       "text_sha256": "a0a4f432a4384d80a51ef69fa08da600787437122559cdbb2034573a4f6fb94f",
       "pages": [
@@ -63,6 +65,7 @@
       "id": "c3",
       "number": "3",
       "heading": "Objects of the Act.",
+      "heading_source": "margin",
       "text": "3. The object of this Act shall be to provide a framework for— (a) the placement of students and trainees to tertiary institutions; (b) financing students and trainees undertaking tertiary education; and (c) offering coordinated career guidance to students and trainees.",
       "text_sha256": "4fd0aa64d6d2ad290090eee1fccd292a0c147b1c258e7aa4e43a70f17a76f356",
       "pages": [
@@ -81,6 +84,7 @@
       "id": "c4",
       "number": "4",
       "heading": "Guiding Principles.",
+      "heading_source": "margin",
       "text": "4. The implementation of this Act shall ensure— (a) universal access to tertiary education; (b) equal access to government funding; (c) availability of adequate funds through promotion of diversified funding sources; (d) sustainable source of funding; and (e) prudent utilization of funds.",
       "text_sha256": "3f913f1673eec5a5b868d9a0d14855394c4a261b0600d0f5692e8f08ceae8a05",
       "pages": [
@@ -99,6 +103,7 @@
       "id": "c5",
       "number": "5",
       "heading": "Application.",
+      "heading_source": "margin",
       "text": "5. This Act shall apply to– (a) persons seeking placement in tertiary institutions; (b) students or trainees seeking funding for tertiary education; (c) students or trainees granted funding for tertiary education; (d) Kenyan students and trainees pursuing tertiary education within and outside Kenya; (e) accredited tertiary institutions offering tertiary education in Kenya; and (f) any person or institution interested in funding in tertiary education.",
       "text_sha256": "07fa15891b873942a608714a2c5109e41f85f16972277cda73156aea948b97a9",
       "pages": [
@@ -117,6 +122,7 @@
       "id": "c6",
       "number": "6",
       "heading": "Establishment of the Placement Service.",
+      "heading_source": "margin",
       "text": "6. (1) There is established a Placement Service to be known as the Kenya Universities and Colleges Central Placement Service. (2) The Placement Service shall be a body corporate with perpetual succession and a common seal and shall, in its corporate name, be capable of— (a) suing and being sued; (b) taking, purchasing, or otherwise acquiring, holding, charging, leasing, or disposing of moveable or immovable property; (c) borrowing and lending money; (d) doing or performing all such other acts necessary for the proper performance of its functions under this Act which may lawfully be done or performed by a body corporate. (3) The headquarters of the Placement Service shall be in Nairobi, but the Service shall ensure access to its services in all parts of Kenya.",
       "text_sha256": "2b4a0ca63c05a9065aac30cbcabf23b06158b05a4c4c56f7a152638ebab72107",
       "pages": [
@@ -135,6 +141,7 @@
       "id": "c7",
       "number": "7",
       "heading": "Functions of the Placement Service.",
+      "heading_source": "margin",
       "text": "7. The Placement Service shall— (a) set a framework to facilitate placement of students and trainees in tertiary education institutions; (b) place students and trainees to public accredited tertiary institutions; (c) offer coordinated career guidance to persons intending to pursue tertiary education; (d) establish and maintain a system for data management relating to placement of students for tertiary education; (e) advise the Cabinet Secretary on matters relating to placement of students and trainees; and (f) perform any other function conferred on it by this Act or any other written law.",
       "text_sha256": "a63d202c5eebfaab3af5e8a79dd8d3d8e3b98845c21b0f28b857e8eb57aef0a6",
       "pages": [
@@ -153,6 +160,7 @@
       "id": "c8",
       "number": "8",
       "heading": "Powers of the Placement Service.",
+      "heading_source": "margin",
       "text": "8. In performance of the functions under section 7, the Placement Service shall have powers to– (a) administer the assets of the Placement Service; (b) open and operate bank accounts in accordance with the relevant laws; (c) receive any gifts, grants, donations, endowments, or any other monies lawfully received by the Placement Service; and (d) enter into associations, collaborations and linkages with other persons, bodies, or organizations within or outside Kenya, as the Placement Service may consider appropriate.",
       "text_sha256": "6bd2ccf7d5ca20eb2ee102368a74a6786c5132070cd251d1c68dbd2b48dba83c",
       "pages": [
@@ -172,6 +180,7 @@
       "id": "c9",
       "number": "9",
       "heading": "Board of the Placement Service.",
+      "heading_source": "margin",
       "text": "9. (1) There shall be a Board of the Placement Service which shall consist of— (a) a Chairperson, who shall be appointed by the President; (b) the Principal Secretary responsible for matters relating to university education or a designated representative; (c) the Principal Secretary responsible for matters relating to technical and vocational education and training or a designated representative; (d) the Principal Secretary responsible for matters relating to finance or a designated representative; (e) the Attorney-General or designated representative; (f) four independent persons; and (g) the Chief Executive Officer who shall be an ex officio member with no voting rights. (2) The members of the Board appointed under subsection (1) (f) shall be appointed by the Cabinet Secretary by notice in the Gazette. (3) The Chairperson and members of the Board appointed under subsection (1)(a) and (f) shall hold office for a term of three years and shall be eligible for reappointment for one further term subject to satisfactory performance.",
       "text_sha256": "8ed21d13bb9d62b1cc2e04fd20eb3d50dca13ade5ecb85fd721247046c15b612",
       "pages": [
@@ -190,6 +199,7 @@
       "id": "c10",
       "number": "10",
       "heading": "Qualifications of the Chairperson of the Board of the Placement Service.",
+      "heading_source": "margin",
       "text": "10. A person qualifies to be appointed as the Chairperson of the Board under section 9 (1) (a), if the person— (a) is a citizen of Kenya; (b) holds a degree from a university recognized in Kenya; (c) has at least ten years’ experience in law, education, public administration, business management, financial management, governance or other relevant professional experience; and (d) meets the requirements of Chapter Six of the Constitution.",
       "text_sha256": "642641e764574c43855a85cc73538c6c1faf93036c04a99bc294957fda8aea13",
       "pages": [
@@ -209,6 +219,7 @@
       "id": "c11",
       "number": "11",
       "heading": "Qualification of a member of the Board of the Placement Service.",
+      "heading_source": "margin",
       "text": "11. A person qualifies to be appointed as a member of the Board under section 9(1)(f) if the person— (a) is a citizen of Kenya; (b) holds a degree from a university recognized in Kenya; (c) has at least six years’ experience in business, financial management, governance or other relevant professional experience; and (d) meets the requirements of Chapter Six of the Constitution.",
       "text_sha256": "d017c06ccccf123349a465ba57cf2dce3a16d7c2e3bce423e2f3fc94ff624af1",
       "pages": [
@@ -227,6 +238,7 @@
       "id": "c12",
       "number": "12",
       "heading": "Vacancy of office.",
+      "heading_source": "margin",
       "text": "12. (1) The office of the Chairperson or a member of the Board shall become vacant if the Chairperson or a member– (a) resigns by notice in writing addressed to the appointing authority; (b) is absent from three consecutive meetings of the Board without the permission of the Chairperson or in the case of the Chairperson the permission of the Cabinet Secretary; (c) is unable to exercise the function of the office by reason of physical or mental infirmity; (d) is adjudged bankrupt by a court of competent jurisdiction or enters into a composition or scheme of arrangement for the benefit of creditors; (e) is in breach of the requirements of Chapter Six of the Constitution; or (f) is convicted of an offence and sentenced to imprisonment for a period of six or more months.",
       "text_sha256": "530f693e7ee4a1a95374cfd7a9aec3821d55c1f0ca084f29dd5f7b3228ffa436",
       "pages": [
@@ -246,6 +258,7 @@
       "id": "c13",
       "number": "13",
       "heading": "Conduct of business and affairs of the Board.",
+      "heading_source": "margin",
       "text": "13. The provisions of the Schedule shall apply with respect to the conduct of the business and affairs of the Board of the Placement Service.",
       "text_sha256": "e946b8d01581d661ff7ff41993bbfe8cf55a9ca500c96fc527d20c90e5316822",
       "pages": [
@@ -264,6 +277,7 @@
       "id": "c14",
       "number": "14",
       "heading": "Committees of the Board.",
+      "heading_source": "margin",
       "text": "14. The Board may establish such committees as may be appropriate to perform such functions and discharge such responsibilities as it may determine.",
       "text_sha256": "ea704360514e6e04d9522c6d65c08c3d26960883a4c99388981665bd5261d7a5",
       "pages": [
@@ -282,6 +296,7 @@
       "id": "c15",
       "number": "15",
       "heading": "Delegation.",
+      "heading_source": "margin",
       "text": "15. The Board may delegate to any committee of the Board or to any member, staff or agent of the Placement Service, the exercise of any of the powers or the performance of any of the functions or duties of the Authority under this Act or any other written law.",
       "text_sha256": "d7d4d95f9aa5f0cb289385c65feffe5c0d140a9e240ea0583f180d3ee7e01edf",
       "pages": [
@@ -300,6 +315,7 @@
       "id": "c16",
       "number": "16",
       "heading": "Chief Executive Officer.",
+      "heading_source": "margin",
       "text": "16. (1) There shall be a Chief Executive Officer appointed by the Board through an open, transparent, and competitive process. (2) The Chief Executive Officer shall hold office for a term of four years on such terms and conditions of service as the Board may determine and shall be eligible for reappointment for one further term.",
       "text_sha256": "2477735648854bfe913a3d0325c1b5d46aa9ddb4753f893d9d5d723ea9cee31f",
       "pages": [
@@ -318,6 +334,7 @@
       "id": "c17",
       "number": "17",
       "heading": "Qualification for appointment as Chief Executive Officer.",
+      "heading_source": "margin",
       "text": "17. (1) A person qualifies to be appointed as a Chief Executive Officer of the Placement Service if the person— (a) holds a bachelor's degree from a university recognized in Kenya; (b) holds a master’s degree in finance, education, social science, or other relevant master’s degree from a university recognized in Kenya; (c) has at least ten years' experience in the management in a public or private institution; and (d) meets the requirements of Chapter Six of the Constitution.",
       "text_sha256": "ebff7764582505bb25e7149ba95bbddff0d9360335c9970ae6660d8108813a68",
       "pages": [
@@ -336,6 +353,7 @@
       "id": "c18",
       "number": "18",
       "heading": "Vacancy in the office of the Chief Executive Officer.",
+      "heading_source": "margin",
       "text": "18. (1) The office of the Chief Executive Officer may become vacant if the holder of the office resigns or is removed from office in accordance with subsection (2). (2) The Chief Executive Officer may be removed from office if the Chief Executive Officer is— (a) in breach of chapter six of the Constitution; (b) adjudged bankrupt or enters into a composition scheme or arrangement with his or her creditors; (c) incapacitated by physical or mental illness; or (d) is convicted of a criminal offence and sentenced to imprisonment for a term exceeding six months;",
       "text_sha256": "1be3d9ed9d24cdc893c4a73b2672acea7b2cc58156be99e215aa19e31871857f",
       "pages": [
@@ -355,6 +373,7 @@
       "id": "c19",
       "number": "19",
       "heading": "Staff of the Placement Service.",
+      "heading_source": "margin",
       "text": "19. The Board may appoint such staff as may be necessary for the proper discharge of the functions of the Service.",
       "text_sha256": "bd68ab5fd0584c57abca36a8f045996018dbbc520ce95db6581535467d3b227b",
       "pages": [
@@ -373,6 +392,7 @@
       "id": "c20",
       "number": "20",
       "heading": "Placement Service obligation.",
+      "heading_source": "margin",
       "text": "20. (1) The Placement Service shall conduct placement of all students who apply and are eligible to undertake tertiary education in a public tertiary institution. (2) The Placement Service shall maintain, update, and publicize a list of all accredited public tertiary institutions submitted by regulatory bodies for purposes of placement of students in accordance with this Act. (3) Despite subsection (1) and (2), the Placement Service may place an eligible student to a private tertiary institution upon request by a student and where there exists no vacancy for the eligible student to pursue the proposed course or programme in a public tertiary institution (4) The Placement Service shall develop a placement framework to guide the placement process. (5) Funding under this Act shall be for students who have been placed by the Placement Service.",
       "text_sha256": "57fb3399709448a2fafc77eae8ad78115d5e9fde3a72795f958f31b681587eb5",
       "pages": [
@@ -391,6 +411,7 @@
       "id": "c21",
       "number": "21",
       "heading": "Submission of programmes, capacity and costs by public tertiary institutions.",
+      "heading_source": "margin",
       "text": "21. (1) Every public tertiary institution shall, at least two months before the release of the national assessment results, submit to the Placement Service the— (a) programmes to be offered; (b) capacity of each programme; and (c) approved cost of each programme. (2) The Placement Service shall validate the information submitted under subsection (1) in consultation with the regulatory bodies. (3) The Placement Service shall, on completion of validation, publicize the programmes, the capacity of each programme and the costs in the Placement Service’s portal.",
       "text_sha256": "37888a36e30d7946cb350db5cbcc337d283091e6ec9673fd145a444f5d646059",
       "pages": [
@@ -409,6 +430,7 @@
       "id": "c22",
       "number": "22",
       "heading": "Application and determination of placement.",
+      "heading_source": "margin",
       "text": "22. (1) The Placement Service shall, within thirty days of the release of the national assessment results, invite applications for placement. (2) The Placement Service shall, within thirty days of receipt of the application process the applications and communicate its decision to the applicants and the tertiary institutions. (3) In processing the applicantions under subsection (2), the Authority shall be guided by the placement framework.",
       "text_sha256": "ead1f5e2d7a485bf7826b5f358323369cc16bd0101d68e16167b0936ac2dd9b0",
       "pages": [
@@ -427,6 +449,7 @@
       "id": "c23",
       "number": "23",
       "heading": "Revision of application for placement.",
+      "heading_source": "margin",
       "text": "23. (1) An applicant whose application for placement under section 22 is unsuccessful shall be accorded an opportunity to revise the application without charge. (2) A person who did not make an application under section 22 shall have a second opportunity to make a placement application under this section subject to payment of the requisite fees. (3) The Placement Service shall invite applicants under subsection (1) and (2) to revise or make their application within fifteen days from the date of invitation. (4) The Placement Service shall, within fifteen days process the applications and communicate its decision to the applicants and tertiary institutions.",
       "text_sha256": "e40d05595192a67d2ad0eb7ab0f59d7ca9c77c0115feda1d235dd7247678a87b",
       "pages": [
@@ -445,6 +468,7 @@
       "id": "c24",
       "number": "24",
       "heading": "Placement Report.",
+      "heading_source": "margin",
       "text": "24. (1) The Placement Service shall, on completion of the placement process, submit the placement report to the Cabinet Secretary. (2) The placement report shall contain information on the placement of students in tertiary institutions and where the provisions of section 20(3) apply, the report shall include information— (a) on the number of students placed in private tertiary institutions; (b) on the courses to be undertaken by the eligible students; and (c) specifying how the requirements under section 20(3) have been met.",
       "text_sha256": "da8a18cc9a1ebc5a657324e7c7fc915ced0a722c4c4a5fb88c58d6616769c889",
       "pages": [
@@ -463,6 +487,7 @@
       "id": "c25",
       "number": "25",
       "heading": "Transfers.",
+      "heading_source": "margin",
       "text": "25. (1) A student or trainee who has been placed in a programme may apply to the institution to change the programme or the institution. (2) Every tertiary institution shall submit to the Placement Service any inter institutional and inter faculty transfer in its institution within fifteen days of the transfer.",
       "text_sha256": "8e60229d16660d5d41657735a068bc561c2130e97daf616df0229a2d4563a18d",
       "pages": [
@@ -482,6 +507,7 @@
       "id": "c26",
       "number": "26",
       "heading": "Institution admission returns.",
+      "heading_source": "margin",
       "text": "26. (1) All tertiary institutions shall submit to the Placement Service returns on the particulars of students enrolled in respective programmes within thirty days after the commencement of the tertiary institution’s academic year. (2) A person who contravenes the provisions of this section commits an offence.",
       "text_sha256": "ef4dc7bfad92d4419cf50f72231e1e82496bda6caf199a7d6163c0fa6742bced",
       "pages": [
@@ -500,6 +526,7 @@
       "id": "c27",
       "number": "27",
       "heading": "Career guidance programmes.",
+      "heading_source": "margin",
       "text": "27. (1) The Placement Service shall develop and implement career guidance programmes to persons intending to pursue tertiary education in tertiary institutions. (2) In developing the career guidelines programme, the Placement Service may— (a) conduct market surveys to identify labour market demands and required skills; (b) collect and analyse relevant data on career choices and trends; (c) collaborate with other relevant government agencies and stakeholders; and (d) benchmark on international best practices. (3) The Placement Service may implement the career guidance programmes contemplated under subsection (1) either on its own, through accredited institutions or persons or in collaboration, with other relevant government agencies and stakeholders. (4) In implementing the career guidance programmes contemplated under subsection (1), the Placement Service may– (a) conduct career guidance fairs, exhibitions and conferences and such other stakeholder forums; (b) conduct continuous training of career mentors; (c) develop career guidance manuals, publications, documentaries, social media content, books and other information education and communication materials; and (d) disseminate research findings and information on career guidance.",
       "text_sha256": "1bf2278668f1fdf6e42503c673fe3289fa2c5412ec686af004d056c1df217670",
       "pages": [
@@ -518,6 +545,7 @@
       "id": "c28",
       "number": "28",
       "heading": "Establishment of the Authority.",
+      "heading_source": "margin",
       "text": "28. (1) There is established an Authority to be known as the Tertiary Education Funding Authority. (2) The Authority shall be a body corporate with perpetual succession and a common seal and shall, in its corporate name, be capable of— (a) suing and being sued; (b) taking, purchasing, or otherwise acquiring, holding, charging, leasing, or disposing of moveable or immovable property; (c) borrowing and lending money; (d) doing or performing all such other acts necessary for the proper performance of its functions under this Act which may lawfully be done or performed by a body corporate. (3) The headquarters of the Authority shall be in Nairobi but the Authority shall ensure access to its services in all parts of Kenya.",
       "text_sha256": "0904f5bef78f141adfd905c6a6c261ad551993e8376beeb802348a1defc4f662",
       "pages": [
@@ -536,6 +564,7 @@
       "id": "c29",
       "number": "29",
       "heading": "Functions of the Authority.",
+      "heading_source": "margin",
       "text": "29. The Authority shall— (a) mobilise funds for lending to students and trainees pursuing tertiary education; (b) in consultation with the Cabinet Secretary, set funding criteria for students and trainees pursuing tertiary education; (c) grant loans to eligible students and trainees pursuing tertiary education; (d) administer scholarships to eligible students pursuing tertiary education; (e) establish and maintain a system for data management relating to funding of tertiary education; (f) advise the Cabinet Secretary on matters relating to funding of tertiary education; and (g) perform any other function conferred on it by this Act or any other written law.",
       "text_sha256": "b03b5cfd1c575c2d0ae6783fa440cf4be3e497ce6c010bd6ffbb989250bdd67e",
       "pages": [
@@ -554,6 +583,7 @@
       "id": "c30",
       "number": "30",
       "heading": "Powers of the Authority.",
+      "heading_source": "margin",
       "text": "30. In performance of the functions under section 29, the Authority shall have powers to– (a) manage and administer loans; (b) administer the assets of the Authority; (c) recover loans from loan beneficiaries; (d) in consultation with the Cabinet Secretary, set the interest rate for loans; (e) open and operate bank accounts in accordance with the relevant laws; (f) receive any gifts, grants, donations, endowments, or any other monies lawfully received by the Authority; (g) mobilise resources from treasury bills, bonds, concessional loans, Government grants, savings scheme, unit trusts, commercial partners, loans repayments and any other lawful source for purposes of the Act; (h) mobilize private capital and non-traditional sources of educational finance including domestic pension funds and collective investment schemes, sovereign wealth funds or climate finance; (i) establish a savings scheme or product to receive deposits from any person for the purpose of saving towards tertiary education in respect of a specific child; (j) enter into associations, collaborations and linkages with other persons, bodies, or organizations within or outside Kenya, as the Authority may consider appropriate; and (k) enter and inspect business premises and employers for compliance.",
       "text_sha256": "b645451e2340ab551cc2a5c2e9a0162ad553b40fcf40bbaeaee96783cbea7666",
       "pages": [
@@ -572,6 +602,7 @@
       "id": "c31",
       "number": "31",
       "heading": "Board of the Authority.",
+      "heading_source": "margin",
       "text": "31. (1) There shall be a Board of Authority which shall consist of– (a) a Chairperson, who shall be appointed by the President; (b) the Principal Secretary responsible for matters relating to university education or a designated representative; (c) the Principal Secretary responsible for matters relating to technical and vocational education and training or a designated representative; (d) the Principal Secretary responsible for matters relating to finance or a designated representative; (e) the Attorney-General or a designated representative; (f) four persons who shall not be public officers; and (g) the Chief Executive Officer who shall be an ex officio member with no voting rights. (2) The members of the Board appointed under subsection (1) (f) shall be appointed by the Cabinet Secretary by notice in the Gazette. (3) The Chairperson and members of the Board appointed under subsection (1) (a) and (f) shall hold office for a term of three years and shall be eligible for reappointment for one further term of three years subject to satisfactory performance.",
       "text_sha256": "0397e270b3f2521f1e1e09dd613b80b5140896c60695384ffc5db5586eddbaca",
       "pages": [
@@ -591,6 +622,7 @@
       "id": "c32",
       "number": "32",
       "heading": "Qualifications of the Chairperson of the Board.",
+      "heading_source": "margin",
       "text": "32. A person qualifies to be appointed as the Chairperson of the Board under section 31 (1) (a), if the person— (a) is a citizen of Kenya; (b) holds a degree from a university recognized in Kenya; (c) has at least ten years’ experience in resource mobilization, business, financial management, governance, or other relevant professional experience; and (d) meets the requirements of Chapter Six of the Constitution.",
       "text_sha256": "0b9aa207a1434f685c3b02efac8f87a788ab408abb48242621463cfa9e1632bb",
       "pages": [
@@ -609,6 +641,7 @@
       "id": "c33",
       "number": "33",
       "heading": "Qualification of a member of the Board.",
+      "heading_source": "margin",
       "text": "33. A person qualifies to be appointed as a member of the Board under section 31 (1) (f) if the person— (a) is a citizen of Kenya; (b) holds a degree from a university recognized in Kenya; (c) has at least six years’ experience in resource mobilization, human resource development, business, financial management, governance, or other relevant professional experience; and (d) meets the requirements of Chapter Six of the Constitution.",
       "text_sha256": "6d8c42e561c036c38e765c2bd1c2f633b131c61cbf25d80bbfb7435f308c8a75",
       "pages": [
@@ -628,6 +661,7 @@
       "id": "c34",
       "number": "34",
       "heading": "Vacancy of office.",
+      "heading_source": "margin",
       "text": "34. (1) Subject to the provisions of this Act, the office of the Chairperson and a member of the Board shall become vacant if the Chairperson or member– (a) resigns by notice in writing addressed to the appointing authority; (b) is absent from three consecutive meetings of the Board without the permission of the Chairperson, or, in the case of the Chairperson, the permission of the Cabinet Secretary; (c) is unable to exercise the function of the office by reason of physical or mental infirmity; (d) is adjudged bankrupt by a court of competent jurisdiction or enters into a composition or scheme of arrangement for the benefit of creditors; (e) is in breach of the requirements of Chapter Six of the Constitution; or (f) is convicted of an offence and sentenced to imprisonment for a period of six or more months.",
       "text_sha256": "cbbd86d66e4503aca63dcfc3ef79cf9721bb9c0d7eb6e2d2a4152ac31038aacd",
       "pages": [
@@ -646,6 +680,7 @@
       "id": "c35",
       "number": "35",
       "heading": "Conduct of business and affairs of the Board.",
+      "heading_source": "margin",
       "text": "35. The provisions of the Schedule shall apply with respect to conduct of the business and affairs of the Board.",
       "text_sha256": "513d18854d473641acf8da9c28fa215baf88b6962cd02196834ad6ee735a02a9",
       "pages": [
@@ -664,6 +699,7 @@
       "id": "c36",
       "number": "36",
       "heading": "Committees of the Board.",
+      "heading_source": "margin",
       "text": "36. The Board may establish such committees as may be appropriate to perform such functions and discharge such responsibilities as it may determine.",
       "text_sha256": "bbc3028f2d2dc0f904f64737476a9d294475020067841af817ee540ec8889702",
       "pages": [
@@ -682,6 +718,7 @@
       "id": "c37",
       "number": "37",
       "heading": "Delegation.",
+      "heading_source": "margin",
       "text": "37. The Board may delegate to any committee of the Board or to any member staff or agent of the Authority, the exercise of any of the powers or the performance of any of the functions or duties of the Authority under this Act or any other written law.",
       "text_sha256": "4d0418814579858fbc7d906c534c94b4a2b46db4bf68d2931be44b60cc9af7f9",
       "pages": [
@@ -700,6 +737,7 @@
       "id": "c38",
       "number": "38",
       "heading": "Chief Executive Officer.",
+      "heading_source": "margin",
       "text": "38. (1) There shall be a Chief Executive Officer appointed by the Board through an open, transparent, and competitive process. (2) The Chief Executive Officer shall hold office for a term of four years on such terms and conditions of employment as the Board may determine and shall be eligible for re-appointment for one further term of four years subject to satisfactory performance.",
       "text_sha256": "14b266626c4cbe8ebed1b1c01098f0734519f10c19da76b01b74f555f541e257",
       "pages": [
@@ -719,6 +757,7 @@
       "id": "c39",
       "number": "39",
       "heading": "Qualification for appointment as Chief Executive Officer.",
+      "heading_source": "margin",
       "text": "39. A person qualifies to be appointed as a Chief Executive Officer of the Authority if the person— (a) holds a bachelor's degree from a university recognized in Kenya; (b) holds a master’s degree in finance, business administration, education, social science, or other relevant master’s degree from a university recognized in Kenya; (c) has at least fifteen years' experience in the management in a public or private institution, five of which should be in a senior position; and (d) meets the requirements of Chapter Six of the Constitution.",
       "text_sha256": "ed0cb59e5dada2830e61585cd6fcc0bbd4880d4eac0cfbae026ac1c35d5c7107",
       "pages": [
@@ -737,6 +776,7 @@
       "id": "c40",
       "number": "40",
       "heading": "Functions of the Chief Executive Officer.",
+      "heading_source": "margin",
       "text": "40. The Chief Executive Officer shall— (a) be responsible to the Board of the Authority for the day-to-day management of the affairs of the Authority; (b) be the administrator of the Fund.",
       "text_sha256": "dae83a8df00b745b82ff67f8ae18f10d6ff0c929e3222bc9856613255fce2b1e",
       "pages": [
@@ -755,6 +795,7 @@
       "id": "c41",
       "number": "41",
       "heading": "Vacancy of the office of the Chief Executive Officer.",
+      "heading_source": "margin",
       "text": "41. (1) The office of the Chief Executive Officer may become vacant if the holder of the office resigns or is removed from office in accordance with subsection (2). (2) The Chief Executive Officer may be removed from office if the Chief Executive Officer is— (e) in breach of chapter six of the Constitution; (f) adjudged bankrupt or enters into a composition scheme or arrangement with his or her creditors; (g) incapacitated by physical or mental illness; or (h) is convicted of a criminal offence and sentenced to imprisonment for a term exceeding six months;",
       "text_sha256": "5307c83f27fa3227b8f2f5ac32b1ca510f531d94f0318b305a0e4cc73628d737",
       "pages": [
@@ -773,6 +814,7 @@
       "id": "c42",
       "number": "42",
       "heading": "Staff of the Authority.",
+      "heading_source": "margin",
       "text": "42. The Board may appoint such staff as may be necessary for the proper discharge of the functions of the Authority.",
       "text_sha256": "efe2c4944b1b02b63bf1def5ecefdbdbd7591bae61b5d77a47cebf174bb98cb9",
       "pages": [
@@ -791,6 +833,7 @@
       "id": "c43",
       "number": "43",
       "heading": "Establishment of Fund.",
+      "heading_source": "margin",
       "text": "43. There is established a fund to be known as the Tertiary Education Fund which shall be managed and administered by the Authority.",
       "text_sha256": "00a9796535405f2f641eccc469b805c8a18b0dc376a42841f59000c5b01c8798",
       "pages": [
@@ -809,6 +852,7 @@
       "id": "c44",
       "number": "44",
       "heading": "Purpose of the Fund.",
+      "heading_source": "margin",
       "text": "44. The purpose of the Fund shall be to provide funds to be granted as education loans under this Act.",
       "text_sha256": "39cc94d3dec2778d668c664e8bb4f2ad3167f2614e581b40c79952d67b1e7df2",
       "pages": [
@@ -827,6 +871,7 @@
       "id": "c45",
       "number": "45",
       "heading": "Sources of funds.",
+      "heading_source": "margin",
       "text": "45. There shall be paid into the Fund— (a) moneys appropriated by the National Assembly; (b) proceeds from investments undertaken by the Authority; (c) repayments of funds disbursed in accordance with this Act or Higher Education Loans Board Act (repealed); (d) interest accrued from the repayments; (e) gifts, grants, donations and endowments; and (f) revenue from any other lawful source.",
       "text_sha256": "268b30ce5d6a77432b32475f39295c6a32a22ee44f0eb75d721f316f1c5a81cb",
       "pages": [
@@ -845,6 +890,7 @@
       "id": "c46",
       "number": "46",
       "heading": "Eligibility for loans.",
+      "heading_source": "margin",
       "text": "46. (1) Every student or trainee admitted into public or private tertiary institution shall be eligible for an education loan. (2) A student or trainee qualifies to apply for an education loan, if the student or trainee— (a) is a citizen of Kenya; (b) has been admitted in a tertiary institution; and (c) meets the requirements of this Act.",
       "text_sha256": "a9d7fdb13d2cde663a21679d0d0718fd27f7f0b67d5dccd2dc66ec71f0c78d54",
       "pages": [
@@ -863,6 +909,7 @@
       "id": "c47",
       "number": "47",
       "heading": "Loans to minors.",
+      "heading_source": "margin",
       "text": "47. An eligible person may apply to the Authority for grant of education loan to a minor who has been admitted to a tertiary institution.",
       "text_sha256": "77b90379b817319c46e8e6a94620b7b325ef64c2262ca6dcf0eb5565e1896880",
       "pages": [
@@ -881,6 +928,7 @@
       "id": "c48",
       "number": "48",
       "heading": "Application for loans.",
+      "heading_source": "margin",
       "text": "48. (1) On admission to a tertiary institution, a student or trainee wishing to be funded shall apply to the Authority in a prescribed manner for the grant of an education loan. (2) The Authority shall review the application and communicate its decision to the applicant and the tertiary institution of the applicant within a prescribed period.",
       "text_sha256": "8d23e841c86ffed1f02175be5712d7b663474725194a90c1973e24699ecbb286",
       "pages": [
@@ -899,6 +947,7 @@
       "id": "c49",
       "number": "49",
       "heading": "obligations of the loanee.",
+      "heading_source": "margin",
       "text": "49. (1) A loanee shall, within one year of completion of studies, commence repaying the loan together with any accrued interest and any other charges. (2) A loanee in formal employment shall disclose his or her loan status to the employer at the commencement of employment. (3) A loanee in informal employment shall enter into a payment plan with the Authority on the mode and frequency of payment. (4) In making deductions for loan repayment, the Authority shall deduct not more than twenty five percent of the loanee’s emoluments.",
       "text_sha256": "36e8e537b2d5bedc6c5852d53e3c0543f3033013d99ee43829db1ca90c337358",
       "pages": [
@@ -917,6 +966,7 @@
       "id": "c50",
       "number": "50",
       "heading": "Obligations of an employer.",
+      "heading_source": "margin",
       "text": "50. (1) Every employer of a loanee shall— (a) upon employment of a loanee, inform the Authority in writing or in such other manner as the Authority may specify; (b) deduct from the emoluments of the loanee such monthly deductions as may be determined by the Authority until payment in full or exit from their employment whichever is earlier; and (c) remit such deductions within nine days after the end of each month. (2) The Authority shall charge an employer who, after making a deduction from the employee emolument, fails to remit the deductions to the Authority within the prescribed period, a sum equal to five percent of the total amount of the repayment for each month or part of the month that the repayment remains unpaid.",
       "text_sha256": "e6fe4bc8022af05197f07bcb14ea155e70b8a36ab41bd787c59ba0a059d6e2af",
       "pages": [
@@ -935,6 +985,7 @@
       "id": "c51",
       "number": "51",
       "heading": "Debt recovery.",
+      "heading_source": "margin",
       "text": "51. All sums due to the Authority shall be recoverable as debts due to the Authority, and without prejudice to any other remedy, may be recovered by the Authority summarily as a civil debt.",
       "text_sha256": "7d9a6c99b2b53adace976027c8bcba88e8be63aa4e2435ddd270c040675d5cf7",
       "pages": [
@@ -953,6 +1004,7 @@
       "id": "c52",
       "number": "52",
       "heading": "Data processing.",
+      "heading_source": "margin",
       "text": "52. (1) The Placement Service and the Authority shall maintain a central data repository for purposes of the Act. (2) The Placement Service and the Authority shall manage data through the collection, collation, analysis, reporting, storage, sharing, retrieval, and archiving of information related to— (a) related placement and funding of students or trainees; (b) students and trainees enrolled in tertiary institutions outside Kenya; (c) career guidance; and (d) other matters. (3) The repository shall contain information on— (a) students funded by the Authority; (b) repayment of loans; and (c) placement of students.",
       "text_sha256": "07d6bb2749d07290a52d00fed42da54b0dd17148adcd839d8de4d4d9dd6d8761",
       "pages": [
@@ -972,6 +1024,7 @@
       "id": "c53",
       "number": "53",
       "heading": "Data sharing. Cap. 411C.",
+      "heading_source": "margin",
       "text": "53. Notwithstanding any other written law, the Authority may request a person or entity to furnish it with any data in line with the Data Protection Act to enable it perform its functions under thisAct. (2) The Authority shall utilize the existing relevant government and third-party databases in the performance of its functions.",
       "text_sha256": "2f03d6b3d4f6597c80f3b5df2e8204f12209a4e121c4eff6286cdd8a5f07e8eb",
       "pages": [
@@ -990,6 +1043,7 @@
       "id": "c54",
       "number": "54",
       "heading": "Alternative dispute resolution.",
+      "heading_source": "margin",
       "text": "54. Any dispute arising under this Act shall be referred to the Placement Service or the Authority, as the case may be, for resolution through alternative dispute resolution mechanisms.",
       "text_sha256": "e5349a81c8ca8bfde1b6c3d5f5e21293f8fc4a1f444361e04e253412f6c8face",
       "pages": [
@@ -1008,6 +1062,7 @@
       "id": "c55",
       "number": "55",
       "heading": "Financial year.",
+      "heading_source": "margin",
       "text": "55. The financial year of the Placement Service and Authority shall be the period of twelve months ending on the thirtieth of June in each year.",
       "text_sha256": "539f419921ebd171f3d65006ffb8ffa962614d551d2e58913bdbdbda11f1c27f",
       "pages": [
@@ -1026,6 +1081,7 @@
       "id": "c56",
       "number": "56",
       "heading": "Annual estimates.",
+      "heading_source": "margin",
       "text": "56. (1) The Placement Service and the Authority shall, within three months after the end of each financial year, cause to be prepared estimates of its revenue and expenditure for that financial year. (2) The annual estimates shall make provision for estimated expenditure of the Placement Service and the Authority for the financial year concerned, and in particular shall provide for– (a) the grant of the loans and scholarships for students in tertiary institutions; (b) the funding for the infrastructure in public tertiary institutions; (c) the payment of salaries, allowances, pensions, gratuities, and other charges in respect of the staff and members of the Placement Service and the Authority; and (d) the proper maintenance of any property vested in the Placement Service and the Authority. (3) The annual estimates shall be approved by the respective Boards before the commencement of the financial year to which they relate and after the approval, the annual estimates shall not be increased without the prior consent of the Board. (4) No expenditure shall be incurred for the purposes of the Placement Service or the Authority except in accordance with the annual estimates approved under subsection",
       "text_sha256": "1c37ec462a626ab7536d0309bd6c068880d9f26ae72bbc32ed26d13b93f05134",
       "pages": [
@@ -1045,6 +1101,7 @@
       "id": "c57",
       "number": "57",
       "heading": "Books of accounts and audit.",
+      "heading_source": "margin",
       "text": "57. (1) The Placement Service and the Authority shall cause to be kept all proper books and records of accounts of the income, expenditure, assets and liabilities of the Placement Service and the Authority. (2) Within a period of three months after the end of each financial year, the Placement Service and the Authority shall submit to the Auditor-General the accounts of that year together with a statement of– (a) the income and expenditure of the Placement Service and the Authority during that year; and (b) the assets and liabilities of the Placement Service and the Authority as at the last day of the financial year. (3) The annual accounts of the Placement Service and the Authority shall be prepared, audited, and reported in accordance with the Constitution and the Public Audit Act.",
       "text_sha256": "0b6aed3111701dd949c29c21f4a1611ac14650cf3e2c5daf2c1fd9133e3ac21a",
       "pages": [
@@ -1063,6 +1120,7 @@
       "id": "c58",
       "number": "58",
       "heading": "Protection from personal liability.",
+      "heading_source": "margin",
       "text": "58. No matter or thing done by the Chairperson or a member of the Board or any officer, employee or agent of the Placement Service and the Authority shall, if the matter or thing is done bona fide for the purpose of executing any provision of this Act, render the Chairperson, member, officer, employee or agent or any person acting on their directions, personally liable to any action, claim or demand whatsoever.",
       "text_sha256": "95d38df96823132d4003ace0578419437f9ea880dc3ba136d383335dc41ba913",
       "pages": [
@@ -1082,6 +1140,7 @@
       "id": "c59",
       "number": "59",
       "heading": "Common seal.",
+      "heading_source": "margin",
       "text": "59. (1) The common seal of the Placement Service and the Authority shall be kept in the custody of the Chief Executive Officer and shall not be used except on the direction of the Board. (2) The affixing of the common seal of the Placement Service or the Authority shall be authenticated by the signatures of the Chairperson and the Chief Executive Officer.",
       "text_sha256": "f64fcfeef0046236922467a8bcbc4d9fd0026bc4c75c99aa8c9d68fc0dd6b0f3",
       "pages": [
@@ -1100,6 +1159,7 @@
       "id": "c60",
       "number": "60",
       "heading": "Amendment of Cap 22.",
+      "heading_source": "margin",
       "text": "60. Section 42 of the Limitation of Actions Act is amended in subsection (1) by deleting paragraph (i) and substituting therefor the following new paragraph– (i) civil proceedings brought under the Tertiary Education Placement and Funding Act for the recovery of any loans owed to the Authority including any penalty or interest thereon.",
       "text_sha256": "8c35d319529c1e79908dfd73498bddd4e39cf8cefab783267654b4463358369c",
       "pages": [
@@ -1118,6 +1178,7 @@
       "id": "c61",
       "number": "61",
       "heading": "Liability for damages.",
+      "heading_source": "margin",
       "text": "61. The provisions of this Act shall not relieve the Placement Service and the Authority of the liability to pay compensation or damages to any person for any injury to the person, their property or any of their interest caused by the exercise of any power conferred by this Act or by the failure, whether wholly or partially of the exercise of such powers.",
       "text_sha256": "61984e6beee4ec1792099a7a668a948aa5946072f2b46435beb27dde22b6d602",
       "pages": [
@@ -1136,6 +1197,7 @@
       "id": "c62",
       "number": "62",
       "heading": "General penalty.",
+      "heading_source": "margin",
       "text": "62. A person convicted of an offence under this Act for which no other penalty is prescribed shall be liable to a fine not exceeding one million shillings or, in the case of a natural person, to imprisonment for a term not exceeding two years, or to both.",
       "text_sha256": "6cd60f71a205419e5d4e7e485cc6587ca1f6eef04cbc5a3298e1bc0ff8624fc4",
       "pages": [
@@ -1154,6 +1216,7 @@
       "id": "c63",
       "number": "63",
       "heading": "Regulations.",
+      "heading_source": "margin",
       "text": "63. (1) The Cabinet Secretary may make regulations for the better carrying out the provisions of this Act. (2) Without prejudice to subregulation (1), the regulations under subregulation (1) may provide for the following— (a) placement of students and trainees; (b) the receipt, processing, and approval of applications for education loans and the forms required; (c) review on placement and funding; (d) loans to minors; (e) the withdrawal, suspension, the recovery, exemption, cancellation, and waiver of loans; (f) recovery of loans from loanees residing outside Kenya; (g) funding of students and trainees outside Kenya. (h) career guidance; and (i) such other necessary for giving full effect to the implementation of this Act",
       "text_sha256": "28b85a5c64eaee7dc1302bd5f423ea3242ed08bc1ca4ae57b4809523ad66f5fb",
       "pages": [
@@ -1173,6 +1236,7 @@
       "id": "c64",
       "number": "64",
       "heading": "Repeal. Cap. 213. Cap. 210. Cap. 210A.",
+      "heading_source": "margin",
       "text": "64. (1) The Higher Education Loans Board Act is repealed. (2) Part VII and VIII of the Universities Act are repealed. (3) Part IX of the Technical and Vocational Education and Training Act is repealed.",
       "text_sha256": "90902014134daff71fed5b8376b3604bb9fbf8e4752b6d0b2c4af773b1576879",
       "pages": [
@@ -1191,6 +1255,7 @@
       "id": "c65",
       "number": "65",
       "heading": "Transition. Cap. 210.",
+      "heading_source": "margin",
       "text": "65. (1) The Kenya University and Colleges Central Placement Service shall be the successor to the Kenya Universities and Colleges Central Placement Service Board established under section 55 (repealed) of the Universities Act. (2) The Tertiary Education Funding Authority shall be the successor to— (a) the Higher Education Loans Management Board established under section 3 of the Higher Education Loans Board Act (repealed). (b) the Universities Fund Board established under section 53 (repealed) of the Universities Act; and (c) the Technical and Vocational Education and Training Funding Board established under section 47 (repealed) of the Technical and Vocational Education and Training Act.",
       "text_sha256": "03050ae7c53bb2a9afe54ff1cc67338478f658a9e9ee96c2cc400e78ec9506e4",
       "pages": [
@@ -1210,6 +1275,7 @@
       "id": "c66",
       "number": "66",
       "heading": "Transfer of property, assets and liabilities.",
+      "heading_source": "margin",
       "text": "66. (1) All references to the former institutions in any agreement or instrument relating to any property, assets, rights, obligations or liabilities transferred under subsections (2) and (3) and subsisting immediately before the commencement of this Act, shall at the commencement of this Act, unless the context otherwise requires be read as references to the Placement Service and the Authority respectively. (2) All movable and immovable property and assets which immediately before the commencement of this Act were vested in or possessed by the former institutions, shall, at the commencement of this Act, vest in the Service and the Authority respectively without further conveyance, transfer or assignment. (3) All rights, obligations, assets, liabilities which immediately before the commencement of this Act were vested in or imposed on the former institutions, shall, at the commencement of this Act, be deemed to be the rights, obligations, assets and liabilities of the Service and the Authority respectively. (4) All actions, suits or legal proceedings pending by or against the former institutions shall, at the commencement of this Act, be deemed to be actions, suits, or legal proceedings against the Service or the Authority.",
       "text_sha256": "efe27a4ecfc203abf5788f89d7920b5fef3192ff49638917aafddafb2f8ff2ea",
       "pages": [
@@ -1228,6 +1294,7 @@
       "id": "c67",
       "number": "67",
       "heading": "Staff.",
+      "heading_source": "margin",
       "text": "67. Any person who, immediately before the commencement date of this Act, was a member of staff of the former institutions shall be deemed to be members of staff of the Service and Authority respectively.",
       "text_sha256": "099e0de57aa51d540e55ab73777c45acf6c5fe2b915fe4bb671af825293b6371",
       "pages": [
@@ -1246,6 +1313,7 @@
       "id": "c68",
       "number": "68",
       "heading": "Interpretation of this Part. Cap. 213. Cap. 210. Cap. 210A.",
+      "heading_source": "margin",
       "text": "68. In this Part— “former institutions” means the Higher Education Loans Management Board established under the Higher Education Loans Boards Act, the Universities Fund Board, the Kenya Universities and Colleges Central Placement Service established under the Universities Act, and the Technical and Vocational Education and Training Funding Board established under the Technical and Vocational Education and Training Act.",
       "text_sha256": "a65df2b22f7e46114ea92b5ea0e031f8b10ca1bc12c8ddb568abe81922250aaa",
       "pages": [
