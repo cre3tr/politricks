@@ -50,11 +50,12 @@ EDGE_LINES = 3  # patterns only apply to the first/last 3 lines of a page
 # A section starts with its number and a dot. In this scan, two-digit numbers
 # often have no space after the dot ("10.Section 15 ..."), so the space is optional.
 SECTION_START = re.compile(r"^(\d{1,3})\.\s*(?=[A-Z(\"“'])")
-# Opt-in (override `start_noise: true`) for scans where a speck of dirt is read
-# as a stray character before the number, e.g. "i 13.(1) A responsible...".
-# Up to two junk characters are tolerated; the monotonic N+1 guard still
-# decides whether it really is the next section. The junk stays in the text —
-# we never edit legal text, we only decide where a section begins.
+# Opt-in, for NAMED clause numbers only (override `start_noise: [13]`), for
+# scans where a speck of dirt is read as a stray character before the number,
+# e.g. "i 13.(1) A responsible...". Up to two junk characters are tolerated,
+# and only when the expected next clause is one of the listed numbers — so it
+# can't start a false clause anywhere else. The junk stays in the text: we
+# never edit legal text, we only decide where a section begins.
 SECTION_START_NOISY = re.compile(r"^(?:\S{1,2}\s+)?(\d{1,3})\.\s*(?=[A-Z(\"“'])")
 PART_HEADING = re.compile(r"^PART\s+[IVXL]+\b")
 SCHEDULE_HEADING = re.compile(r"^(FIRST |SECOND |THIRD |FOURTH )?SCHEDULE\b")
@@ -90,48 +91,66 @@ def load_overrides(repo_root: Path, bill_id: str) -> dict:
         return yaml.safe_load(handle) or {}
 
 
-def find_gutter(words: list[dict], search: tuple[float, float]) -> float | None:
+def find_gutter(words: list[dict], search: tuple[float, float], min_width: float = 6.0) -> float | None:
     """Find the empty vertical strip between the body column and the notes.
 
     Scanned pages shift and stretch, so the body can end at x≈315 on one page
     and x≈344 on the next — no single fixed line works. What IS stable is that
-    no word crosses the gutter. We scan x across `search`, count how many words
-    span each x, and return the middle of the widest strip that no word crosses.
-    Returns None if there is no empty strip (then nothing is treated as a note).
+    no word crosses the gutter. We merge every word's [x0, x1] span into
+    covered intervals, then return the middle of the widest UNcovered strip
+    inside `search`.
+
+    `min_width` guards against mistaking an ordinary word space for the gutter:
+    measured on the Public Participation scan, real gutters are 7.8–14pt wide
+    while word spaces are ~3pt. Returns None if no strip is wide enough (then
+    nothing is treated as a note on that page).
     """
     lo, hi = search
-    best_start = best_len = 0
-    run_start = None
-    x = lo
-    while x <= hi:
-        crossed = any(w["x0"] < x < w["x1"] for w in words)
-        if not crossed and run_start is None:
-            run_start = x
-        if (crossed or x == hi) and run_start is not None:
-            length = x - run_start
-            if length > best_len:
-                best_start, best_len = run_start, length
-            run_start = None
-        x += 1
-    return best_start + best_len / 2 if best_len >= 3 else None
+    # Merge the horizontal spans of all words that reach into the search window.
+    spans = sorted((max(w["x0"], lo), min(w["x1"], hi)) for w in words if w["x1"] > lo and w["x0"] < hi)
+    merged: list[list[float]] = []
+    for start, end in spans:
+        if merged and start <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], end)
+        else:
+            merged.append([start, end])
+    # The gaps between covered intervals (and the window edges) are empty strips.
+    edges = [lo] + [x for span in merged for x in span] + [hi]
+    gaps = [(edges[i], edges[i + 1]) for i in range(0, len(edges), 2)]
+    best = max(gaps, key=lambda gap: gap[1] - gap[0], default=None)
+    if best is None or best[1] - best[0] < min_width:
+        return None
+    return (best[0] + best[1]) / 2
 
 
-def _margin_words(page, search: tuple[float, float]) -> list[dict]:
+def _margin_words(page, search: tuple[float, float], min_width: float) -> tuple[list[dict], float | None, int]:
     """Words right of this page's gutter: the marginal notes.
 
-    Used for noisy scans where notes come out at body size. A body word that
-    ends a line just short of the gutter stays in the legal text, because the
-    gutter is found from where words actually are on THIS page.
+    Returns (note words, gutter x, total words on the page). Used for noisy
+    scans where notes come out at body size. A body word that ends a line just
+    short of the gutter stays in the legal text, because the gutter is found
+    from where words actually are on THIS page.
     """
     words = page.extract_words()
-    gutter = find_gutter(words, search)
+    gutter = find_gutter(words, search, min_width)
     if gutter is None:
-        return []
-    return [w for w in words if w["x0"] >= gutter]
+        return [], None, len(words)
+    return [w for w in words if w["x0"] >= gutter], gutter, len(words)
+
+
+# If more than this share of a page's words land right of the gutter, the
+# "gutter" is probably something else (an indented block, a table column) and
+# real legal text would be dropped. We stop rather than guess.
+MAX_NOTE_SHARE = 0.25
 
 
 def _page_lines(
-    page, margin_x: float, mode: str = "char", search: tuple[float, float] = (0.0, 0.0)
+    page,
+    margin_x: float,
+    mode: str = "char",
+    search: tuple[float, float] = (0.0, 0.0),
+    min_width: float = 6.0,
+    audit: list[str] | None = None,
 ) -> tuple[list[dict], list[dict]]:
     """Split one page into (body lines, marginal-note lines), each with `top`.
 
@@ -146,7 +165,19 @@ def _page_lines(
       We judge whole words, not letters, so no body word loses letters.
     """
     if mode == "gutter":
-        boxes = [(w["x0"], w["top"], w["x1"], w["bottom"]) for w in _margin_words(page, search)]
+        notes, gutter, total = _margin_words(page, search, min_width)
+        page_no = page.page_number
+        if total and len(notes) / total > MAX_NOTE_SHARE:
+            raise ExtractError(
+                f"page {page_no}: {len(notes)}/{total} words fall right of the gutter at x={gutter} — "
+                "that looks like body text, not marginal notes; stopping rather than dropping it"
+            )
+        if audit is not None:
+            # Record exactly what this page loses to the margin, so anyone can
+            # check no legal text went with it (written to <file>.margin.txt).
+            where = "none found" if gutter is None else f"x={gutter:.1f}"
+            audit.append(f"p{page_no}: gutter {where}; {len(notes)} note words: " + " | ".join(w["text"] for w in notes))
+        boxes = [(w["x0"], w["top"], w["x1"], w["bottom"]) for w in notes]
 
         def is_margin(obj) -> bool:
             if obj.get("object_type") != "char":
@@ -174,14 +205,24 @@ def _page_lines(
     return body.extract_text_lines(strip=True), margin.extract_text_lines(strip=True)
 
 
-def read_pdf(pdf_path: Path, overrides: dict) -> tuple[list[Line], dict[int, list[Line]], list[str]]:
+def read_pdf(
+    pdf_path: Path, overrides: dict, margin_audit: list[str] | None = None
+) -> tuple[list[Line], dict[int, list[Line]], list[str]]:
     """Return (body lines, marginal lines per page, stripped-line log).
 
-    This is the single source of truth every check compares against.
+    This is the single source of truth every check compares against. If
+    `margin_audit` is given, gutter mode appends one line per page saying
+    exactly which words it moved to the margin.
     """
     margin_x = float(overrides.get("margin_x", 395))
     patterns = [re.compile(p) for p in overrides.get("strip_patterns", DEFAULT_STRIP_PATTERNS)]
     skip_pages = set(overrides.get("skip_pages", []))
+    mode = overrides.get("margin_mode", "char")
+    if mode == "gutter" and "gutter_search" not in overrides:
+        # Without a search window gutter mode would silently find nothing.
+        raise ExtractError("margin_mode 'gutter' needs gutter_search: [x_from, x_to] in the overrides")
+    search = tuple(overrides.get("gutter_search", (0, 0)))
+    min_width = float(overrides.get("gutter_min", 6))
 
     body_lines: list[Line] = []
     margin_lines: dict[int, list[Line]] = {}
@@ -190,9 +231,7 @@ def read_pdf(pdf_path: Path, overrides: dict) -> tuple[list[Line], dict[int, lis
         for number, page in enumerate(pdf.pages, start=1):
             if number in skip_pages or not page.chars:
                 continue
-            body, margin = _page_lines(
-                page, margin_x, overrides.get("margin_mode", "char"), tuple(overrides.get("gutter_search", (0, 0)))
-            )
+            body, margin = _page_lines(page, margin_x, mode, search, min_width, margin_audit)
             kept: list[Line] = []
             removed_here = 0
             for index, raw in enumerate(body):
@@ -234,11 +273,13 @@ def segment(region: list[Line], overrides: dict) -> tuple[list[Segment], list[st
     ignore = set(overrides.get("ignore_starts", []))
     segments: list[Segment] = []
     log: list[str] = []
-    start_pattern = SECTION_START_NOISY if overrides.get("start_noise") else SECTION_START
+    noisy_numbers = set(overrides.get("start_noise", []))
     expected = 1
     current = Segment(kind="other")
     for line in region:
         text = line.text
+        # Only the clause numbers named in the overrides get the noisy pattern.
+        start_pattern = SECTION_START_NOISY if expected in noisy_numbers else SECTION_START
         match = start_pattern.match(text)
         kind = None
         if text in ignore:
@@ -282,7 +323,8 @@ def extract(repo_root: Path, bill_id: str, pdf_file: str, write: bool = True) ->
     """Run extraction and all three checks. Returns (clauses, report)."""
     overrides = load_overrides(repo_root, bill_id)
     pdf_path = repo_root / "sources" / validate_bill_id(bill_id) / pdf_file
-    lines, margin_lines, stripped_log = read_pdf(pdf_path, overrides)
+    margin_audit: list[str] = []
+    lines, margin_lines, stripped_log = read_pdf(pdf_path, overrides, margin_audit)
     source_text = normalise("\n".join(line.text for line in lines))
 
     region = _region(lines, overrides)
@@ -327,6 +369,12 @@ def extract(repo_root: Path, bill_id: str, pdf_file: str, write: bool = True) ->
         (audit / f"{stem}.stripped.txt").write_text(
             "\n".join(stripped_log) + "\n", encoding="utf-8", newline="\n"
         )
+        if margin_audit:
+            # Gutter mode only: every word each page moved to the margin, so a
+            # human can confirm no legal text went with the marginal notes.
+            (audit / f"{stem}.margin.txt").write_text(
+                "\n".join(margin_audit) + "\n", encoding="utf-8", newline="\n"
+            )
     return clauses, report
 
 

@@ -104,20 +104,23 @@ def fetch_bill(repo_root: Path, bill_id: str) -> Bill:
         raise SystemExit(f"unknown bill id '{bill_id}' — add it to pipeline/sources.yaml")
     entry = registry[bill_id]
 
+    # The registry (sources.yaml) is the authority for a bill's title and
+    # where it stands. These fields are refreshed on EVERY fetch, so editing
+    # the stage or "last checked" date in sources.yaml always reaches the site.
+    registry_fields = dict(
+        title=entry["title"],
+        chamber=entry["chamber"],
+        kind=entry["kind"],
+        status=entry["status"],
+        stage=entry["stage"],
+        stage_checked_at=str(entry["stage_checked_at"]),
+    )
     json_path = bill_path(repo_root, bill_id)
     if json_path.exists():
-        bill = load_bill(json_path)
+        bill = load_bill(json_path).model_copy(update=registry_fields)
     else:
         # First fetch: create a skeleton bill with no clauses yet.
-        bill = Bill(
-            id=bill_id,
-            title=entry["title"],
-            chamber=entry["chamber"],
-            kind=entry["kind"],
-            status=entry["status"],
-            stage=entry["stage"],
-            stage_checked_at=str(entry["stage_checked_at"]),
-        )
+        bill = Bill(id=bill_id, **registry_fields)
 
     folder = repo_root / "sources" / bill_id
     folder.mkdir(parents=True, exist_ok=True)
@@ -149,16 +152,20 @@ def fetch_bill(repo_root: Path, bill_id: str) -> Bill:
             )
         )
 
-    # Replace sources by label; keep any not re-fetched this time.
-    by_label = {s.label: s for s in bill.sources}
+    # The bill's sources become exactly what the registry lists, in its order.
+    # Matching is by saved file (not label), so fixing a label in sources.yaml
+    # replaces the old entry instead of adding a duplicate. A source removed
+    # from the registry disappears from the bill.
+    previous_by_file = {s.file: s for s in bill.sources}
+    merged: list[Source] = []
     for source in fetched:
-        previous = by_label.get(source.label)
+        previous = previous_by_file.get(source.file)
         # Keep the original timestamp if the file didn't change, so re-running
-        # fetch produces no git diff. Everything else (label, scanned flag...)
-        # comes fresh from sources.yaml, so registry edits always take effect.
+        # fetch produces no git diff. Label, URL and scanned flag always come
+        # fresh from sources.yaml.
         if previous and previous.sha256 == source.sha256:
             source = source.model_copy(update={"fetched_at": previous.fetched_at})
-        by_label[source.label] = source
-    bill.sources = list(by_label.values())
+        merged.append(source)
+    bill.sources = merged
     save_bill(bill, json_path)
     return bill

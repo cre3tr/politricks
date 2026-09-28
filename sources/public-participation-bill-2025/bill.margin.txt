@@ -1,0 +1,9 @@
+p2: gutter x=351.4; 0 note words: 
+p3: gutter x=334.3; 8 note words: Shorttitle. | interpretation. | ObjectoftheAct. | Applicationofthe | Principles | of | public | participation.
+p4: gutter x=334.7; 5 note words: 1127 | Responsible | authontiesin | public | participation.
+p5: gutter x=332.6; 9 note words: Considerationsin | undertaking | public | participation. | Noticeforpublic | participation. | Modesof | notifyingthe | public.
+p6: gutter x=346.0; 25 note words: 1129 | Submissions | duringpublic | participation. | Reasonable | time. | Processing | of | responses. | Access | topublic | participation | processes, | Accessto | documents. | Conductin | a | forum | ofpublic | participation. | oeveiopmer^tof | specificguidelines | forpubii | 1C | participation.
+p7: gutter x=321.1; 18 note words: Publicationof | specificpublic | participation | guidelines. | Public | participationby | Parliament. | Certain | information | notto | be | disclosed. | Cap. | 7M. | Cap. | 199. | Cap. | 411C.
+p8: gutter x=350.3; 5 note words: 1131 | General | penalty, | Transitional | provision.
+p9: gutter none found; 0 note words: 
+p10: gutter none found; 0 note words: 

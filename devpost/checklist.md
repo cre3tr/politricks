@@ -192,3 +192,17 @@ Activity mode:
 - `start_noise` override: tolerates a scan speck before a clause number ("i 13.(1)…"). The text stays as published.
 - `Source.scanned` flag: the "produced from a scan" note now shows only on scanned sources (Act, Public Participation). The born-digital Tertiary Education bill no longer carries a false claim. `fetch` now keeps only the old timestamp for an unchanged file, so edits to the registry take effect.
 - Home: the Active Bills list plus a plain **Recently passed** list, which is how a reader reaches the Finance Act until slice 9's Una'tafuta? search replaces it.
+- **Sonnet review of `48f66ff`:** 0 blockers.
+  - **Independent confirmation that gutter mode dropped no body words:** per-page character counts matched, left of the gutter against the extracted body (e.g. p6 1505 = 1505).
+  - **Fixed** (each confirmed in the code first):
+    - The gutter is found by exact interval merging, with a minimum width (`gutter_min: 6`; real gutters are 7.8–14pt, word spaces about 3pt).
+    - A page stops extraction if more than 25% of its words fall right of the gutter. Proven by pointing it at the page's left margin: "123/123 words… stopping rather than dropping it".
+    - Gutter mode refuses to run without `gutter_search`.
+    - Every page's moved-to-margin words are written to `bill.margin.txt`.
+    - `start_noise` is scoped to named clause numbers (`[13]`).
+    - `fetch` refreshes title, stage and last-checked from the registry on every run, and matches sources by file, not label. It previously never propagated registry edits and could duplicate a relabelled source.
+    - The bill page shows "Text shown: <source label>" next to the clauses, so the Public Participation first-published caveat is visible there, not only in the footer.
+    - The home page gains an `<h1>`, sorts by title, and has an empty state.
+  - All three bill JSONs were byte-identical after the fixes.
+  - **Not fixed, waiting on the learner:** scan-garbled marginal-note headings on the Public Participation Bill (e.g. c16 "oeveiopmer^tof specificguidelines forpubii 1C participation.") render beside the clauses. How to handle them is an editorial choice.
+  - Declined NITs: a per-source scan note (every bill has one source today), and the clipped Tertiary Education header characters (harmless: they can't reach a heading).

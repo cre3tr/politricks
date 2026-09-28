@@ -65,6 +65,13 @@ const summaryBadge = bill.summary ? badgeFor(bill.summary.review.status) : null;
       </span>
     </div>
     <p class="stage">{bill.stage}</p>
+    {/* Which official text the clauses below come from — shown up here, next to
+        the clauses, not only in the footer. For the Public Participation Bill
+        the label carries the caveat that this is the first-published text, not
+        the version now before the Senate. */}
+    <p class="text-shown">
+      Text shown: {bill.sources.map((source) => source.label).join("; ")}
+    </p>
 
     {
       bill.source_changed && (
@@ -141,6 +148,11 @@ const summaryBadge = bill.summary ? badgeFor(bill.summary.review.status) : null;
   }
   .status-active {
     color: var(--matatu-brown);
+  }
+  .text-shown {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 0.25rem;
   }
   .stage {
     color: var(--muted);

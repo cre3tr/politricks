@@ -31,8 +31,11 @@ expected_clause_count: 21
 # actually are, searching x = 300..370; words right of it are notes.
 margin_mode: gutter
 gutter_search: [300, 370]
+# Real gutters here are 7.8–14pt wide; word spaces ~3pt. Anything narrower
+# than 6pt is not treated as a gutter.
+gutter_min: 6
 
 # Clause 13's line reads "i 13.(1) A responsible authority..." — a scan speck
-# before the number. Allow up to two junk characters before a clause number
-# (the monotonic guard still has the final say; the text itself is unchanged).
-start_noise: true
+# before the number. Up to two junk characters are allowed before clause 13's
+# number ONLY (named, so it can't fire anywhere else); the text is unchanged.
+start_noise: [13]
