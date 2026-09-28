@@ -1,0 +1,408 @@
+{
+  "id": "public-participation-bill-2025",
+  "title": "The Public Participation Bill, 2025",
+  "chamber": "senate",
+  "kind": "bill",
+  "status": "active",
+  "stage": "Before the Senate Justice, Legal Affairs and Human Rights Committee — public views closed 28 September 2026, 5pm",
+  "stage_checked_at": "2026-09-28",
+  "source_changed": false,
+  "sources": [
+    {
+      "label": "Public Participation Bill, 2025 (as first published, 1 Oct 2025 — not the National Assembly-approved text)",
+      "url": "https://new.kenyalaw.org/akn/ke/bill/na/2025-10-01/the-public-participation-bill-2025/eng@2025-10-01/source.pdf",
+      "official": true,
+      "fetched_at": "2026-09-28T19:45:39+00:00",
+      "sha256": "9b38c9509a33f9b2889a3f9aba4e0faa6d5d0f9cb5ca4cb04740fd791e9b286a",
+      "file": "sources/public-participation-bill-2025/bill.pdf",
+      "scanned": true
+    }
+  ],
+  "summary": null,
+  "groups": [],
+  "clauses": [
+    {
+      "id": "c1",
+      "number": "1",
+      "heading": "Shorttitle.",
+      "text": "1. This Act may be cited as the Public Participation Act, 2025.",
+      "text_sha256": "3e5b2ed53505951ef73e53544405cc3d213cd435515ed441a006fc48325e194f",
+      "pages": [
+        3
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c2",
+      "number": "2",
+      "heading": "interpretation.",
+      "text": "2. In this Act, unless the context otherwise requires— “public participation” means the process of involving the public in making or implementing public policy decisions including the enactment oflegislation; “responsible authority” means the person responsible for public participation in the institutions set out under section 6; and “specific guidelines” means the specific public participation guidelines developed by a responsible authority under section 16.",
+      "text_sha256": "0474e5e46f7c220318fa903029f3c7b9a3e1e9416ab8f55b129bc814e2811b40",
+      "pages": [
+        3
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c3",
+      "number": "3",
+      "heading": "ObjectoftheAct.",
+      "text": "3. The object of this Act is to enhance, promote and facilitate participation of the people in governance as provided for in Articles 10 (2), 69 (1) (d), 118, 184 (1) (c), 196,201 (a) and 232 (l)(d) ofthe Constitution.",
+      "text_sha256": "2e3198bf82977b059e667c7d9a7d751db4db1edee601426e16a269a222d29a1b",
+      "pages": [
+        3
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c4",
+      "number": "4",
+      "heading": "Applicationofthe",
+      "text": "4. (1) This Act applies to responsible authorities and the public with respect to public participation exercises. (2) A responsible authority shall facilitate public participationon mattersrelatingto— (a) formulation and implementation ofpublic policies; (b) law making processes; or (c) any other matter as may be required by legislation.",
+      "text_sha256": "cd2be3e695394c9b577534fa198f96337d2655422fdbc9beb0a9b44a974b583a",
+      "pages": [
+        3
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c5",
+      "number": "5",
+      "heading": "Principles of public participation.",
+      "text": "5. A responsible authority undertaking a public ^ participation exercise under this Act shall be guided by the principles that— (a) public participation may be conducted through written submissions, oral hearings, online forums or any other method deemed appropriate to the context; (b) the public shall be afforded a reasonable chance to express their views; (c) the scope, depth and duration of a public participation exercise shall be commensurate with the complexity, significance and potential impact ofthe matter under consideration; and (d) public resources shall be used in a prudent and responsible manner.",
+      "text_sha256": "f3fa3673eaa6eb495583acbaafd9c22253928c6b5b657bb8bee26cc9df420475",
+      "pages": [
+        3,
+        4
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c6",
+      "number": "6",
+      "heading": "Responsible authontiesin public participation.",
+      "text": "6. The responsible authorities for the purposes ofthis , , f, , ^ Act shall be — (a) in the case of Parliament, the Clerk of the relevant House; (b) in the case of the Judiciary, the Chief Registrar of the Judiciary; (c) in the case of the Office of the Attorney-General, the Attorney-General; (d) in the case of the Office of the Director of Public Prosecutions, the Director ofPublic Prosecutions; (e) in the case of a State Department, the relevant Principal Secretary; (f) in the case of a Constitutional Commission or an Independent Office, the Secretary or the Chief Executive Officer; (g) in the case of a State corporation, the Chief Executive Officer; (h) in the case of a county assembly, the Clerk of the county assembly; (i) in the case of a county executive, the county Governor; and (j) in any other case, the person or entity making or implementing a public policy decision.",
+      "text_sha256": "1118473c6cadac7f2cc5b30cff3f3e3f5ac43b6d3fe4a6f9db4bf7f145cb182d",
+      "pages": [
+        4
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c7",
+      "number": "7",
+      "heading": "Considerationsin undertaking public participation.",
+      "text": "7. A responsible' authority shall in undertaking public participation, consider— (a) the nature ofthe matter under consideration; (b) the urgency ofthe matter under consideration; (c) the impact ofthe matter on the public; (d) the need for inclusive and effective representation; (e) the number ofpersons likely to be affected; (f) the ability of the members of the public to access the necessary information and the public participation forum; (g) the integrity and transparency ofthe process; (h) the financial and human resources available; and (i) any other relevant considerations.",
+      "text_sha256": "7cb565d67cc45e813d7633f56d786d502c1030ce5e933ac66ef0d68b90de82bf",
+      "pages": [
+        5
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c8",
+      "number": "8",
+      "heading": "Noticeforpublic participation.",
+      "text": "8. (1) A responsible authority shall, before undertaking a public participation exercise, notify the public ofthe exercise. (2) A notice under subsection (1) shall include the venue, date, time and mode of the public participation exercise.",
+      "text_sha256": "7b6c1c4800c529103b2feae4426f2ce6bbb2cfd7777e654d4bd0a7312dd30266",
+      "pages": [
+        5
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c9",
+      "number": "9",
+      "heading": "Modesof notifyingthe public.",
+      "text": "9. (1) A responsible authority may notify the public of the public participation exercise through — (a) electronic media including television, radio stations, internet or mobile phones; (b) official websites and social media platforms; (c) public meetings; (d) public notice boards; or (e) print media. (2) A public participation notice under sub-section (1) shall state— (a) the subject matter ofthe public participation; (b) the duration of the public participation exercise; and (c) whether submissions may be made orally, in writing or both.",
+      "text_sha256": "4a0803fb5d741dc8a9dc9b8da62c6dde11f896e6a252297d18a1b1bcc6573e6f",
+      "pages": [
+        5
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c10",
+      "number": "10",
+      "heading": "Submissions duringpublic participation.",
+      "text": "10. The submissions at a public participation exercise may be made— (a) in writing by way ofmemoranda or letters; (b) orally; (c) through online platforms; or (d) at public hearings, workshops, seminars and conferences.",
+      "text_sha256": "93e03176dff19e403bff49211583a5ef65e855bcfc6b5461245c82881ecad596",
+      "pages": [
+        6
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c11",
+      "number": "11",
+      "heading": "Reasonable time.",
+      "text": "11. A responsible authority shall allow reasonable time for the public to make submissions during a public participation process.",
+      "text_sha256": "cd81b6d3e070c78150e8d2c3f523a2096edbed293f5d5f9c51f63507b5348592",
+      "pages": [
+        6
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c12",
+      "number": "12",
+      "heading": "Processing of responses.",
+      "text": "12. (1) A responsible authority shall analyse and take into account the submissions received from the public. (2) A responsible authority shall publish the outcome of the public participation exercise.",
+      "text_sha256": "cf26b38b05d9a6598234c221b7912520d48219d06928d4a47c97f73adc211cf5",
+      "pages": [
+        6
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c13",
+      "number": "13",
+      "heading": "Access topublic participation processes,",
+      "text": "i 13.(1) A responsible authority shall ensure that the , .. . ,, public has access to the public participation process and the opportunity to give views on the matter under consideration. (2) Where a responsible authority holds a public hearing and the participants are not conversant with English or Kiswahili language, the responsible authority shall take measures to conduct the exercise in a language that the participants understand.",
+      "text_sha256": "db644d2e7abfb9dcbaee54e3b7fdbcba9e039b7fa706189d9a8091838e25fe24",
+      "pages": [
+        6
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c14",
+      "number": "14",
+      "heading": "Accessto documents.",
+      "text": "14. A responsible authority shall facilitate the public with access to the documents relating to the matter under consideration in apublic participation exercise.",
+      "text_sha256": "258aa330e6107172a507829417731e15192609bd4bbf07c52c054c40ba365eca",
+      "pages": [
+        6
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c15",
+      "number": "15",
+      "heading": "Conductin a forum ofpublic participation.",
+      "text": "15.(1) A person who attends a public participation forum shall be courteous, respectful and civil. (2) A responsible authority shall facilitate the maintenance of order during the conduct of public participation.",
+      "text_sha256": "0d0099f1894bba7c06faa58c747c0895d465d6f9dee75b7881744fd2627e2b4a",
+      "pages": [
+        6
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c16",
+      "number": "16",
+      "heading": "oeveiopmer^tof specificguidelines forpubii 1C participation.",
+      "text": "16. (1) A responsible authonty may develop specific • , T T j X 11- k ..u guidelines for the conduct of public participation by the t respective institution. (2) The specific guidelines on public participation developed by a responsible authority shall comply with the general guidelines set out in Part III of this Act.",
+      "text_sha256": "758ef0ea33729997c60406780419feb37d22d5efd1a07e87b897dc624c6b8743",
+      "pages": [
+        6
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c17",
+      "number": "17",
+      "heading": "Publicationof specificpublic participation guidelines.",
+      "text": "17. A responsible authority shall publish in the Gazette, the specific guidelines on public participation developed pursuant to section 16: Provided that in the case of Parliament and county assemblies, such guidelines shall be incorporated in the Standing Orders of the respective House of Parliament or county assembly.",
+      "text_sha256": "a890c41b5ca37b079e97ac2e42d94c316ecb7e15dd4965609a604b1051e24d79",
+      "pages": [
+        7
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c18",
+      "number": "18",
+      "heading": "Public participationby Parliament.",
+      "text": "18. (1) Pursuant to Article 118(1) of the Constitution, Parliament shall— (a) conduct its business in an open manner, and its sittings and those of its committees shall he open to the public; and (b) facilitate public participation and involvement in the legislative and other business of Parhament and its committees. (2) Where a Committee of one House of Parliament has conducted public participation on a Bill, a Committee of the other House ofParliament may— (a) rely on the report tabled by the Committee of the originating House; or (b) seek additional views on the Bill with respect to substantive amendments made to the Bill during its consideration. (3) A committee of the originating House may hold a joint public participation exercise with the corresponding committee of the other House with respect to a Bill originating from the Party forming the National Government. (4) A committee of a House of Parliament may take measures to avoid duplicating public participation conducted by a committee ofthe originating House.",
+      "text_sha256": "1551bf9b626f10bbc41483a00a2904caca1729dbbf77c0560d7b41a7a97ecbd3",
+      "pages": [
+        7
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c19",
+      "number": "19",
+      "heading": "Certain information notto be disclosed. Cap. 7M. Cap. 199. Cap. 411C.",
+      "text": "19. (1) A responsible authority undertaking public participation under this Act shall not disclose information protected under section 6 of the Access to Information Act, sections 48 and 49 of the Kenya Defences Forces Act or any other written law. (2) A responsible authority processing personal data under this Act shall comply with the Data Protection Act.",
+      "text_sha256": "19f182cb1e95572ddccda454f394087e40b47738f9340abe16d373e236b019ba",
+      "pages": [
+        7
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c20",
+      "number": "20",
+      "heading": "General penalty,",
+      "text": "20. A responsible authority who, in conducting public participation, wilfully fails to adhere to the principles and guidelines set out under this Act commits an offence and shall be liable, upon conviction, to a fine not exceeding five hundred thousand shillings.",
+      "text_sha256": "604fd190bac2ee89f56aaeec629d7bfb0fd2c32a8f15baece73c279cf67e0663",
+      "pages": [
+        8
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    },
+    {
+      "id": "c21",
+      "number": "21",
+      "heading": "Transitional provision.",
+      "text": "21. A public participation exercise in progress at the commencement of this Act shall proceed so far as possible in accordance with this Act.",
+      "text_sha256": "615ad226088e1f12facd0c1fbcd6751a49f6515650a340c13a85f7d0bcb15b77",
+      "pages": [
+        8
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": []
+    }
+  ],
+  "stage_next": null,
+  "changes": [],
+  "participation": null,
+  "challenge": null
+}

@@ -1,0 +1,24 @@
+# Layout rules for the Tertiary Education, Placement and Funding Bill, 2026
+# (Kenya Law, born-digital PDF), calibrated from `politricks probe`.
+# May only move boundaries or strip running headers — never edit legal text.
+
+# Page 1 is the Gazette cover; page 2 is blank.
+skip_pages: [1, 2]
+
+# Body text is 11.3pt; marginal notes are 7.5pt starting at x ≈ 400.
+margin_x: 395
+
+# Running header: "1784 The Tertiary Education Placement and Funding Bill, 2026"
+# (page number first or last). It is 9.5pt and spans the page, so the margin
+# filter clips its right-hand end — observed as "...Funding Bill, 20" (the "26"
+# and trailing page number fall past the margin line). The pattern accepts that.
+strip_patterns:
+  - '^\d{1,4}$'
+  - '^(\d{3,4}\s+)?The Tertiary Education,? Placement and Funding( Bill,?)?( 20(26)?)?(\s+\d{3,4})?$'
+
+start_after: 'ENACTED by the Parliament of Kenya'
+end_before: '^MEMORANDUM OF OBJECTS AND REASONS'
+
+# The Arrangement of Clauses (pages 3–6) lists 1–68 ("68—Interpretation of
+# this Part."), then a Schedule. Pinned so a mis-split fails loudly.
+expected_clause_count: 68

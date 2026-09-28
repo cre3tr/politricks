@@ -1,0 +1,1098 @@
+p3: THE TERTIARY EDUCATION, PLACEMENT AND
+p3: FUNDING BILL, 2026
+p3: ARRANGEMENT OF CLAUSES
+p3: Clause
+p3: PART I—PRELIMINARY
+p3: 1—Short title and commencement.
+p3: 2—Interpretation.
+p3: 3—Objects of the Act.
+p3: 4—Guiding principles.
+p3: 5—Application.
+p3: PART II— THE KENYA UNIVERSITIES AND
+p3: COLLEGES CENTRAL PLACEMENT SERVICE
+p3: 6—Establishment of the Kenya Universities and
+p3: Colleges Central Placement Service.
+p3: 7—Functions of the Placement Service.
+p3: 8—Powers of the Placement Service.
+p3: 9—Board of the Placement Service.
+p3: 10—Qualifications of the Chairperson of the Board of
+p3: the Service.
+p3: 11—Qualifications of a member of the Board of the
+p3: Service.
+p3: 12—Vacancy of office.
+p3: 13—Conduct of Business and Affairs of the Board.
+p3: 14—Committees of the Board.
+p3: 15—Delegation.
+p3: 16—Chief Executive Officer.
+p3: 17—Qualifications for appointment as Chief Executive
+p3: Officer.
+p3: 18—Vacancy in the office Chief Executive Officer.
+p3: 19—Staff of the Placement Service.
+p3: 20—Placement Service obligation.
+p4: 21—Submission of programmes, capacity, and costs by
+p4: public tertiary
+p4: institutions.
+p4: 22—Application and determination of the placement.
+p4: 23—Revision of application for placement.
+p4: 24—Placement report.
+p4: 25—Transfers.
+p4: 26—Institution admission returns.
+p4: 27—Career guidance programmes.
+p4: PART III— THE TERTIARY EDUCATION
+p4: FUNDING AUTHORITY.
+p4: 28—Establishment of the Tertiary Education Funding
+p4: Authority.
+p4: 29—Functions of the Authority.
+p4: 30—Powers of the Authority.
+p4: 31—Board of the Authority.
+p4: 32—Qualifications of the Chairperson of the Board.
+p4: 33—Qualifications of a member of the Board.
+p4: 34—Vacancy of office.
+p4: 35—Conduct of business and affairs of the Board.
+p4: 36—Committees of the Board.
+p4: 37—Delegation.
+p4: 38—Chief Executive Officer.
+p4: 39—Qualifications for appointment as Chief Executive
+p4: Officer.
+p4: 40—Functions of the Chief Executive Officer.
+p4: 41—Vacancy in the office of the Chief Executive
+p4: Officer.
+p4: 42—Staff of the Authority.
+p4: 43—Establishment of Fund.
+p4: 44—Purpose of the Fund.
+p5: 45—Sources of funds.
+p5: 46—Eligibility for loans.
+p5: 47—Loans to minors.
+p5: 48—Application for loans.
+p5: 49—Obligations of the loanee.
+p5: 50—Obligations of employer.
+p5: 51—Debt recovery.
+p5: PART IV- DATA MANAGEMENT
+p5: 52—Data Processing.
+p5: 53—Data sharing.
+p5: PART V – DISPUTE RESOLUTION
+p5: MECHANISMS
+p5: 54—Alternative dispute resolution.
+p5: PART VI–FINANCIAL PROVISIONS
+p5: 55—Financial year.
+p5: 56—Annual estimates.
+p5: 57—Books of accounts and audit.
+p5: PART VII—MISCELLANEOUS PROVISIONS
+p5: 58—Protection from personal liability.
+p5: 59—Common seal.
+p5: 60—Amendment of Cap. 22.
+p5: 61—Liability for damages.
+p5: 62—General penalty.
+p5: 63—Regulations.
+p5: PART VIII— REPEAL AND TRANSITIONAL
+p5: PROVISIONS
+p5: 64—Repeal.
+p5: 65—Transition.
+p6: 66—Transfer of property, assets, and liabilities.
+p6: 67—Staff.
+p6: 68—Interpretation of this Part.
+p6: SCHEDULE—CONDUCT OF BUSINESS AND
+p6: AFFAIRS OF THE BOARDS
+p7: THE TERTIARY EDUCATION, PLACEMENT AND
+p7: FUNDING BILL, 2026
+p7: A Bill for
+p7: AN ACT of Parliament to provide for the placement of
+p7: students and trainees to tertiary institutions;
+p7: funding of students and trainees in tertiary
+p7: institutions; establishment of the Kenya
+p7: Universities and Colleges Central Placement
+p7: Service, and the Tertiary Education Funding
+p7: Authority; and for connected purposes
+p7: ENACTED by the Parliament of Kenya as follows—
+p7: PART I—PRELIMINARY
+p7: 1. This Act may be cited as the Tertiary Education
+p7: Placement and Funding Act, 2026.
+p7: 2. In this Act, unless the context otherwise requires–
+p7: “accepting institution” means a tertiary institution that
+p7: accepts a student who has been placed by the Kenya
+p7: Universities and Colleges Central Placement Service in a
+p7: different tertiary institution during the inter institution
+p7: transfers;
+p7: “admission” means the process of accepting an
+p7: applicant who meets the minimum requirements set by the
+p7: relevant authorities for the programme applied for in a
+p7: tertiary institution;
+p7: “Authority” means the Tertiary Education Funding
+p7: Authority established under section 28;
+p7: “Cabinet Secretary” means the Cabinet Secretary for
+p7: the time being responsible for matters relating to tertiary
+p7: education;
+p7: “Chief Executive Officer means the Chief Executive
+p7: Officer of the Kenya Universities and Colleges Central
+p7: Placement Service or the Tertiary Education Funding
+p7: Authority;
+p7: “Commission” means the Commission for University
+p7: Education established under section 4 of the Universities
+p7: Act;
+p7: “eligible person” means any person, who being a
+p7: Kenyan citizen has attained a minimum entry requirement
+p8: and has been admitted to a recognized tertiary institution or
+p8: any other person being a Kenyan citizen, is willing to
+p8: access tertiary education loan for the benefit of a student
+p8: admitted in a tertiary institution;
+p8: “emolument” means any salary, wages, remuneration,
+p8: allowances, bonus, commission, gratuity, benefit or other
+p8: payments or benefit whether in cash or in-kind payable to a
+p8: beneficiary in respect to employment or services rendered;
+p8: “enrolment” means the total number of students and
+p8: trainees admitted in a tertiary institution to undertake a
+p8: course or programme in a given period;
+p8: “Fund” means the Tertiary Education Fund established
+p8: under section 43;
+p8: “loan” means financial aid granted to a student or a
+p8: trainee undertaking tertiary education;
+p8: “loanee” means a person who has received a loan
+p8: facility for tertiary education;
+p8: “placement” means allocating qualified students and
+p8: trainees to specific programmes or courses in various
+p8: tertiary institutions;
+p8: “Placement Service” means the Kenya Universities
+p8: and Colleges Central Placement Service established under
+p8: section 6;
+p8: “regulatory bodies” means the Commission of
+p8: University Education established under section 4 of the
+p8: Universities Act and the Technical and Vocational
+p8: Education and Training Authority established under section
+p8: 6 of the Technical and Vocational Education and Training
+p8: Act;
+p8: “saving scheme” means a savings plan, specifically
+p8: designed by the Tertiary Education Funding Authority to
+p8: enable a person to plan or invest for the tertiary education
+p8: of a student’s or trainee;
+p8: “scholarship” means the financial aid awarded to
+p8: student or trainee, based on their need to support tertiary
+p8: education;
+p8: “student” means any person undertaking tertiary
+p8: education in a university;
+p9: “tertiary education” means formal post-secondary
+p9: education offered in a tertiary institution;
+p9: “tertiary institution” means a university, college, and
+p9: technical and vocational education training institution
+p9: recognized by the relevant regulatory bodies; and
+p9: “trainee” means any person undertaking tertiary
+p9: education in a college.
+p9: 3. The object of this Act shall be to provide a
+p9: framework for—
+p9: (a) the placement of students and trainees to tertiary
+p9: institutions;
+p9: (b) financing students and trainees undertaking
+p9: tertiary education; and
+p9: (c) offering coordinated career guidance to students
+p9: and trainees.
+p9: 4. The implementation of this Act shall ensure—
+p9: (a) universal access to tertiary education;
+p9: (b) equal access to government funding;
+p9: (c) availability of adequate funds through promotion
+p9: of diversified funding sources;
+p9: (d) sustainable source of funding; and
+p9: (e) prudent utilization of funds.
+p9: 5. This Act shall apply to–
+p9: (a) persons seeking placement in tertiary institutions;
+p9: (b) students or trainees seeking funding for tertiary
+p9: education;
+p9: (c) students or trainees granted funding for tertiary
+p9: education;
+p9: (d) Kenyan students and trainees pursuing tertiary
+p9: education within and outside Kenya;
+p9: (e) accredited tertiary institutions offering tertiary
+p9: education in Kenya; and
+p9: (f) any person or institution interested in funding in
+p9: tertiary education.
+p10: PART II— THE KENYA UNIVERSITIES AND
+p10: COLLEGES CENTRAL PLACEMENT SERVICE.
+p10: 6. (1) There is established a Placement Service to be
+p10: known as the Kenya Universities and Colleges Central
+p10: Placement Service.
+p10: (2) The Placement Service shall be a body corporate
+p10: with perpetual succession and a common seal and shall, in
+p10: its corporate name, be capable of—
+p10: (a) suing and being sued;
+p10: (b) taking, purchasing, or otherwise acquiring,
+p10: holding, charging, leasing, or disposing of
+p10: moveable or immovable property;
+p10: (c) borrowing and lending money;
+p10: (d) doing or performing all such other acts necessary
+p10: for the proper performance of its functions under
+p10: this Act which may lawfully be done or performed
+p10: by a body corporate.
+p10: (3) The headquarters of the Placement Service shall
+p10: be in Nairobi, but the Service shall ensure access to its
+p10: services in all parts of Kenya.
+p10: 7. The Placement Service shall—
+p10: (a) set a framework to facilitate placement of students
+p10: and trainees in tertiary education institutions;
+p10: (b) place students and trainees to public accredited
+p10: tertiary institutions;
+p10: (c) offer coordinated career guidance to persons
+p10: intending to pursue tertiary education;
+p10: (d) establish and maintain a system for data
+p10: management relating to placement of students for
+p10: tertiary education;
+p10: (e) advise the Cabinet Secretary on matters relating to
+p10: placement of students and trainees; and
+p10: (f) perform any other function conferred on it by this
+p10: Act or any other written law.
+p10: 8. In performance of the functions under section 7, the
+p10: Placement Service shall have powers to–
+p11: (a) administer the assets of the Placement Service;
+p11: (b) open and operate bank accounts in accordance
+p11: with the relevant laws;
+p11: (c) receive any gifts, grants, donations, endowments,
+p11: or any other monies lawfully received by the
+p11: Placement Service; and
+p11: (d) enter into associations, collaborations and linkages
+p11: with other persons, bodies, or organizations within
+p11: or outside Kenya, as the Placement Service may
+p11: consider appropriate.
+p11: 9. (1) There shall be a Board of the Placement Service
+p11: which shall consist of—
+p11: (a) a Chairperson, who shall be appointed by the
+p11: President;
+p11: (b) the Principal Secretary responsible for matters
+p11: relating to university education or a designated
+p11: representative;
+p11: (c) the Principal Secretary responsible for matters
+p11: relating to technical and vocational education and
+p11: training or a designated representative;
+p11: (d) the Principal Secretary responsible for matters
+p11: relating to finance or a designated representative;
+p11: (e) the Attorney-General or designated representative;
+p11: (f) four independent persons; and
+p11: (g) the Chief Executive Officer who shall be an ex
+p11: officio member with no voting rights.
+p11: (2) The members of the Board appointed under
+p11: subsection (1) (f) shall be appointed by the Cabinet
+p11: Secretary by notice in the Gazette.
+p11: (3) The Chairperson and members of the Board
+p11: appointed under subsection (1)(a) and (f) shall hold office
+p11: for a term of three years and shall be eligible for re-
+p11: appointment for one further term subject to satisfactory
+p11: performance.
+p11: 10. A person qualifies to be appointed as the
+p11: Chairperson of the Board under section 9 (1) (a), if the
+p11: person—
+p12: (a) is a citizen of Kenya;
+p12: (b) holds a degree from a university recognized in
+p12: Kenya;
+p12: (c) has at least ten years’ experience in law, education,
+p12: public administration, business management,
+p12: financial management, governance or other
+p12: relevant professional experience; and
+p12: (d) meets the requirements of Chapter Six of the
+p12: Constitution.
+p12: 11. A person qualifies to be appointed as a member of
+p12: the Board under section 9(1)(f) if the person—
+p12: (a) is a citizen of Kenya;
+p12: (b) holds a degree from a university recognized in
+p12: Kenya;
+p12: (c) has at least six years’ experience in business,
+p12: financial management, governance or other
+p12: relevant professional experience; and
+p12: (d) meets the requirements of Chapter Six of the
+p12: Constitution.
+p12: 12. (1) The office of the Chairperson or a member of
+p12: the Board shall become vacant if the Chairperson or a
+p12: member–
+p12: (a) resigns by notice in writing addressed to the
+p12: appointing authority;
+p12: (b) is absent from three consecutive meetings of the
+p12: Board without the permission of the Chairperson
+p12: or in the case of the Chairperson the permission of
+p12: the Cabinet Secretary;
+p12: (c) is unable to exercise the function of the office by
+p12: reason of physical or mental infirmity;
+p12: (d) is adjudged bankrupt by a court of competent
+p12: jurisdiction or enters into a composition or scheme
+p12: of arrangement for the benefit of creditors;
+p12: (e) is in breach of the requirements of Chapter Six of
+p12: the Constitution; or
+p13: (f) is convicted of an offence and sentenced to
+p13: imprisonment for a period of six or more months.
+p13: 13. The provisions of the Schedule shall apply with
+p13: respect to the conduct of the business and affairs of the
+p13: Board of the Placement Service.
+p13: 14. The Board may establish such committees as may
+p13: be appropriate to perform such functions and discharge
+p13: such responsibilities as it may determine.
+p13: 15. The Board may delegate to any committee of the
+p13: Board or to any member, staff or agent of the Placement
+p13: Service, the exercise of any of the powers or the
+p13: performance of any of the functions or duties of the
+p13: Authority under this Act or any other written law.
+p13: 16. (1) There shall be a Chief Executive Officer
+p13: appointed by the Board through an open, transparent, and
+p13: competitive process.
+p13: (2) The Chief Executive Officer shall hold office for a
+p13: term of four years on such terms and conditions of service
+p13: as the Board may determine and shall be eligible for re-
+p13: appointment for one further term.
+p13: 17. (1) A person qualifies to be appointed as a Chief
+p13: Executive Officer of the Placement Service if the person—
+p13: (a) holds a bachelor's degree from a university
+p13: recognized in Kenya;
+p13: (b) holds a master’s degree in finance, education,
+p13: social science, or other relevant master’s degree
+p13: from a university recognized in Kenya;
+p13: (c) has at least ten years' experience in the
+p13: management in a public or private institution; and
+p13: (d) meets the requirements of Chapter Six of the
+p13: Constitution.
+p13: 18. (1) The office of the Chief Executive Officer may
+p13: become vacant if the holder of the office resigns or is
+p13: removed from office in accordance with subsection (2).
+p13: (2) The Chief Executive Officer may be removed
+p13: from office if the Chief Executive Officer is—
+p14: (a) in breach of chapter six of the Constitution;
+p14: (b) adjudged bankrupt or enters into a composition
+p14: scheme or arrangement with his or her creditors;
+p14: (c) incapacitated by physical or mental illness; or
+p14: (d) is convicted of a criminal offence and sentenced to
+p14: imprisonment for a term exceeding six months;
+p14: 19. The Board may appoint such staff as may be
+p14: necessary for the proper discharge of the functions of the
+p14: Service.
+p14: 20. (1) The Placement Service shall conduct
+p14: placement of all students who apply and are eligible to
+p14: undertake tertiary education in a public tertiary institution.
+p14: (2) The Placement Service shall maintain, update, and
+p14: publicize a list of all accredited public tertiary institutions
+p14: submitted by regulatory bodies for purposes of placement
+p14: of students in accordance with this Act.
+p14: (3) Despite subsection (1) and (2), the Placement
+p14: Service may place an eligible student to a private tertiary
+p14: institution upon request by a student and where there exists
+p14: no vacancy for the eligible student to pursue the proposed
+p14: course or programme in a public tertiary institution
+p14: (4) The Placement Service shall develop a placement
+p14: framework to guide the placement process.
+p14: (5) Funding under this Act shall be for students who
+p14: have been placed by the Placement Service.
+p14: 21. (1) Every public tertiary institution shall, at least
+p14: two months before the release of the national assessment
+p14: results, submit to the Placement Service the—
+p14: (a) programmes to be offered;
+p14: (b) capacity of each programme; and
+p14: (c) approved cost of each programme.
+p14: (2) The Placement Service shall validate the
+p14: information submitted under subsection (1) in consultation
+p14: with the regulatory bodies.
+p14: (3) The Placement Service shall, on completion of
+p14: validation, publicize the programmes, the capacity of each
+p14: programme and the costs in the Placement Service’s portal.
+p15: 22. (1) The Placement Service shall, within thirty days
+p15: of the release of the national assessment results, invite
+p15: applications for placement.
+p15: (2) The Placement Service shall, within thirty days of
+p15: receipt of the application process the applications and
+p15: communicate its decision to the applicants and the tertiary
+p15: institutions.
+p15: (3) In processing the applicantions under subsection
+p15: (2), the Authority shall be guided by the placement
+p15: framework.
+p15: 23. (1) An applicant whose application for placement
+p15: under section 22 is unsuccessful shall be accorded an
+p15: opportunity to revise the application without charge.
+p15: (2) A person who did not make an application under
+p15: section 22 shall have a second opportunity to make a
+p15: placement application under this section subject to payment
+p15: of the requisite fees.
+p15: (3) The Placement Service shall invite applicants
+p15: under subsection (1) and (2) to revise or make their
+p15: application within fifteen days from the date of invitation.
+p15: (4) The Placement Service shall, within fifteen days
+p15: process the applications and communicate its decision to
+p15: the applicants and tertiary institutions.
+p15: 24. (1) The Placement Service shall, on completion of
+p15: the placement process, submit the placement report to the
+p15: Cabinet Secretary.
+p15: (2) The placement report shall contain information on
+p15: the placement of students in tertiary institutions and where
+p15: the provisions of section 20(3) apply, the report shall
+p15: include information—
+p15: (a) on the number of students placed in private tertiary
+p15: institutions;
+p15: (b) on the courses to be undertaken by the eligible
+p15: students; and
+p15: (c) specifying how the requirements under section
+p15: 20(3) have been met.
+p15: 25. (1) A student or trainee who has been placed in a
+p15: programme may apply to the institution to change the
+p15: programme or the institution.
+p16: (2) Every tertiary institution shall submit to the
+p16: Placement Service any inter institutional and inter faculty
+p16: transfer in its institution within fifteen days of the transfer.
+p16: 26. (1) All tertiary institutions shall submit to the
+p16: Placement Service returns on the particulars of students
+p16: enrolled in respective programmes within thirty days after
+p16: the commencement of the tertiary institution’s academic
+p16: year.
+p16: (2) A person who contravenes the provisions of this
+p16: section commits an offence.
+p16: 27. (1) The Placement Service shall develop and
+p16: implement career guidance programmes to persons
+p16: intending to pursue tertiary education in tertiary
+p16: institutions.
+p16: (2) In developing the career guidelines programme,
+p16: the Placement Service may—
+p16: (a) conduct market surveys to identify labour market
+p16: demands and required skills;
+p16: (b) collect and analyse relevant data on career choices
+p16: and trends;
+p16: (c) collaborate with other relevant government
+p16: agencies and stakeholders; and
+p16: (d) benchmark on international best practices.
+p16: (3) The Placement Service may implement the career
+p16: guidance programmes contemplated under subsection (1)
+p16: either on its own, through accredited institutions or persons
+p16: or in collaboration, with other relevant government
+p16: agencies and stakeholders.
+p16: (4) In implementing the career guidance programmes
+p16: contemplated under subsection (1), the Placement Service
+p16: may–
+p16: (a) conduct career guidance fairs, exhibitions and
+p16: conferences and such other stakeholder forums;
+p16: (b) conduct continuous training of career mentors;
+p16: (c) develop career guidance manuals, publications,
+p16: documentaries, social media content, books and
+p16: other information education and communication
+p16: materials; and
+p16: (d) disseminate research findings and information on
+p16: career guidance.
+p17: PART III— THE TERTIARY EDUCATION
+p17: FUNDING AUTHORITY.
+p17: 28. (1) There is established an Authority to be known
+p17: as the Tertiary Education Funding Authority.
+p17: (2) The Authority shall be a body corporate with
+p17: perpetual succession and a common seal and shall, in its
+p17: corporate name, be capable of—
+p17: (a) suing and being sued;
+p17: (b) taking, purchasing, or otherwise acquiring,
+p17: holding, charging, leasing, or disposing of
+p17: moveable or immovable property;
+p17: (c) borrowing and lending money;
+p17: (d) doing or performing all such other acts necessary
+p17: for the proper performance of its functions under
+p17: this Act which may lawfully be done or performed
+p17: by a body corporate.
+p17: (3) The headquarters of the Authority shall be in
+p17: Nairobi but the Authority shall ensure access to its services
+p17: in all parts of Kenya.
+p17: 29. The Authority shall—
+p17: (a) mobilise funds for lending to students and trainees
+p17: pursuing tertiary education;
+p17: (b) in consultation with the Cabinet Secretary, set
+p17: funding criteria for students and trainees pursuing
+p17: tertiary education;
+p17: (c) grant loans to eligible students and trainees
+p17: pursuing tertiary education;
+p17: (d) administer scholarships to eligible students
+p17: pursuing tertiary education;
+p17: (e) establish and maintain a system for data
+p17: management relating to funding of tertiary
+p17: education;
+p17: (f) advise the Cabinet Secretary on matters relating to
+p17: funding of tertiary education; and
+p17: (g) perform any other function conferred on it by this
+p17: Act or any other written law.
+p18: 30. In performance of the functions under section 29,
+p18: the Authority shall have powers to–
+p18: (a) manage and administer loans;
+p18: (b) administer the assets of the Authority;
+p18: (c) recover loans from loan beneficiaries;
+p18: (d) in consultation with the Cabinet Secretary, set the
+p18: interest rate for loans;
+p18: (e) open and operate bank accounts in accordance
+p18: with the relevant laws;
+p18: (f) receive any gifts, grants, donations, endowments,
+p18: or any other monies lawfully received by the
+p18: Authority;
+p18: (g) mobilise resources from treasury bills, bonds,
+p18: concessional loans, Government grants, savings
+p18: scheme, unit trusts, commercial partners, loans
+p18: repayments and any other lawful source for
+p18: purposes of the Act;
+p18: (h) mobilize private capital and non-traditional
+p18: sources of educational finance including domestic
+p18: pension funds and collective investment schemes,
+p18: sovereign wealth funds or climate finance;
+p18: (i) establish a savings scheme or product to receive
+p18: deposits from any person for the purpose of saving
+p18: towards tertiary education in respect of a specific
+p18: child;
+p18: (j) enter into associations, collaborations and linkages
+p18: with other persons, bodies, or organizations within
+p18: or outside Kenya, as the Authority may consider
+p18: appropriate; and
+p18: (k) enter and inspect business premises and employers
+p18: for compliance.
+p18: 31. (1) There shall be a Board of Authority which
+p18: shall consist of–
+p18: (a) a Chairperson, who shall be appointed by the
+p18: President;
+p18: (b) the Principal Secretary responsible for matters
+p18: relating to university education or a designated
+p18: representative;
+p19: (c) the Principal Secretary responsible for matters
+p19: relating to technical and vocational education and
+p19: training or a designated representative;
+p19: (d) the Principal Secretary responsible for matters
+p19: relating to finance or a designated representative;
+p19: (e) the Attorney-General or a designated
+p19: representative;
+p19: (f) four persons who shall not be public officers; and
+p19: (g) the Chief Executive Officer who shall be an ex
+p19: officio member with no voting rights.
+p19: (2) The members of the Board appointed under
+p19: subsection (1) (f) shall be appointed by the Cabinet
+p19: Secretary by notice in the Gazette.
+p19: (3) The Chairperson and members of the Board
+p19: appointed under subsection (1) (a) and (f) shall hold office
+p19: for a term of three years and shall be eligible for re-
+p19: appointment for one further term of three years subject to
+p19: satisfactory performance.
+p19: 32. A person qualifies to be appointed as the
+p19: Chairperson of the Board under section 31 (1) (a), if the
+p19: person—
+p19: (a) is a citizen of Kenya;
+p19: (b) holds a degree from a university recognized in
+p19: Kenya;
+p19: (c) has at least ten years’ experience in resource
+p19: mobilization, business, financial management,
+p19: governance, or other relevant professional
+p19: experience; and
+p19: (d) meets the requirements of Chapter Six of the
+p19: Constitution.
+p19: 33. A person qualifies to be appointed as a member of
+p19: the Board under section 31 (1) (f) if the person—
+p19: (a) is a citizen of Kenya;
+p19: (b) holds a degree from a university recognized in
+p19: Kenya;
+p19: (c) has at least six years’ experience in resource
+p19: mobilization, human resource development,
+p20: business, financial management, governance, or
+p20: other relevant professional experience; and
+p20: (d) meets the requirements of Chapter Six of the
+p20: Constitution.
+p20: 34. (1) Subject to the provisions of this Act, the office
+p20: of the Chairperson and a member of the Board shall
+p20: become vacant if the Chairperson or member–
+p20: (a) resigns by notice in writing addressed to the
+p20: appointing authority;
+p20: (b) is absent from three consecutive meetings of the
+p20: Board without the permission of the Chairperson,
+p20: or, in the case of the Chairperson, the permission
+p20: of the Cabinet Secretary;
+p20: (c) is unable to exercise the function of the office by
+p20: reason of physical or mental infirmity;
+p20: (d) is adjudged bankrupt by a court of competent
+p20: jurisdiction or enters into a composition or scheme
+p20: of arrangement for the benefit of creditors;
+p20: (e) is in breach of the requirements of Chapter Six of
+p20: the Constitution; or
+p20: (f) is convicted of an offence and sentenced to
+p20: imprisonment for a period of six or more months.
+p20: 35. The provisions of the Schedule shall apply with
+p20: respect to conduct of the business and affairs of the Board.
+p20: 36. The Board may establish such committees as may
+p20: be appropriate to perform such functions and discharge
+p20: such responsibilities as it may determine.
+p20: 37. The Board may delegate to any committee of the
+p20: Board or to any member staff or agent of the Authority, the
+p20: exercise of any of the powers or the performance of any of
+p20: the functions or duties of the Authority under this Act or
+p20: any other written law.
+p20: 38. (1) There shall be a Chief Executive Officer
+p20: appointed by the Board through an open, transparent, and
+p20: competitive process.
+p20: (2) The Chief Executive Officer shall hold office for a
+p20: term of four years on such terms and conditions of
+p21: employment as the Board may determine and shall be
+p21: eligible for re-appointment for one further term of four
+p21: years subject to satisfactory performance.
+p21: 39. A person qualifies to be appointed as a Chief
+p21: Executive Officer of the Authority if the person—
+p21: (a) holds a bachelor's degree from a university
+p21: recognized in Kenya;
+p21: (b) holds a master’s degree in finance, business
+p21: administration, education, social science, or other
+p21: relevant master’s degree from a university
+p21: recognized in Kenya;
+p21: (c) has at least fifteen years' experience in the
+p21: management in a public or private institution, five
+p21: of which should be in a senior position; and
+p21: (d) meets the requirements of Chapter Six of the
+p21: Constitution.
+p21: 40. The Chief Executive Officer shall—
+p21: (a) be responsible to the Board of the Authority for
+p21: the day-to-day management of the affairs of
+p21: the Authority;
+p21: (b) be the administrator of the Fund.
+p21: 41. (1) The office of the Chief Executive Officer may
+p21: become vacant if the holder of the office resigns or is
+p21: removed from office in accordance with subsection (2).
+p21: (2) The Chief Executive Officer may be removed
+p21: from office if the Chief Executive Officer is—
+p21: (e) in breach of chapter six of the Constitution;
+p21: (f) adjudged bankrupt or enters into a composition
+p21: scheme or arrangement with his or her creditors;
+p21: (g) incapacitated by physical or mental illness; or
+p21: (h) is convicted of a criminal offence and sentenced to
+p21: imprisonment for a term exceeding six months;
+p21: 42. The Board may appoint such staff as may be
+p21: necessary for the proper discharge of the functions of the
+p21: Authority.
+p22: 43. There is established a fund to be known as the
+p22: Tertiary Education Fund which shall be managed and
+p22: administered by the Authority.
+p22: 44. The purpose of the Fund shall be to provide funds
+p22: to be granted as education loans under this Act.
+p22: 45. There shall be paid into the Fund—
+p22: (a) moneys appropriated by the National Assembly;
+p22: (b) proceeds from investments undertaken by
+p22: the Authority;
+p22: (c) repayments of funds disbursed in accordance with
+p22: this Act or Higher Education Loans Board Act
+p22: (repealed);
+p22: (d) interest accrued from the repayments;
+p22: (e) gifts, grants, donations and endowments; and
+p22: (f) revenue from any other lawful source.
+p22: 46. (1) Every student or trainee admitted into public
+p22: or private tertiary institution shall be eligible for an
+p22: education loan.
+p22: (2) A student or trainee qualifies to apply for an
+p22: education loan, if the student or trainee—
+p22: (a) is a citizen of Kenya;
+p22: (b) has been admitted in a tertiary institution; and
+p22: (c) meets the requirements of this Act.
+p22: 47. An eligible person may apply to the Authority for
+p22: grant of education loan to a minor who has been admitted
+p22: to a tertiary institution.
+p22: 48. (1) On admission to a tertiary institution, a student
+p22: or trainee wishing to be funded shall apply to the Authority
+p22: in a prescribed manner for the grant of an education loan.
+p22: (2) The Authority shall review the application and
+p22: communicate its decision to the applicant and the tertiary
+p22: institution of the applicant within a prescribed period.
+p23: 49. (1) A loanee shall, within one year of completion
+p23: of studies, commence repaying the loan together with any
+p23: accrued interest and any other charges.
+p23: (2) A loanee in formal employment shall disclose his
+p23: or her loan status to the employer at the commencement of
+p23: employment.
+p23: (3) A loanee in informal employment shall enter into
+p23: a payment plan with the Authority on the mode and
+p23: frequency of payment.
+p23: (4) In making deductions for loan repayment, the
+p23: Authority shall deduct not more than twenty five percent of
+p23: the loanee’s emoluments.
+p23: 50. (1) Every employer of a loanee shall—
+p23: (a) upon employment of a loanee, inform the
+p23: Authority in writing or in such other manner as the
+p23: Authority may specify;
+p23: (b) deduct from the emoluments of the loanee such
+p23: monthly deductions as may be determined by the
+p23: Authority until payment in full or exit from their
+p23: employment whichever is earlier; and
+p23: (c) remit such deductions within nine days after the
+p23: end of each month.
+p23: (2) The Authority shall charge an employer who, after
+p23: making a deduction from the employee emolument, fails to
+p23: remit the deductions to the Authority within the prescribed
+p23: period, a sum equal to five percent of the total amount of
+p23: the repayment for each month or part of the month that the
+p23: repayment remains unpaid.
+p23: 51. All sums due to the Authority shall be recoverable
+p23: as debts due to the Authority, and without prejudice to any
+p23: other remedy, may be recovered by
+p23: the Authority summarily as a civil debt.
+p23: PART IV—DATA MANAGEMENT
+p23: 52. (1) The Placement Service and the Authority shall
+p23: maintain a central data repository for purposes of the Act.
+p23: (2) The Placement Service and the Authority shall
+p23: manage data through the collection, collation, analysis,
+p23: reporting, storage, sharing, retrieval, and archiving of
+p23: information related to—
+p24: (a) related placement and funding of students or
+p24: trainees;
+p24: (b) students and trainees enrolled in tertiary
+p24: institutions outside Kenya;
+p24: (c) career guidance; and
+p24: (d) other matters.
+p24: (3) The repository shall contain information on—
+p24: (a) students funded by the Authority;
+p24: (b) repayment of loans; and
+p24: (c) placement of students.
+p24: 53. Notwithstanding any other written law, the
+p24: Authority may request a person or entity to furnish it with
+p24: any data in line with the Data Protection Act to enable it
+p24: perform its functions under thisAct.
+p24: (2) The Authority shall utilize the existing relevant
+p24: government and third-party databases in the performance
+p24: of its functions.
+p24: PART V—DISPUTE RESOLUTION MECHANISMS
+p24: 54. Any dispute arising under this Act shall be referred
+p24: to the Placement Service or the Authority, as the case may
+p24: be, for resolution through alternative dispute resolution
+p24: mechanisms.
+p24: PART VI—FINANCIAL PROVISIONS
+p24: 55. The financial year of the Placement Service and
+p24: Authority shall be the period of twelve months ending on
+p24: the thirtieth of June in each year.
+p24: 56. (1) The Placement Service and the Authority
+p24: shall, within three months after the end of each financial
+p24: year, cause to be prepared estimates of its revenue and
+p24: expenditure for that financial year.
+p24: (2) The annual estimates shall make provision for
+p24: estimated expenditure of the Placement Service and the
+p24: Authority for the financial year concerned, and in particular
+p24: shall provide for–
+p24: (a) the grant of the loans and scholarships for students
+p24: in tertiary institutions;
+p25: (b) the funding for the infrastructure in public tertiary
+p25: institutions;
+p25: (c) the payment of salaries, allowances, pensions,
+p25: gratuities, and other charges in respect of the staff
+p25: and members of the Placement Service and the
+p25: Authority; and
+p25: (d) the proper maintenance of any property vested in
+p25: the Placement Service and the Authority.
+p25: (3) The annual estimates shall be approved by the
+p25: respective Boards before the commencement of the
+p25: financial year to which they relate and after the approval,
+p25: the annual estimates shall not be increased without the prior
+p25: consent of the Board.
+p25: (4) No expenditure shall be incurred for the purposes of
+p25: the Placement Service or the Authority except in
+p25: accordance with the annual estimates approved under
+p25: subsection
+p25: 57. (1) The Placement Service and the Authority shall
+p25: cause to be kept all proper books and records of accounts of
+p25: the income, expenditure, assets and liabilities of the
+p25: Placement Service and the Authority.
+p25: (2) Within a period of three months after the end of
+p25: each financial year, the Placement Service and the
+p25: Authority shall submit to the Auditor-General the
+p25: accounts of that year together with a statement of–
+p25: (a) the income and expenditure of the Placement
+p25: Service and the Authority during that year; and
+p25: (b) the assets and liabilities of the Placement Service
+p25: and the Authority as at the last day of the financial
+p25: year.
+p25: (3) The annual accounts of the Placement Service and
+p25: the Authority shall be prepared, audited, and reported in
+p25: accordance with the Constitution and the Public Audit Act.
+p25: PART VII—MISCELLANEOUS PROVISIONS
+p25: 58. No matter or thing done by the Chairperson or a
+p25: member of the Board or any officer, employee or agent of
+p25: the Placement Service and the Authority shall, if the matter
+p25: or thing is done bona fide for the purpose of executing any
+p26: provision of this Act, render the Chairperson, member,
+p26: officer, employee or agent or any person acting on their
+p26: directions, personally liable to any action, claim or demand
+p26: whatsoever.
+p26: 59. (1) The common seal of the Placement Service
+p26: and the Authority shall be kept in the custody of the Chief
+p26: Executive Officer and shall not be used except on the
+p26: direction of the Board.
+p26: (2) The affixing of the common seal of the Placement
+p26: Service or the Authority shall be authenticated by the
+p26: signatures of the Chairperson and the Chief Executive
+p26: Officer.
+p26: 60. Section 42 of the Limitation of Actions Act is
+p26: amended in subsection (1) by deleting paragraph (i) and
+p26: substituting therefor the following new paragraph–
+p26: (i) civil proceedings brought under the Tertiary
+p26: Education Placement and Funding Act for the
+p26: recovery of any loans owed to the Authority
+p26: including any penalty or interest thereon.
+p26: 61. The provisions of this Act shall not relieve the
+p26: Placement Service and the Authority of the liability to pay
+p26: compensation or damages to any person for any injury to
+p26: the person, their property or any of their interest caused by
+p26: the exercise of any power conferred by this Act or by the
+p26: failure, whether wholly or partially of the exercise of such
+p26: powers.
+p26: 62. A person convicted of an offence under this Act
+p26: for which no other penalty is prescribed shall be liable to a
+p26: fine not exceeding one million shillings or, in the case of a
+p26: natural person, to imprisonment for a term not exceeding
+p26: two years, or to both.
+p26: 63. (1) The Cabinet Secretary may make regulations
+p26: for the better carrying out the provisions of this Act.
+p26: (2) Without prejudice to subregulation (1), the
+p26: regulations under subregulation (1) may provide for the
+p26: following—
+p27: (a) placement of students and trainees;
+p27: (b) the receipt, processing, and approval of
+p27: applications for education loans and the forms
+p27: required;
+p27: (c) review on placement and funding;
+p27: (d) loans to minors;
+p27: (e) the withdrawal, suspension, the recovery,
+p27: exemption, cancellation, and waiver of loans;
+p27: (f) recovery of loans from loanees residing outside
+p27: Kenya;
+p27: (g) funding of students and trainees outside Kenya.
+p27: (h) career guidance; and
+p27: (i) such other necessary for giving full effect to the
+p27: implementation of this Act
+p27: PART VIII— REPEAL AND TRANSTIONAL
+p27: PROVISIONS
+p27: 64. (1) The Higher Education Loans Board Act is
+p27: repealed.
+p27: (2) Part VII and VIII of the Universities Act are
+p27: repealed.
+p27: (3) Part IX of the Technical and Vocational Education
+p27: and Training Act is repealed.
+p27: 65. (1) The Kenya University and Colleges Central
+p27: Placement Service shall be the successor to the Kenya
+p27: Universities and Colleges Central Placement Service Board
+p27: established under section 55 (repealed) of the Universities
+p27: Act.
+p27: (2) The Tertiary Education Funding Authority shall
+p27: be the successor to—
+p27: (a) the Higher Education Loans Management Board
+p27: established under section 3 of the Higher
+p27: Education Loans Board Act (repealed).
+p27: (b) the Universities Fund Board established under
+p27: section 53 (repealed) of the Universities Act; and
+p28: (c) the Technical and Vocational Education and
+p28: Training Funding Board established under section
+p28: 47 (repealed) of the Technical and Vocational
+p28: Education and Training Act.
+p28: 66. (1) All references to the former institutions in any
+p28: agreement or instrument relating to any property, assets,
+p28: rights, obligations or liabilities transferred under
+p28: subsections (2) and (3) and subsisting immediately before
+p28: the commencement of this Act, shall at the commencement
+p28: of this Act, unless the context otherwise requires be read as
+p28: references to the Placement Service and the Authority
+p28: respectively.
+p28: (2) All movable and immovable property and assets
+p28: which immediately before the commencement of this Act
+p28: were vested in or possessed by the former institutions,
+p28: shall, at the commencement of this Act, vest in the Service
+p28: and the Authority respectively without further conveyance,
+p28: transfer or assignment.
+p28: (3) All rights, obligations, assets, liabilities which
+p28: immediately before the commencement of this Act were
+p28: vested in or imposed on the former institutions, shall, at the
+p28: commencement of this Act, be deemed to be the rights,
+p28: obligations, assets and liabilities of the Service and the
+p28: Authority respectively.
+p28: (4) All actions, suits or legal proceedings pending by
+p28: or against the former institutions shall, at the
+p28: commencement of this Act, be deemed to be actions, suits,
+p28: or legal proceedings against the Service or the Authority.
+p28: 67. Any person who, immediately before the
+p28: commencement date of this Act, was a member of staff of
+p28: the former institutions shall be deemed to be members of
+p28: staff of the Service and Authority respectively.
+p28: 68. In this Part—
+p28: “former institutions” means the Higher Education
+p28: Loans Management Board established under the Higher
+p28: Education Loans Boards Act, the Universities Fund Board,
+p28: the Kenya Universities and Colleges Central Placement
+p28: Service established under the Universities Act, and the
+p28: Technical and Vocational Education and Training Funding
+p28: Board established under the Technical and Vocational
+p28: Education and Training Act.
+p29: SCHEDULE (s. 13, and s. 34)
+p29: CONDUCT OF BUSINESS AND AFFAIRS OF THE BOARD OF
+p29: THE KENYA UNIVERSITY AND COLLEGES CENTRAL
+p29: PLACEMENT SERVICE AND THE TERTIARY EDUCATION
+p29: FUNDING AUTHORITY
+p29: Frequency of meetings.
+p29: 1. The Board shall meet as often as necessary for the transaction of
+p29: business, but not more than three months shall lapse between the date of
+p29: one meeting and that of the next meeting.
+p29: Special meetings.
+p29: 2. The Chairperson may at any time or shall upon written request by
+p29: a majority of the members, call a special meeting of the Board.
+p29: Presiding over meetings.
+p29: 3. The Chairperson shall preside at every meeting of the Board at
+p29: which the Chairperson is present, but in the absence of the Chairperson
+p29: the members present may elect one from among their number to preside.
+p29: Quorum.
+p29: 4. The quorum for a meeting of the Board shall be five members.
+p29: Decision making.
+p29: 5. Unless a unanimous decision is reached, a decision on any matter
+p29: before the Board shall be by a majority of the members present, and in the
+p29: case of an equality of votes the Chairperson or person presiding shall have
+p29: a casting vote.
+p29: Declaration of interest.
+p29: 6. (1) A member who has a direct or indirect interest in a matter
+p29: being considered or to be considered by the Board shall, at the beginning
+p29: of the meeting where the matter is to be considered disclose the nature of
+p29: such interest, and shall not be present during any deliberations on the
+p29: matter.
+p29: (2) A disclosure of interest made shall be recorded in the minutes of
+p29: the meeting at which it is made.
+p29: (3) The Board shall cause minutes of all proceedings of its meetings
+p29: to be entered in its records for that purpose.
+p30: Recording of minutes.
+p30: 7. The Board shall cause the minutes of all proceedings of its
+p30: meetings to be recorded and kept and shall be signed by the chairperson or
+p30: the person presiding at the meeting.
+p30: Regulation of procedure.
+p30: 8. Save as provided in this Schedule, the Board may regulate its
+p30: own procedure.
+p31: MEMORANDUM OF OBJECTS AND REASONS
+p31: Statement of objects and reasons
+p31: The principal object of the Bill is to provide for the placement of
+p31: students and trainees to tertiary institutions; for the establishment of the
+p31: Kenya Universities and Colleges Central Placement Service and the
+p31: Tertiary Education Funding Authority; and for connected purposes.
+p31: Clause 1 of the Bill provides for the short title of the Act.
+p31: Clause 2 of the Bill provides for the definition of key terms in the
+p31: Bill.
+p31: Clause 3 of the Bill provides for the objects of the Act which are the
+p31: placement of students and trainees to tertiary institutions; financing
+p31: students and trainees undertaking tertiary education; and offering
+p31: coordinated career guidance to students and trainees.
+p31: Clause 4 of the Bill provides for the guiding principles in the
+p31: implementation of the Act which include universal access to tertiary
+p31: education; and equal access to government funding.
+p31: Clause 5 of the Bill provides that the Act shall apply to persons
+p31: seeking placement in tertiary institutions, student and trainees seeking
+p31: funding for tertiary education and students granted funding under this Act.
+p31: Clause 6 of the Bill provides for the establishment of the
+p31: Universities and Colleges Central Placement Service.
+p31: Clause 7 of the Bill provides for the functions of the Service in
+p31: relation placement of students and trainees and career guidance.
+p31: Clause 8 of the Bill provides for the powers of the Board of the
+p31: Service.
+p31: Clause 9 of the Bill provides for the composition of the Board of the
+p31: Service.
+p31: Clause 10 of the Bill provides for the qualifications that the
+p31: Chairperson of the Board of the Service.
+p31: Clause 11 of the Bill provides for the qualifications of a member of
+p31: the Board of the Service.
+p31: Clause 12 of the Bill provides for vacancy in the office of the
+p31: Chairperson or a member of the Board of the Service.
+p31: Clause 13 of the Bill provides for the conduct of business and affairs
+p31: of the Board of the Service.
+p32: Clause 14 of the Bill provides for the committees of the Board of the
+p32: Service.
+p32: Clause 15 of the Bill provides for delegation by the Board of the
+p32: Service.
+p32: Clause 16 of the Bill provides for the appointment of the Chief
+p32: Executive officer of the Service.
+p32: Clause 17 of the Bill provides for the qualification for appointment
+p32: of the Chief Executive Officer of the Service.
+p32: Clause 18 of the Bill provides for vacancy in the office of the Chief
+p32: Executive Officer.
+p32: Clause 19 of the Bill provides for appointment of the staff of the
+p32: Service.
+p32: Clause 20 of the Bill provides for obligations of the Service in
+p32: relation to placement of students.
+p32: Clause 21 of the Bill provides for submission of programmes,
+p32: capacity and coats by public tertiary institutions.
+p32: Clause 22 of the Bill provides for application and determination of
+p32: placement in tertiary institutions by the Service.
+p32: Clause 23 of the Bill provides for revision of application for
+p32: placement by students wishing to be placed by the Service.
+p32: Clause 24 of the Bill provides for submission of the placement report
+p32: to the Cabinet Secretary.
+p32: Clause 25 of the Bill provides for transfers after a placement has
+p32: been made particularly for inter institution transfer or inter faculty
+p32: transfer.
+p32: Clause 26 of the Bill provides for submission of tertiary institution
+p32: admission reports.
+p32: Clause 27 of the Bill provides for provision of career guidance
+p32: programmes to students by the Service.
+p32: Clause 28 of the Bill provides for the establishment of the Tertiary
+p32: Funding Authority.
+p32: Clause 29 of the Bill provides for functions of the Authority in
+p32: relation to funding of students and trainees which include to mobilise
+p32: funds for lending to students and trainees pursuing tertiary education;
+p32: grant loans to eligible students and trainees pursuing tertiary education;
+p32: administer scholarships to eligible students pursuing tertiary education;
+p33: and establish and maintain a system for data management relating to
+p33: funding of tertiary education.
+p33: Clause 30 of the Bill provides for the powers of the Authority.
+p33: Clause 31 of the Bill provides for the composition of the Board of
+p33: the Authority.
+p33: Clause 32 of the Bill provides for the qualifications of the
+p33: Chairperson of the Board of the Authority.
+p33: Clause 33 of the Bill provides for the qualifications of a member of
+p33: the Board of the Authority.
+p33: Clause 34 of the Bill provides for vacancy in the office of the
+p33: Chairperson or a member of the Board of the Authority.
+p33: Clause 35 of the Bill provides for the conduct of business and affairs
+p33: of the Board of the Authority.
+p33: Clause 36 of the Bill provides for the committees of the Board of the
+p33: Authority.
+p33: Clause 37 of the Bill provides for delegation by the Board of the
+p33: Authority.
+p33: Clause 38 of the Bill provides for the appointment of the Chief
+p33: Executive officer of the Authority.
+p33: Clause 39 of the Bill provides for the qualification for appointment
+p33: of the Chief Executive Officer of the Authority.
+p33: Clause 40 of the Bill provides for vacancy in the office of the Chief
+p33: Executive Officer.
+p33: Clause 41 of the Bill provides for the functions of the Chief
+p33: Executive Officer of the Authority.
+p33: Clause 42 of the Bill provides for appointment of the staff of the
+p33: Authority.
+p33: Clause 43 of the Bill provides establishment of Tertiary Education
+p33: Fund. Clause 44 of the Bill provides the purpose of the Fund.
+p33: Clause 45 of the Bill provides the sources of funds.
+p33: Clause 46 of the Bill provides for eligibility for loans and stipulates
+p33: that every student or trainee admitted into public or private tertiary
+p33: institution shall be eligible for an education loan.
+p33: Clause 47 of the Bill provides for loans to minors.
+p34: Clause 48 of the Bill provides for application for loans by students
+p34: and trainees.
+p34: Clause 49 of the Bill provides for obligations for loanee.
+p34: Clause 50 of the Bill provides for obligations for employer.
+p34: Clause 51 of the Bill provides for obligations debt recovery.
+p34: Clause 52 of the Bill provides for the management of data
+p34: processing. Clause 53 of the Bill provides for data sharing.
+p34: Clause 54 of the Bill provides for dispute resolution for any dispute
+p34: arising under the Act through the use of alternative dispute resolution
+p34: mechanisms.
+p34: Clause 55 of the Bill provides for the financial year of the Service
+p34: and the Authority.
+p34: Clause 56 of the Bill provides for annual estimates for the Service
+p34: and the Authority.
+p34: Clause 57 of the Bill provides for the keeping of books of accounts
+p34: and audit.
+p34: Clause 58 of the Bill provides for protection from personal liability
+p34: for a person acting in good faith for the Service or the Authority.
+p34: Clause 59 of the Bill provides for the common seal of the Service
+p34: and the Authority.
+p34: Clause 60 of the Bill provides for amendment of the Limitations of
+p34: Actions Act to exempt expiry of claims under this Act.
+p34: Clause 61 of the Bill provides for liability for damages in event of
+p34: negligence in the course of duties for the Service and the Authority.
+p34: Clause 62 of the Bill provides for the general penalty for offences
+p34: whose penalty has not been specified.
+p34: Clause 63 of the Bill provides for Cabinet Secretary making
+p34: regulations for the better carrying into effect the provisions of the Act.
+p34: Clause 64 of the Bill provides for the repeal of Higher Educations
+p34: Loans Board Act and various sections of other laws.
+p34: Clause 65 of the Bill provides for successors of former institutions.
+p34: Clause 66 of the Bill provides for the transfer of property, assets and
+p34: liabilities of former institutions to the Service and the Authority.
+p34: Clause 67 of the Bill provides for the transfer of staff of the former
+p34: institutions to the Service and the Authority.
+p35: Clause 68 of the Bill provides for the interpretation of former
+p35: institutions.
+p35: Statement on the delegation of legislative powers and limitation of
+p35: fundamental rights and freedoms
+p35: Clause 63 of the Bill provides for the power of the Cabinet Secretary
+p35: to make regulations for the better carrying out the provisions of the Act.
+p35: The Bill does not limit any fundamental rights and freedoms.
+p35: Statement as to whether the Bill is a money Bill within the meaning of
+p35: Article 114 of the Constitution.
+p35: The enactment of this Bill may not occasion additional expenditure of
+p35: public funds.
+p35: Dated the 24th July, 2026.
+p35: KIMANI ICHUNG’WAH,
+p35: Leader of the Majority Party.

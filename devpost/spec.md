@@ -261,7 +261,7 @@ Bill {
   stage: string, stage_checked_at: ISO-date,
   stage_next: { text: Tri, source_url, review: Review } | null,   // shown when participation isn't open
   source_changed: bool,
-  sources: [{ label, url, official: bool, fetched_at, sha256, file }],
+  sources: [{ label, url, official: bool, fetched_at, sha256, file, scanned: bool /* text layer came from a scan */ }],
   summary: { text: Tri, review: Review },
   groups: [{ group: "employee"|"trader"|"transport"|"student", text: Tri, clause_ids: string[], review: Review }],
   clauses: [{ id, number, heading /* from the marginal note */, text /* normalised */, text_sha256, pages: number[] /* PDF pages it spans */,

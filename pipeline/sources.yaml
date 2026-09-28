@@ -24,3 +24,36 @@ finance-act-2026:
       url: "https://new.kenyalaw.org/akn/ke/act/2026/19/eng@2026-06-26/source.pdf"
       official: true
       file: act.pdf
+      scanned: true   # text layer produced from a scan ("Date ofA ssent" etc.)
+
+tertiary-education-bill-2026:
+  # Kenya Law copy (text layer 35/35 pages). Gazetted 24 July 2026.
+  title: "The Tertiary Education, Placement and Funding Bill, 2026"
+  chamber: national
+  kind: bill
+  status: active
+  stage: "Before the National Assembly Education Committee — public views open until 2 October 2026"
+  stage_checked_at: "2026-09-28"
+  sources:
+    - label: "Tertiary Education, Placement and Funding Bill, 2026 (as published, 24 Jul 2026)"
+      url: "https://new.kenyalaw.org/akn/ke/bill/na/2026-07-24/the-tertiary-education-placement-and-funding-bill-2026/eng@2026-07-24/source.pdf"
+      official: true
+      file: bill.pdf
+
+public-participation-bill-2025:
+  # Kenya Law copy (text layer 10/10 pages). CAVEAT: this is the Bill AS FIRST
+  # PUBLISHED (National Assembly Bills No. 44 of 2025, 1 Oct 2025). The Senate
+  # is considering the version the National Assembly approved, which may
+  # differ. The source label says so, so no one mistakes it for that text.
+  title: "The Public Participation Bill, 2025"
+  chamber: senate
+  kind: bill
+  status: active
+  stage: "Before the Senate Justice, Legal Affairs and Human Rights Committee — public views closed 28 September 2026, 5pm"
+  stage_checked_at: "2026-09-28"
+  sources:
+    - label: "Public Participation Bill, 2025 (as first published, 1 Oct 2025 — not the National Assembly-approved text)"
+      url: "https://new.kenyalaw.org/akn/ke/bill/na/2025-10-01/the-public-participation-bill-2025/eng@2025-10-01/source.pdf"
+      official: true
+      file: bill.pdf
+      scanned: true   # scanned paper: variable type sizes, specks read as characters

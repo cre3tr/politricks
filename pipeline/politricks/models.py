@@ -62,7 +62,11 @@ class Source(BaseModel):
     official: bool
     fetched_at: str  # UTC ISO timestamp of the download
     sha256: str  # fingerprint of the raw file bytes
-    file: str  # repo-relative path, e.g. "sources/finance-bill-2026/bill.pdf"
+    file: str  # repo-relative path, e.g. "sources/finance-act-2026/act.pdf"
+    # True when the official file's text layer came from scanning paper (so it
+    # can contain small typing glitches). Set per source in sources.yaml; the
+    # site shows a note only for these.
+    scanned: bool = False
 
 
 class Clause(BaseModel):

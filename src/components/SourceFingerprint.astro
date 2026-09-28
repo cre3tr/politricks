@@ -13,10 +13,17 @@ const { sources } = Astro.props;
 ---
 <section class="source-fingerprint" aria-label="Source fingerprint">
   <h2>Source fingerprint</h2>
-  <p class="scan-note">
-    This official file's text was produced from a scan, so it may contain
-    small typing glitches; PoliTricks shows it exactly as published.
-  </p>
+  {/* Only claim "produced from a scan" when that's true of the file
+      (source.scanned, set in pipeline/sources.yaml). A born-digital bill must
+      not carry this note — the page's credibility rests on it saying true things. */}
+  {
+    sources.some((source) => source.scanned) && (
+      <p class="scan-note">
+        This official file's text was produced from a scan, so it may contain
+        small typing glitches; PoliTricks shows it exactly as published.
+      </p>
+    )
+  }
   {
     sources.map((source) => {
       const fetchedDate = new Date(source.fetched_at).toLocaleDateString("en-KE", {

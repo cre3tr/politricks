@@ -1,28 +1,149 @@
 ---
-// Minimal placeholder home page. Slice 5 replaces this with the real Active
-// Bills list + Una'tafuta? search (devpost/spec.md > Home Page). For now it
-// just gets a reader to the one bill that exists.
+// Home page (devpost/spec.md > Home Page, prd.md > Home: Active Bills and
+// Una'tafuta?). Built ahead of time from every bill file in src/data/bills/.
+//
+// - Active Bills: every bill currently before Parliament (status "active"),
+//   with chamber, stage and when that stage was last checked.
+// - Recently passed: a plain list for now. Slice 9 turns this into the
+//   Una'tafuta? search; until then it's how a reader reaches the Finance Act.
+//
+// A deadline countdown appears only once participation data exists (slice 6);
+// until then the stage text carries the date, straight from the registry.
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { BillSchema, type Bill } from "../lib/schema";
+
+// Same validation as the bill pages: bad data fails the build.
+const modules = import.meta.glob("../data/bills/*.json", { eager: true }) as Record<
+  string,
+  { default: unknown }
+>;
+const bills: Bill[] = Object.values(modules).map((mod) => BillSchema.parse(mod.default));
+
+const active = bills.filter((bill) => bill.status === "active");
+const passed = bills.filter((bill) => bill.status === "passed");
+
+// Plain-language chamber labels. County comes in slice 11.
+const CHAMBER: Record<Bill["chamber"], string> = {
+  national: "National Assembly",
+  senate: "Senate",
+  county: "Nairobi County Assembly",
+};
+
+const checked = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-KE", { year: "numeric", month: "long", day: "numeric" });
 ---
-<BaseLayout title="PoliTricks">
-  <main class="home-placeholder">
-    <h1>PoliTricks</h1>
-    <p>Kenyan law, explained beside the official text — in English, Kiswahili and Sheng.</p>
-    <p>
-      <a href="/bills/finance-act-2026">Open the Finance Act, 2026 →</a>
+<BaseLayout title="PoliTricks — Kenyan law, explained">
+  <main class="home">
+    <p class="lede">
+      Kenyan law, explained beside the official text — in English, Kiswahili and Sheng.
     </p>
+
+    <section aria-labelledby="active-heading">
+      <h2 id="active-heading">Active Bills</h2>
+      <ul class="bill-list">
+        {
+          active.map((bill) => (
+            <li>
+              <a class="bill-card" href={`/bills/${bill.id}`}>
+                <span class="chamber">{CHAMBER[bill.chamber]}</span>
+                <span class="title">{bill.title}</span>
+                <span class="stage">{bill.stage}</span>
+                <span class="checked">Last checked {checked(bill.stage_checked_at)}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section aria-labelledby="passed-heading">
+      <h2 id="passed-heading">Recently passed</h2>
+      <ul class="bill-list">
+        {
+          passed.map((bill) => (
+            <li>
+              <a class="bill-card" href={`/bills/${bill.id}`}>
+                <span class="chamber">
+                  <span class="passed-label">Passed</span> {CHAMBER[bill.chamber]}
+                </span>
+                <span class="title">{bill.title}</span>
+                <span class="stage">{bill.stage}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
   </main>
 </BaseLayout>
 
 <style>
-  .home-placeholder {
-    max-width: 640px;
+  .home {
+    max-width: 720px;
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem 3rem;
   }
-  .home-placeholder h1 {
+  .lede {
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  h2 {
     font-family: var(--font-display);
     text-transform: uppercase;
-    font-size: 2rem;
+    letter-spacing: 0.04em;
+    font-size: 1.5rem;
+    margin: 1.75rem 0 0.75rem;
+  }
+  .bill-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+  /* Each bill is one big tap target: easy on a phone. The left rule uses the
+     flag colours — green for active, black for passed — never party colours. */
+  .bill-card {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid #ddd;
+    border-left: 6px solid var(--flag-green);
+    border-radius: 6px;
+    color: var(--flag-black);
+    text-decoration: none;
+    background: var(--paper);
+  }
+  section[aria-labelledby="passed-heading"] .bill-card {
+    border-left-color: var(--flag-black);
+  }
+  .bill-card:hover,
+  .bill-card:focus-visible {
+    border-color: var(--flag-black);
+  }
+  .chamber {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  .title {
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .stage {
+    font-size: 0.95rem;
+  }
+  .checked {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .passed-label {
+    display: inline-block;
+    background: var(--flag-black);
+    color: var(--paper);
+    padding: 0 0.4rem;
+    border-radius: 3px;
+    margin-right: 0.25rem;
   }
 </style>

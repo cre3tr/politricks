@@ -145,6 +145,7 @@ def fetch_bill(repo_root: Path, bill_id: str) -> Bill:
                 fetched_at=datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
                 sha256=digest,
                 file=target.relative_to(repo_root).as_posix(),
+                scanned=bool(item.get("scanned", False)),
             )
         )
 
@@ -153,9 +154,10 @@ def fetch_bill(repo_root: Path, bill_id: str) -> Bill:
     for source in fetched:
         previous = by_label.get(source.label)
         # Keep the original timestamp if the file didn't change, so re-running
-        # fetch produces no git diff.
+        # fetch produces no git diff. Everything else (label, scanned flag...)
+        # comes fresh from sources.yaml, so registry edits always take effect.
         if previous and previous.sha256 == source.sha256:
-            source = previous
+            source = source.model_copy(update={"fetched_at": previous.fetched_at})
         by_label[source.label] = source
     bill.sources = list(by_label.values())
     save_bill(bill, json_path)

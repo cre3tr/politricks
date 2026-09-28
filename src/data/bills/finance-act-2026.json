@@ -14,7 +14,8 @@
       "official": true,
       "fetched_at": "2026-09-25T13:02:15+00:00",
       "sha256": "809ed38b9fdc94983460b99b134b26f24080eb152b20c2dedd21dc6cee9919af",
-      "file": "sources/finance-act-2026/act.pdf"
+      "file": "sources/finance-act-2026/act.pdf",
+      "scanned": true
     }
   ],
   "summary": {

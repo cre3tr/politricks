@@ -51,6 +51,8 @@ export const SourceSchema = z
     fetched_at: z.string(),
     sha256: z.string(),
     file: z.string(),
+    // True when the official file's text came from a scan (see models.py).
+    scanned: z.boolean(),
   })
   .strict();
 export type Source = z.infer<typeof SourceSchema>;

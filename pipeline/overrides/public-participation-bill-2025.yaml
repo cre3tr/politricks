@@ -1,0 +1,38 @@
+# Layout rules for the Public Participation Bill, 2025 (Kenya Law copy of a
+# scanned document — text sizes vary 11–13.7pt), calibrated from `politricks probe`.
+# May only move boundaries or strip running headers — never edit legal text.
+
+# Page 1 is the Kenya Law cover sheet.
+skip_pages: [1]
+
+# Page is ~440pt wide; marginal notes are small type starting at x ≈ 340,
+# while body text ends before that.
+margin_x: 324
+
+# Running header, OCR'd inconsistently: "1126 ThePublicParticipation BUI, 2025",
+# "The Public Participation Bill, 2025 1127", "ThePublic Participation Bill,
+# 2025 1129", sometimes with the page number on its own line.
+strip_patterns:
+  - '^\d{1,4}$'
+  - '(?i)^(\d{3,4}\s*)?The\s*Public\s*Participation\s*B\w{1,3},?\s*2025(\s*\d{3,4})?$'
+
+# The scan runs words together: observed as "ENACTED by the Parliament ofKenya".
+start_after: 'ENACTED by the Parliament\s*of\s*Kenya'
+end_before: '^MEMORANDUM OF OBJECTS AND REASONS'
+
+# The Arrangement of Clauses (page 2) lists 1–21 ("21—Transitional provision.").
+expected_clause_count: 21
+
+# Measured (not guessed): in this scan the marginal notes are sometimes printed
+# at BODY size ("Principles" is 11.5pt), so the default "small AND right" test
+# misses them. And the page shifts from scan to scan: the body ends at x≈315 on
+# page 7 but x≈344 on pages 6 and 8. So instead of one fixed line, each page's
+# empty gutter strip between body and notes is found from where the words
+# actually are, searching x = 300..370; words right of it are notes.
+margin_mode: gutter
+gutter_search: [300, 370]
+
+# Clause 13's line reads "i 13.(1) A responsible authority..." — a scan speck
+# before the number. Allow up to two junk characters before a clause number
+# (the monotonic guard still has the final say; the text itself is unchanged).
+start_noise: true

@@ -50,6 +50,12 @@ EDGE_LINES = 3  # patterns only apply to the first/last 3 lines of a page
 # A section starts with its number and a dot. In this scan, two-digit numbers
 # often have no space after the dot ("10.Section 15 ..."), so the space is optional.
 SECTION_START = re.compile(r"^(\d{1,3})\.\s*(?=[A-Z(\"“'])")
+# Opt-in (override `start_noise: true`) for scans where a speck of dirt is read
+# as a stray character before the number, e.g. "i 13.(1) A responsible...".
+# Up to two junk characters are tolerated; the monotonic N+1 guard still
+# decides whether it really is the next section. The junk stays in the text —
+# we never edit legal text, we only decide where a section begins.
+SECTION_START_NOISY = re.compile(r"^(?:\S{1,2}\s+)?(\d{1,3})\.\s*(?=[A-Z(\"“'])")
 PART_HEADING = re.compile(r"^PART\s+[IVXL]+\b")
 SCHEDULE_HEADING = re.compile(r"^(FIRST |SECOND |THIRD |FOURTH )?SCHEDULE\b")
 
@@ -84,8 +90,75 @@ def load_overrides(repo_root: Path, bill_id: str) -> dict:
         return yaml.safe_load(handle) or {}
 
 
-def _page_lines(page, margin_x: float) -> tuple[list[dict], list[dict]]:
-    """Split one page into (body lines, marginal-note lines), each with `top`."""
+def find_gutter(words: list[dict], search: tuple[float, float]) -> float | None:
+    """Find the empty vertical strip between the body column and the notes.
+
+    Scanned pages shift and stretch, so the body can end at x≈315 on one page
+    and x≈344 on the next — no single fixed line works. What IS stable is that
+    no word crosses the gutter. We scan x across `search`, count how many words
+    span each x, and return the middle of the widest strip that no word crosses.
+    Returns None if there is no empty strip (then nothing is treated as a note).
+    """
+    lo, hi = search
+    best_start = best_len = 0
+    run_start = None
+    x = lo
+    while x <= hi:
+        crossed = any(w["x0"] < x < w["x1"] for w in words)
+        if not crossed and run_start is None:
+            run_start = x
+        if (crossed or x == hi) and run_start is not None:
+            length = x - run_start
+            if length > best_len:
+                best_start, best_len = run_start, length
+            run_start = None
+        x += 1
+    return best_start + best_len / 2 if best_len >= 3 else None
+
+
+def _margin_words(page, search: tuple[float, float]) -> list[dict]:
+    """Words right of this page's gutter: the marginal notes.
+
+    Used for noisy scans where notes come out at body size. A body word that
+    ends a line just short of the gutter stays in the legal text, because the
+    gutter is found from where words actually are on THIS page.
+    """
+    words = page.extract_words()
+    gutter = find_gutter(words, search)
+    if gutter is None:
+        return []
+    return [w for w in words if w["x0"] >= gutter]
+
+
+def _page_lines(
+    page, margin_x: float, mode: str = "char", search: tuple[float, float] = (0.0, 0.0)
+) -> tuple[list[dict], list[dict]]:
+    """Split one page into (body lines, marginal-note lines), each with `top`.
+
+    Two ways to spot a marginal note (chosen per document in its overrides):
+
+    - "char" (default): a character is marginal if it is BOTH smaller than the
+      body text AND right of `margin_x`. Right for clean PDFs, where notes are
+      printed in smaller type.
+    - "gutter": whole WORDS right of this page's empty gutter strip are
+      marginal, whatever their size (see find_gutter). Needed for noisy scans
+      where notes come out at body size and the page shifts from scan to scan.
+      We judge whole words, not letters, so no body word loses letters.
+    """
+    if mode == "gutter":
+        boxes = [(w["x0"], w["top"], w["x1"], w["bottom"]) for w in _margin_words(page, search)]
+
+        def is_margin(obj) -> bool:
+            if obj.get("object_type") != "char":
+                return False
+            cx = (obj["x0"] + obj["x1"]) / 2
+            cy = (obj["top"] + obj["bottom"]) / 2
+            return any(x0 <= cx <= x1 and top <= cy <= bottom for x0, top, x1, bottom in boxes)
+
+        body = page.filter(lambda obj: not is_margin(obj))
+        margin = page.filter(is_margin)
+        return body.extract_text_lines(strip=True), margin.extract_text_lines(strip=True)
+
     sizes = Counter(round(c["size"], 1) for c in page.chars)
     body_size = sizes.most_common(1)[0][0]
 
@@ -117,7 +190,9 @@ def read_pdf(pdf_path: Path, overrides: dict) -> tuple[list[Line], dict[int, lis
         for number, page in enumerate(pdf.pages, start=1):
             if number in skip_pages or not page.chars:
                 continue
-            body, margin = _page_lines(page, margin_x)
+            body, margin = _page_lines(
+                page, margin_x, overrides.get("margin_mode", "char"), tuple(overrides.get("gutter_search", (0, 0)))
+            )
             kept: list[Line] = []
             removed_here = 0
             for index, raw in enumerate(body):
@@ -159,11 +234,12 @@ def segment(region: list[Line], overrides: dict) -> tuple[list[Segment], list[st
     ignore = set(overrides.get("ignore_starts", []))
     segments: list[Segment] = []
     log: list[str] = []
+    start_pattern = SECTION_START_NOISY if overrides.get("start_noise") else SECTION_START
     expected = 1
     current = Segment(kind="other")
     for line in region:
         text = line.text
-        match = SECTION_START.match(text)
+        match = start_pattern.match(text)
         kind = None
         if text in ignore:
             kind = None
