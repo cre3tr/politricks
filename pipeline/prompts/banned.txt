@@ -1,0 +1,27 @@
+# Phrases PoliTricks must never publish in an explanation, summary or note.
+# One phrase per line. Lines starting with # are comments; blank lines are ignored.
+# Matching is case-insensitive and whole-phrase: "vote" matches "can't vote" but
+# not "voting" or "devote". Read by pipeline/politricks/lint.py (and, from
+# slice 4, by the live Explain API, so a banned draft is discarded there too).
+
+# Doctrine (devpost/spec.md > Lint). Never remove these without changing the spec.
+unconstitutional
+kinyume cha katiba
+haramu
+illegal
+invalid
+you should
+vote
+
+# Proposed — Kiswahili/Sheng twins and the explainer prompt's own advice phrases.
+# Ian prunes or extends these at his first real review (slice 2b/3).
+kinyume na katiba
+inakiuka katiba
+si halali
+kinyume cha sheria
+batili
+unapaswa
+mnapaswa
+piga kura
+you must
+make sure

@@ -9,6 +9,8 @@ Run from anywhere; paths are resolved from the repo root, not your current folde
     uv run --project pipeline politricks verify [--self-test]
     uv run --project pipeline politricks samples finance-act-2026
     uv run --project pipeline politricks generate finance-act-2026 [--self-test]
+    uv run --project pipeline politricks lint [finance-act-2026] [--self-test]
+    uv run --project pipeline politricks review finance-act-2026 [--self-test]
 """
 
 from __future__ import annotations
@@ -52,6 +54,14 @@ def main() -> None:
     p_generate.add_argument(
         "--self-test", action="store_true", help="offline check of request-building and result-parsing (no network)"
     )
+
+    p_lint = sub.add_parser("lint", help="fail on banned phrases and neutrality flags in every generated text")
+    p_lint.add_argument("bill_id", nargs="?", help="one bill (default: every bill in src/data/bills)")
+    p_lint.add_argument("--self-test", action="store_true", help="offline check of the linter itself (writes nothing)")
+
+    p_review = sub.add_parser("review", help="walk every draft text: accept, edit or skip (the human gate)")
+    p_review.add_argument("bill_id", nargs="?")
+    p_review.add_argument("--self-test", action="store_true", help="offline scripted walk (writes nothing)")
 
     args = parser.parse_args()
 
@@ -114,6 +124,22 @@ def main() -> None:
         # Live generation is not exercised in slice 2a — it needs a real
         # ANTHROPIC_API_KEY and network egress, neither of which exist here.
         generate.run(REPO_ROOT, args.bill_id)
+
+    elif args.command == "lint":
+        from . import lint
+
+        if args.self_test:
+            sys.exit(0 if lint.self_test(REPO_ROOT) else 1)
+        sys.exit(lint.run(REPO_ROOT, args.bill_id))
+
+    elif args.command == "review":
+        from . import review
+
+        if args.self_test:
+            sys.exit(0 if review.self_test(REPO_ROOT) else 1)
+        if not args.bill_id:
+            parser.error("review needs a bill id (or --self-test)")
+        sys.exit(review.run(REPO_ROOT, args.bill_id))
 
 
 if __name__ == "__main__":

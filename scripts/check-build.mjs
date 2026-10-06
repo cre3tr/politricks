@@ -92,13 +92,33 @@ check(
   countOccurrences(pageText, "Sample text — placeholder") === expectedSampleBadges
 );
 
+// Draft and Reviewed badges. These used to be hard-coded to 0 (slice 2a had no
+// drafts and no reviews); from slice 3 they depend on the data, so the expected
+// counts are derived from the bill JSON and compared with what the page shows.
+// A badge renders only on a clause that HAS an explanation (ClauseCard), and on
+// the summary when there is one. Group entries aren't rendered yet, so they
+// are not counted here — add them when a slice renders them.
+//
 // Case-sensitive on purpose: these are the exact badge label strings
-// (ClauseCard's `badgeFor`). Neither should appear anywhere in slice 2a,
-// since every explained item here is "sample" and everything else is
-// unexplained — this also implicitly checks that banner copy never
-// accidentally contains a badge's exact wording.
-check('"AI draft" appears 0 times', countOccurrences(pageText, "AI draft") === 0);
-check('"Reviewed" appears 0 times', countOccurrences(pageText, "Reviewed") === 0);
+// (src/lib/badge.ts), which also checks that banner copy never accidentally
+// contains a badge's exact wording.
+const explainedClauses = bill.clauses.filter((clause) => clause.explanation);
+const draftClauses = explainedClauses.filter((clause) => clause.review.status === "draft");
+const reviewedClauses = explainedClauses.filter((clause) => clause.review.status === "reviewed");
+const summaryIsDraft = bill.summary?.review.status === "draft";
+const summaryIsReviewed = bill.summary?.review.status === "reviewed";
+
+const expectedDraftBadges = draftClauses.length + (summaryIsDraft ? 1 : 0);
+check(
+  `"AI draft — not yet reviewed" appears ${expectedDraftBadges} times (${draftClauses.length} draft clause(s) + summary if draft)`,
+  countOccurrences(pageText, "AI draft — not yet reviewed") === expectedDraftBadges
+);
+
+const expectedReviewedBadges = reviewedClauses.length + (summaryIsReviewed ? 1 : 0);
+check(
+  `"Reviewed" appears ${expectedReviewedBadges} times (${reviewedClauses.length} reviewed clause(s) + summary if reviewed)`,
+  countOccurrences(pageText, "Reviewed") === expectedReviewedBadges
+);
 
 for (const source of bill.sources) {
   check(`source "${source.label}" full SHA-256 is on the page`, pageText.includes(source.sha256));
