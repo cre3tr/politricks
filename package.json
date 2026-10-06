@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro check && astro build",
+    "check": "astro check",
     "preview": "astro preview",
     "check:build": "node scripts/check-build.mjs"
   },
@@ -16,6 +17,8 @@
     "zod": "^4"
   },
   "devDependencies": {
-    "@fontsource/anton": "^5"
+    "@astrojs/check": "^0.9.10",
+    "@fontsource/anton": "^5",
+    "typescript": "^6.0.3"
   }
 }

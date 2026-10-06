@@ -5,10 +5,14 @@
 // the first).
 //
 // The `never` branch is load-bearing, not decoration: if `Review["status"]`
-// ever grows a fourth value, every caller of `badgeFor` fails to TYPECHECK
+// ever grows a fourth value, the `never` assignment below fails to TYPECHECK
 // until a human decides what badge that status gets. That is what makes
 // "a sample can never render as AI draft or Reviewed" (devpost/spec.md >
 // Clause Card) a compile-time guarantee instead of a hope.
+//
+// The check is real because `npm run build` runs `astro check` first (also
+// `npm run check` on its own). `astro build` alone strips types without
+// checking them, so build with `npm run build`, not bare `astro build`.
 import type { Review } from "./schema";
 
 export interface Badge {
