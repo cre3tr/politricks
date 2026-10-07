@@ -5,11 +5,22 @@
 //
 // Why this file exists at all: `npm run build` succeeding only proves the
 // page rendered without throwing. It says nothing about whether the legal
-// text, the sample Sheng, or the badges actually landed in the output —
+// text, the explanations, or the badges actually landed in the output —
 // this script is the second, independent check (see devpost/checklist.md >
 // slice 2a's Verify step).
+//
+// It checks EACH CARD, not page totals. A page-wide count ("Reviewed appears
+// 3 times") cannot see two cards with their statuses swapped, and it trips on
+// any legal or explanation text that happens to contain the word. So the built
+// HTML is cut into one piece per clause card (and one for the summary block),
+// and each piece is checked against the bill JSON for THAT clause:
+//   - its legal text is inside its own card (word for word),
+//   - its explanation (EN / SW / Sheng) is inside its own card,
+//   - its badge label and class are exactly what src/lib/badge.ts gives for
+//     its review status, and a clause with no explanation has NO badge.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const billId = process.argv[2];
 if (!billId) {
@@ -59,66 +70,123 @@ const pageText = htmlToText(html);
 const bill = JSON.parse(readFileSync(join("src", "data", "bills", `${billId}.json`), "utf-8"));
 
 let failed = false;
-function check(label, condition) {
+function check(label, condition, detail = "") {
   if (condition) {
     console.log(`PASS: ${label}`);
   } else {
-    console.log(`FAIL: ${label}`);
+    console.log(`FAIL: ${label}${detail ? ` (${detail})` : ""}`);
     failed = true;
   }
 }
 
-function countOccurrences(haystack, needle) {
-  return haystack.split(needle).length - 1;
+// ---------------------------------------------------------------------------
+// What each status's badge must say: read from src/lib/badge.ts, the one place
+// that decides it (ClauseCard and the bill page both call badgeFor). Located
+// from this file's own path, so it works from any working directory.
+// ---------------------------------------------------------------------------
+const badgeSource = readFileSync(fileURLToPath(new URL("../src/lib/badge.ts", import.meta.url)), "utf-8");
+const expectedBadge = {};
+for (const status of ["draft", "reviewed", "sample"]) {
+  const found = badgeSource.match(
+    new RegExp(`case "${status}":\\s*return \\{ label: "([^"]+)", className: "([^"]+)" \\}`)
+  );
+  if (!found) {
+    console.error(`FAIL: could not read the "${status}" badge from src/lib/badge.ts (did its shape change?)`);
+    process.exit(1);
+  }
+  expectedBadge[status] = { label: found[1], className: found[2] };
 }
+const labels = Object.values(expectedBadge).map((badge) => badge.label);
+check(
+  `badge labels read from src/lib/badge.ts: ${Object.entries(expectedBadge)
+    .map(([status, badge]) => `${status}="${badge.label}"`)
+    .join(", ")}`,
+  new Set(labels).size === 3
+);
+
+// Every <span class="badge badge-…">label</span> inside a piece of the page.
+function badgesIn(fragment) {
+  return [...fragment.matchAll(/<span class="badge (badge-[a-z]+)"[^>]*>([^<]*)<\/span>/g)].map((match) => ({
+    className: match[1],
+    label: htmlToText(match[2]),
+  }));
+}
+
+function describeBadges(badges) {
+  return badges.length === 0 ? "no badge" : badges.map((badge) => `"${badge.label}" (${badge.className})`).join(" + ");
+}
+
+// A block with an explanation must carry exactly the badge for its status; a
+// block with none must carry no badge at all.
+function checkBadge(what, status, hasText, fragment) {
+  const found = badgesIn(fragment);
+  if (!hasText) {
+    check(`${what} has no explanation, so it has NO badge`, found.length === 0, `page shows ${describeBadges(found)}`);
+    return;
+  }
+  const want = expectedBadge[status];
+  check(
+    `${what} (${status}) shows the badge "${want.label}"`,
+    found.length === 1 && found[0].label === want.label && found[0].className === want.className,
+    `page shows ${describeBadges(found)}`
+  );
+}
+
+function triTexts(tri) {
+  return [tri.en, tri.sw, tri.sheng].map(htmlToText);
+}
+
+// ---------------------------------------------------------------------------
+// One piece of HTML per clause card. ClauseCard renders
+//   <article class="clause-card" data-clause-id="c12" ...> ... </article>
+// and cards never nest, so a non-greedy match to the next </article> is the card.
+// ---------------------------------------------------------------------------
+const cards = new Map();
+const cardIds = [];
+for (const match of html.matchAll(/<article class="clause-card" data-clause-id="([^"]+)"[^>]*>([\s\S]*?)<\/article>/g)) {
+  cardIds.push(match[1]);
+  cards.set(match[1], match[2]);
+}
+check(
+  `the page has one clause card per clause, in order (${bill.clauses.length} expected)`,
+  JSON.stringify(cardIds) === JSON.stringify(bill.clauses.map((clause) => clause.id)),
+  `page has ${cardIds.length} card(s)`
+);
 
 for (const clause of bill.clauses) {
-  check(`clause ${clause.id} legal text is on the page`, pageText.includes(htmlToText(clause.text)));
+  const card = cards.get(clause.id);
+  if (card === undefined) {
+    check(`clause ${clause.id} has its own card`, false, "no <article> with that data-clause-id");
+    continue;
+  }
+  const cardText = htmlToText(card);
+  const wanted = [htmlToText(clause.text), ...(clause.explanation ? triTexts(clause.explanation) : [])];
+  check(
+    `clause ${clause.id} legal text${clause.explanation ? " and explanation (EN/SW/Sheng) are inside its own card" : " is inside its own card"}`,
+    wanted.every((text) => cardText.includes(text)),
+    `missing: ${wanted.filter((text) => !cardText.includes(text)).map((text) => JSON.stringify(text.slice(0, 40))).join(", ")}`
+  );
+  checkBadge(`clause ${clause.id}`, clause.review.status, Boolean(clause.explanation), card);
 }
 
-const sampleClauses = bill.clauses.filter((clause) => clause.review.status === "sample");
-for (const clause of sampleClauses) {
-  check(`clause ${clause.id} sample Sheng text is on the page`, pageText.includes(htmlToText(clause.explanation.sheng)));
+// ---------------------------------------------------------------------------
+// The summary block (src/pages/bills/[id].astro):
+//   <section class="summary-card" aria-label="Summary"> badge + EN/SW/Sheng </section>
+// ---------------------------------------------------------------------------
+const summaryBlock = html.match(/<section class="summary-card"[^>]*>([\s\S]*?)<\/section>/);
+if (bill.summary) {
+  check("the summary block is on the page", summaryBlock !== null);
+  if (summaryBlock) {
+    const summaryText = htmlToText(summaryBlock[1]);
+    check(
+      "the summary text (EN/SW/Sheng) is inside the summary block",
+      triTexts(bill.summary.text).every((text) => summaryText.includes(text))
+    );
+    checkBadge("the summary", bill.summary.review.status, true, summaryBlock[1]);
+  }
+} else {
+  check("the bill has no summary, so the page has no summary block", summaryBlock === null);
 }
-
-const summaryIsSample = bill.summary?.review.status === "sample";
-if (summaryIsSample) {
-  check("summary sample Sheng text is on the page", pageText.includes(htmlToText(bill.summary.text.sheng)));
-}
-
-const expectedSampleBadges = sampleClauses.length + (summaryIsSample ? 1 : 0);
-check(
-  `"Sample text — placeholder" appears ${expectedSampleBadges} times (${sampleClauses.length} sample clause(s) + summary)`,
-  countOccurrences(pageText, "Sample text — placeholder") === expectedSampleBadges
-);
-
-// Draft and Reviewed badges. These used to be hard-coded to 0 (slice 2a had no
-// drafts and no reviews); from slice 3 they depend on the data, so the expected
-// counts are derived from the bill JSON and compared with what the page shows.
-// A badge renders only on a clause that HAS an explanation (ClauseCard), and on
-// the summary when there is one. Group entries aren't rendered yet, so they
-// are not counted here — add them when a slice renders them.
-//
-// Case-sensitive on purpose: these are the exact badge label strings
-// (src/lib/badge.ts), which also checks that banner copy never accidentally
-// contains a badge's exact wording.
-const explainedClauses = bill.clauses.filter((clause) => clause.explanation);
-const draftClauses = explainedClauses.filter((clause) => clause.review.status === "draft");
-const reviewedClauses = explainedClauses.filter((clause) => clause.review.status === "reviewed");
-const summaryIsDraft = bill.summary?.review.status === "draft";
-const summaryIsReviewed = bill.summary?.review.status === "reviewed";
-
-const expectedDraftBadges = draftClauses.length + (summaryIsDraft ? 1 : 0);
-check(
-  `"AI draft — not yet reviewed" appears ${expectedDraftBadges} times (${draftClauses.length} draft clause(s) + summary if draft)`,
-  countOccurrences(pageText, "AI draft — not yet reviewed") === expectedDraftBadges
-);
-
-const expectedReviewedBadges = reviewedClauses.length + (summaryIsReviewed ? 1 : 0);
-check(
-  `"Reviewed" appears ${expectedReviewedBadges} times (${reviewedClauses.length} reviewed clause(s) + summary if reviewed)`,
-  countOccurrences(pageText, "Reviewed") === expectedReviewedBadges
-);
 
 for (const source of bill.sources) {
   check(`source "${source.label}" full SHA-256 is on the page`, pageText.includes(source.sha256));

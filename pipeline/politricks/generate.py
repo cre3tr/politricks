@@ -30,6 +30,7 @@ from typing import Union
 
 from pydantic import BaseModel, ConfigDict, ValidationError
 
+from .hashing import sha256_file
 from .models import (
     Bill,
     Clause,
@@ -43,6 +44,7 @@ from .models import (
     load_bill,
     save_bill,
 )
+from .selftest import FIXTURE_BILL_ID, Checker, reset_bill
 
 MODEL = "claude-opus-5"
 MAX_TOKENS = 16000
@@ -289,8 +291,11 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
     """Write every `Applied` outcome onto `bill`, in place. Returns how many were.
 
     Skips anything already `"reviewed"` — a human's accepted text is never
-    overwritten by a fresh draft. A `"sample"` item IS overwritten: that's the
-    whole point of slice 2a's placeholders, they exist to be replaced.
+    overwritten by a fresh draft. That includes group entries: a new summary
+    result replaces the summary and the NON-reviewed group entries, but every
+    group entry a human has reviewed is kept, even if the new output leaves
+    that group out. A `"sample"` item IS overwritten: that's the whole point of
+    slice 2a's placeholders, they exist to be replaced.
     `suggested_articles` is always forced to `[]` here; validating suggested
     article numbers against the constitution is slice 10's job, not this one's.
     """
@@ -308,15 +313,25 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
                 text=Tri(en=summary_out.summary.en, sw=summary_out.summary.sw, sheng=summary_out.summary.sheng),
                 review=Review(status="draft"),
             )
-            bill.groups = [
-                GroupEntry(
-                    group=group.group,
-                    text=Tri(en=group.text.en, sw=group.text.sw, sheng=group.text.sheng),
-                    clause_ids=list(group.clause_ids),
-                    review=Review(status="draft"),
-                )
-                for group in summary_out.groups
-            ]
+            # A reviewed group entry is a human's accepted text: keep it, matched
+            # by group id, in place of that group's new draft.
+            reviewed = {entry.group: entry for entry in bill.groups if entry.review.status == "reviewed"}
+            groups: list[GroupEntry] = []
+            for group in summary_out.groups:
+                if group.group in reviewed:
+                    groups.append(reviewed.pop(group.group))
+                else:
+                    groups.append(
+                        GroupEntry(
+                            group=group.group,
+                            text=Tri(en=group.text.en, sw=group.text.sw, sheng=group.text.sheng),
+                            clause_ids=list(group.clause_ids),
+                            review=Review(status="draft"),
+                        )
+                    )
+            # Reviewed groups the new output left out are still kept (at the end).
+            groups.extend(reviewed.values())
+            bill.groups = groups
             applied += 1
             continue
 
@@ -344,17 +359,11 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
 def self_test(repo_root: Path) -> bool:
     import re
 
-    ok = True
+    check = Checker()
 
-    def check(label: str, condition: bool) -> None:
-        nonlocal ok
-        if condition:
-            print(f"PASS: {label}")
-        else:
-            print(f"FAIL: {label}")
-            ok = False
-
-    bill = load_bill(bill_path(repo_root, "finance-act-2026"))
+    real_path = bill_path(repo_root, FIXTURE_BILL_ID)
+    sha_before = sha256_file(real_path)
+    bill = load_bill(real_path)
 
     # --- request building --------------------------------------------------
     requests = build_batch(repo_root, bill)
@@ -393,7 +402,10 @@ def self_test(repo_root: Path) -> bool:
     )
 
     # --- applying onto an in-memory copy (nothing is written to disk) -------
-    working = bill.model_copy(deep=True)
+    # Not a plain copy of the real bill: once a human reviews c3 or c4 in the
+    # real file, apply() would (correctly) skip it and "2 applied" would fail on
+    # a healthy repo. `reset_bill` is the same clauses with all of that cleared.
+    working = reset_bill(repo_root)
     applied_count = apply(working, outcomes)
     check("apply() reports 2 applied", applied_count == 2)
 
@@ -413,7 +425,67 @@ def self_test(repo_root: Path) -> bool:
         revalidates = False
     check("the resulting bill still validates as models.Bill", revalidates)
 
-    return ok
+    # --- a reviewed group entry survives a new summary result -----------------
+    # Three existing groups: trader and student are reviewed, transport is a
+    # draft. The new summary names trader and employee, and leaves out student
+    # and transport. Expected: trader keeps the human's words, student is kept
+    # even though the output omitted it, transport (a draft) is replaced,
+    # employee arrives as a fresh draft.
+    def tri_out(text: str) -> TriOut:
+        return TriOut(en=text, sw=text, sheng=text)
+
+    human_trader = GroupEntry(
+        group="trader", text=Tri(en="human trader", sw="human trader", sheng="human trader"),
+        clause_ids=["c3"], review=Review(status="reviewed", at="2026-01-01"),
+    )
+    human_student = GroupEntry(
+        group="student", text=Tri(en="human student", sw="human student", sheng="human student"),
+        clause_ids=["c4"], review=Review(status="reviewed", at="2026-01-01"),
+    )
+    draft_transport = GroupEntry(
+        group="transport", text=Tri(en="old draft", sw="old draft", sheng="old draft"),
+        clause_ids=["c3"], review=Review(status="draft"),
+    )
+    summary_result = Applied(
+        "summary",
+        SummaryOut(
+            summary=tri_out("new summary"),
+            groups=[
+                GroupOut(group="trader", text=tri_out("new trader draft"), clause_ids=["c3"]),
+                GroupOut(group="employee", text=tri_out("new employee draft"), clause_ids=["c4"]),
+            ],
+        ),
+    )
+    trader_before, student_before = human_trader.model_copy(deep=True), human_student.model_copy(deep=True)
+    grouped = reset_bill(repo_root)
+    grouped.groups = [human_trader, draft_transport, human_student]
+    grouped_applied = apply(grouped, [summary_result])
+    by_group = {entry.group: entry for entry in grouped.groups}
+    check("summary apply: reported 1 applied", grouped_applied == 1, str(grouped_applied))
+    check(
+        "summary apply: the reviewed trader entry keeps the human's words (not overwritten)",
+        by_group.get("trader") == trader_before,
+        str(by_group.get("trader")),
+    )
+    check(
+        "summary apply: the reviewed student entry is kept although the new output omitted it",
+        by_group.get("student") == student_before,
+        str(sorted(by_group)),
+    )
+    check(
+        "summary apply: the draft transport entry is replaced, and employee arrives as a draft",
+        "transport" not in by_group
+        and by_group.get("employee") is not None
+        and by_group["employee"].review.status == "draft"
+        and by_group["employee"].text.en == "new employee draft",
+        str(sorted(by_group)),
+    )
+    check("summary apply: the summary itself is the new draft", grouped.summary.text.en == "new summary" and grouped.summary.review.status == "draft")
+
+    # --- nothing written -----------------------------------------------------
+    check("the real bill file's SHA-256 is unchanged", sha256_file(real_path) == sha_before)
+
+    return check.finish()
 
 
 # --------------------------------------------------------------------------

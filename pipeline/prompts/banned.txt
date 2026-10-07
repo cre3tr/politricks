@@ -1,20 +1,30 @@
 # Phrases PoliTricks must never publish in an explanation, summary or note.
 # One phrase per line. Lines starting with # are comments; blank lines are ignored.
-# Matching is case-insensitive and whole-phrase: "vote" matches "can't vote" but
-# not "voting" or "devote". Read by pipeline/politricks/lint.py (and, from
-# slice 4, by the live Explain API, so a banned draft is discarded there too).
+#
+# How a line matches (case-insensitive, after whitespace is collapsed):
+#   - The WHOLE phrase must appear, not just part of a longer word.
+#     "vote" matches "cannot vote" but NOT "votes", "voting", "voted" or "devote".
+#   - A trailing * lets the LAST word keep going: "illegal*" also matches
+#     "illegally" and "illegality"; "you should*" also matches "you shouldn't".
+#     The * is only allowed as the last character of the line.
+#
+# Read by pipeline/politricks/lint.py (and, from slice 4, by the live Explain
+# API, so a banned draft is discarded there too).
 
 # Doctrine (devpost/spec.md > Lint). Never remove these without changing the spec.
-unconstitutional
+# "vote" stays unstarred on purpose: "voting rights" and "voted" are fine to say.
+unconstitutional*
 kinyume cha katiba
 haramu
-illegal
-invalid
-you should
+illegal*
+invalid*
+you should*
 vote
 
 # Proposed — Kiswahili/Sheng twins and the explainer prompt's own advice phrases.
-# Ian prunes or extends these at his first real review (slice 2b/3).
+# Ian prunes or extends these at his first real review.
+unlawful*
+violates the constitution
 kinyume na katiba
 inakiuka katiba
 si halali

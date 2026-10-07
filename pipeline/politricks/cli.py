@@ -2,7 +2,7 @@
 
 Run from anywhere; paths are resolved from the repo root, not your current folder.
 
-    uv run --project pipeline politricks intake
+    uv run --project pipeline politricks intake [--self-test]
     uv run --project pipeline politricks fetch finance-bill-2026
     uv run --project pipeline politricks fetch --check-url <url>
     uv run --project pipeline politricks probe finance-act-2026
@@ -32,7 +32,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(prog="politricks")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    sub.add_parser("intake", help="first load of every new bill in sources.yaml: fetch, extract, generate, lint")
+    p_intake = sub.add_parser(
+        "intake", help="first load of every new bill in sources.yaml: fetch, extract, generate, lint"
+    )
+    p_intake.add_argument(
+        "--self-test", action="store_true", help="offline run in a temp folder with the download stubbed (writes nothing real)"
+    )
 
     p_fetch = sub.add_parser("fetch", help="download + fingerprint a bill's official sources")
     p_fetch.add_argument("bill_id", nargs="?")
@@ -71,6 +76,8 @@ def main() -> None:
     if args.command == "intake":
         from . import intake
 
+        if args.self_test:
+            sys.exit(0 if intake.self_test(REPO_ROOT) else 1)
         sys.exit(intake.run(REPO_ROOT))
 
     elif args.command == "fetch":

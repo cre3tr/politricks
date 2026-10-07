@@ -5,7 +5,9 @@ and fails (exit 1) on either of two things:
 
 1. A BANNED PHRASE from `pipeline/prompts/banned.txt` ("unconstitutional",
    "kinyume cha katiba", "you should", ...). This fails at ANY review status:
-   even a human-reviewed text must not carry one.
+   even a human-reviewed text must not carry one. A phrase matches as a whole
+   phrase; a trailing `*` in banned.txt lets its last word keep going, so
+   `illegal*` also catches "illegally" while plain `vote` does not catch "votes".
 2. A NEUTRAL FLAG: Claude marked its own clause explanation `neutral_check.ok
    == false`. This fails only while the clause is not "reviewed" — a human
    accepting the clause is exactly what clears the flag.
@@ -17,19 +19,20 @@ legal text, headings, URLs or channel values — a law is allowed to say "vote".
 Hand-written samples ARE scanned, because they render on the page too.
 
 `politricks lint --self-test` proves the checker itself works, offline, against
-the recorded batch fixture, and writes nothing.
+the shared test bill in `selftest.py`, and writes nothing.
 """
 
 from __future__ import annotations
 
-import json
 import re
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator, Optional
 
 from .hashing import normalise, sha256_file
 from .models import Bill, NeutralCheck, Review, bill_path, load_bill
+from .selftest import FIXTURE_BILL_ID, FIXTURE_DRAFT_IDS, Checker, fixture_bill
 
 LANGS = ("en", "sw", "sheng")
 
@@ -37,9 +40,17 @@ LANGS = ("en", "sw", "sheng")
 # and the item a human is looking at can never disagree about what to call it.
 SUMMARY_ID = "summary"
 
-# The two clauses the recorded fixture (pipeline/tests/fixtures/batch_results
-# .jsonl) turns into drafts. Both self-tests lean on them.
-FIXTURE_DRAFT_IDS = ("c3", "c4")
+# The seven phrases devpost/spec.md > Lint names. banned.txt may hold more, but
+# never fewer: `lint --self-test` fails if one of these goes missing.
+DOCTRINE_PHRASES = (
+    "unconstitutional",
+    "kinyume cha katiba",
+    "haramu",
+    "illegal",
+    "invalid",
+    "you should",
+    "vote",
+)
 
 # Bill fields that have no typed model yet (later slices). A Tri hiding inside
 # any of them is still reader-facing text, so we hunt for it by shape.
@@ -60,7 +71,7 @@ class Finding:
     item: str  # "c12", "summary", "group:trader", "participation.requirements"
     lang: Optional[str]  # None for a neutral flag (it is about the clause, not a language)
     kind: str  # "banned" or "neutral"
-    detail: str  # the banned phrase, or the neutral note
+    detail: str  # the banned phrase (as written in banned.txt), or the neutral note
 
     def describe(self) -> str:
         if self.kind == "banned":
@@ -78,7 +89,11 @@ class Finding:
 
 
 def load_phrases(repo_root: Path) -> list[str]:
-    """Read `pipeline/prompts/banned.txt`: one phrase per line, # comments."""
+    """Read `pipeline/prompts/banned.txt`: one phrase per line, # comments.
+
+    Phrases come back exactly as written, trailing `*` included, because a
+    finding quotes the line a human would search for in banned.txt.
+    """
     path = repo_root / "pipeline" / "prompts" / "banned.txt"
     if not path.exists():
         raise LintError(f"no banned-phrase list at {path.relative_to(repo_root).as_posix()}")
@@ -88,6 +103,12 @@ def load_phrases(repo_root: Path) -> list[str]:
         line = normalise(raw)
         if not line or line.startswith("#"):
             continue
+        # `*` means "last word may continue", so it only makes sense at the very
+        # end, after at least one real character. Anywhere else it is a typo we
+        # would otherwise match literally and never notice.
+        stem = line[:-1].rstrip() if line.endswith("*") else line
+        if not stem or "*" in stem:
+            raise LintError(f'banned.txt: "{line}" — a * is only allowed as the last character, after a phrase')
         if line.casefold() not in seen:
             seen.add(line.casefold())
             phrases.append(line)
@@ -98,9 +119,20 @@ def load_phrases(repo_root: Path) -> list[str]:
 
 
 def _pattern(phrase: str) -> re.Pattern:
-    # Whole phrase, either side: "vote" must not fire inside "voting"/"devote",
-    # and "piga kura" must not fire inside "kupiga kura".
-    return re.compile(r"(?<!\w)" + re.escape(normalise(phrase)) + r"(?!\w)", re.IGNORECASE)
+    """The regex for one banned.txt line.
+
+    Whole phrase on the left, always: "vote" must not fire inside "devote", and
+    "piga kura" must not fire inside "kupiga kura". On the right, a plain
+    phrase must also end at a word boundary ("vote" does not fire on "votes");
+    a phrase ending in `*` lets its last word continue ("illegal*" fires on
+    "illegally") and then ends at a word boundary.
+    """
+    starred = phrase.endswith("*")
+    stem = phrase[:-1].rstrip() if starred else phrase
+    return re.compile(
+        r"(?<!\w)" + re.escape(normalise(stem)) + (r"\w*" if starred else "") + r"(?!\w)",
+        re.IGNORECASE,
+    )
 
 
 # --------------------------------------------------------------------------
@@ -153,7 +185,8 @@ def lint_bill(bill: Bill, phrases: list[str]) -> list[Finding]:
     patterns = [(phrase, _pattern(phrase)) for phrase in phrases]
     findings: list[Finding] = []
 
-    # (a) banned phrases — any review status.
+    # (a) banned phrases — any review status. Text is normalised first so a
+    # phrase that wrapped across a line or sits after a double space still hits.
     for item, lang, text in iter_texts(bill):
         clean = normalise(text)
         for phrase, pattern in patterns:
@@ -230,59 +263,44 @@ def run(repo_root: Path, bill_id: Optional[str] = None) -> int:
 # --------------------------------------------------------------------------
 
 
-def fixture_bill(repo_root: Path) -> Bill:
-    """finance-act-2026 in memory, with the recorded fixture's two drafts applied.
-
-    c3 and c4 are first reset to "no explanation yet", so the copy is the same
-    today and after slice 2b has explained (or a human has reviewed) the real
-    clauses. Nothing here touches the file on disk.
-    """
-    from . import generate
-
-    bill = load_bill(bill_path(repo_root, "finance-act-2026")).model_copy(deep=True)
-    for clause in bill.clauses:
-        if clause.id in FIXTURE_DRAFT_IDS:
-            clause.explanation = None
-            clause.review = Review(status="draft")
-            clause.neutral_check = None
-    fixture = repo_root / "pipeline" / "tests" / "fixtures" / "batch_results.jsonl"
-    lines = [json.loads(line) for line in fixture.read_text(encoding="utf-8").splitlines() if line.strip()]
-    generate.apply(bill, [generate.parse_batch_line(line) for line in lines])
-    return bill
-
-
 def _clause(bill: Bill, clause_id: str):
     return next(clause for clause in bill.clauses if clause.id == clause_id)
 
 
 def self_test(repo_root: Path) -> bool:
-    ok = True
+    check = Checker()
 
-    def check(label: str, condition: bool, detail: str = "") -> None:
-        nonlocal ok
-        if condition:
-            print(f"PASS: {label}")
-        else:
-            print(f"FAIL: {label}" + (f" ({detail})" if detail else ""))
-            ok = False
-
-    real_path = bill_path(repo_root, "finance-act-2026")
+    real_path = bill_path(repo_root, FIXTURE_BILL_ID)
     sha_before = sha256_file(real_path)
     phrases = load_phrases(repo_root)
+
+    # All seven doctrine phrases, not just the three this test happens to plant:
+    # deleting "haramu" from banned.txt must fail here, not pass silently.
+    bare = {phrase[:-1].rstrip() if phrase.endswith("*") else phrase for phrase in phrases}
+    missing = [phrase for phrase in DOCTRINE_PHRASES if phrase not in bare]
+    check("banned.txt holds all 7 doctrine phrases", not missing, f"missing {missing}")
     check(
-        "banned.txt loads and holds the phrases this test plants",
-        {"kinyume cha katiba", "vote", "you should"} <= set(phrases),
+        'banned.txt: "illegal*" is starred (inflections caught) and "vote" is not ("voting rights" stays allowed)',
+        "illegal*" in phrases and "vote" in phrases,
+        str(sorted(phrases)),
     )
 
     base = fixture_bill(repo_root)
     draft_ids = [c.id for c in base.clauses if c.explanation is not None and c.review.status == "draft"]
     check("fixture applied: exactly c3 and c4 are drafts", draft_ids == list(FIXTURE_DRAFT_IDS), str(draft_ids))
+    check(
+        "fixture: the summary is a sample and there is exactly one draft group entry (trader)",
+        base.summary is not None
+        and base.summary.review.status == "sample"
+        and [(g.group, g.review.status) for g in base.groups] == [("trader", "draft")],
+        str(base.groups),
+    )
 
     # --- 1. a clean, drafted bill passes -------------------------------------
     findings = lint_bill(base, phrases)
     check("1. clean bill with the fixture drafts: 0 findings", findings == [], str(findings))
-    # Control: the scan really reached every explained item, drafts included,
-    # so "0 findings" cannot secretly mean "0 texts looked at".
+    # Control: the scan really reached every explained item, drafts, summary and
+    # group entries included, so "0 findings" cannot secretly mean "0 texts".
     explained = sum(1 for c in base.clauses if c.explanation is not None)
     expected = 3 * (explained + (1 if base.summary else 0) + len(base.groups))
     check(f"1. control: scan covers all {expected} texts", count_texts(base) == expected, str(count_texts(base)))
@@ -298,26 +316,81 @@ def self_test(repo_root: Path) -> bool:
         == ("c4", "sheng", "banned", "kinyume cha katiba"),
         str(findings),
     )
+    # The same phrase in the two other places a reader sees text. Without these,
+    # deleting the summary or groups loop from iter_texts would pass every test.
+    bill = base.model_copy(deep=True)
+    bill.groups[0].text.sw += " Hii ni kinyume cha katiba."
+    findings = lint_bill(bill, phrases)
+    check(
+        "2. planted phrase in the draft GROUP entry: exactly one finding naming group:trader and sw",
+        len(findings) == 1 and (findings[0].item, findings[0].lang, findings[0].kind) == ("group:trader", "sw", "banned"),
+        str(findings),
+    )
+    bill = base.model_copy(deep=True)
+    bill.summary.text.en += " This is illegal."
+    findings = lint_bill(bill, phrases)
+    check(
+        "2. planted phrase in the SUMMARY: exactly one finding naming summary and en",
+        len(findings) == 1 and (findings[0].item, findings[0].lang, findings[0].kind) == ("summary", "en", "banned"),
+        str(findings),
+    )
 
-    # --- 3. word boundaries, both directions ----------------------------------
-    def one_finding_for(text: str, lang: str = "en") -> list[Finding]:
+    # --- 3. matching: whole phrases, inflections, normalised whitespace --------
+    def findings_for(text: str, lang: str = "en") -> list[Finding]:
         probe = base.model_copy(deep=True)
         setattr(_clause(probe, "c3").explanation, lang, text)
         return lint_bill(probe, phrases)
 
-    check('3. "voting rights" is not a "vote" match', one_finding_for("The Chief Executive Officer has no voting rights.") == [])
-    check('3. "devote" is not a "vote" match', one_finding_for("They devote time to the work.") == [])
+    def one_hit(text: str, phrase: str, lang: str = "en") -> bool:
+        found = findings_for(text, lang)
+        return len(found) == 1 and (found[0].item, found[0].lang, found[0].detail) == ("c3", lang, phrase)
+
+    # Starred phrases catch their inflections...
+    check('3. "unconstitutionally" is found (unconstitutional*)', one_hit("The rule is unconstitutionally broad.", "unconstitutional*"))
+    check('3. "illegally" is found (illegal*)', one_hit("The goods were illegally imported.", "illegal*"))
+    check('3. "illegality" is found (illegal*)', one_hit("Illegality is for a court to decide.", "illegal*"))
+    check('3. "invalidated" is found (invalid*)', one_hit("The licence was invalidated.", "invalid*"))
+    check("3. \"You shouldn't\" is found (you should*)", one_hit("You shouldn't wait.", "you should*"))
+    check('3. "unlawfully" is found (unlawful*)', one_hit("The land was held unlawfully.", "unlawful*"))
+    check(
+        '3. "violates the constitution" is found',
+        one_hit("This clause violates the constitution.", "violates the constitution"),
+    )
+    # ...and unstarred ones do not. Each of these would fire if the right-hand
+    # word boundary were dropped (the first), or the left one (the second).
+    check('3. "He votes in Nairobi." is NOT found (right boundary: "vote" is unstarred)', findings_for("He votes in Nairobi.") == [])
+    check('3. "voting rights" is not a "vote" match', findings_for("The Chief Executive Officer has no voting rights.") == [])
+    check('3. "devote" is not a "vote" match (left boundary)', findings_for("They devote time to the work.") == [])
     check(
         '3. "kupiga kura" is not a "piga kura" match',
-        one_finding_for("Wananchi wengi wanapenda kupiga kura.", "sw") == [],
+        findings_for("Wananchi wengi wanapenda kupiga kura.", "sw") == [],
     )
-    found = one_finding_for("The Chief Executive Officer cannot vote.")
+    found = findings_for("The Chief Executive Officer cannot vote.")
     check(
         '3. "cannot vote" is one finding for "vote" in c3',
         len(found) == 1 and (found[0].item, found[0].detail) == ("c3", "vote"),
         str(found),
     )
-    check('3. matching ignores case ("CANNOT VOTE")', len(one_finding_for("THE OFFICER CANNOT VOTE.")) == 1)
+    check('3. matching ignores case ("CANNOT VOTE")', len(findings_for("THE OFFICER CANNOT VOTE.")) == 1)
+    # Text is normalised before matching: the PDF-style line break and the
+    # double space below only match because lint collapses whitespace first.
+    check('3. "you  should" (double space) is found', one_hit("Please note you  should apply early.", "you should*"))
+    check(
+        '3. "kinyume cha<newline>katiba" is found',
+        one_hit("Hii ni kinyume cha\nkatiba ya nchi.", "kinyume cha katiba", "sw"),
+    )
+
+    # --- 3b. a malformed banned.txt is refused, not matched literally ---------
+    with tempfile.TemporaryDirectory() as tmp:
+        prompts = Path(tmp) / "pipeline" / "prompts"
+        prompts.mkdir(parents=True)
+        (prompts / "banned.txt").write_text("ill*egal\n", encoding="utf-8")
+        try:
+            load_phrases(Path(tmp))
+            refused = False
+        except LintError:
+            refused = True
+    check('3. a "*" in the middle of a banned.txt line is refused', refused)
 
     # --- 4. neutral flag: fails until a human reviews the clause --------------
     bill = base.model_copy(deep=True)
@@ -346,7 +419,7 @@ def self_test(repo_root: Path) -> bool:
     check(
         '5. "you should" inside a nested participation Tri is found (the URL and channel "vote" are not)',
         len(findings) == 1
-        and (findings[0].item, findings[0].lang, findings[0].detail) == ("participation.requirements", "en", "you should"),
+        and (findings[0].item, findings[0].lang, findings[0].detail) == ("participation.requirements", "en", "you should*"),
         str(findings),
     )
     bill = base.model_copy(deep=True)
@@ -364,4 +437,4 @@ def self_test(repo_root: Path) -> bool:
     # --- 6. nothing written ----------------------------------------------------
     check("6. the real bill file's SHA-256 is unchanged", sha256_file(real_path) == sha_before)
 
-    return ok
+    return check.finish()
