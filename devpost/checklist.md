@@ -207,3 +207,53 @@ Activity mode:
   - **Not fixed, waiting on the learner:** scan-garbled marginal-note headings on the Public Participation Bill (e.g. c16 "oeveiopmer^tof specificguidelines forpubii 1C participation.") render beside the clauses. How to handle them is an editorial choice.
   - Declined NITs: a per-source scan note (every bill has one source today), and the clipped Tertiary Education header characters (harmless: they can't reach a heading).
 - **Transcribed headings (learner decision, 2026-09-28):** the Public Participation Bill's 21 clause headings are typed by hand from the bill's own Arrangement of Clauses (PDF page 2, checked against a rendered image), because the scan garbled its marginal notes. They're marked `heading_source: "transcribed"`, and each card says so quietly: "heading transcribed from the printed page". Headings are signposts, not legal text. All 21 clause texts and fingerprints are unchanged. A misspelled clause ID in the transcriptions stops extraction.
+
+### Key-free pass, 2026-10-07
+
+- **Correction to the slice 2a "Gap" note above.** It said "the only type check is Astro's build". There was no type check at all, because `astro build` strips types without checking them. This made the `never` guarantee in `badge.ts` unenforced until `7f2d09a`.
+- **Correction to the slice 5 reorder note above.** It listed the `intake` command in the key-free half that was marked done. No `intake` code existed (0 hits across 23 source files). It now exists (`4c40781`).
+- **TypeScript gate (`7f2d09a`).** Added `@astrojs/check` 0.9.10 and `typescript` 6.0.3 (its peer range is `^5 || ^6`, so not 7.x).
+  - `npm run check` runs `astro check`, and `npm run build` now runs `astro check && astro build`.
+  - The first check found 0 errors over 15 files.
+  - **Positive control:** a planted fourth review status makes the check fail at `badge.ts:28`, and the build stops before `astro build`.
+  - The built output is byte-identical before and after.
+- **Slice 3 lint and review gate (`f91e749`, fixed in `2171ec3`).**
+  - New: `pipeline/prompts/banned.txt`, `lint.py`, `review.py`, and a test-support module `selftest.py`. `check-build.mjs` now checks each card's badge against its status, instead of whole-page counts.
+  - **Banned list:** the spec's 7 doctrine phrases, plus 12 *proposed* Kiswahili/Sheng and English twins **for Ian to prune at his first review**. Matching is whole-phrase. A trailing `*` lets the last word continue (`illegal*` → "illegally"). `vote` stays unstarred, so "voting rights" (Tertiary c9, c31) is allowed.
+  - **Lint:** a neutral flag fails only until a human accepts the clause; a banned phrase fails at any status. Samples are scanned too.
+  - **Review:** walks drafts, plus any flagged item at any status, flagged ones first.
+    - It refuses to accept text that still contains a banned phrase.
+    - It saves on every accept.
+    - Editing a reviewed text makes it a draft again until accepted.
+    - A sample is never promoted to Reviewed.
+    - End of input or Ctrl-C at any prompt means quit, never typed data.
+  - Slice 3 stays **unticked**: its learner check needs real drafts (slice 2b).
+- **`intake` (`4c40781`, fixed in `2171ec3`).** Runs fetch → scanned-PDF check → extract → generate → lint for every registry entry that has no loaded bill.
+  - Without `ANTHROPIC_API_KEY`, generate is skipped with a message.
+  - A failed load deletes its 0-clause skeleton JSON, so nothing half-built ships, and one failing bill never stops the rest.
+  - `intake --self-test` covers the happy path (byte-equal to the committed bill apart from `fetched_at`), a scanned PDF, a download error, an off-allowlist source, resume, and retry.
+- **Cold Sonnet review of `1ae50c4..4c40781`:** 1 blocker, 8 should-fix and 5 nits, all confirmed in the code.
+  - **Blocker:** intake left a 0-clause JSON behind that the site would publish.
+  - **Should-fix:**
+    - any answer starting with "a" accepted an item;
+    - end of input at the edit prompt wrote "q" over the draft;
+    - the self-tests depended on the state of the real data;
+    - inflections slipped past lint;
+    - badges were only checked as page totals;
+    - intake's narrow `except` let one failing bill abort the run;
+    - review dead-ended on flagged items it wouldn't walk.
+  - **Nit fixed:** `generate.apply` overwrote reviewed group entries.
+  - The reviewer's 30 planted bugs left 22 surviving. After the fixes, all 17 named mutations are caught. The lead also independently deleted `invalid*` and got 2 FAILs.
+  - **Deferred, with reasons:**
+    - Lint doesn't gate `npm run build` yet. Slice 4 adds a TypeScript matcher for `banned.txt` (the Explain API needs one); add the build gate there. Until then: generate → lint → review → commit.
+    - Review can't reach change notes or civic translations until slices 6 and 8 create them.
+    - **Proposal for Ian:** tie a "Reviewed" status to the text a human actually saw (for example, a hash of the reviewed text), so a hand-edit can't keep a green badge.
+- **Kenya Law is unreachable (2026-10-07).**
+  - `new.kenyalaw.org` and `kenyalaw.org` return 403 to every request, including the home page.
+  - Three observers on two networks agree: curl and the browser on this machine, and an off-network fetcher. Controls `parliament.go.ke` and `example.com` return 200.
+  - Live `fetch`, `verify` and `intake` fail until it recovers. The committed PDFs and fingerprints are unaffected.
+- **Found, not yet acted on:**
+  - **Stale stage line:** the Tertiary bill still says "public views open until 2 October 2026" (checked 2026-09-28, past the 7-day staleness rule). Both live bills' stages need re-checking from Parliament.
+  - **Model ID:** `generate.py` uses `claude-opus-5` while Opus 5.5 is current. Check it before slice 2b's first live call.
+  - **Loading `.env`:** the pipeline doesn't read `.env`. Use `uv run --env-file .env …` (verified: the variable arrives with the flag and is absent without it).
+- **Project `CLAUDE.md` created** (commands, gotchas, line maps). No git remote is configured, so nothing was pushed.
