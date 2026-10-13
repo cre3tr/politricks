@@ -327,3 +327,21 @@ Activity mode:
 - **Self-test:** generate now drives the real `run()` offline, using `_FakeClient` and a temp copy of the repo. 32 passed, 0 failed, up from 19.
   - **Positive controls:** planting the old `.parsed` retry gives 9 FAILs; planting a retry with the right attribute but no guard gives 6 FAILs.
   - All other self-tests, lint, the build and `check-build` for all 3 bills pass.
+
+### Groups prompt and probe 2, 2026-10-13
+
+- **Group definitions (learner decision):** no fifth group. Unbanked people (cash and mobile money), the informal sector and digital or gig workers fold into `trader`; delivery and ride-hailing drivers fold into `transport`. The prompt (`explainer.md`) now defines all four groups and the summary task. The summary request sends every section's full text. `apply()` drops repeated groups and unknown clause ids, with a note for each (S3). Self-test: 37 passed.
+- **Probe 2:** `msgbatch_01Jhx5PXCrDJvGiuoaH7k9Dy`, three requests (summary, c3, c32). 3/3 succeeded, all `Applied`, in 408 s.
+  - Lint over the applied in-memory bill: 0 findings. `apply` notes: none, so no invented ids.
+  - Cost about $0.084. Output tokens: c3 1,996, c32 2,636, summary 6,572.
+  - Re-projected full Finance Act: about **$0.71**, from the mean clause output (1,843 tokens over three samples).
+  - **S5 closed:** the summary schema works live.
+  - Raw results: `msgbatch_01Jhx5PXCrDJvGiuoaH7k9Dy.jsonl` in the session scratchpad.
+- **Clause-level tags looked right in 2/2:** c3 (taxes gratuity contributions) → `employee`; c32 (VAT exemptions, including money transfer) → `trader`, as the new rule intends.
+- **The summary's groups over-tag, and give the site two sources of truth for groups:**
+  - `trader` named 11 sections. They include general-taxpayer procedure: return deadlines (c18), pre-populated returns (c47), e-system penalties (c48), PIN reinstatement (c40), invoices (c30), import documents (c43) and the amnesty dates (c45).
+  - Its group text also bundles betting winnings under traders.
+  - c18 and c47 are tagged both `employee` and `trader`, although they apply to every individual.
+  - The summary's groups come from a separate request from the clause tags, so the two can disagree about which sections a group covers.
+  - Proposed fix: run the summary after the clause batch, feed it the clause tags, and take each group's `clause_ids` from those tags in code. **Waiting on the learner.**
+- **Length:** c32's explanation runs about ten sentences against the prompt's "two to four". The clause is 5,300 characters listing about 20 exemptions. Whether long schedule amendments may run longer is a learner call.
