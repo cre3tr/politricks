@@ -56,25 +56,27 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `run` 409
 - `check_json` 432
 
-**`pipeline/politricks/generate.py` (1029):**
+**`pipeline/politricks/generate.py` (1161):**
 - `MODEL` / `EFFORT` 61–62 (`claude-sonnet-5-5`; effort set explicitly so a model swap can't change it)
-- output models 87–131 (`SwapOut` = a Sheng word kept in Kiswahili; `GroupOut` has no `clause_ids`: group membership comes only from clause tags)
-- `_swaps` 134
-- `build_params` 162
-- `tagged_sections` 192 (each group's clause ids, from the per-clause tags)
-- `build_summary_params` 197 (full section text in `<section id>` blocks, plus the tag list)
-- `build_batch` 240 (clauses only; no summary)
-- `direct_params` 246
-- `retry_params` 258 (drops only `output_config.format`, keeps effort)
-- outcomes 283–313
-- `parse_batch_line` 316
-- `apply` 371 (applies the summary last; keeps reviewed items and groups; a group's `clause_ids` come from the tags; drops repeated or untagged groups, with a note; copies `sheng_swaps`)
-- self-test fakes: `_FakeClient` 460, `_run_offline` 494 (cuts the temp bill to the fixture's clauses)
-- `self_test` 543
-- `BATCH_RECORDS` 880
-- `_call_direct` 883 (refusal retries and the summary; never raises)
-- `_summarise` 906, `_report` 917
-- `run` 932: phase 1 is the clause batch (saves the batch id and raw results under `pipeline/.cache/batches/`; `--batch-id` resumes; a missing result or one for a request this bill didn't make fails the run). Phase 2 is the summary as a direct call from the clause tags, **skipped if any clause failed** (`--summary-only` redoes just that). Exits 1 listing anything not applied.
+- output models 87–139 (`SwapOut` = a Sheng word kept in Kiswahili; `GroupOut` has no `clause_ids`: group membership comes only from clause tags; `TagsOut` = groups only)
+- `_out_model` 141 (which schema an answer must match), `_swaps` 148
+- `build_params` 176
+- `tagged_sections` 206 (each group's clause ids, from the per-clause tags)
+- `build_summary_params` 211 (full section text in `<section id>` blocks, plus the tag list)
+- `build_tag_params` 254, `build_tag_batch` 277 (tags-only pass; same system prompt, so the cache is reused)
+- `build_batch` 282 (clauses only; no summary)
+- `direct_params` 288
+- `retry_params` 300 (drops only `output_config.format`, keeps effort)
+- outcomes 325–355
+- `parse_batch_line` 358
+- `apply` 415 (applies the summary last; keeps reviewed items and groups; a group's `clause_ids` come from the tags; drops repeated or untagged groups, with a note; copies `sheng_swaps`)
+- `apply_tags` 495 (only `groups` changes; reviewed clauses keep theirs; prints each change)
+- self-test fakes: `_FakeClient` 527, `_run_offline` 561 (cuts the temp bill to the fixture's clauses)
+- `self_test` 613
+- `BATCH_RECORDS` 1007
+- `_call_direct` 1010 (refusal retries and the summary; never raises)
+- `_summarise` 1033, `_report` 1044
+- `run` 1059: phase 1 is the clause batch (saves the batch id and raw results under `pipeline/.cache/batches/`; `--batch-id` resumes; a missing result or one for a request this bill didn't make fails the run). Phase 2 is the summary as a direct call from the clause tags, **skipped if any clause failed** (`--summary-only` redoes just that). `--tags-only` makes phase 1 a groups-only batch (id saved as `<bill>.tags.batch-id`). Exits 1 listing anything not applied.
 
 **`pipeline/politricks/intake.py` (454):**
 - `_clause_count` 51

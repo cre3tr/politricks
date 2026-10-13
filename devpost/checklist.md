@@ -476,3 +476,14 @@ Activity mode:
     - c55 halves the Road Maintenance Levy (3 → 1.50 shillings) and is untagged.
     - Its explanation is faithful but never says what the levy is charged on, because the clause text doesn't say. The prompt forbids outside knowledge, so a reader learns only "an amount changed".
   - **Committing:** CLAUDE.md's order is generate → lint → review → commit. Slice 2b has its own commit step (`Generate Claude explanations for Finance Act 2026`). The drafts are **not committed yet**. They stay recoverable from the batch id at no cost.
+- **Learner decisions:**
+  - **Commit the drafts now** as slice 2b. Done in `89c985a`, with everything still `draft`.
+  - **Loosen tagging slightly and re-run only the tags.**
+  - **No outside context** for c55-style explanations. Context gets added by hand in review.
+- **Tags-only pass, built (`generate <bill> --tags-only`):**
+  - `TagsOut` allows only `groups`. `build_tag_params` reuses the explainer system prompt, so the cache carries over.
+  - `apply_tags` changes only `groups`, never a reviewed clause's, and prints each change.
+  - The batch id is saved as `<bill>.tags.batch-id`. Phase 2 then rewrites the summary from the new tags.
+  - **Prompt:** two exceptions that count even though others pay too. A levy, duty, fee or tax on fuel, vehicles, motorcycles, spare parts, roads, parking, driving licences or fares counts for `transport`. School, college and university fees, student loans and bursaries, and youth employment count for `student`.
+  - **Self-test: 56 passed** (up from 47).
+  - **Positive controls:** an `apply_tags` that overrides a reviewed clause gives 3 FAILs; one that wipes explanations gives 2.

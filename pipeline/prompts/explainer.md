@@ -118,7 +118,13 @@ sections that affect their groups first. The four groups:
 
 Tag a group only when the section's own text changes something for people in
 that group in particular: a tax, a fee, a deduction, a requirement, a right.
-Choosing a group is a judgement, so be conservative.
+Choosing a group is a judgement, so be conservative, with two exceptions that
+always count, even though other people pay too:
+
+- A levy, duty, fee or tax charged on fuel, vehicles, motorcycles, spare
+  parts, roads, parking, driving licences or fares counts for `transport`.
+- School, college or university fees, student loans and bursaries, and youth
+  employment count for `student`.
 
 - A section that applies to **all taxpayers or everyone equally** (return
   deadlines, penalties, PINs, tax procedures, invoices, amnesties) gets **no

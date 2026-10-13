@@ -131,6 +131,20 @@ class SummaryOut(BaseModel):
     groups: list[GroupOut]
 
 
+class TagsOut(BaseModel):
+    # The tags-only pass: re-decide a clause's groups without paying to
+    # rewrite its explanation (`generate <bill> --tags-only`).
+    model_config = _STRICT
+    groups: list[GroupId]
+
+
+def _out_model(custom_id: str, tags_only: bool = False) -> type[BaseModel]:
+    """Which schema a request's answer must match."""
+    if custom_id == "summary":
+        return SummaryOut
+    return TagsOut if tags_only else ClauseOut
+
+
 def _swaps(swaps: list[SwapOut]) -> list[ShengSwap]:
     return [ShengSwap(word=swap.word, english=swap.english) for swap in swaps]
 
@@ -237,6 +251,34 @@ def build_summary_params(repo_root: Path, bill: Bill) -> dict:
     }
 
 
+def build_tag_params(repo_root: Path, bill: Bill, clause: Clause) -> dict:
+    """The params for re-deciding one clause's groups, and nothing else.
+
+    Same system prompt as the explainer, so the batch reuses its cache; the
+    user message says this is a tags-only request, and the schema allows only
+    `groups`.
+    """
+    params = build_params(repo_root, bill, clause)
+    schema = TagsOut.model_json_schema()
+    assert _all_objects_forbid_additional(schema), "TagsOut schema must forbid extra properties everywhere"
+    params["messages"] = [
+        {
+            "role": "user",
+            "content": (
+                "This is a tags-only request: return only `groups` for this section, under the rules in "
+                '"Who a section affects". Don\'t explain it.\n\n' + params["messages"][0]["content"]
+            ),
+        }
+    ]
+    params["output_config"] = {"format": {"type": "json_schema", "schema": schema}, "effort": EFFORT}
+    return params
+
+
+def build_tag_batch(repo_root: Path, bill: Bill) -> list[dict]:
+    """One tags-only request per clause."""
+    return [{"custom_id": clause.id, "params": build_tag_params(repo_root, bill, clause)} for clause in bill.clauses]
+
+
 def build_batch(repo_root: Path, bill: Bill) -> list[dict]:
     """One batch request per clause. The summary is NOT in the batch: it
     needs the clause tags this batch produces, so run() asks for it after."""
@@ -313,8 +355,10 @@ class Invalid:
 Outcome = Union[Applied, NeedsDirect, Errored, Invalid]
 
 
-def parse_batch_line(obj: dict) -> Outcome:
+def parse_batch_line(obj: dict, tags_only: bool = False) -> Outcome:
     """Turn one decoded line of a batch results `.jsonl` file into an Outcome.
+
+    `tags_only` says the line answers a tags-only request (`TagsOut`).
 
     `obj` is a plain dict (e.g. from `json.loads` on one line, or from
     `response.model_dump(mode="json")` for a line the SDK already parsed for
@@ -360,7 +404,7 @@ def parse_batch_line(obj: dict) -> Outcome:
     if text is None:
         return Invalid(custom_id, "no text content block in the response")
 
-    model_cls = SummaryOut if custom_id == "summary" else ClauseOut
+    model_cls = _out_model(custom_id, tags_only)
     try:
         parsed = model_cls.model_validate_json(text)
     except ValidationError as error:
@@ -448,6 +492,29 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
     return applied
 
 
+def apply_tags(bill: Bill, outcomes: list[Outcome]) -> int:
+    """Write the groups from a tags-only pass onto `bill`. Returns how many.
+
+    Only `groups` changes: explanations, review status and everything else are
+    left exactly as they were. A reviewed clause keeps the tags a human
+    accepted. Every change is printed, so the reviewer sees what moved.
+    """
+    clauses_by_id = {clause.id: clause for clause in bill.clauses}
+    applied = 0
+    for outcome in outcomes:
+        if not isinstance(outcome, Applied) or outcome.custom_id == "summary":
+            continue
+        clause = clauses_by_id.get(outcome.custom_id)
+        if clause is None or clause.review.status == "reviewed":
+            continue
+        new = list(dict.fromkeys(outcome.parsed.groups))  # no repeats
+        if new != clause.groups:
+            print(f"  tags {clause.id}: {clause.groups or '[]'} -> {new or '[]'}")
+        clause.groups = new
+        applied += 1
+    return applied
+
+
 # --------------------------------------------------------------------------
 # Self-test: proves the above offline, against a recorded fixture. No network,
 # no Anthropic client is ever constructed.
@@ -498,6 +565,7 @@ def _run_offline(
     batch_id: str | None = None,
     summary_only: bool = False,
     clause_ids: list[str] | None = None,
+    tags_only: bool = False,
 ) -> SimpleNamespace:
     """Run run() in a temp copy of the repo against a fake client.
 
@@ -523,12 +591,13 @@ def _run_offline(
         with contextlib.redirect_stdout(out):
             try:
                 code = run(root, FIXTURE_BILL_ID, batch_id=batch_id, client=client, poll_seconds=0,
-                           summary_only=summary_only)
+                           summary_only=summary_only, tags_only=tags_only)
             except Exception as error:
                 code = f"raised {type(error).__name__}: {error}"
 
         records = root.joinpath(*BATCH_RECORDS)
         id_file = records / f"{FIXTURE_BILL_ID}.batch-id"
+        tags_id_file = records / f"{FIXTURE_BILL_ID}.tags.batch-id"
         raw_file = records / f"{_FAKE_BATCH_ID}.jsonl"
         return SimpleNamespace(
             code=code,
@@ -536,6 +605,7 @@ def _run_offline(
             bill=load_bill(bill_path(root, FIXTURE_BILL_ID)),
             created=client.created,
             id_saved=id_file.read_text(encoding="utf-8").strip() if id_file.exists() else None,
+            tags_id_saved=tags_id_file.read_text(encoding="utf-8").strip() if tags_id_file.exists() else None,
             raw_lines=len(raw_file.read_text(encoding="utf-8").splitlines()) if raw_file.exists() else 0,
         )
 
@@ -860,6 +930,63 @@ def self_test(repo_root: Path) -> bool:
     check("run: a retry that's refused again is listed, not applied as None (exit 1)",
           c.code == 1 and "NOT APPLIED c5: direct call gave no usable output" in c.out, f"{c.code} / {c.out}")
 
+    # --- the tags-only pass ---------------------------------------------------
+    tag_requests = build_tag_batch(repo_root, bill)
+    tag_schema = tag_requests[0]["params"]["output_config"]["format"]["schema"]
+    check(
+        "tags batch: one request per clause, schema allows only `groups`, and says it's tags-only",
+        len(tag_requests) == len(bill.clauses)
+        and set(tag_schema.get("properties", {})) == {"groups"}
+        and _all_objects_forbid_additional(tag_schema)
+        and "tags-only request" in tag_requests[0]["params"]["messages"][0]["content"],
+        str(sorted(tag_schema.get("properties", {}))),
+    )
+    check(
+        "tags batch: same system prompt as the explainer (so it reuses the cache)",
+        tag_requests[0]["params"]["system"] == requests[0]["params"]["system"],
+    )
+
+    tag_bill = reset_bill(repo_root)
+    apply(tag_bill, outcomes)  # c3, c4 get fixture explanations and tags
+    c3_before = next(clause for clause in tag_bill.clauses if clause.id == "c3").model_copy(deep=True)
+    reviewed_c4 = next(clause for clause in tag_bill.clauses if clause.id == "c4")
+    reviewed_c4.review = Review(status="reviewed", at="2026-01-01")
+    c4_tags = list(reviewed_c4.groups)
+    with contextlib.redirect_stdout(io.StringIO()) as tag_notes:
+        tagged_count = apply_tags(tag_bill, [
+            Applied("c3", TagsOut(groups=["transport", "transport"])),
+            Applied("c4", TagsOut(groups=["student"])),
+        ])
+    c3_after = next(clause for clause in tag_bill.clauses if clause.id == "c3")
+    check("apply_tags: a draft clause gets the new groups, without repeats", c3_after.groups == ["transport"],
+          str(c3_after.groups))
+    check("apply_tags: nothing but groups changes (explanation, status, swaps untouched)",
+          c3_after.model_copy(update={"groups": c3_before.groups}) == c3_before)
+    check("apply_tags: a reviewed clause keeps the tags a human accepted",
+          reviewed_c4.groups == c4_tags and tagged_count == 1, f"{reviewed_c4.groups} / {tagged_count}")
+    check("apply_tags: each change is printed", "tags c3:" in tag_notes.getvalue(), tag_notes.getvalue())
+
+    # A whole tags-only run, offline: answers are {"groups": [...]} lines.
+    def tags_line(custom_id: str, groups: list[str]) -> dict:
+        line = json.loads(json.dumps(lines[0]))  # a real succeeded line, re-pointed
+        line["custom_id"] = custom_id
+        line["result"]["message"]["content"] = [{"type": "text", "text": json.dumps({"groups": groups})}]
+        return line
+
+    parse_calls.clear()
+    tagged_run = _run_offline(repo_root, [tags_line("c3", ["employee"]), tags_line("c4", [])], parse_ok, tags_only=True)
+    tagged_c3 = next(clause for clause in tagged_run.bill.clauses if clause.id == "c3")
+    check("run --tags-only: exit 0, tags applied, explanations untouched",
+          tagged_run.code == 0 and tagged_c3.groups == ["employee"] and tagged_c3.explanation is None,
+          f"{tagged_run.code} / {tagged_c3.groups} / {tagged_run.out}")
+    check("run --tags-only: its batch id is saved under its own name",
+          tagged_run.tags_id_saved == _FAKE_BATCH_ID and tagged_run.id_saved is None,
+          f"{tagged_run.tags_id_saved} / {tagged_run.id_saved}")
+    check("run --tags-only: the summary is rewritten from the new tags",
+          len(parse_calls) == 1 and parse_calls[0].get("output_format") is SummaryOut
+          and "- employee: c3" in parse_calls[0]["messages"][0]["content"],
+          str(len(parse_calls)))
+
     # --- nothing written -----------------------------------------------------
     check("the real bill file's SHA-256 is unchanged", sha256_file(real_path) == sha_before)
 
@@ -880,7 +1007,7 @@ def self_test(repo_root: Path) -> bool:
 BATCH_RECORDS = ("pipeline", ".cache", "batches")
 
 
-def _call_direct(client, custom_id: str, params: dict) -> Outcome:
+def _call_direct(client, custom_id: str, params: dict, tags_only: bool = False) -> Outcome:
     """One direct (non-batch) request, with the server-side fallback on.
 
     Used for refused clauses and for the summary, which needs the clause tags
@@ -888,7 +1015,7 @@ def _call_direct(client, custom_id: str, params: dict) -> Outcome:
     wrong becomes an `Errored`, so one bad call can't throw away every other
     result the batch already paid for.
     """
-    model_cls = SummaryOut if custom_id == "summary" else ClauseOut
+    model_cls = _out_model(custom_id, tags_only)
     try:
         message = client.beta.messages.parse(output_format=model_cls, **retry_params(params))
     except Exception as error:  # a refusal, truncated JSON, a network drop...
@@ -936,6 +1063,7 @@ def run(
     client=None,
     poll_seconds: float = 10,
     summary_only: bool = False,
+    tags_only: bool = False,
 ) -> int:
     """Explain every clause in one batch, then write the summary from their tags.
 
@@ -943,6 +1071,8 @@ def run(
     refusals directly and applies the results. Phase 2 asks for the summary
     directly, because it needs the tags phase 1 produced. `summary_only`
     skips phase 1 and redoes just the summary from the tags already saved.
+    `tags_only` makes phase 1 re-decide only each clause's groups (cheap,
+    explanations untouched); phase 2 then rewrites the summary from them.
 
     Returns the exit code: 0 only if every request was applied, 1 if any was
     not. Each one that wasn't is listed with its reason. `client` and
@@ -960,16 +1090,18 @@ def run(
         save_bill(bill, path)
         return _report(sum(isinstance(outcome, Applied) for outcome in outcomes), outcomes, None)
 
-    requests = build_batch(repo_root, bill)
+    requests = build_tag_batch(repo_root, bill) if tags_only else build_batch(repo_root, bill)
     records = repo_root.joinpath(*BATCH_RECORDS)
     records.mkdir(parents=True, exist_ok=True)
+    mode_flag = " --tags-only" if tags_only else ""
 
     if batch_id is None:
         batch = client.messages.batches.create(requests=requests)
         batch_id = batch.id
-        (records / f"{bill_id}.batch-id").write_text(batch_id + "\n", encoding="utf-8")
-        print(f"submitted batch {batch_id} ({len(requests)} requests)")
-        print(f"  if this stops, resume without paying again: politricks generate {bill_id} --batch-id {batch_id}")
+        id_name = f"{bill_id}.tags.batch-id" if tags_only else f"{bill_id}.batch-id"
+        (records / id_name).write_text(batch_id + "\n", encoding="utf-8")
+        print(f"submitted {'tags-only ' if tags_only else ''}batch {batch_id} ({len(requests)} requests)")
+        print(f"  if this stops, resume without paying again: politricks generate {bill_id}{mode_flag} --batch-id {batch_id}")
     else:
         print(f"resuming batch {batch_id} (nothing new is submitted)")
         batch = client.messages.batches.retrieve(batch_id)
@@ -985,7 +1117,7 @@ def run(
     raw = [response.model_dump(mode="json") for response in client.messages.batches.results(batch_id)]
     raw_path = records / f"{batch_id}.jsonl"
     raw_path.write_text("".join(json.dumps(line, ensure_ascii=False) + "\n" for line in raw), encoding="utf-8")
-    outcomes = [parse_batch_line(line) for line in raw]
+    outcomes = [parse_batch_line(line, tags_only) for line in raw]
 
     # Check what came back against what was asked for. A missing line, or a
     # line for a request this bill never made (a wrong --batch-id), must fail
@@ -1009,12 +1141,12 @@ def run(
         if isinstance(outcome, NeedsDirect):
             params = by_custom_id.get(outcome.custom_id)
             outcomes[i] = (
-                _call_direct(client, outcome.custom_id, params)
+                _call_direct(client, outcome.custom_id, params, tags_only)
                 if params is not None
                 else Errored(outcome.custom_id, "refused, and no longer in the bill to retry")
             )
 
-    applied = apply(bill, outcomes)
+    applied = apply_tags(bill, outcomes) if tags_only else apply(bill, outcomes)
     save_bill(bill, path)  # the clause results are safe on disk before phase 2
 
     # The summary is written from the clause tags, so it waits until every
