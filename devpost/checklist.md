@@ -487,3 +487,14 @@ Activity mode:
   - **Prompt:** two exceptions that count even though others pay too. A levy, duty, fee or tax on fuel, vehicles, motorcycles, spare parts, roads, parking, driving licences or fares counts for `transport`. School, college and university fees, student loans and bursaries, and youth employment count for `student`.
   - **Self-test: 56 passed** (up from 47).
   - **Positive controls:** an `apply_tags` that overrides a reviewed clause gives 3 FAILs; one that wipes explanations gives 2.
+- **Tags-only run (learner approved, effort high):** batch `msgbatch_0169Ezwvu5AFHwcTyWmdFmjT`, 55/55 succeeded, 32 polls. The summary was then rewritten directly by `claude-sonnet-5-5`. Exit 0.
+  - **Cost $0.081** (output 6,707 tokens, 6,130 of it thinking; 202k read from the cache). **The lead's pre-run estimate of $0.20–0.65 was 2.5–8× too high:** it assumed the full run's thinking per request, but tagging needed about 110 thinking tokens a request.
+  - **Changes:** c33, c36 and c55, each `[]` → `transport`. Nothing else moved. Still no `student` tag.
+  - Tags are now employee 2, trader 4, transport 3; 46 untagged. The groups match exactly (transport: c33, c36, c55).
+  - **Scope check against HEAD:** 0 explanations changed and no field other than `groups` changed on any clause. Summary and group texts were rewritten, with 0 em dashes.
+  - Gate: lint (177 texts) 0 findings, all self-tests, the build and `check-build` pass.
+- **For the learner's review: two of the three new transport tags are literal applications of the rule.**
+  - c33 only adds tariff codes for bicycles and batteries to the VAT schedule.
+  - c36 is the excise schedule. Its vehicle item is a 50% rate on antique, vintage and classic cars, not boda, matatu or delivery vehicles.
+  - c55 (the fuel levy cut) is the intended case.
+  - Drop or keep each in `review`.
