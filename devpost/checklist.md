@@ -575,3 +575,10 @@ Activity mode:
 - **First audit, of this repo:** `TESTING.md` lists every kind with its location, command and last control.
   - It ran two controls this change hadn't had yet. K9: `DisplayStatus` grew a value, giving `ts(2322)` at `badge.ts:37`. K7: every card was forced to the draft badge, giving 2 FAILs.
   - **Gaps it names:** the K1 and K4 controls have never been run; lint doesn't gate the build (slice 4); the probe and control-copy scripts live only in a scratchpad; live fetch is blocked by Kenya Law's 403.
+
+### Git remote added, 2026-10-14
+
+- **The learner's call:** a private GitHub repo, `cre3tr/politricks`, with `main` and `build/poc` pushed. This supersedes the earlier "no git remote" notes, which stay as written because the log is append-only.
+- **Checked before the push:** of the 89 tracked files, the only env file is `.env.example`, with an empty key; no `.env` was ever added in history; `.env` is gitignored.
+- **Read back:** visibility `PRIVATE`, default branch `main`, and both remote branches at `e7ad079`.
+- Slice 7 (Vercel) can link this repo. Making it public for judging is a later decision for the learner.
