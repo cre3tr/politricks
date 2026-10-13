@@ -447,3 +447,32 @@ Activity mode:
   - **Length down:** en 133 → 110 words, sw 130 → 104, Sheng 109 → 88, for 171 words of law. 3 sentences each (counted by reading).
   - The output token count barely moved (2,818 → 2,631) because thinking dominates, so the full-run estimate stays about $1.2.
   - Swaps `[]`, 0 em dashes, tag `employee`. Applied to the working copy for the preview.
+
+### Slice 2b full run, Finance Act, 2026-10-14
+
+- **`generate finance-act-2026`** (learner approved about $1.2): batch `msgbatch_01XPbYqgfcUzCL3WdKUyJRLG`, 55 requests, **55 succeeded**, 0 errored / expired / canceled.
+  - It ended after 36 polls (about 6 min).
+  - Phase 2's summary was answered directly by `claude-sonnet-5-5` (no fallback).
+  - `applied 56 results (status: draft)`, exit 0. The id and raw results are in `pipeline/.cache/batches/`.
+- **Real cost (batch usage):** input 20,435, cache write 4,291, cache read 231,714, output 113,821 (66,078 of it thinking), which is **$0.618** at batch rates.
+  - The summary's direct call isn't logged. About $0.10, estimated from its probe.
+  - Caching worked: 231k tokens read from the cache against 4k written.
+- **Slice 2b verify (mechanical), all met:**
+  - 55/55 clauses have an explanation, every one `draft`, 0 `sample`. The summary is `draft`.
+  - Zod validates (`npm run build` exit 0), and `check-build` shows "AI draft (not yet reviewed)" on every card.
+  - Lint: 174 texts, 0 findings. All self-tests pass.
+  - **The learner check is still open** (read three clauses in Sheng), so slice 2b stays unticked.
+- **Measured over the output:**
+  - **Em dashes:** 0 over 174 generated texts.
+  - **Neutral flags:** 0.
+  - **Sheng swaps:** 0.
+  - **Legal terms in Sheng:** 2, both "proviso" (c21, c36), each glossed as "condition (proviso)", which the prompt allows.
+  - **Length:**
+    - 5 clauses run past 4 English sentences. c32 and c36 (14 each) are schedules, as intended. c39 (5), c43 (6) and c4 (5) are not.
+    - Total English is 5,318 words against 8,478 words of law.
+  - **Tags:** employee c3, c9; trader c7, c16, c21, c32. **49 of 55 untagged**, transport 0, student 0. The groups match the tags exactly.
+- **Open for the learner:**
+  - **Tagging may now be too conservative:** 6 of 55, with no transport or student group.
+    - c55 halves the Road Maintenance Levy (3 → 1.50 shillings) and is untagged.
+    - Its explanation is faithful but never says what the levy is charged on, because the clause text doesn't say. The prompt forbids outside knowledge, so a reader learns only "an amount changed".
+  - **Committing:** CLAUDE.md's order is generate → lint → review → commit. Slice 2b has its own commit step (`Generate Claude explanations for Finance Act 2026`). The drafts are **not committed yet**. They stay recoverable from the batch id at no cost.
