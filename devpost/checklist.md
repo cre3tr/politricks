@@ -442,3 +442,8 @@ Activity mode:
   - **Register:** English-led, but with plain words. The prompt now says to use everyday English, not the Act's English ("counted as income", not "deemed to accrue"; "pay", not "emoluments"; "a condition", not "a proviso"), with c3's legalistic line as "not like this" and a plain rewrite as "like this".
   - **Length:** only a section listing many separate items (a schedule) covers every item. Any other section stays at two to four sentences, naming each change without restating its conditions word for word.
   - **Swaps:** "nje ya", "inajumuisha", "kufikia" and "haichukuliwi" are normal Sheng, so an empty list was right. They're added to the prompt's examples of words not to flag. **This answers the under-reporting question: no defect.**
+- **c3 re-probe** (`msgbatch_01YLJcQQxbKyBySgXVh7QEhA`, 109 s, `end_turn`, 2,631 output tokens, 1,729 of them thinking):
+  - **Register fixed:** "haitakuwa counted kama income from Kenya", "pay ya employee", "(end-of-contract payment)", "non-stop". None of deemed / accrue / proviso / emolument / derived appear in en or Sheng.
+  - **Length down:** en 133 → 110 words, sw 130 → 104, Sheng 109 → 88, for 171 words of law. 3 sentences each (counted by reading).
+  - The output token count barely moved (2,818 → 2,631) because thinking dominates, so the full-run estimate stays about $1.2.
+  - Swaps `[]`, 0 em dashes, tag `employee`. Applied to the working copy for the preview.
