@@ -20,7 +20,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from .models import Bill, GroupEntry, Review, Summary, Tri, bill_path, load_bill
+from .models import Bill, Clause, GroupEntry, Review, Summary, Tri, bill_path, current_sha256, load_bill
 
 # The two clauses the recorded fixture (pipeline/tests/fixtures/batch_results
 # .jsonl) turns into drafts. Every self-test that uses the fixture leans on them.
@@ -71,6 +71,13 @@ class Checker:
     def finish(self) -> bool:
         print(f"checks: {self.passed} passed, {self.failed} failed")
         return self.ok
+
+
+def mark_reviewed(owner: Clause | Summary | GroupEntry) -> None:
+    """Self-tests only, on in-memory copies: mark an item reviewed the way
+    `politricks review` does, fingerprint included. Never used on real data
+    (only Ian's accept in `politricks review` does that)."""
+    owner.review = Review(status="reviewed", at="2026-01-01", sha256=current_sha256(owner))
 
 
 def reset_bill(repo_root: Path) -> Bill:

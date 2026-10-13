@@ -7,6 +7,7 @@
 import type { Clause } from "../lib/schema";
 import { splitHighlights } from "../lib/highlight";
 import { badgeFor } from "../lib/badge";
+import { clauseSha256, displayStatus } from "../lib/reviewHash";
 
 interface Props {
   clause: Clause;
@@ -17,7 +18,9 @@ const segments = splitHighlights(clause.text);
 
 // No explanation yet: no badge at all (there is nothing to badge), just the
 // trilingual "not ready" placeholder — see devpost/spec.md > Clause Card.
-const badge = clause.explanation ? badgeFor(clause.review.status) : null;
+// The badge comes from the display status: "Reviewed" only while the
+// content still matches what was accepted (src/lib/reviewHash.ts).
+const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await clauseSha256(clause))) : null;
 ---
 <article class="clause-card" data-clause-id={clause.id} data-text-sha256={clause.text_sha256}>
   <header class="clause-header">

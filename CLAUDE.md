@@ -29,7 +29,7 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 
 ## Gotchas that cost time
 
-- **Bare `astro build` doesn't type-check.** `npm run build` does. The `never` branch in `src/lib/badge.ts` only matters because of that. Proof: adding a fourth review status fails at `badge.ts:28`. No Vercel project is linked yet; at slice 7, pin `buildCommand: "npm run build"` in `vercel.json`.
+- **Bare `astro build` doesn't type-check.** `npm run build` does. The `never` branch in `src/lib/badge.ts` only matters because of that. Proof: adding a value to `DisplayStatus` (`src/lib/reviewHash.ts`) without a badge fails at the `never` line in `badge.ts` (37). No Vercel project is linked yet; at slice 7, pin `buildCommand: "npm run build"` in `vercel.json`.
 - **Kenya Law returned 403 to every request on 2026-10-07**, from curl, the browser and an off-network fetcher. parliament.go.ke worked. The live paths of `fetch`, `verify` and `intake` fail while that lasts. `intake --self-test` stubs the download and covers the logic.
 - **`fetch` writes a bill JSON before `extract` runs.** `intake` treats a 0-clause JSON as incomplete: it resumes it, and deletes it on failure. The site builds a page for every `src/data/bills/*.json`, so a stray skeleton would publish.
 - **Banned phrases** (`pipeline/prompts/banned.txt`):
@@ -49,6 +49,10 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
   - **Spending:** a run with `ANTHROPIC_API_KEY` spends real credit. Probe first (filter `build_batch` to a few ids) and ask Ian before a full run.
 - **No em dashes** in UI copy, data labels or the explainer prompt (Ian's call). Clause text keeps its own, because it's verbatim and fingerprinted.
 - **Never set `review.status: "reviewed"` from code or a script.** Only `politricks review` does that, driven by Ian.
+- **"Reviewed" is tied to a fingerprint** (`review.sha256`, from `models.current_sha256`). It covers the three texts, plus a clause's legal text and sorted tags, or a group's section list. The site recomputes it at build time (`src/lib/reviewHash.ts`) and shows *Reviewed* only on a match, otherwise *Changed since review*. Lint flags those until Ian accepts again.
+  - **Python and TS must agree.** Change both twins together, then regenerate the shared vectors with `uv run --project pipeline python -m politricks.hashvectors` and commit them. `check-build` checks the TS side against them and `review --self-test` the Python side, so neither can drift alone.
+  - **Covered or not:** a new field shown to readers belongs in the fingerprint; bump `REVIEW_HASH_VERSION` (`hashing.py`) when you add it. Slice 10 must do this for `suggested_articles`.
+  - **What `generate` won't touch:** a hand-edited draft (`sha256` is `"hand-edited"`, or doesn't match). To hand one back to `generate`, set its `review.sha256` to null. **This includes an AI draft whose legal text changed** (a re-extract): the fingerprint covers the text, so the draft reads as hand-edited and `generate` leaves it out (it prints "left out N clause(s)"). Null those drafts' `sha256` to redraft them.
 - **Bill JSON is written deterministically** (`models.save_bill`). Re-running a stage must give byte-identical output, and a diff means something changed.
 
 ## Line maps (files over 300 lines)
@@ -64,27 +68,28 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `run` 409
 - `check_json` 432
 
-**`pipeline/politricks/generate.py` (1161):**
-- `MODEL` / `EFFORT` 61–62 (`claude-sonnet-5-5`; effort set explicitly so a model swap can't change it)
-- output models 87–139 (`SwapOut` = a Sheng word kept in Kiswahili; `GroupOut` has no `clause_ids`: group membership comes only from clause tags; `TagsOut` = groups only)
-- `_out_model` 141 (which schema an answer must match), `_swaps` 148
-- `build_params` 176
-- `tagged_sections` 206 (each group's clause ids, from the per-clause tags)
-- `build_summary_params` 211 (full section text in `<section id>` blocks, plus the tag list)
-- `build_tag_params` 254, `build_tag_batch` 277 (tags-only pass; same system prompt, so the cache is reused)
-- `build_batch` 282 (clauses only; no summary)
-- `direct_params` 288
-- `retry_params` 300 (drops only `output_config.format`, keeps effort)
-- outcomes 325–355
-- `parse_batch_line` 358
-- `apply` 415 (applies the summary last; keeps reviewed items and groups; a group's `clause_ids` come from the tags; drops repeated or untagged groups, with a note; copies `sheng_swaps`)
-- `apply_tags` 495 (only `groups` changes; reviewed clauses keep theirs; prints each change)
-- self-test fakes: `_FakeClient` 527, `_run_offline` 561 (cuts the temp bill to the fixture's clauses)
-- `self_test` 613
-- `BATCH_RECORDS` 1007
-- `_call_direct` 1010 (refusal retries and the summary; never raises)
-- `_summarise` 1033, `_report` 1044
-- `run` 1059: phase 1 is the clause batch (saves the batch id and raw results under `pipeline/.cache/batches/`; `--batch-id` resumes; a missing result or one for a request this bill didn't make fails the run). Phase 2 is the summary as a direct call from the clause tags, **skipped if any clause failed** (`--summary-only` redoes just that). `--tags-only` makes phase 1 a groups-only batch (id saved as `<bill>.tags.batch-id`). Exits 1 listing anything not applied.
+**`pipeline/politricks/generate.py` (1361):**
+- `MODEL` / `EFFORT` 68–69 (`claude-sonnet-5-5`; effort set explicitly so a model swap can't change it)
+- output models 94–146 (`SwapOut` = a Sheng word kept in Kiswahili; `GroupOut` has no `clause_ids`: group membership comes only from clause tags; `TagsOut` = groups only)
+- `_out_model` 148 (which schema an answer must match), `_swaps` 155
+- `build_params` 183
+- `tagged_sections` 213 (each group's clause ids, from the per-clause tags)
+- `build_summary_params` 218 (full section text in `<section id>` blocks, plus the tag list)
+- `build_tag_params` 261, `build_tag_batch` 284 (tags-only pass; same system prompt, so the cache is reused)
+- `build_batch` 293 (clauses only; no summary). Both batch builders leave out protected clauses (reviewed or hand-edited), so they're never paid for again
+- `direct_params` 307
+- `retry_params` 319 (drops only `output_config.format`, keeps effort)
+- outcomes 344–374
+- `parse_batch_line` 377
+- `apply` 434 (applies the summary last; never overwrites a protected item; stamps every draft it writes with its fingerprint, AFTER setting its fields; a group's `clause_ids` come from the tags; drops repeated or untagged groups, with a note; copies `sheng_swaps`)
+- `refresh_group_sections` 519 (every group's `clause_ids` follow the tags; decides human-or-AI BEFORE changing; an AI draft is re-stamped or dropped, a reviewed group goes "changed since review")
+- `apply_tags` 551 (only `groups` changes, plus the draft's re-stamp; protected clauses keep theirs; prints each change)
+- self-test fakes: `_FakeClient` 586, `_run_offline` 620 (cuts the temp bill to the fixture's clauses; `prepare=` edits it first), `mark_reviewed_with_text` 676
+- `self_test` 683
+- `BATCH_RECORDS` 1190
+- `_call_direct` 1193 (refusal retries and the summary; never raises)
+- `_summarise` 1216 (skips a protected summary), `_report` 1227
+- `run` 1242: phase 1 is the clause batch (saves the batch id and raw results under `pipeline/.cache/batches/`; `--batch-id` resumes; a missing result or one for a request this bill didn't make fails the run, except a clause reviewed or edited while the batch ran, which is left alone; no batch at all if every clause is protected). Phase 2 is the summary as a direct call from the clause tags, **skipped if any clause failed** (`--summary-only` redoes just that). `--tags-only` makes phase 1 a groups-only batch (id saved as `<bill>.tags.batch-id`). Exits 1 listing anything not applied.
 
 **`pipeline/politricks/intake.py` (454):**
 - `_clause_count` 51
@@ -94,23 +99,25 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `_blank_pdf` 219
 - `self_test` 245
 
-**`pipeline/politricks/lint.py` (473):**
-- `Finding` 69 (kinds: banned, neutral, sheng)
-- `load_phrases` 93
-- `_pattern` 123
-- `iter_texts` 167
-- `lint_bill` 185 (banned phrases at any status; neutral flags and Sheng swaps until the item is reviewed)
-- `run` 223
-- `self_test` 283
+**`pipeline/politricks/lint.py` (501):**
+- `Finding` 69 (kinds: banned, neutral, sheng, changed)
+- `load_phrases` 95
+- `_pattern` 125
+- `iter_texts` 169
+- `lint_bill` 187 (banned phrases at any status; neutral flags and Sheng swaps until the item `is_reviewed`; `changed` for anything reviewed whose content has changed since)
+- `run` 234
+- `self_test` 294
 
-**`pipeline/politricks/review.py` (736):**
-- `QuitReview` 82
-- `_collect` 126
-- `_describe` 159
-- `_edit_text` 196
-- `walk` 234
-- `_ask_from_terminal` 347
-- `run` 356
-- `self_test` 380
+**`pipeline/politricks/review.py` (825):**
+- `QuitReview` 107
+- `_collect` 151 (flagged first; then clauses, summary, groups)
+- `_describe` 185 (shows a clause's GROUPS or a group's SECTIONS: accepting accepts them too)
+- `_edit_text` 229
+- `walk` 267 (accept stores the fingerprint; any edit makes a hand-edited draft, `sha256: "hand-edited"`)
+- `_ask_from_terminal` 385
+- `run` 394
+- `self_test` 418
 
-The shared test support lives in `pipeline/politricks/selftest.py`: `Checker`, `reset_bill` and `fixture_bill`.
+**`pipeline/politricks/models.py` (248), review fingerprints:** `current_sha256` 155, `is_reviewed` 181, `changed_since_review` 187, `HAND_EDITED` 194, `is_hand_edited` 197, `is_protected` 207, `draft_review` 213.
+
+The shared test support lives in `pipeline/politricks/selftest.py`: `Checker`, `mark_reviewed` (in-memory copies only), `reset_bill` and `fixture_bill`.

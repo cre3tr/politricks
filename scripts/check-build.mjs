@@ -17,7 +17,12 @@
 //   - its legal text is inside its own card (word for word),
 //   - its explanation (EN / SW / Sheng) is inside its own card,
 //   - its badge label and class are exactly what src/lib/badge.ts gives for
-//     its review status, and a clause with no explanation has NO badge.
+//     its DISPLAY status (src/lib/reviewHash.ts: "Reviewed" only while the
+//     stored fingerprint matches the content), and a clause with no
+//     explanation has NO badge.
+// Before any of that, it proves the site's fingerprint (reviewHash.ts) and the
+// pipeline's (models.current_sha256) agree, on the shared vectors in
+// pipeline/tests/fixtures/review_hash_vectors.json.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -80,13 +85,31 @@ function check(label, condition, detail = "") {
 }
 
 // ---------------------------------------------------------------------------
+// The review fingerprint: the site's twin must match the pipeline exactly.
+// Node 24 loads the .ts file directly (its imports are type-only).
+// ---------------------------------------------------------------------------
+const reviewHash = await import(new URL("../src/lib/reviewHash.ts", import.meta.url).href);
+const { clauseSha256, summarySha256, groupSha256, displayStatus } = reviewHash;
+const { vectors } = JSON.parse(
+  readFileSync(fileURLToPath(new URL("../pipeline/tests/fixtures/review_hash_vectors.json", import.meta.url)), "utf-8")
+);
+const twin = { clause: clauseSha256, summary: summarySha256, group: groupSha256 };
+const got = await Promise.all(vectors.map((vector) => twin[vector.kind](vector.item)));
+const mismatched = vectors.filter((vector, i) => got[i] !== vector.sha256);
+check(
+  `review fingerprints: src/lib/reviewHash.ts matches the pipeline on all ${vectors.length} shared vectors`,
+  vectors.length > 0 && mismatched.length === 0,
+  mismatched.map((vector) => `${vector.kind} ${vector.item.id ?? vector.item.group ?? ""}`).join(", ")
+);
+
+// ---------------------------------------------------------------------------
 // What each status's badge must say: read from src/lib/badge.ts, the one place
 // that decides it (ClauseCard and the bill page both call badgeFor). Located
 // from this file's own path, so it works from any working directory.
 // ---------------------------------------------------------------------------
 const badgeSource = readFileSync(fileURLToPath(new URL("../src/lib/badge.ts", import.meta.url)), "utf-8");
 const expectedBadge = {};
-for (const status of ["draft", "reviewed", "sample"]) {
+for (const status of ["draft", "reviewed", "sample", "changed"]) {
   const found = badgeSource.match(
     new RegExp(`case "${status}":\\s*return \\{ label: "([^"]+)", className: "([^"]+)" \\}`)
   );
@@ -101,7 +124,7 @@ check(
   `badge labels read from src/lib/badge.ts: ${Object.entries(expectedBadge)
     .map(([status, badge]) => `${status}="${badge.label}"`)
     .join(", ")}`,
-  new Set(labels).size === 3
+  new Set(labels).size === 4
 );
 
 // Every <span class="badge badge-…">label</span> inside a piece of the page.
@@ -166,7 +189,18 @@ for (const clause of bill.clauses) {
     wanted.every((text) => cardText.includes(text)),
     `missing: ${wanted.filter((text) => !cardText.includes(text)).map((text) => JSON.stringify(text.slice(0, 40))).join(", ")}`
   );
-  checkBadge(`clause ${clause.id}`, clause.review.status, Boolean(clause.explanation), card);
+  const fingerprint = await clauseSha256(clause);
+  checkBadge(`clause ${clause.id}`, displayStatus(clause.review, fingerprint), Boolean(clause.explanation), card);
+  // The same rule again, without displayStatus, so a bug there can't agree
+  // with itself: a green "Reviewed" badge needs a stored fingerprint that
+  // equals the one recomputed from what the card shows.
+  if (badgesIn(card).some((badge) => badge.label === expectedBadge.reviewed.label)) {
+    check(
+      `clause ${clause.id} shows "Reviewed" only because its fingerprint matches`,
+      clause.review.status === "reviewed" && clause.review.sha256 !== null && clause.review.sha256 === fingerprint,
+      `stored ${clause.review.sha256}, recomputed ${fingerprint}`
+    );
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -182,7 +216,16 @@ if (bill.summary) {
       "the summary text (EN/SW/Sheng) is inside the summary block",
       triTexts(bill.summary.text).every((text) => summaryText.includes(text))
     );
-    checkBadge("the summary", bill.summary.review.status, true, summaryBlock[1]);
+    const summaryFingerprint = await summarySha256(bill.summary);
+    checkBadge("the summary", displayStatus(bill.summary.review, summaryFingerprint), true, summaryBlock[1]);
+    // The same independent rule as for clause cards (no displayStatus).
+    if (badgesIn(summaryBlock[1]).some((badge) => badge.label === expectedBadge.reviewed.label)) {
+      check(
+        'the summary shows "Reviewed" only because its fingerprint matches',
+        bill.summary.review.status === "reviewed" && bill.summary.review.sha256 === summaryFingerprint,
+        `stored ${bill.summary.review.sha256}, recomputed ${summaryFingerprint}`
+      );
+    }
   }
 } else {
   check("the bill has no summary, so the page has no summary block", summaryBlock === null);

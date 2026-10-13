@@ -152,7 +152,8 @@ Implements `prd.md > Have Your Say` (content). **Your decision: hand-entered fac
 
 #### Review
 - An interactive terminal walk through **every draft text**: clause explanations, summary, group entries, change notes and civic translations. Items flagged by `neutral_check` or lint come first.
-- For each: accept, edit, or skip. It sets `review {status: "reviewed", at}`. This is your Sheng gate.
+- For each: accept, edit, or skip. It sets `review {status: "reviewed", at, sha256}`. This is your Sheng gate.
+- `sha256` fingerprints what you accepted: the three texts, plus a clause's legal text and tags or a group's section list (`models.current_sha256`, twin `src/lib/reviewHash.ts`). The page shows *Reviewed* only while it still matches; anything changed afterwards shows *Changed since review* and lint flags it until you accept it again. An edit you don't accept is a hand-edited draft, which `generate` never overwrites or pays for again (decided 2026-10-14).
 
 #### Verify
 - Re-downloads every official source and compares fingerprints, printing `unchanged` / `CHANGED` / `unreachable` per source.
@@ -201,7 +202,7 @@ Implements `prd.md > What It Does`, `prd.md > What Changed`, `prd.md > Have Your
 #### Clause Card
 Implements `prd.md > What It Does`, `prd.md > Language Switching`, `prd.md > Constitution Check`.
 - The legal text, with highlighter marks, sits **beside** (on desktop) or **directly above** (on mobile) the explanation.
-- Per-card EN/SW/Sheng flip, plus a review badge (*Reviewed* / *AI draft — not yet reviewed* / *Sample text — placeholder*). One exhaustive switch picks the label, so a sample can never show either of the other two.
+- Per-card EN/SW/Sheng flip, plus a review badge (*Reviewed* / *AI draft (not yet reviewed)* / *Sample text (placeholder)* / *Changed since review*). One exhaustive switch picks the label, so a sample can never show either of the other two.
 - "Suggested articles" chips open the Article Sheet.
 - If there's no explanation, it calls the **Explain API**.
 
@@ -252,7 +253,7 @@ Implements `prd.md > Automatic Bill Intake` (maintenance). `.github/workflows/up
 
 **Bill file** — `src/data/bills/<bill-id>.json`, validated by `pipeline/politricks/models.py` (Pydantic) and `src/lib/schema.ts` (Zod):
 ```text
-Review   = { status: "draft" | "reviewed" | "sample", at: ISO-date | null }   // "sample" = hand-written placeholder (slice 2a), never shown as AI draft or Reviewed
+Review   = { status: "draft" | "reviewed" | "sample", at: ISO-date | null, sha256: string | null }   // "sample" = hand-written placeholder (slice 2a), never shown as AI draft or Reviewed; sha256 = fingerprint of the content when the status was set ("hand-edited" after a review-walk edit)
 Tri      = { en: string, sw: string, sheng: string }
 
 Bill {

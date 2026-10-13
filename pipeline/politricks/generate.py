@@ -46,11 +46,18 @@ from .models import (
     ShengSwap,
     Summary,
     Tri,
+    HAND_EDITED,
     bill_path,
+    changed_since_review,
+    current_sha256,
+    draft_review,
+    is_hand_edited,
+    is_protected,
+    is_reviewed,
     load_bill,
     save_bill,
 )
-from .selftest import FIXTURE_BILL_ID, Checker, reset_bill
+from .selftest import FIXTURE_BILL_ID, Checker, mark_reviewed, reset_bill
 
 # Sonnet 5.5, chosen for keeping closely to the brief: explain the clause and
 # never editorialise (learner decision, 2026-10-13; see checklist Revisions).
@@ -275,14 +282,26 @@ def build_tag_params(repo_root: Path, bill: Bill, clause: Clause) -> dict:
 
 
 def build_tag_batch(repo_root: Path, bill: Bill) -> list[dict]:
-    """One tags-only request per clause."""
-    return [{"custom_id": clause.id, "params": build_tag_params(repo_root, bill, clause)} for clause in bill.clauses]
+    """One tags-only request per clause a human hasn't reviewed or edited."""
+    return [
+        {"custom_id": clause.id, "params": build_tag_params(repo_root, bill, clause)}
+        for clause in bill.clauses
+        if not is_protected(clause)
+    ]
 
 
 def build_batch(repo_root: Path, bill: Bill) -> list[dict]:
     """One batch request per clause. The summary is NOT in the batch: it
-    needs the clause tags this batch produces, so run() asks for it after."""
-    return [{"custom_id": clause.id, "params": build_params(repo_root, bill, clause)} for clause in bill.clauses]
+    needs the clause tags this batch produces, so run() asks for it after.
+
+    Clauses a human reviewed or edited are left out: `apply` would keep the
+    human's version anyway, so asking for them only costs money.
+    """
+    return [
+        {"custom_id": clause.id, "params": build_params(repo_root, bill, clause)}
+        for clause in bill.clauses
+        if not is_protected(clause)
+    ]
 
 
 def direct_params(params: dict) -> dict:
@@ -415,12 +434,14 @@ def parse_batch_line(obj: dict, tags_only: bool = False) -> Outcome:
 def apply(bill: Bill, outcomes: list[Outcome]) -> int:
     """Write every `Applied` outcome onto `bill`, in place. Returns how many were.
 
-    Skips anything already `"reviewed"` — a human's accepted text is never
-    overwritten by a fresh draft. That includes group entries: a new summary
-    result replaces the summary and the NON-reviewed group entries, but every
-    group entry a human has reviewed is kept, even if the new output leaves
-    that group out. A `"sample"` item IS overwritten: that's the whole point of
-    slice 2a's placeholders, they exist to be replaced.
+    Skips anything a human reviewed or edited (`models.is_protected`): a
+    human's text is never overwritten by a fresh draft. That includes group
+    entries: a new summary result replaces the summary and the unprotected
+    group entries, but every protected one is kept, even if the new output
+    leaves that group out. A `"sample"` item IS overwritten: that's the whole
+    point of slice 2a's placeholders, they exist to be replaced. Every draft
+    written here is stamped with its fingerprint (`draft_review`), AFTER all
+    its fields are set, so a later hand-edit can be told apart from it.
     `suggested_articles` is always forced to `[]` here; validating suggested
     article numbers against the constitution is slice 10's job, not this one's.
     """
@@ -433,7 +454,8 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
             continue
 
         if outcome.custom_id == "summary":
-            if bill.summary is not None and bill.summary.review.status == "reviewed":
+            if bill.summary is not None and is_protected(bill.summary):
+                print("  note: the summary was reviewed or edited by a human; kept it and its groups")
                 continue
             summary_out: SummaryOut = outcome.parsed
             bill.summary = Summary(
@@ -441,9 +463,10 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
                 review=Review(status="draft"),
                 sheng_swaps=_swaps(summary_out.summary_sheng_swaps),
             )
-            # A reviewed group entry is a human's accepted text: keep it, matched
-            # by group id, in place of that group's new draft.
-            reviewed = {entry.group: entry for entry in bill.groups if entry.review.status == "reviewed"}
+            bill.summary.review = draft_review(bill.summary)
+            # A reviewed or hand-edited group entry is a human's text: keep it,
+            # matched by group id, in place of that group's new draft.
+            reviewed = {entry.group: entry for entry in bill.groups if is_protected(entry)}
             tags = tagged_sections(bill)
             groups: list[GroupEntry] = []
             seen: set[str] = set()
@@ -461,15 +484,15 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
                 if not tags[group.group]:
                     print(f"  note: the summary wrote about group {group.group!r}, but no section is tagged with it; left out")
                     continue
-                groups.append(
-                    GroupEntry(
-                        group=group.group,
-                        text=Tri(en=group.text.en, sw=group.text.sw, sheng=group.text.sheng),
-                        clause_ids=list(tags[group.group]),
-                        review=Review(status="draft"),
-                        sheng_swaps=_swaps(group.sheng_swaps),
-                    )
+                entry = GroupEntry(
+                    group=group.group,
+                    text=Tri(en=group.text.en, sw=group.text.sw, sheng=group.text.sheng),
+                    clause_ids=list(tags[group.group]),
+                    review=Review(status="draft"),
+                    sheng_swaps=_swaps(group.sheng_swaps),
                 )
+                entry.review = draft_review(entry)
+                groups.append(entry)
             # Reviewed groups the new output left out are still kept (at the end).
             groups.extend(reviewed.values())
             bill.groups = groups
@@ -477,27 +500,61 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
             continue
 
         clause = clauses_by_id.get(outcome.custom_id)
-        if clause is None or clause.review.status == "reviewed":
+        if clause is None or is_protected(clause):
             continue
         clause_out: ClauseOut = outcome.parsed
         clause.explanation = Tri(
             en=clause_out.explanation.en, sw=clause_out.explanation.sw, sheng=clause_out.explanation.sheng
         )
-        clause.review = Review(status="draft")
         clause.neutral_check = NeutralCheck(ok=clause_out.neutral_check.ok, note=clause_out.neutral_check.note)
         clause.groups = list(dict.fromkeys(clause_out.groups))  # no repeats
         clause.suggested_articles = []
         clause.sheng_swaps = _swaps(clause_out.sheng_swaps)
+        clause.review = draft_review(clause)  # last: it fingerprints the fields above
         applied += 1
+    refresh_group_sections(bill)
     return applied
+
+
+def refresh_group_sections(bill: Bill) -> None:
+    """Make every group entry's `clause_ids` match the clause tags now on the bill.
+
+    A group's section list comes only from the tags, so when tags change the
+    list must follow. Whether the entry is a human's is decided BEFORE the
+    list changes (the change itself would make any entry look edited):
+    - an untouched AI draft gets the new list and a fresh fingerprint, or is
+      dropped if no section is tagged with its group any more;
+    - a reviewed or hand-edited entry gets the new list and is NOT
+      re-fingerprinted, so a reviewed one now reads "changed since review"
+      and lint and `politricks review` bring it back to a human.
+    """
+    tags = tagged_sections(bill)
+    kept: list[GroupEntry] = []
+    for entry in bill.groups:
+        new = tags[entry.group]
+        if new == entry.clause_ids:
+            kept.append(entry)
+            continue
+        human = is_protected(entry)
+        if not new and not human:
+            print(f"  group {entry.group}: no section is tagged with it any more; draft dropped")
+            continue
+        note = " (a human's text: review it again)" if human else ""
+        print(f"  group {entry.group} sections: {entry.clause_ids or '[]'} -> {new or '[]'}{note}")
+        entry.clause_ids = list(new)
+        if not human:
+            entry.review = draft_review(entry)
+        kept.append(entry)
+    bill.groups = kept
 
 
 def apply_tags(bill: Bill, outcomes: list[Outcome]) -> int:
     """Write the groups from a tags-only pass onto `bill`. Returns how many.
 
-    Only `groups` changes: explanations, review status and everything else are
-    left exactly as they were. A reviewed clause keeps the tags a human
-    accepted. Every change is printed, so the reviewer sees what moved.
+    Only `groups` changes (and the draft's fingerprint, which covers them):
+    explanations and everything else are left exactly as they were. A clause a
+    human reviewed or edited keeps its tags. Every change is printed, so the
+    reviewer sees what moved. Group entries' section lists follow the new tags.
     """
     clauses_by_id = {clause.id: clause for clause in bill.clauses}
     applied = 0
@@ -505,13 +562,15 @@ def apply_tags(bill: Bill, outcomes: list[Outcome]) -> int:
         if not isinstance(outcome, Applied) or outcome.custom_id == "summary":
             continue
         clause = clauses_by_id.get(outcome.custom_id)
-        if clause is None or clause.review.status == "reviewed":
+        if clause is None or is_protected(clause):
             continue
         new = list(dict.fromkeys(outcome.parsed.groups))  # no repeats
         if new != clause.groups:
             print(f"  tags {clause.id}: {clause.groups or '[]'} -> {new or '[]'}")
         clause.groups = new
+        clause.review = draft_review(clause)  # still Claude's draft, now with these tags
         applied += 1
+    refresh_group_sections(bill)
     return applied
 
 
@@ -566,6 +625,7 @@ def _run_offline(
     summary_only: bool = False,
     clause_ids: list[str] | None = None,
     tags_only: bool = False,
+    prepare=None,
 ) -> SimpleNamespace:
     """Run run() in a temp copy of the repo against a fake client.
 
@@ -574,7 +634,8 @@ def _run_offline(
     (default: the clauses the fixture lines answer for), so the batch asks
     for exactly what the fake returns unless a test says otherwise. Its
     exceptions are caught and returned as the code, so a crash fails a check
-    instead of the test.
+    instead of the test. `prepare(bill)`, if given, changes the test bill
+    before the run (e.g. marks a clause reviewed).
     """
     keep = clause_ids if clause_ids is not None else [line["custom_id"] for line in lines]
     with tempfile.TemporaryDirectory() as tmp:
@@ -584,6 +645,8 @@ def _run_offline(
         shutil.copy(repo_root / "pipeline" / "prompts" / "explainer.md", prompts)
         test_bill = reset_bill(repo_root)
         test_bill.clauses = [clause for clause in test_bill.clauses if clause.id in keep]
+        if prepare is not None:
+            prepare(test_bill)
         save_bill(test_bill, bill_path(root, FIXTURE_BILL_ID))
 
         client = _FakeClient(lines, parse)
@@ -608,6 +671,13 @@ def _run_offline(
             tags_id_saved=tags_id_file.read_text(encoding="utf-8").strip() if tags_id_file.exists() else None,
             raw_lines=len(raw_file.read_text(encoding="utf-8").splitlines()) if raw_file.exists() else 0,
         )
+
+
+def mark_reviewed_with_text(bill: Bill, clause_id: str) -> None:
+    """Self-test only, in memory: give a clause words and mark them reviewed."""
+    clause = next(clause for clause in bill.clauses if clause.id == clause_id)
+    clause.explanation = Tri(en="reviewed words", sw="reviewed words", sheng="reviewed words")
+    mark_reviewed(clause)
 
 
 def self_test(repo_root: Path) -> bool:
@@ -748,10 +818,16 @@ def self_test(repo_root: Path) -> bool:
         by_group.get("trader") == trader_before,
         str(by_group.get("trader")),
     )
+    student = by_group.get("student")
     check(
         "summary apply: the reviewed student entry is kept although the new output omitted it",
-        by_group.get("student") == student_before,
+        student is not None and student.text == student_before.text and student.review == student_before.review,
         str(sorted(by_group)),
+    )
+    check(
+        "summary apply: its sections follow the tags (none now), so it reads changed since review",
+        student is not None and student.clause_ids == [] and changed_since_review(student),
+        str(student),
     )
     check(
         "summary apply: the draft transport entry is replaced, and employee arrives as a draft",
@@ -961,7 +1037,10 @@ def self_test(repo_root: Path) -> bool:
     check("apply_tags: a draft clause gets the new groups, without repeats", c3_after.groups == ["transport"],
           str(c3_after.groups))
     check("apply_tags: nothing but groups changes (explanation, status, swaps untouched)",
-          c3_after.model_copy(update={"groups": c3_before.groups}) == c3_before)
+          c3_after.model_copy(update={"groups": c3_before.groups, "review": c3_before.review}) == c3_before
+          and c3_after.review.status == "draft")
+    check("apply_tags: the draft is re-fingerprinted with its new tags (still Claude's, still replaceable)",
+          c3_after.review.sha256 == current_sha256(c3_after) and not is_protected(c3_after), str(c3_after.review))
     check("apply_tags: a reviewed clause keeps the tags a human accepted",
           reviewed_c4.groups == c4_tags and tagged_count == 1, f"{reviewed_c4.groups} / {tagged_count}")
     check("apply_tags: each change is printed", "tags c3:" in tag_notes.getvalue(), tag_notes.getvalue())
@@ -986,6 +1065,110 @@ def self_test(repo_root: Path) -> bool:
           len(parse_calls) == 1 and parse_calls[0].get("output_format") is SummaryOut
           and "- employee: c3" in parse_calls[0]["messages"][0]["content"],
           str(len(parse_calls)))
+
+    # --- review fingerprints: what generate may overwrite ----------------------
+    # See models.is_protected. Every draft generate writes carries its
+    # fingerprint; anything a human reviewed or edited is never overwritten or
+    # paid for again.
+    stamped = reset_bill(repo_root)
+    apply(stamped, [*outcomes, clause_result, transport_summary])  # clause_result tags c3 transport
+    drafts = [c for c in stamped.clauses if c.explanation is not None and c.review.status == "draft"]
+    drafts += [stamped.summary, *stamped.groups]
+    check("fingerprints: every draft apply writes (clauses, summary, groups) is stamped with its own fingerprint",
+          len(drafts) >= 4 and all(item.review.sha256 == current_sha256(item) for item in drafts),
+          str([item.review.sha256 for item in drafts]))
+
+    def protected_bill() -> Bill:
+        """c3 reviewed (fingerprint matches), c4 a hand-edited draft."""
+        guarded = reset_bill(repo_root)
+        apply(guarded, outcomes)
+        mark_reviewed(next(c for c in guarded.clauses if c.id == "c3"))
+        c4 = next(c for c in guarded.clauses if c.id == "c4")
+        c4.explanation.en = "a human's words"
+        return guarded
+
+    guarded = protected_bill()
+    g3, g4 = (next(c for c in guarded.clauses if c.id == cid) for cid in ("c3", "c4"))
+    check("fingerprints: a reviewed clause whose content matches is reviewed", is_reviewed(g3))
+    check("fingerprints: a draft edited in the JSON reads as hand-edited", is_hand_edited(g4))
+    before = (g3.model_copy(deep=True), g4.model_copy(deep=True))
+    apply(guarded, outcomes)
+    check("apply: a reviewed clause and a hand-edited draft are both kept as they were",
+          (g3, g4) == before, f"{g3.explanation} / {g4.explanation}")
+    asked = {request["custom_id"] for request in build_batch(repo_root, guarded)}
+    asked_tags = {request["custom_id"] for request in build_tag_batch(repo_root, guarded)}
+    check("build_batch / build_tag_batch: leave out reviewed and hand-edited clauses (not paid for again)",
+          "c3" not in asked and "c4" not in asked and "c3" not in asked_tags and "c4" not in asked_tags
+          and "c5" in asked and "c5" in asked_tags, f"{sorted(asked)[:4]} / {sorted(asked_tags)[:4]}")
+
+    # Edit-back: a review-walk edit stores HAND_EDITED, which never matches,
+    # so typing the old words back in doesn't hand the text back to generate.
+    edited_back = reset_bill(repo_root)
+    apply(edited_back, outcomes)
+    e3 = next(c for c in edited_back.clauses if c.id == "c3")
+    e3.review = Review(status="draft", sha256=HAND_EDITED)
+    check("fingerprints: an edit typed back to the old words stays hand-edited (protected)",
+          is_hand_edited(e3) and is_protected(e3))
+    e3.review = Review(status="draft", sha256=None)
+    check("fingerprints: a draft with no fingerprint is generate's to replace (the documented escape hatch)",
+          not is_protected(e3))
+
+    tagged_reviewed = reset_bill(repo_root)
+    apply(tagged_reviewed, outcomes)
+    t3 = next(c for c in tagged_reviewed.clauses if c.id == "c3")
+    mark_reviewed(t3)
+    t3.groups = [*t3.groups, "student"]
+    check("fingerprints: changing a reviewed clause's tags makes it changed since review",
+          changed_since_review(t3) and not is_reviewed(t3))
+    reordered = t3.model_copy(deep=True)
+    mark_reviewed(reordered)
+    reordered.groups = list(reversed(reordered.groups))
+    check("fingerprints: the same tags in another order change nothing", is_reviewed(reordered), str(reordered.groups))
+    texted = t3.model_copy(deep=True)
+    mark_reviewed(texted)
+    texted.text = texted.text + " (edited)"
+    check("fingerprints: editing the legal text un-reviews its explanation", changed_since_review(texted))
+    no_hash = t3.model_copy(deep=True)
+    no_hash.review = Review(status="reviewed", at="2026-01-01")
+    check("fingerprints: reviewed with no fingerprint is NOT reviewed (fail closed)", changed_since_review(no_hash))
+
+    # refresh_group_sections, case by case.
+    refreshing = tagged_bill(c3=["trader"], c4=["trader"])
+    fresh = GroupEntry(group="trader", text=Tri(en="t", sw="t", sheng="t"), clause_ids=["c3"], review=Review(status="draft"))
+    fresh.review = draft_review(fresh)
+    gone = GroupEntry(group="student", text=Tri(en="s", sw="s", sheng="s"), clause_ids=["c4"], review=Review(status="draft"))
+    gone.review = draft_review(gone)
+    human = GroupEntry(group="employee", text=Tri(en="e", sw="e", sheng="e"), clause_ids=["c4"], review=Review(status="draft"))
+    mark_reviewed(human)
+    refreshing.groups = [fresh, gone, human]
+    with contextlib.redirect_stdout(io.StringIO()):
+        refresh_group_sections(refreshing)
+    after = {entry.group: entry for entry in refreshing.groups}
+    check("refresh: an AI draft group follows the tags and is re-fingerprinted (still replaceable)",
+          after["trader"].clause_ids == ["c3", "c4"] and not is_protected(after["trader"]), str(after.get("trader")))
+    check("refresh: an AI draft group with no tagged section left is dropped", "student" not in after, str(sorted(after)))
+    check("refresh: a reviewed group is kept, follows the tags, and reads changed since review",
+          "employee" in after and after["employee"].clause_ids == [] and changed_since_review(after["employee"]),
+          str(after.get("employee")))
+
+    # run() with protected clauses: nothing sent for them, and a result for a
+    # clause reviewed while the batch ran is left alone, not a failure.
+    created_for = _run_offline(repo_root, lines[:2], parse_ok, clause_ids=["c3", "c4", "c5"],
+                               prepare=lambda b: mark_reviewed_with_text(b, "c5"))
+    check("run: a reviewed clause is not in the batch", created_for.created == [2], f"{created_for.created} / {created_for.out}")
+
+    all_done = _run_offline(repo_root, [], parse_ok, clause_ids=["c3"], prepare=lambda b: mark_reviewed_with_text(b, "c3"))
+    check("run: every clause reviewed means no batch at all (and no crash)", all_done.created == [] and all_done.code == 0,
+          f"{all_done.created} / {all_done.code} / {all_done.out}")
+
+    def reviewed_since(b: Bill) -> None:
+        mark_reviewed_with_text(b, "c4")
+
+    since = _run_offline(repo_root, lines[:2], parse_ok, clause_ids=["c3", "c4"], batch_id=_FAKE_BATCH_ID, prepare=reviewed_since)
+    since_c4 = next(clause for clause in since.bill.clauses if clause.id == "c4")
+    check("run --batch-id: a result for a clause reviewed since the batch was sent is left alone (exit 0)",
+          since.code == 0 and "left alone" in since.out and is_reviewed(since_c4) and since_c4.explanation.en == "reviewed words",
+          f"{since.code} / {since.out}")
 
     # --- nothing written -----------------------------------------------------
     check("the real bill file's SHA-256 is unchanged", sha256_file(real_path) == sha_before)
@@ -1032,8 +1215,8 @@ def _call_direct(client, custom_id: str, params: dict, tags_only: bool = False) 
 
 def _summarise(repo_root: Path, bill: Bill, client) -> list[Outcome]:
     """Phase 2: the summary, written from the clause tags now on `bill`."""
-    if bill.summary is not None and bill.summary.review.status == "reviewed":
-        print("summary already reviewed; not asked for again")
+    if bill.summary is not None and is_protected(bill.summary):
+        print("summary already reviewed or edited by a human; not asked for again")
         return []
     print("asking for the summary (direct call, from the clause tags)...")
     outcome = _call_direct(client, "summary", build_summary_params(repo_root, bill))
@@ -1091,6 +1274,16 @@ def run(
         return _report(sum(isinstance(outcome, Applied) for outcome in outcomes), outcomes, None)
 
     requests = build_tag_batch(repo_root, bill) if tags_only else build_batch(repo_root, bill)
+    protected_ids = {clause.id for clause in bill.clauses if is_protected(clause)}
+    if protected_ids:
+        print(f"left out {len(protected_ids)} clause(s) a human reviewed or edited: {', '.join(sorted(protected_ids))}")
+    if not requests and batch_id is None:
+        print("no clause needs a draft: nothing sent")
+        if tags_only:
+            return 0
+        summary = _summarise(repo_root, bill, client)
+        save_bill(bill, path)
+        return _report(sum(isinstance(outcome, Applied) for outcome in summary), summary, None)
     records = repo_root.joinpath(*BATCH_RECORDS)
     records.mkdir(parents=True, exist_ok=True)
     mode_flag = " --tags-only" if tags_only else ""
@@ -1124,6 +1317,13 @@ def run(
     # loudly, not pass as "applied 0".
     by_custom_id = {request["custom_id"]: request["params"] for request in requests}
     returned = {outcome.custom_id for outcome in outcomes}
+    # A clause a human reviewed or edited WHILE the batch ran is no longer
+    # asked for, so its result looks foreign. It isn't a failure: leave the
+    # human's version alone and say so.
+    since = sorted(outcome.custom_id for outcome in outcomes if outcome.custom_id not in by_custom_id and outcome.custom_id in protected_ids)
+    if since:
+        print(f"  left alone (reviewed or edited since the batch was sent): {', '.join(since)}")
+    outcomes = [outcome for outcome in outcomes if outcome.custom_id not in since]
     outcomes = [
         outcome if outcome.custom_id in by_custom_id
         else Errored(outcome.custom_id, "a result for a request this bill didn't make (wrong --batch-id?)")

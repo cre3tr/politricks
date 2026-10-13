@@ -3,19 +3,27 @@
 `politricks review <bill-id>` walks you through every DRAFT text in a bill, one
 item at a time — the summary, each group entry, each clause explanation — and
 you accept, edit or skip each one. Accepting sets `review {status: "reviewed",
-at: <today>}`, which is what flips the page badge from "AI draft" to "Reviewed".
+at: <today>, sha256: <fingerprint>}`, which is what flips the page badge from
+"AI draft" to "Reviewed". The fingerprint (`models.current_sha256`) covers the
+three texts and the tags or section list shown with them, so the badge stays
+"Reviewed" only while the content is exactly what you accepted. Change it
+afterwards, by hand or by a tags pass, and it reads "Changed since review"
+until you accept it again.
 This is the Sheng gate: Claude writes the draft, you decide it sounds right.
 
-Order: anything lint flags (a banned phrase, or Claude's own neutral flag)
-comes first, then the rest in bill order. Clean hand-written samples, clean
-already-reviewed items and clauses with no explanation are skipped — there is
-nothing for a human to judge in them.
+Order: anything lint flags (a banned phrase, a neutral or Sheng flag, or a
+change since review) comes first, then the rest: clauses in bill order, then
+the summary, then the group notes (a group's sections come from the clause
+tags, so settle those first). Clean hand-written samples, items still exactly
+as reviewed and clauses with no explanation are skipped: there is nothing for
+a human to judge in them.
 
 A text that lint flags is walked whatever its status, otherwise the walk would
 dead-end on it ("not done" with no way to fix it):
-- draft or reviewed -> accepting sets it to reviewed, dated today. Editing a
-  reviewed text turns it back into a draft until you accept it again, because
-  the badge must never say "Reviewed" about words nobody reviewed.
+- draft or reviewed -> accepting sets it to reviewed, dated today. Editing
+  turns it into a hand-edited draft until you accept it (a reviewed text
+  too, because the badge must never say "Reviewed" about words nobody
+  reviewed). A hand-edited draft is yours: `generate` never overwrites it.
 - sample -> accepting keeps it a sample. Only `generate` replaces a sample, and
   a sample never renders as "AI draft" or "Reviewed" (spec > Clause Card).
 
@@ -35,6 +43,7 @@ scripted answers, in memory, offline, writing nothing.
 
 from __future__ import annotations
 
+import json
 import os
 import shlex
 import subprocess
@@ -56,8 +65,24 @@ from .lint import (
     lint_bill,
     load_phrases,
 )
-from .models import Bill, Clause, GroupEntry, NeutralCheck, Review, Summary, Tri, bill_path, load_bill, save_bill
-from .selftest import FIXTURE_DRAFT_IDS, FIXTURE_SAMPLE_ID, Checker, fixture_bill
+from .models import (
+    HAND_EDITED,
+    Bill,
+    Clause,
+    GroupEntry,
+    NeutralCheck,
+    Review,
+    Summary,
+    Tri,
+    bill_path,
+    changed_since_review,
+    current_sha256,
+    is_hand_edited,
+    is_reviewed,
+    load_bill,
+    save_bill,
+)
+from .selftest import FIXTURE_DRAFT_IDS, FIXTURE_SAMPLE_ID, Checker, fixture_bill, mark_reviewed
 
 LEGAL_PREVIEW_CHARS = 300
 
@@ -126,18 +151,19 @@ class ReviewResult:
 def _collect(bill: Bill, phrases: list[str]) -> tuple[list[Item], dict[str, int]]:
     """Split every reviewable thing into the ones to walk and the rest (counted).
 
-    Walked: every draft, plus anything lint flags whatever its status, flagged
-    ones first (a stable sort keeps bill order inside each half).
+    Walked: every draft, plus anything lint flags whatever its status (a
+    reviewed item changed since is flagged), flagged ones first. A stable sort
+    keeps the order inside each half: clauses, then the summary, then groups.
     """
     candidates: list[Item] = []
-    if bill.summary is not None:
-        candidates.append(Item(SUMMARY_ID, bill.summary))
-    for entry in bill.groups:
-        candidates.append(Item(group_item_id(entry.group), entry))
     for clause in bill.clauses:
         candidates.append(
             Item(clause.id, clause, heading=f"Section {clause.number}: {clause.heading}", legal_text=clause.text)
         )
+    if bill.summary is not None:
+        candidates.append(Item(SUMMARY_ID, bill.summary))
+    for entry in bill.groups:
+        candidates.append(Item(group_item_id(entry.group), entry))
 
     flagged = {finding.item for finding in lint_bill(bill, phrases)}
     to_walk: list[Item] = []
@@ -165,8 +191,15 @@ def _describe(item: Item, findings: list[Finding]) -> str:
         lines += ["", "LEGAL TEXT (first 300 characters):", text]
     tri = item.tri
     lines += ["", f"EN:    {tri.en}", f"SW:    {tri.sw}", f"SHENG: {tri.sheng}"]
+    # Accepting also accepts these (they're in the fingerprint), so show them.
+    if isinstance(item.owner, Clause):
+        lines.append(f"GROUPS: {', '.join(item.owner.groups) or 'none'}")
+    elif isinstance(item.owner, GroupEntry):
+        lines.append(f"SECTIONS: {', '.join(item.owner.clause_ids) or 'none'}")
     status = item.owner.review.status
-    if status != "draft":
+    if changed_since_review(item.owner):
+        lines += ["", "status: reviewed, but changed since"]
+    elif status != "draft":
         lines += ["", f"status: {status}"]
     if findings:
         lines.append("")
@@ -275,7 +308,9 @@ def walk(bill: Bill, phrases: list[str], ask: Ask, show: Show, save: Save, edito
                         else:
                             for finding in findings:  # neutral flags: allowed, but say so first
                                 show(f"accepting clears this flag — {finding.describe()}")
-                            item.owner.review = Review(status="reviewed", at=date.today().isoformat())
+                            item.owner.review = Review(
+                                status="reviewed", at=date.today().isoformat(), sha256=current_sha256(item.owner)
+                            )
                         result.accepted.append(item.id)
                         save(bill)  # right now, so quitting later loses nothing
                         dirty = False
@@ -291,10 +326,13 @@ def walk(bill: Bill, phrases: list[str], ask: Ask, show: Show, save: Save, edito
                             show("no change")
                             continue
                         setattr(item.tri, lang, new_text)
-                        if item.owner.review.status == "reviewed":
-                            # These are no longer the words a human accepted.
-                            item.owner.review = Review(status="draft")
-                            show("edited: this text is a draft again until you accept it")
+                        if item.owner.review.status != "sample":
+                            if item.owner.review.status == "reviewed":
+                                # These are no longer the words a human accepted.
+                                show("edited: this text is a draft again until you accept it")
+                            # A human's draft now: generate never overwrites it,
+                            # even if a later edit types the old words back.
+                            item.owner.review = Review(status="draft", sha256=HAND_EDITED)
                         if item.id not in result.edited:
                             result.edited.append(item.id)
                         dirty = True
@@ -446,18 +484,23 @@ def self_test(repo_root: Path) -> bool:
             "accept",  # c4: accept -> refused (banned phrase)
             "Edit", "sheng", new_sheng,  # c4: edit sheng inline (no editor in the test)
             " ACCEPT ",  # c4: accept -> allowed now
-            "skip",  # group:trader: skip
-            "s",  # c3: skip
+            "skip",  # c3: skip
+            "s",  # group:trader: skip (groups come after clauses)
         ],
     )
     result, shown = run_a.result, run_a.shown
     c3, c4 = clause_of(bill, "c3"), clause_of(bill, "c4")
     check(
-        "A. the flagged clause (c4) comes first, then the draft group entry, then c3",
-        result.visited == ["c4", "group:trader", "c3"],
+        "A. the flagged clause (c4) comes first, then clause c3, then the group entry",
+        result.visited == ["c4", "c3", "group:trader"],
         str(result.visited),
     )
     check("A. accepting c4 with a banned phrase was refused", result.refused == ["c4"], str(result.refused))
+    check(
+        "A. the accept stores the fingerprint of what was accepted, so c4 counts as reviewed",
+        c4.review.sha256 == current_sha256(c4) and is_reviewed(c4),
+        str(c4.review),
+    )
     check(
         "A. c4 is reviewed, dated today, with the edited sheng",
         c4.review.status == "reviewed" and c4.review.at == today and c4.explanation.sheng == new_sheng,
@@ -496,22 +539,22 @@ def self_test(repo_root: Path) -> bool:
     check("A. the result still validates as models.Bill", validates)
 
     # === Scenario B: an edit you made is kept even if you quit =================
-    # The first item is the draft group entry. After an explicit "q" the walk
-    # must STOP: c3 and c4 are never shown.
+    # The first item is draft clause c3. After an explicit "q" the walk must
+    # STOP: c4 and the group entry are never shown.
     bill = fixture_bill(repo_root)
     run_b = drive(bill, ["e", "en", "Edited by hand.", "q"])
-    saved_group = run_b.saves[0].groups[0] if run_b.saves else None
+    saved_group = clause_of(run_b.saves[0], "c3") if run_b.saves else None
     check(
         "B. edit then quit: the edit was saved, still as a draft",
         run_b.result.quit
         and len(run_b.saves) == 1
-        and saved_group.text.en == "Edited by hand."
+        and saved_group.explanation.en == "Edited by hand."
         and saved_group.review.status == "draft",
         f"{len(run_b.saves)} save(s)",
     )
     check(
         "B. after an explicit quit the later items are NOT visited",
-        run_b.result.visited == ["group:trader"] and run_b.left == [],
+        run_b.result.visited == ["c3"] and run_b.left == [],
         str(run_b.result.visited),
     )
 
@@ -611,12 +654,12 @@ def self_test(repo_root: Path) -> bool:
     run_f = drive(bill, ["abort", "all", "again", "q"])
     check(
         'F. "abort", "all" and "again" do not accept: nothing accepted, the item stays a draft',
-        run_f.result.accepted == [] and bill.groups[0].review.status == "draft" and run_f.saves == [],
+        run_f.result.accepted == [] and clause_of(bill, "c3").review.status == "draft" and run_f.saves == [],
         str(run_f.result.accepted),
     )
     check(
         "F. each of them was refused with the prompt help, and the same item was asked again",
-        run_f.lines.count("choose a, e, s or q") == 3 and run_f.result.visited == ["group:trader"],
+        run_f.lines.count("choose a, e, s or q") == 3 and run_f.result.visited == ["c3"],
         str(run_f.lines.count("choose a, e, s or q")),
     )
     bill = fixture_bill(repo_root)
@@ -627,12 +670,12 @@ def self_test(repo_root: Path) -> bool:
     # G1. The input ends at the inline "New en text" prompt. The old walk read
     # that as the answer "q" and PUT IT IN THE BILL as the new text.
     bill = fixture_bill(repo_root)
-    text_before = bill.groups[0].text.en
+    text_before = clause_of(bill, "c3").explanation.en
     run_g1 = drive(bill, ["e", "en"])  # script ends -> the reviewer is gone
     check(
         "G. end of input at the inline text prompt leaves the text unchanged, and save() is never called",
-        bill.groups[0].text.en == text_before and run_g1.saves == [] and run_g1.result.quit,
-        f"{bill.groups[0].text.en!r}, {len(run_g1.saves)} save(s)",
+        clause_of(bill, "c3").explanation.en == text_before and run_g1.saves == [] and run_g1.result.quit,
+        f"{clause_of(bill, "c3").explanation.en!r}, {len(run_g1.saves)} save(s)",
     )
     # G2. Ctrl-C at the accept prompt, after a real edit: the edit is kept.
     bill = fixture_bill(repo_root)
@@ -642,23 +685,23 @@ def self_test(repo_root: Path) -> bool:
         not run_g2.escaped
         and run_g2.result.quit
         and len(run_g2.saves) == 1
-        and run_g2.saves[0].groups[0].text.en == "Edited by hand."
-        and run_g2.saves[0].groups[0].review.status == "draft"
+        and clause_of(run_g2.saves[0], "c3").explanation.en == "Edited by hand."
+        and clause_of(run_g2.saves[0], "c3").review.status == "draft"
         and "accepted 0, edited 1" in run_g2.shown,
         f"{len(run_g2.saves)} save(s)",
     )
     # G3. Ctrl-C half-way through a SECOND edit: the first edit is still kept,
     # and the half-typed one is not.
     bill = fixture_bill(repo_root)
-    sw_before = bill.groups[0].text.sw
+    sw_before = clause_of(bill, "c3").explanation.sw
     run_g3 = drive(bill, ["e", "en", "First edit.", "e", "sw", KeyboardInterrupt()])
     check(
         "G. Ctrl-C mid-edit keeps the earlier edit, and the interrupted one changes nothing",
         not run_g3.escaped
         and run_g3.result.quit
         and len(run_g3.saves) == 1
-        and run_g3.saves[0].groups[0].text.en == "First edit."
-        and run_g3.saves[0].groups[0].text.sw == sw_before,
+        and clause_of(run_g3.saves[0], "c3").explanation.en == "First edit."
+        and clause_of(run_g3.saves[0], "c3").explanation.sw == sw_before,
         f"{len(run_g3.saves)} save(s)",
     )
 
@@ -695,15 +738,15 @@ def self_test(repo_root: Path) -> bool:
         return Driven(result, [], lines, saves)
 
     bill = fixture_bill(repo_root)
-    text_before = bill.groups[0].text.en
+    text_before = clause_of(bill, "c3").explanation.en
     run_g4 = drive_terminal(bill, FakeStdin(["e", "en"], then="eof"))  # the pipe closes at "New en text"
     check(
         "G. a closed pipe at the inline text prompt (real terminal reader) quits: text unchanged, nothing saved, nothing accepted",
         run_g4.result.quit
-        and bill.groups[0].text.en == text_before
+        and clause_of(bill, "c3").explanation.en == text_before
         and run_g4.saves == []
         and run_g4.result.accepted == [],
-        f"{bill.groups[0].text.en!r}, accepted {run_g4.result.accepted}",
+        f"{clause_of(bill, "c3").explanation.en!r}, accepted {run_g4.result.accepted}",
     )
     bill = fixture_bill(repo_root)
     run_g5 = drive_terminal(bill, FakeStdin(["e", "en", "Edited by hand."], then="ctrl-c"))
@@ -712,7 +755,7 @@ def self_test(repo_root: Path) -> bool:
         not run_g5.escaped
         and run_g5.result.quit
         and len(run_g5.saves) == 1
-        and run_g5.saves[0].groups[0].text.en == "Edited by hand.",
+        and clause_of(run_g5.saves[0], "c3").explanation.en == "Edited by hand.",
         f"{len(run_g5.saves)} save(s)",
     )
 
@@ -726,9 +769,55 @@ def self_test(repo_root: Path) -> bool:
         run_h = drive(bill, ["e", "en", "", "Typed instead.", "q"], editor=f'"{sys.executable}" "{script}"')
     check(
         "H. an editor that saves unreadable bytes falls back to the inline prompt, with a message",
-        bill.groups[0].text.en == "Typed instead." and "encoding" in run_h.shown,
-        f"{bill.groups[0].text.en!r}",
+        clause_of(bill, "c3").explanation.en == "Typed instead." and "encoding" in run_h.shown,
+        f"{clause_of(bill, "c3").explanation.en!r}",
     )
+
+    # === Scenario I: fingerprints (what "Reviewed" is tied to) =================
+    # I1. An edit you skip stays yours: a hand-edited draft generate won't touch.
+    bill = fixture_bill(repo_root)
+    drive(bill, ["e", "en", "Edited by hand.", "s"])
+    c3 = clause_of(bill, "c3")
+    check("I. an edited-then-skipped draft is marked hand-edited (generate keeps it)",
+          c3.review.status == "draft" and c3.review.sha256 == HAND_EDITED and is_hand_edited(c3), str(c3.review))
+
+    # I2. Edit-back: a reviewed text edited, then typed back to its old words,
+    # is still a hand-edited draft, never "reviewed" again without an accept.
+    bill = fixture_bill(repo_root)
+    c3 = clause_of(bill, "c3")
+    original = c3.explanation.en
+    c3.explanation.sw += " " + BANNED  # a banned phrase gets even a reviewed clause walked
+    mark_reviewed(c3)
+    drive(bill, ["e", "en", "Changed words.", "e", "en", original, "s"])
+    check("I. a reviewed text edited and typed back is a hand-edited draft, not reviewed",
+          c3.explanation.en == original and c3.review.status == "draft" and is_hand_edited(c3) and not is_reviewed(c3),
+          str(c3.review))
+
+    # I3. Changed since review (here: a tag added in the JSON) is walked, shown
+    # as such with its tags, and an accept makes it reviewed again.
+    bill = fixture_bill(repo_root)
+    c3 = clause_of(bill, "c3")
+    mark_reviewed(c3)
+    untouched = clause_of(bill, "c4")
+    mark_reviewed(untouched)
+    c3.groups = [*c3.groups, "student"]
+    run_i3 = drive(bill, ["a", "s"])
+    check("I. a reviewed clause changed since is walked first, shown as changed, with its groups",
+          run_i3.result.visited[:1] == ["c3"] and "reviewed, but changed since" in run_i3.shown
+          and "GROUPS: " in run_i3.shown and "student" in run_i3.shown, str(run_i3.result.visited))
+    check("I. accepting it fingerprints the new content: reviewed again, today",
+          is_reviewed(c3) and c3.review.at == today, str(c3.review))
+    check("I. a reviewed clause still as accepted is not walked, and is counted as already reviewed",
+          "c4" not in run_i3.result.visited and run_i3.result.not_drafts["reviewed"] == 1, str(run_i3.result.not_drafts))
+
+    # I4. The shared vectors: this side's fingerprints must equal the file the
+    # site's twin is checked against (scripts/check-build.mjs), or the two
+    # could drift apart while each passes its own tests.
+    from . import hashvectors
+
+    recorded = json.loads(repo_root.joinpath(*hashvectors.FIXTURE).read_text(encoding="utf-8"))["vectors"]
+    check("I. models.current_sha256 matches every shared vector (regenerate: python -m politricks.hashvectors)",
+          len(recorded) > 0 and recorded == hashvectors.build(), f"{len(recorded)} recorded")
 
     # === Nothing written ========================================================
     check("the real bill file's SHA-256 is unchanged", sha256_file(real_path) == sha_before)

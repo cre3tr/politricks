@@ -29,6 +29,9 @@ export const ReviewSchema = z
   .object({
     status: z.enum(["draft", "reviewed", "sample"]),
     at: z.string().nullable(),
+    // Fingerprint of the content when the status was set (models.py twin);
+    // "Reviewed" shows only while it matches. See src/lib/reviewHash.ts.
+    sha256: z.string().nullable(),
   })
   .strict();
 export type Review = z.infer<typeof ReviewSchema>;

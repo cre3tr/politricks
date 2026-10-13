@@ -16,6 +16,8 @@ from typing import Literal, Optional
 
 from pydantic import BaseModel, ConfigDict
 
+from .hashing import REVIEW_HASH_VERSION, review_sha256
+
 # "forbid" means an unexpected field is an error, not silently ignored.
 _STRICT = ConfigDict(extra="forbid")
 
@@ -43,6 +45,11 @@ class Review(BaseModel):
     model_config = _STRICT
     status: Literal["draft", "reviewed", "sample"]
     at: Optional[str] = None  # ISO date when it was reviewed
+    # The fingerprint (`current_sha256`) of the content when this status was
+    # set: by `generate` for a draft, by `politricks review` on accept. None
+    # for samples. "Reviewed" counts only while it still matches, so content
+    # changed after an accept can never keep the green badge.
+    sha256: Optional[str] = None
 
 
 class NeutralCheck(BaseModel):
@@ -139,6 +146,73 @@ class Bill(BaseModel):
     changes: list[dict] = []
     participation: Optional[dict] = None
     challenge: Optional[dict] = None
+
+
+# --------------------------------------------------------------------------
+# Review fingerprints: what "Reviewed" is tied to
+# --------------------------------------------------------------------------
+
+def current_sha256(owner: Clause | Summary | GroupEntry) -> Optional[str]:
+    """The fingerprint of what a reviewer accepts for this item, as it is now.
+
+    It covers the three texts a reader sees, plus what decides WHO sees the
+    item: a clause's group tags (sorted, so order alone changes nothing) and a
+    group entry's section list. A clause also includes its legal text itself,
+    so a changed law un-reviews its explanation. Left out: review aids
+    (`sheng_swaps`, `neutral_check`), the heading (a signpost, not legal
+    text) and `suggested_articles` (always [] until slice 10, which must add
+    them and move REVIEW_HASH_VERSION to v2). None when there is no text.
+    Twin: `src/lib/reviewHash.ts`.
+    """
+    if isinstance(owner, Clause):
+        if owner.explanation is None:
+            return None
+        text = owner.explanation
+        parts = ["clause", owner.id, owner.text, text.en, text.sw, text.sheng, ",".join(sorted(owner.groups))]
+    elif isinstance(owner, Summary):
+        text = owner.text
+        parts = ["summary", text.en, text.sw, text.sheng]
+    else:
+        text = owner.text
+        parts = ["group", owner.group, text.en, text.sw, text.sheng, ",".join(owner.clause_ids)]
+    return review_sha256([REVIEW_HASH_VERSION, *parts])
+
+
+def is_reviewed(owner: Clause | Summary | GroupEntry) -> bool:
+    """Reviewed AND unchanged since. The only state that earns "Reviewed"."""
+    review = owner.review
+    return review.status == "reviewed" and review.sha256 is not None and review.sha256 == current_sha256(owner)
+
+
+def changed_since_review(owner: Clause | Summary | GroupEntry) -> bool:
+    return owner.review.status == "reviewed" and not is_reviewed(owner)
+
+
+# What `politricks review` stores as a draft's fingerprint after a human edits
+# it. It never matches a real fingerprint, so the draft stays protected even if
+# the edit is later typed back to the old words.
+HAND_EDITED = "hand-edited"
+
+
+def is_hand_edited(owner: Clause | Summary | GroupEntry) -> bool:
+    """A draft that is no longer exactly what `generate` wrote: edited in
+    `politricks review` (fingerprint HAND_EDITED) or in the JSON (fingerprint
+    no longer matches). A draft with no fingerprint is treated as untouched:
+    that is how to hand one back to `generate`, by setting its
+    `review.sha256` to null."""
+    review = owner.review
+    return review.status == "draft" and review.sha256 is not None and review.sha256 != current_sha256(owner)
+
+
+def is_protected(owner: Clause | Summary | GroupEntry) -> bool:
+    """Human work `generate` must never overwrite: anything reviewed (changed
+    since or not) and any hand-edited draft."""
+    return owner.review.status == "reviewed" or is_hand_edited(owner)
+
+
+def draft_review(owner: Clause | Summary | GroupEntry) -> Review:
+    """The review record `generate` gives an item it has just written."""
+    return Review(status="draft", sha256=current_sha256(owner))
 
 
 # Bill ids become folder and file names (sources/<id>/, bills/<id>.json), so

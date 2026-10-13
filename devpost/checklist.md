@@ -523,3 +523,48 @@ Activity mode:
   - S2: cheap recovery for errored or expired clauses (today that means a fresh run).
   - S5: refresh reviewed groups' `clause_ids`.
   - The direct calls' usage isn't logged. Add that before costing the next bill.
+
+### "Reviewed" tied to a fingerprint, 2026-10-14
+
+- **Decided (the learner, before the first accept):** "Reviewed" means the content is exactly what a human accepted. This closes the proposal from the slice 2a cold review, and cold-review S4 and S5.
+- **How it works:**
+  - `review.sha256` holds a fingerprint of the content when the status was set: by `generate` for a draft, by `politricks review` on accept.
+  - The fingerprint covers the three texts, a clause's legal text and sorted tags, and a group's section list. It leaves out review aids, the heading, and `suggested_articles` (slice 10 must add those under v2).
+  - Python: `models.current_sha256`. TS twin: `src/lib/reviewHash.ts`, which uses Web Crypto because the project has no Node types.
+- **States:**
+  - **Reviewed and matching:** the badge says *Reviewed*.
+  - **Reviewed, no longer matching:** the badge says *Changed since review*, lint raises a `changed` finding, and review walks it.
+  - **Edited draft** (`sha256: "hand-edited"`, or no longer matching): it's protected, so `generate` never overwrites it or pays for it again. Typing the old words back doesn't undo that.
+  - **Draft with no fingerprint:** `generate` may replace it. Setting `sha256` to null is how to hand a draft back.
+- **`generate`:**
+  - Both batch builders leave out protected clauses. If every clause is protected, no batch is sent.
+  - On `--batch-id` resume, a result for a clause reviewed while the batch ran is left alone. It doesn't count as a failure.
+  - Drafts are stamped after their fields are set.
+  - New `refresh_group_sections`: group `clause_ids` follow the tags. It decides human or AI before changing anything, so a reviewed group whose sections moved reads *Changed since review*.
+- **`review`:**
+  - Shows each clause's GROUPS and each group's SECTIONS, because accepting covers them too.
+  - Walks clauses, then the summary, then groups.
+- **Backfill:** the Finance Act's 55 clause drafts, its summary and its 3 groups were stamped as drafts (from `91f2ee6`, untouched since). Nothing was set to reviewed: a grep for `"status": "reviewed"` over the 3 bill files found 0 lines, against 59 `"status": "draft"` lines. All 3 bills were re-saved with `sha256`.
+- **Parity:**
+  - Shared vectors: `pipeline/tests/fixtures/review_hash_vectors.json`, written by `python -m politricks.hashvectors`. They cover a newline, colons, quotes, a backslash, an em dash, an emoji, NFD, U+2028, unsorted tags and empty strings.
+  - `check-build` checks the TS side and `review --self-test` the Python side.
+  - `check-build` also checks independently that no card or summary shows *Reviewed* unless its stored fingerprint equals the recomputed one.
+- **Reviews:** two Sonnet cold reviews.
+  - **Plan review:** 2 blockers, both fixed before the build. Editing back to the old words un-protected a reviewed text (fixed by the `hand-edited` sentinel). The stamp/refresh ordering was wrong.
+  - **Plan review should-fixes, all taken:** show tags in review; hash the raw legal text (`text_sha256` was never rechecked at build time); guard the resume; guard the empty batch; switch every status check to the helpers; sort the tags.
+  - **Diff review:** no blockers. Fixed: the Python side never read the vectors (the docs claimed it did); the independent invariant now covers the summary; a stale line reference in CLAUDE.md.
+  - **Documented, not fixed:** an AI draft whose legal text changes reads as hand-edited. Null its `sha256` to redraft it.
+- **Tests:**
+  - Self-tests: lint 36, review 40, generate 75, intake 22, all passing. Lint over the 3 bills: 0 findings. Build: 0 errors. `check-build` passes for all 3 bills.
+  - **Planted-bug controls, all caught:**
+    - generate ignores protection: 11 FAILs;
+    - the fingerprint ignores tags: 4;
+    - lint treats any "reviewed" as reviewed: 1;
+    - review accepts without a fingerprint: 6;
+    - an edit leaves the fingerprint alone: 2;
+    - a tampered vector: 1.
+  - **Site controls** (scratch copy with a control bill, never the real data):
+    - c3 rendered *Reviewed*, c4 *Changed since review* and c5 *AI draft*, confirmed both by `check-build` and by reading the raw HTML;
+    - planting a `displayStatus` that ignores the fingerprint failed the independent invariant on c4;
+    - removing the TS tag sort failed the vector check.
+- **Next:** slice 3. The learner runs `politricks review finance-act-2026`. The c33/c36 tags now appear on screen during the walk; changing them still means editing the JSON before accepting.

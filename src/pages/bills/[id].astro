@@ -10,6 +10,7 @@ import ClauseCard from "../../components/ClauseCard.astro";
 import SourceFingerprint from "../../components/SourceFingerprint.astro";
 import { BillSchema, type Bill } from "../../lib/schema";
 import { badgeFor } from "../../lib/badge";
+import { displayStatus, summarySha256 } from "../../lib/reviewHash";
 
 export async function getStaticPaths() {
   // Eager: every bill file is read and validated right now, at build time —
@@ -54,7 +55,9 @@ const hasSample =
   bill.summary?.review.status === "sample" ||
   bill.clauses.some((clause) => clause.review.status === "sample");
 
-const summaryBadge = bill.summary ? badgeFor(bill.summary.review.status) : null;
+const summaryBadge = bill.summary
+  ? badgeFor(displayStatus(bill.summary.review, await summarySha256(bill.summary)))
+  : null;
 ---
 <BaseLayout title={`${bill.title} | PoliTricks`}>
   <main class="bill-page">

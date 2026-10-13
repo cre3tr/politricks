@@ -59,3 +59,26 @@ def sha256_bytes(data: bytes) -> str:
 def sha256_text(text: str) -> str:
     """Fingerprint a clause: SHA-256 of its normalised text, encoded as UTF-8."""
     return hashlib.sha256(normalise(text).encode("utf-8")).hexdigest()
+
+
+# The first part of every review fingerprint. Change it (to "-v2") only if the
+# parts below change, and change src/lib/reviewHash.ts with it.
+REVIEW_HASH_VERSION = "politricks-review-v1"
+
+
+def review_sha256(parts: list[str]) -> str:
+    """Fingerprint the content a human reviews (see models.current_sha256).
+
+    Each part is UTF-8 encoded and prefixed with its byte length and a colon,
+    then all are joined and hashed. The length prefix means no two different
+    lists of parts can produce the same bytes, and it avoids JSON, whose
+    escaping differs between Python and JavaScript. The site's twin is
+    `src/lib/reviewHash.ts`; `pipeline/tests/fixtures/review_hash_vectors.json`
+    proves they agree.
+    """
+    digest = hashlib.sha256()
+    for part in parts:
+        data = part.encode("utf-8")
+        digest.update(f"{len(data)}:".encode("ascii"))
+        digest.update(data)
+    return digest.hexdigest()
