@@ -4,12 +4,12 @@
   "chamber": "senate",
   "kind": "bill",
   "status": "active",
-  "stage": "Before the Senate Justice, Legal Affairs and Human Rights Committee — public views closed 28 September 2026, 5pm",
+  "stage": "Before the Senate Justice, Legal Affairs and Human Rights Committee. Public views closed 28 September 2026, 5pm",
   "stage_checked_at": "2026-09-28",
   "source_changed": false,
   "sources": [
     {
-      "label": "Public Participation Bill, 2025 (as first published, 1 Oct 2025 — not the National Assembly-approved text)",
+      "label": "Public Participation Bill, 2025 (as first published, 1 Oct 2025; not the National Assembly-approved text)",
       "url": "https://new.kenyalaw.org/akn/ke/bill/na/2025-10-01/the-public-participation-bill-2025/eng@2025-10-01/source.pdf",
       "official": true,
       "fetched_at": "2026-09-28T19:45:39+00:00",

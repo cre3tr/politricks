@@ -34,13 +34,13 @@ const CHAMBER: Record<Bill["chamber"], string> = {
 const checked = (iso: string) =>
   new Date(iso).toLocaleDateString("en-KE", { year: "numeric", month: "long", day: "numeric" });
 ---
-<BaseLayout title="PoliTricks — Kenyan law, explained">
+<BaseLayout title="PoliTricks | Kenyan law, explained">
   <main class="home">
     {/* The page-level heading. The header wordmark is decorative, so the home
         page needs its own h1 for screen readers and search engines. */}
     <h1 class="home-title">PoliTricks</h1>
     <p class="lede">
-      Kenyan law, explained beside the official text — in English, Kiswahili and Sheng.
+      Kenyan law, explained beside the official text, in English, Kiswahili and Sheng.
     </p>
 
     <section aria-labelledby="active-heading">

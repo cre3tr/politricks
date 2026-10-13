@@ -369,3 +369,28 @@ Activity mode:
   - The full run replaces them. Lint gives 0 findings over 27 texts.
   - `check-build` passes with them in place.
   - Probe 1's results were re-fetched by batch id at no charge. Its raw results now sit in the scratchpad beside probe 2's.
+
+### Em dashes and Sheng feedback, 2026-10-13
+
+- **The learner reported "tons of em dashes".** Counted first:
+  - **0** in Claude's output (4 generated text blocks).
+  - 10 in `explainer.md`, to be removed in the Sheng prompt rewrite.
+  - The rest were in the site's own copy and data.
+- **Fixed in visible copy:**
+  - Home title and tagline.
+  - The bill page title (`<title> | PoliTricks`) and the Sample banner.
+  - The source label line and the fingerprint how-to.
+  - Badge labels, now "AI draft (not yet reviewed)" and "Sample text (placeholder)". `check-build` reads these from `badge.ts`, so it followed.
+  - Stage lines in `sources.yaml` and the bill JSONs ("Law: assented…", "Committee. Public views…").
+  - The Public Participation source label ("1 Oct 2025; not the…").
+  - **Not committed yet:** the Finance Act JSON's stage line, which sits in the same file as the uncommitted preview drafts and goes in with the full run.
+- **Kept on purpose:** em dashes in clause text are the law's own, and that text is verbatim and fingerprinted. Visible-text counts after stripping scripts, styles and comments:
+  - Finance Act 0, and home 0.
+  - Public Participation 8, against 8 clauses whose text contains one.
+  - Tertiary 26, against 26 such clauses.
+  - Code and HTML comments keep theirs; readers never see them.
+- **Sheng feedback (being played back before acting):**
+  - The summary's first sentence is the target mix. The paragraph after it is too Swahili.
+  - Once an English word is used ("rent"), keep it.
+  - "wakazi" is too broad.
+  - The learner asked for a review for purely Swahili words in context: "Sheng is Swahili-English".

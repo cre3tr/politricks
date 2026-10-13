@@ -23,11 +23,11 @@ export interface Badge {
 export function badgeFor(status: Review["status"]): Badge {
   switch (status) {
     case "draft":
-      return { label: "AI draft — not yet reviewed", className: "badge-draft" };
+      return { label: "AI draft (not yet reviewed)", className: "badge-draft" };
     case "reviewed":
       return { label: "Reviewed", className: "badge-reviewed" };
     case "sample":
-      return { label: "Sample text — placeholder", className: "badge-sample" };
+      return { label: "Sample text (placeholder)", className: "badge-sample" };
     default: {
       const exhaustive: never = status;
       throw new Error(`badgeFor: unhandled review status ${String(exhaustive)}`);

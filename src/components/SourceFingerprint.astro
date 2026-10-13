@@ -35,7 +35,7 @@ const { sources } = Astro.props;
       return (
         <div class="source-entry">
           <p class="source-label">
-            {source.label} — <a href={source.url}>{source.url}</a>
+            {source.label}: <a href={source.url}>{source.url}</a>
           </p>
           <p class="source-fetched">Fetched: {fetchedDate}</p>
           <details>
@@ -56,7 +56,7 @@ const { sources } = Astro.props;
                 macOS/Linux: run <code>shasum -a 256 &lt;file&gt;</code> in a
                 terminal.
               </li>
-              <li>Compare the result to the SHA-256 above — it should match exactly.</li>
+              <li>Compare the result to the SHA-256 above. It should match exactly.</li>
             </ol>
           </details>
         </div>

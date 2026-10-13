@@ -17,7 +17,7 @@ finance-act-2026:
   chamber: national
   kind: bill
   status: passed
-  stage: "Law — assented 23 June 2026 (Act No. 19 of 2026)"
+  stage: "Law: assented 23 June 2026 (Act No. 19 of 2026)"
   stage_checked_at: "2026-09-25"
   sources:
     - label: "Finance Act, 2026 (Act No. 19 of 2026)"
@@ -32,7 +32,7 @@ tertiary-education-bill-2026:
   chamber: national
   kind: bill
   status: active
-  stage: "Before the National Assembly Education Committee — public views open until 2 October 2026"
+  stage: "Before the National Assembly Education Committee. Public views open until 2 October 2026"
   stage_checked_at: "2026-09-28"
   sources:
     - label: "Tertiary Education, Placement and Funding Bill, 2026 (as published, 24 Jul 2026)"
@@ -49,10 +49,10 @@ public-participation-bill-2025:
   chamber: senate
   kind: bill
   status: active
-  stage: "Before the Senate Justice, Legal Affairs and Human Rights Committee — public views closed 28 September 2026, 5pm"
+  stage: "Before the Senate Justice, Legal Affairs and Human Rights Committee. Public views closed 28 September 2026, 5pm"
   stage_checked_at: "2026-09-28"
   sources:
-    - label: "Public Participation Bill, 2025 (as first published, 1 Oct 2025 — not the National Assembly-approved text)"
+    - label: "Public Participation Bill, 2025 (as first published, 1 Oct 2025; not the National Assembly-approved text)"
       url: "https://new.kenyalaw.org/akn/ke/bill/na/2025-10-01/the-public-participation-bill-2025/eng@2025-10-01/source.pdf"
       official: true
       file: bill.pdf
