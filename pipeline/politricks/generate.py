@@ -46,7 +46,13 @@ from .models import (
 )
 from .selftest import FIXTURE_BILL_ID, Checker, reset_bill
 
-MODEL = "claude-opus-5"
+# Opus 5.5 replaced Opus 5 as the current Opus (and costs less). Its effort
+# defaults to "medium", one level below Opus 5's "high", so EFFORT is set
+# explicitly: these are legal explanations, and depth matters more than speed.
+# Opus 5.5 can't switch thinking off, and it rejects a forced tool_choice.
+# This file uses neither.
+MODEL = "claude-opus-5-5"
+EFFORT = "high"
 MAX_TOKENS = 16000
 
 # The beta needed for a direct (non-batch) refusal retry to accept
@@ -155,7 +161,7 @@ def build_params(repo_root: Path, bill: Bill, clause: Clause) -> dict:
             }
         ],
         "messages": [{"role": "user", "content": user_text}],
-        "output_config": {"format": {"type": "json_schema", "schema": schema}},
+        "output_config": {"format": {"type": "json_schema", "schema": schema}, "effort": EFFORT},
     }
 
 
@@ -177,7 +183,7 @@ def build_summary_params(repo_root: Path, bill: Bill) -> dict:
             }
         ],
         "messages": [{"role": "user", "content": user_text}],
-        "output_config": {"format": {"type": "json_schema", "schema": schema}},
+        "output_config": {"format": {"type": "json_schema", "schema": schema}, "effort": EFFORT},
     }
 
 
@@ -200,6 +206,25 @@ def direct_params(params: dict) -> dict:
     how to pass it (`client.beta.messages.parse(**direct_params(params))`).
     """
     return {**params, "betas": [FALLBACK_BETA], "fallbacks": "default"}
+
+
+def retry_params(params: dict) -> dict:
+    """`direct_params` with the pre-built schema removed, ready for `.parse`.
+
+    `client.beta.messages.parse` builds its own schema from `output_format`
+    and raises if `output_config.format` is ALSO set, so only `format` goes.
+    The rest of `output_config` (the effort level) stays: the SDK merges it
+    with the schema it builds (anthropic 1.8.0, `_merge_output_configs`).
+    Dropping the whole `output_config` would quietly retry at the model's
+    default effort.
+    """
+    params = direct_params(params)
+    output_config = {k: v for k, v in params.get("output_config", {}).items() if k != "format"}
+    if output_config:
+        params["output_config"] = output_config
+    else:
+        params.pop("output_config", None)
+    return params
 
 
 # --------------------------------------------------------------------------
@@ -388,6 +413,24 @@ def self_test(repo_root: Path) -> bool:
         direct.get("fallbacks") == "default" and FALLBACK_BETA in direct.get("betas", []),
     )
 
+    check(
+        # Proves the builders wire in MODEL and EFFORT; the IDs themselves live
+        # only in the constants above.
+        f"every batch request carries MODEL ({MODEL}) and EFFORT ({EFFORT!r})",
+        all(
+            request["params"]["model"] == MODEL and request["params"]["output_config"].get("effort") == EFFORT
+            for request in requests
+        ),
+    )
+    retry = retry_params(requests[0]["params"])
+    check(
+        "retry_params drops the schema but keeps the effort and the fallback",
+        "format" not in retry.get("output_config", {})
+        and retry.get("output_config", {}).get("effort") == EFFORT
+        and retry.get("fallbacks") == "default",
+    )
+    check("retry_params leaves the batch params untouched", "format" in requests[0]["params"]["output_config"])
+
     # --- result parsing ------------------------------------------------------
     fixture_path = repo_root / "pipeline" / "tests" / "fixtures" / "batch_results.jsonl"
     lines = [json.loads(line) for line in fixture_path.read_text(encoding="utf-8").splitlines() if line.strip()]
@@ -531,12 +574,9 @@ def run(repo_root: Path, bill_id: str) -> None:
     # never inside a batch, which rejects the fallback option outright.
     by_custom_id = {request["custom_id"]: request["params"] for request in requests}
     for custom_id in needs_direct:
-        params = direct_params(by_custom_id[custom_id])
-        # `client.beta.messages.parse` builds its own schema from
-        # `output_format` and raises if `output_config.format` is ALSO set —
-        # drop the pre-built schema here and hand it a Pydantic class instead,
-        # which is what actually populates `.parsed` on the response.
-        params.pop("output_config", None)
+        # A Pydantic class (not the pre-built schema) is what populates
+        # `.parsed` on the response; see retry_params.
+        params = retry_params(by_custom_id[custom_id])
         model_cls = SummaryOut if custom_id == "summary" else ClauseOut
         parsed_message = client.beta.messages.parse(output_format=model_cls, **params)
         outcomes = [o for o in outcomes if not (isinstance(o, NeedsDirect) and o.custom_id == custom_id)]

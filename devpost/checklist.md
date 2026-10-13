@@ -35,7 +35,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   PRD ref: `prd.md > What It Does`
   Spec ref: `spec.md > Generate (Claude)`, `spec.md > Anthropic Messages API`
   Build: The learner creates the API key and puts it in `.env`. Run a tiny live call, a 1-item test batch, then `generate finance-act-2026`, retrying refusals directly.
-  Verify (mechanical): A tiny `claude-opus-5` call returns non-empty text. The 1-item batch returns output that parses with the Pydantic model; if the schema is rejected, record a revision and fall back to direct `messages.parse`. After `generate`, every clause has an `explanation`, no item is `"sample"`, all are `"draft"`, the Zod schema validates, and `check:build` shows "AI draft" on every card.
+  Verify (mechanical): A tiny `claude-opus-5-5` call returns non-empty text. The 1-item batch returns output that parses with the Pydantic model; if the schema is rejected, record a revision and fall back to direct `messages.parse`. After `generate`, every clause has an `explanation`, no item is `"sample"`, all are `"draft"`, the Zod schema validates, and `check:build` shows "AI draft" on every card.
   Learner check: Reload the Finance Bill page and read three clauses in Sheng. Do Claude's explanations sound natural and neutral? Note anything to fix in review.
   Commit: `Generate Claude explanations for Finance Act 2026`
 
@@ -257,3 +257,21 @@ Activity mode:
   - **Model ID:** `generate.py` uses `claude-opus-5` while Opus 5.5 is current. Check it before slice 2b's first live call.
   - **Loading `.env`:** the pipeline doesn't read `.env`. Use `uv run --env-file .env …` (verified: the variable arrives with the flag and is absent without it).
 - **Project `CLAUDE.md` created** (commands, gotchas, line maps). No git remote is configured, so nothing was pushed.
+
+### Model switch and state re-check, 2026-10-13
+
+- **Model: `claude-opus-5` → `claude-opus-5-5` (learner decision, 2026-10-13).** Opus 5 is still served, so nothing was broken. Opus 5.5 is the current Opus and costs less: $4/$20 per million tokens against $5/$25.
+  - **Compatibility, from the code:** Opus 5.5 rejects disabled thinking, `budget_tokens` and a forced `tool_choice`. `generate.py` uses none of them: it sends adaptive thinking and structured output through `output_config.format`.
+  - **Effort is now explicit:** `EFFORT = "high"` in both param builders. Opus 5.5 defaults to `medium`, one level below Opus 5's `high`, so leaving it unset would quietly have lowered depth. `high` vs `medium` is **untested on real clauses** and is worth comparing at slice 2b, especially for Sheng.
+  - **Retry fix:** the refusal retry used to drop all of `output_config` before `client.beta.messages.parse`, so it would have retried at the default effort. The new `retry_params` drops only `format`. Evidence: in the installed SDK (anthropic 1.8.0), `_validate_output_config_conflict` raises only when `output_config.format` is set, and `_merge_output_configs` merges the rest with the schema built from `output_format`.
+  - **Self-test:** 19 passed, 0 failed. **Positive control:** planting the old retry behaviour gives `FAIL: retry_params drops the schema but keeps the effort and the fallback`.
+  - **The control also caught a weak check of mine:** planting `MODEL = "claude-opus-5"` still passed, because the check compares each request against `MODEL` itself. It is relabelled to say what it proves (the builders wire in `MODEL` and `EFFORT`). It is not a version pin, and the ID lives only in the constant.
+  - **Copies updated:** `spec.md` (6 places), `spec.html` (2), and slice 2b's verify line above. The "Model ID" bullet in the 2026-10-07 entry is left as written, because that is what was true then.
+  - **Not changed, your call:** `spec.md`'s Model row still calls Opus "the most capable standard model", and Claude Fable 5.1 is now above it. The spec's cheaper option for live calls names `claude-haiku-4-5` at "about 5×" cheaper. Haiku 5.5 (`claude-haiku-5-5`) is now current at $0.10/$0.50, about 40× below Opus 5.5 on input, with the Sheng quality question unchanged.
+- **State re-check (commands run 2026-10-13):**
+  - `main` fast-forwards cleanly: `git log build/poc..main` is empty. Still **no git remote**, so nothing is backed up off this machine.
+  - The dev server was not running: `curl localhost:4321` got no connection.
+  - **Kenya Law still returns 403** on both hosts, six days after it was first seen. `parliament.go.ke` returns 301.
+  - **Bill stages are now 15 days old** (`stage_checked_at: 2026-09-28` on both). The Tertiary bill still shows a closed deadline as open.
+  - Three leftover agent worktrees under `.claude/worktrees/`. All have zero uncommitted changes, and their commits are on `build/poc`: two as ancestors, and `f4cce6b` marked already applied by `git cherry`. Safe to remove.
+  - The banned list still holds 7 doctrine and 12 proposed phrases, from reading `banned.txt`.

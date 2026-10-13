@@ -56,17 +56,19 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `run` 409
 - `check_json` 432
 
-**`pipeline/politricks/generate.py` (547):**
-- output models 74–102
-- `build_params` 132
-- `build_summary_params` 162
-- `build_batch` 184
-- `direct_params` 193
-- outcomes 211–234
-- `parse_batch_line` 244
-- `apply` 290 (keeps reviewed items and groups)
-- `self_test` 359
-- `run` 498, never run live yet
+**`pipeline/politricks/generate.py` (587):**
+- `MODEL` / `EFFORT` 54–55 (`claude-opus-5-5`, effort set explicitly because Opus 5.5 defaults to `medium`)
+- output models 80–111
+- `build_params` 138
+- `build_summary_params` 168
+- `build_batch` 190
+- `direct_params` 199
+- `retry_params` 211 (drops only `output_config.format`, keeps effort)
+- outcomes 236–266
+- `parse_batch_line` 269
+- `apply` 315 (keeps reviewed items and groups)
+- `self_test` 384
+- `run` 541, never run live yet
 
 **`pipeline/politricks/intake.py` (447):**
 - `_clause_count` 51

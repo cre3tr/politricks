@@ -52,10 +52,10 @@ PRD ref: `prd.md > The Core Journey`.
 | PDF text | **pdfplumber** | *Derived:* MIT licence, good text-position access. PyMuPDF was avoided because it's AGPL. | [pdfplumber](https://github.com/jsvine/pdfplumber) |
 | Schemas | **Pydantic v2** (Python), **Zod** (TS) | *Derived:* the same shapes are validated on both sides, and they plug into Claude structured outputs. | [Pydantic](https://docs.pydantic.dev), [Zod](https://zod.dev) |
 | AI | Anthropic SDKs: `anthropic` (Python), `@anthropic-ai/sdk` (TS) | Claude does the explaining, tagging, translating, matching and article suggestions. | [Messages API](https://platform.claude.com/docs/en/api/messages), [Structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs.md) |
-| Model | **`claude-opus-5`** for pipeline and live calls | *Default, open to your call:* the most capable standard model. Downgrading the live calls to `claude-haiku-4-5` for cost is your decision (see Decisions). | [Pricing](https://platform.claude.com/docs/en/about-claude/pricing.md) |
+| Model | **`claude-opus-5-5`** for pipeline and live calls | *Default, open to your call:* the most capable standard model. Downgrading the live calls to `claude-haiku-4-5` for cost is your decision (see Decisions). | [Pricing](https://platform.claude.com/docs/en/about-claude/pricing.md) |
 | Scheduled updates | GitHub Actions (weekly cron) + `peter-evans/create-pull-request` | You chose manual intake for setup and scheduled runs for updates. | [Actions cron](https://docs.github.com/actions/using-workflows/events-that-trigger-workflows#schedule), [create-pull-request](https://github.com/peter-evans/create-pull-request) |
 
-**To confirm in build step 0 (don't assume):** that the exact current versions of Astro, the adapter and Tailwind install cleanly together, and that the model IDs answer. Make one tiny `claude-opus-5` call and read back a non-empty reply.
+**To confirm in build step 0 (don't assume):** that the exact current versions of Astro, the adapter and Tailwind install cleanly together, and that the model IDs answer. Make one tiny `claude-opus-5-5` call and read back a non-empty reply.
 
 ## Where It Runs and How Someone Tries It
 
@@ -123,7 +123,7 @@ Implements `prd.md > Automatic Bill Intake`, `prd.md > What It Does` (content), 
 - **No OCR.** A PDF with no extractable text fails loudly with "scanned PDF — not supported yet".
 
 #### Generate (Claude)
-- Uses the **Message Batches API** (50% cheaper, not time-sensitive) with `claude-opus-5`, adaptive thinking and **structured outputs**. `client.messages.parse` validates the response against a Pydantic model.
+- Uses the **Message Batches API** (50% cheaper, not time-sensitive) with `claude-opus-5-5`, adaptive thinking and **structured outputs**. `client.messages.parse` validates the response against a Pydantic model.
 - Per clause, it returns: `explanation {en, sw, sheng}`, `groups[]` (from the fixed four), `suggested_articles[]` (article numbers only), `neutral_check: {ok: bool, note}`.
 - Per bill, it returns `summary {en, sw, sheng}` and group entries `{group, text {en,sw,sheng}, clause_ids[]}`.
 - **System prompt rules** live in `pipeline/prompts/explainer.md`, and the live Explain API loads the same file. Say what the clause does, never whether it's good or bad. **Never state or imply that anything is unconstitutional, illegal or invalid.** No advice. Sheng for everyday clarity, never mockery.
@@ -223,7 +223,7 @@ Astro on-demand routes (`export const prerender = false`), run as Vercel functio
 Implements `prd.md > First-Visit Profile` (free-text matching).
 - **Request:** `{bill_id: string, words: string}`.
 - **Guard:** strip control characters and markup, collapse whitespace, max 80 characters.
-- **Call:** `claude-opus-5` via `client.messages.parse` with a Zod schema. The prompt contains each clause's ID and English explanation, plus the reader's words **inside a quoted data block, labelled as data, never as instructions**.
+- **Call:** `claude-opus-5-5` via `client.messages.parse` with a Zod schema. The prompt contains each clause's ID and English explanation, plus the reader's words **inside a quoted data block, labelled as data, never as instructions**.
 - **Responses:**
   - `200 {clause_ids: string[]}`: at most 8, filtered to IDs that exist in the bill.
   - `400 {error: "empty" | "unknown_bill"}`.
@@ -373,7 +373,7 @@ politricks/
 ### Anthropic Messages API
 - **Endpoint:** `POST https://api.anthropic.com/v1/messages`, through the SDKs. Auth is `ANTHROPIC_API_KEY`.
 - **Structured output:** `output_config: {format: <schema>}` via `messages.parse` (Python: Pydantic model; TS: `zodOutputFormat(schema)` from `@anthropic-ai/sdk/helpers/zod`).
-- **Model:** `claude-opus-5`, with adaptive thinking. On **direct** calls (live APIs, refusal retries), add `fallbacks: "default"` plus beta `server-side-fallback-2026-07-01`. **Not on batches, which reject it.** Always check `stop_reason` before reading content.
+- **Model:** `claude-opus-5-5`, with adaptive thinking. On **direct** calls (live APIs, refusal retries), add `fallbacks: "default"` plus beta `server-side-fallback-2026-07-01`. **Not on batches, which reject it.** Always check `stop_reason` before reading content.
 - **Batches (pipeline):** `POST /v1/messages/batches`. The pipeline polls until `ended` and matches results by `custom_id` (= clause ID). Results arrive in any order. That structured outputs and the fallback option are accepted inside batch requests is **to be confirmed with one test batch in step 0 [MEDIUM]**. If not, fall back to plain `messages.parse` calls (full price, still cheap at this scale).
 - **Pricing:** Opus 5 is $5 in / $25 out per million tokens, halved on Batches ([pricing](https://platform.claude.com/docs/en/about-claude/pricing.md)).
 - **Rough estimate [LOW]:** about **$1–3 per bill** in the pipeline, and **under $0.02 per live Match call**.
@@ -439,7 +439,7 @@ politricks/
 - The 80-character free-text cap, `localStorage` keys, 15-second timeouts and the 7-day staleness threshold.
 - The `lint` stage with a banned-phrase list, and prompts shared between the pipeline and the live APIs.
 - Storing official PDFs in the repo, so anyone can re-hash them. **Redistribution terms are [UNKNOWN].** Government publications are usually fine to share, but check this before making the repo public. The fallback is to keep only the fingerprints and URLs.
-- `claude-opus-5` for all calls, with the refusal fallback on. **Your call:** switching the live calls to `claude-haiku-4-5` cuts their cost about 5× at some quality cost, especially for Sheng.
+- `claude-opus-5-5` for all calls, with the refusal fallback on. **Your call:** switching the live calls to `claude-haiku-4-5` cuts their cost about 5× at some quality cost, especially for Sheng.
 
 ### The one useful unknown: what a hash proves
 **Question (raised by your "hashed copy" idea):** does a hash prove a copy is official?
