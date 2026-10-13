@@ -26,6 +26,7 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `intake`, `fetch`, `probe`, `extract [--check-json]`, `samples`, `generate [--batch-id X] [--summary-only] [--tags-only]`, `lint [id]`, `review <id>`, `verify`.
 - Self-tests: `lint`, `review`, `intake`, `generate` and `verify` each take `--self-test`. All are offline, write nothing, and assert the real bill files' SHA-256 is unchanged.
 - **Before committing:** every self-test, then `lint`, then `npm run build`, then `check-build` for each bill.
+- Test kinds and their controls: `TESTING.md` (test-kinds skill).
 
 ## Gotchas that cost time
 

@@ -568,3 +568,10 @@ Activity mode:
     - planting a `displayStatus` that ignores the fingerprint failed the independent invariant on c4;
     - removing the TS tag sort failed the vector check.
 - **Next:** slice 3. The learner runs `politricks review finance-act-2026`. The c33/c36 tags now appear on screen during the walk; changing them still means editing the JSON before accepting.
+
+### Test kinds recorded, 2026-10-14
+
+- **New user-level skill `test-kinds`** (the learner's request): a cross-repo catalog of test kinds at `haven-ea/references/testing/test-kinds.md` (K1–K15, all earned in this repo, each with its evidence), and a per-repo `TESTING.md`.
+- **First audit, of this repo:** `TESTING.md` lists every kind with its location, command and last control.
+  - It ran two controls this change hadn't had yet. K9: `DisplayStatus` grew a value, giving `ts(2322)` at `badge.ts:37`. K7: every card was forced to the draft badge, giving 2 FAILs.
+  - **Gaps it names:** the K1 and K4 controls have never been run; lint doesn't gate the build (slice 4); the probe and control-copy scripts live only in a scratchpad; live fetch is blocked by Kenya Law's 403.
