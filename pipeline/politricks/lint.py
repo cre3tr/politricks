@@ -31,7 +31,7 @@ from pathlib import Path
 from typing import Iterator, Optional
 
 from .hashing import normalise, sha256_file
-from .models import Bill, NeutralCheck, Review, bill_path, load_bill
+from .models import Bill, NeutralCheck, Review, ShengSwap, bill_path, load_bill
 from .selftest import FIXTURE_BILL_ID, FIXTURE_DRAFT_IDS, Checker, fixture_bill
 
 LANGS = ("en", "sw", "sheng")
@@ -70,12 +70,14 @@ class Finding:
     bill_id: str
     item: str  # "c12", "summary", "group:trader", "participation.requirements"
     lang: Optional[str]  # None for a neutral flag (it is about the clause, not a language)
-    kind: str  # "banned" or "neutral"
-    detail: str  # the banned phrase (as written in banned.txt), or the neutral note
+    kind: str  # "banned", "neutral" or "sheng"
+    detail: str  # the banned phrase (as written in banned.txt), the neutral note, or the Sheng swaps
 
     def describe(self) -> str:
         if self.kind == "banned":
             return f'banned phrase "{self.detail}"'
+        if self.kind == "sheng":
+            return f"Sheng kept in Kiswahili: {self.detail}"
         return f"neutral flag — {self.detail}"
 
     def line(self) -> str:
@@ -198,6 +200,17 @@ def lint_bill(bill: Bill, phrases: list[str]) -> list[Finding]:
         check = clause.neutral_check
         if check is not None and not check.ok and clause.review.status != "reviewed":
             findings.append(Finding(bill.id, clause.id, None, "neutral", check.note))
+
+    # (c) Sheng words Claude kept in pure Kiswahili (Sheng here is English-led),
+    # only until a human has reviewed the item. Accepting it in `review` is
+    # the decision that each word stays; editing it is the swap.
+    flagged_items = [(SUMMARY_ID, bill.summary)] if bill.summary is not None else []
+    flagged_items += [(group_item_id(entry.group), entry) for entry in bill.groups]
+    flagged_items += [(clause.id, clause) for clause in bill.clauses if clause.explanation is not None]
+    for item, holder in flagged_items:
+        if holder.sheng_swaps and holder.review.status != "reviewed":
+            swaps = ", ".join(f'"{swap.word}" (English: "{swap.english}")' for swap in holder.sheng_swaps)
+            findings.append(Finding(bill.id, item, "sheng", "sheng", swaps))
 
     return findings
 
@@ -406,6 +419,26 @@ def self_test(repo_root: Path) -> bool:
     check("4. once c3 is reviewed the neutral flag is gone", lint_bill(bill, phrases) == [])
     clause.explanation.en = "The officer cannot vote."
     check('4. but a banned phrase still fails on a "reviewed" clause', len(lint_bill(bill, phrases)) == 1)
+
+    # --- 4b. Sheng swaps: fail until a human reviews the item -----------------
+    bill = base.model_copy(deep=True)
+    _clause(bill, "c3").sheng_swaps = [ShengSwap(word="wasio wakazi", english="non-residents")]
+    bill.summary.sheng_swaps = [ShengSwap(word="mapato", english="income")]
+    findings = lint_bill(bill, phrases)
+    got = sorted((finding.item, finding.kind, finding.lang) for finding in findings)
+    check(
+        "4b. Sheng swaps on draft c3 and on the summary: one sheng finding each",
+        got == [("c3", "sheng", "sheng"), ("summary", "sheng", "sheng")],
+        str(findings),
+    )
+    check(
+        "4b. the finding names the word and its English",
+        any('"wasio wakazi" (English: "non-residents")' in finding.describe() for finding in findings),
+        str([finding.describe() for finding in findings]),
+    )
+    _clause(bill, "c3").review = Review(status="reviewed", at="2026-01-01")
+    bill.summary.review = Review(status="reviewed", at="2026-01-01")
+    check("4b. once reviewed, the Sheng flags are gone", lint_bill(bill, phrases) == [], str(lint_bill(bill, phrases)))
 
     # --- 5. Tris hiding in loose fields are scanned; URLs and legal text are not
     bill = base.model_copy(deep=True)

@@ -69,6 +69,17 @@ class Source(BaseModel):
     scanned: bool = False
 
 
+class ShengSwap(BaseModel):
+    """A word Claude's Sheng kept in pure Kiswahili, with the everyday English
+    a Nairobi speaker would more likely use. Sheng here is English-led, so
+    these are flagged for the human Sheng review: Claude flags, Ian decides.
+    Lint fails on a non-empty list until the item is reviewed."""
+
+    model_config = _STRICT
+    word: str
+    english: str
+
+
 class Clause(BaseModel):
     """One numbered clause of the bill, copied word for word from the PDF."""
 
@@ -88,12 +99,14 @@ class Clause(BaseModel):
     neutral_check: Optional[NeutralCheck] = None
     groups: list[GroupId] = []
     suggested_articles: list[int] = []
+    sheng_swaps: list[ShengSwap] = []
 
 
 class Summary(BaseModel):
     model_config = _STRICT
     text: Tri
     review: Review
+    sheng_swaps: list[ShengSwap] = []
 
 
 class GroupEntry(BaseModel):
@@ -102,6 +115,7 @@ class GroupEntry(BaseModel):
     text: Tri
     clause_ids: list[str]
     review: Review
+    sheng_swaps: list[ShengSwap] = []
 
 
 class Bill(BaseModel):

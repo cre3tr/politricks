@@ -42,6 +42,18 @@ export const NeutralCheckSchema = z
   .strict();
 export type NeutralCheck = z.infer<typeof NeutralCheckSchema>;
 
+// A word Claude's Sheng kept in pure Kiswahili, with the everyday English it
+// could use instead (models.py twin: ShengSwap). A review aid only: the site
+// never shows it. Defaults to [] so bill files written before the field
+// existed still validate.
+export const ShengSwapSchema = z
+  .object({
+    word: z.string(),
+    english: z.string(),
+  })
+  .strict();
+const ShengSwaps = z.array(ShengSwapSchema).default([]);
+
 // One fingerprinted official document behind a bill.
 export const SourceSchema = z
   .object({
@@ -74,6 +86,7 @@ export const ClauseSchema = z
     neutral_check: NeutralCheckSchema.nullable(),
     groups: z.array(GroupIdSchema),
     suggested_articles: z.array(z.number()),
+    sheng_swaps: ShengSwaps,
   })
   .strict();
 export type Clause = z.infer<typeof ClauseSchema>;
@@ -82,6 +95,7 @@ export const SummarySchema = z
   .object({
     text: TriSchema,
     review: ReviewSchema,
+    sheng_swaps: ShengSwaps,
   })
   .strict();
 export type Summary = z.infer<typeof SummarySchema>;
@@ -92,6 +106,7 @@ export const GroupEntrySchema = z
     text: TriSchema,
     clause_ids: z.array(z.string()),
     review: ReviewSchema,
+    sheng_swaps: ShengSwaps,
   })
   .strict();
 export type GroupEntry = z.infer<typeof GroupEntrySchema>;

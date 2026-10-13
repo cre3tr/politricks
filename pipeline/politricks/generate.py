@@ -43,6 +43,7 @@ from .models import (
     GroupId,
     NeutralCheck,
     Review,
+    ShengSwap,
     Summary,
     Tri,
     bill_path,
@@ -96,12 +97,21 @@ class NeutralOut(BaseModel):
     note: str
 
 
+class SwapOut(BaseModel):
+    # A word the Sheng kept in pure Kiswahili + the everyday English for it.
+    # Stored as models.ShengSwap; lint flags it until Ian reviews the item.
+    model_config = _STRICT
+    word: str
+    english: str
+
+
 class ClauseOut(BaseModel):
     model_config = _STRICT
     explanation: TriOut
     groups: list[GroupId]
     suggested_articles: list[int]
     neutral_check: NeutralOut
+    sheng_swaps: list[SwapOut]
 
 
 class GroupOut(BaseModel):
@@ -111,12 +121,18 @@ class GroupOut(BaseModel):
     model_config = _STRICT
     group: GroupId
     text: TriOut
+    sheng_swaps: list[SwapOut]
 
 
 class SummaryOut(BaseModel):
     model_config = _STRICT
     summary: TriOut
+    summary_sheng_swaps: list[SwapOut]
     groups: list[GroupOut]
+
+
+def _swaps(swaps: list[SwapOut]) -> list[ShengSwap]:
+    return [ShengSwap(word=swap.word, english=swap.english) for swap in swaps]
 
 
 def _all_objects_forbid_additional(schema: dict) -> bool:
@@ -379,6 +395,7 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
             bill.summary = Summary(
                 text=Tri(en=summary_out.summary.en, sw=summary_out.summary.sw, sheng=summary_out.summary.sheng),
                 review=Review(status="draft"),
+                sheng_swaps=_swaps(summary_out.summary_sheng_swaps),
             )
             # A reviewed group entry is a human's accepted text: keep it, matched
             # by group id, in place of that group's new draft.
@@ -406,6 +423,7 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
                         text=Tri(en=group.text.en, sw=group.text.sw, sheng=group.text.sheng),
                         clause_ids=list(tags[group.group]),
                         review=Review(status="draft"),
+                        sheng_swaps=_swaps(group.sheng_swaps),
                     )
                 )
             # Reviewed groups the new output left out are still kept (at the end).
@@ -425,6 +443,7 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
         clause.neutral_check = NeutralCheck(ok=clause_out.neutral_check.ok, note=clause_out.neutral_check.note)
         clause.groups = list(dict.fromkeys(clause_out.groups))  # no repeats
         clause.suggested_articles = []
+        clause.sheng_swaps = _swaps(clause_out.sheng_swaps)
         applied += 1
     return applied
 
@@ -473,20 +492,31 @@ class _FakeClient:
 
 
 def _run_offline(
-    repo_root: Path, lines: list[dict], parse, batch_id: str | None = None, summary_only: bool = False
+    repo_root: Path,
+    lines: list[dict],
+    parse,
+    batch_id: str | None = None,
+    summary_only: bool = False,
+    clause_ids: list[str] | None = None,
 ) -> SimpleNamespace:
     """Run run() in a temp copy of the repo against a fake client.
 
     The temp repo holds only what run() reads: the explainer prompt and the
-    test bill (`reset_bill`, never the real file). Its exceptions are caught
-    and returned as the code, so a crash fails a check instead of the test.
+    test bill (`reset_bill`, never the real file), cut down to `clause_ids`
+    (default: the clauses the fixture lines answer for), so the batch asks
+    for exactly what the fake returns unless a test says otherwise. Its
+    exceptions are caught and returned as the code, so a crash fails a check
+    instead of the test.
     """
+    keep = clause_ids if clause_ids is not None else [line["custom_id"] for line in lines]
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         prompts = root / "pipeline" / "prompts"
         prompts.mkdir(parents=True)
         shutil.copy(repo_root / "pipeline" / "prompts" / "explainer.md", prompts)
-        save_bill(reset_bill(repo_root), bill_path(root, FIXTURE_BILL_ID))
+        test_bill = reset_bill(repo_root)
+        test_bill.clauses = [clause for clause in test_bill.clauses if clause.id in keep]
+        save_bill(test_bill, bill_path(root, FIXTURE_BILL_ID))
 
         client = _FakeClient(lines, parse)
         out = io.StringIO()
@@ -630,10 +660,10 @@ def self_test(repo_root: Path) -> bool:
     summary_result = Applied(
         "summary",
         SummaryOut(
-            summary=tri_out("new summary"),
+            summary=tri_out("new summary"), summary_sheng_swaps=[],
             groups=[
-                GroupOut(group="trader", text=tri_out("new trader draft")),
-                GroupOut(group="employee", text=tri_out("new employee draft")),
+                GroupOut(group="trader", text=tri_out("new trader draft"), sheng_swaps=[]),
+                GroupOut(group="employee", text=tri_out("new employee draft"), sheng_swaps=[]),
             ],
         ),
     )
@@ -687,11 +717,11 @@ def self_test(repo_root: Path) -> bool:
     messy = Applied(
         "summary",
         SummaryOut(
-            summary=tri_out("summary"),
+            summary=tri_out("summary"), summary_sheng_swaps=[],
             groups=[
-                GroupOut(group="employee", text=tri_out("first employee")),
-                GroupOut(group="employee", text=tri_out("second employee")),
-                GroupOut(group="student", text=tri_out("no section is tagged student")),
+                GroupOut(group="employee", text=tri_out("first employee"), sheng_swaps=[]),
+                GroupOut(group="employee", text=tri_out("second employee"), sheng_swaps=[]),
+                GroupOut(group="student", text=tri_out("no section is tagged student"), sheng_swaps=[]),
             ],
         ),
     )
@@ -712,19 +742,34 @@ def self_test(repo_root: Path) -> bool:
     # --- in one apply() call, the summary still sees the clause tags ---------
     # Outcomes in the "wrong" order (summary first) must still give the
     # summary's transport group the section tagged in the same call.
+    # The same outcomes carry Sheng swaps, which must land on the clause, the
+    # summary and the group entry.
     clause_result = Applied(
         "c3",
         ClauseOut(explanation=tri_out("c3 text"), groups=["transport"], suggested_articles=[],
-                  neutral_check=NeutralOut(ok=True, note="")),
+                  neutral_check=NeutralOut(ok=True, note=""),
+                  sheng_swaps=[SwapOut(word="ushuru", english="tax")]),
     )
     transport_summary = Applied(
-        "summary", SummaryOut(summary=tri_out("s"), groups=[GroupOut(group="transport", text=tri_out("t"))])
+        "summary",
+        SummaryOut(
+            summary=tri_out("s"),
+            summary_sheng_swaps=[SwapOut(word="mapato", english="income")],
+            groups=[GroupOut(group="transport", text=tri_out("t"), sheng_swaps=[SwapOut(word="magari", english="vehicles")])],
+        ),
     )
     ordered = reset_bill(repo_root)
     apply(ordered, [transport_summary, clause_result])
     check("summary apply: clause tags from the same call are applied first",
           [(entry.group, entry.clause_ids) for entry in ordered.groups] == [("transport", ["c3"])],
           str([(entry.group, entry.clause_ids) for entry in ordered.groups]))
+    landed = (
+        [(swap.word, swap.english) for swap in next(c for c in ordered.clauses if c.id == "c3").sheng_swaps],
+        [(swap.word, swap.english) for swap in ordered.summary.sheng_swaps],
+        [(swap.word, swap.english) for swap in ordered.groups[0].sheng_swaps] if ordered.groups else None,
+    )
+    check("apply: Sheng swaps land on the clause, the summary and the group",
+          landed == ([("ushuru", "tax")], [("mapato", "income")], [("magari", "vehicles")]), str(landed))
 
     # --- run() end to end, offline -------------------------------------------
     # A fake client stands in for the API, and a temp folder for the repo, so
@@ -732,7 +777,7 @@ def self_test(repo_root: Path) -> bool:
     # file, resume, the refusal retry and its failures, and the exit code.
     # Fixture lines: c3, c4 applied; c5 refused; c6 errored; c7 invalid.
     fixture_ok = next(outcome.parsed for outcome in outcomes if isinstance(outcome, Applied))
-    fake_summary = SummaryOut(summary=tri_out("fake summary"), groups=[])
+    fake_summary = SummaryOut(summary=tri_out("fake summary"), summary_sheng_swaps=[], groups=[])
     parse_calls: list[dict] = []
 
     def parse_ok(**kwargs):
@@ -751,7 +796,7 @@ def self_test(repo_root: Path) -> bool:
 
     a = _run_offline(repo_root, first_three, parse_ok)
     check("run: a good retry gives exit 0", a.code == 0, f"{a.code} / {a.out}")
-    check("run: one batch submitted, with every clause", a.created == [len(bill.clauses)], str(a.created))
+    check("run: one batch submitted, with every clause", a.created == [len(first_three)], str(a.created))
     check("run: the batch id is saved to disk the moment it's submitted", a.id_saved == _FAKE_BATCH_ID, str(a.id_saved))
     check("run: the raw results are saved (one line per result)", a.raw_lines == 3, str(a.raw_lines))
     c5 = next(clause for clause in a.bill.clauses if clause.id == "c5")
@@ -793,9 +838,22 @@ def self_test(repo_root: Path) -> bool:
     check("run: the other results are still saved", {"c3", "c4"} <= saved, str(sorted(saved)))
     check(
         "run: every request not applied is listed",
-        all(f"NOT APPLIED {cid}" in b.out for cid in ("c5", "c6", "c7", "summary")),
+        all(f"NOT APPLIED {cid}" in b.out for cid in ("c5", "c6", "c7")),
         b.out,
     )
+    check(
+        "run: with clauses missing, the summary is not asked for (or paid for)",
+        "summary not asked for" in b.out and "NOT APPLIED summary" not in b.out,
+        b.out,
+    )
+
+    missing = _run_offline(repo_root, lines[:2], parse_ok, clause_ids=["c3", "c4", "c5"])
+    check("run: a request with no result is listed and fails the run",
+          missing.code == 1 and "NOT APPLIED c5: no result came back" in missing.out, f"{missing.code} / {missing.out}")
+    stray = _run_offline(repo_root, lines[:2], parse_ok, clause_ids=["c3"])
+    check("run: a result for a request this bill didn't make fails the run (wrong --batch-id)",
+          stray.code == 1 and "NOT APPLIED c4: a result for a request this bill didn't make" in stray.out,
+          f"{stray.code} / {stray.out}")
     check("run: the batch error keeps the API's type and message", "c6: errored: api_error: internal server error" in b.out, b.out)
 
     c = _run_offline(repo_root, first_three, parse_refused)
@@ -865,6 +923,8 @@ def _report(applied: int, outcomes: list[Outcome], raw_path: Path | None) -> int
     if failures:
         where = f" Raw batch results: {raw_path}" if raw_path else ""
         print(f"{len(failures)} of {len(outcomes)} request(s) not applied.{where}")
+        if [failure.custom_id for failure in failures] == ["summary"]:
+            print("  only the summary failed: redo it alone with --summary-only")
         return 1
     return 0
 
@@ -927,9 +987,24 @@ def run(
     raw_path.write_text("".join(json.dumps(line, ensure_ascii=False) + "\n" for line in raw), encoding="utf-8")
     outcomes = [parse_batch_line(line) for line in raw]
 
+    # Check what came back against what was asked for. A missing line, or a
+    # line for a request this bill never made (a wrong --batch-id), must fail
+    # loudly, not pass as "applied 0".
+    by_custom_id = {request["custom_id"]: request["params"] for request in requests}
+    returned = {outcome.custom_id for outcome in outcomes}
+    outcomes = [
+        outcome if outcome.custom_id in by_custom_id
+        else Errored(outcome.custom_id, "a result for a request this bill didn't make (wrong --batch-id?)")
+        for outcome in outcomes
+    ]
+    outcomes += [
+        Errored(custom_id, "no result came back for this request")
+        for custom_id in by_custom_id
+        if custom_id not in returned
+    ]
+
     # Refusals are retried one at a time, directly, with the fallback on —
     # never inside a batch, which rejects the fallback option outright.
-    by_custom_id = {request["custom_id"]: request["params"] for request in requests}
     for i, outcome in enumerate(outcomes):
         if isinstance(outcome, NeedsDirect):
             params = by_custom_id.get(outcome.custom_id)
@@ -941,6 +1016,12 @@ def run(
 
     applied = apply(bill, outcomes)
     save_bill(bill, path)  # the clause results are safe on disk before phase 2
+
+    # The summary is written from the clause tags, so it waits until every
+    # clause landed: a summary from half the tags would be wrong, and paid for.
+    if any(not isinstance(outcome, Applied) for outcome in outcomes):
+        print(f"summary not asked for: some clauses didn't land. Fix them, then: politricks generate {bill_id} --summary-only")
+        return _report(applied, outcomes, raw_path)
 
     summary = _summarise(repo_root, bill, client)
     applied += sum(isinstance(outcome, Applied) for outcome in summary)

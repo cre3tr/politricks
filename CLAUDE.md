@@ -56,24 +56,25 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `run` 409
 - `check_json` 432
 
-**`pipeline/politricks/generate.py` (948):**
-- `MODEL` / `EFFORT` 60–61 (`claude-sonnet-5-5`; effort set explicitly so a model swap can't change it)
-- output models 86–119 (`GroupOut` has no `clause_ids`: group membership comes only from clause tags)
-- `build_params` 146
-- `tagged_sections` 176 (each group's clause ids, from the per-clause tags)
-- `build_summary_params` 181 (full section text in `<section id>` blocks, plus the tag list)
-- `build_batch` 224 (clauses only; no summary)
-- `direct_params` 230
-- `retry_params` 242 (drops only `output_config.format`, keeps effort)
-- outcomes 267–297
-- `parse_batch_line` 300
-- `apply` 355 (applies the summary last; keeps reviewed items and groups; a group's `clause_ids` come from the tags; drops repeated or untagged groups, with a note)
-- self-test fakes: `_FakeClient` 441, `_run_offline` 475
-- `self_test` 513
-- `BATCH_RECORDS` 822
-- `_call_direct` 825 (refusal retries and the summary; never raises)
-- `_summarise` 848, `_report` 859
-- `run` 872: phase 1 is the clause batch (saves the batch id and raw results under `pipeline/.cache/batches/`; `--batch-id` resumes). Phase 2 is the summary as a direct call from the clause tags (`--summary-only` redoes just that). Exits 1 listing anything not applied.
+**`pipeline/politricks/generate.py` (1029):**
+- `MODEL` / `EFFORT` 61–62 (`claude-sonnet-5-5`; effort set explicitly so a model swap can't change it)
+- output models 87–131 (`SwapOut` = a Sheng word kept in Kiswahili; `GroupOut` has no `clause_ids`: group membership comes only from clause tags)
+- `_swaps` 134
+- `build_params` 162
+- `tagged_sections` 192 (each group's clause ids, from the per-clause tags)
+- `build_summary_params` 197 (full section text in `<section id>` blocks, plus the tag list)
+- `build_batch` 240 (clauses only; no summary)
+- `direct_params` 246
+- `retry_params` 258 (drops only `output_config.format`, keeps effort)
+- outcomes 283–313
+- `parse_batch_line` 316
+- `apply` 371 (applies the summary last; keeps reviewed items and groups; a group's `clause_ids` come from the tags; drops repeated or untagged groups, with a note; copies `sheng_swaps`)
+- self-test fakes: `_FakeClient` 460, `_run_offline` 494 (cuts the temp bill to the fixture's clauses)
+- `self_test` 543
+- `BATCH_RECORDS` 880
+- `_call_direct` 883 (refusal retries and the summary; never raises)
+- `_summarise` 906, `_report` 917
+- `run` 932: phase 1 is the clause batch (saves the batch id and raw results under `pipeline/.cache/batches/`; `--batch-id` resumes; a missing result or one for a request this bill didn't make fails the run). Phase 2 is the summary as a direct call from the clause tags, **skipped if any clause failed** (`--summary-only` redoes just that). Exits 1 listing anything not applied.
 
 **`pipeline/politricks/intake.py` (454):**
 - `_clause_count` 51
@@ -83,14 +84,14 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `_blank_pdf` 219
 - `self_test` 245
 
-**`pipeline/politricks/lint.py` (440):**
-- `Finding` 69
-- `load_phrases` 91
-- `_pattern` 121
-- `iter_texts` 165
-- `lint_bill` 183
-- `run` 210
-- `self_test` 270
+**`pipeline/politricks/lint.py` (473):**
+- `Finding` 69 (kinds: banned, neutral, sheng)
+- `load_phrases` 93
+- `_pattern` 123
+- `iter_texts` 167
+- `lint_bill` 185 (banned phrases at any status; neutral flags and Sheng swaps until the item is reviewed)
+- `run` 223
+- `self_test` 283
 
 **`pipeline/politricks/review.py` (736):**
 - `QuitReview` 82

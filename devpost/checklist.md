@@ -394,3 +394,31 @@ Activity mode:
   - Once an English word is used ("rent"), keep it.
   - "wakazi" is too broad.
   - The learner asked for a review for purely Swahili words in context: "Sheng is Swahili-English".
+- **Played back and decided (learner, 2026-10-13):**
+  - **"wakazi" → tenant / "kama unalipa rent": the lead pushed back, and the learner accepted.** Section 3 taxes non-residents who *receive* rent, who are landlords. "Tenant" would tell renters a tax applies to them. The Sheng term is "non-residents", which also follows the English-led rule.
+  - The lead's English-led rewrite of the problem paragraph is accepted as the prompt's reference.
+  - Purely-Kiswahili check: **Claude flags, the learner decides.** No word list and no second pass.
+  - The review's three fixes: yes.
+- **Prompt (`explainer.md`), rewritten once:**
+  - 0 em dashes, down from 10. A new rule: never use an em dash in any language.
+  - Sheng is English-led: English carries the meaning and Kiswahili/Sheng is the glue. It has a "like this" (the learner's target sentence plus the accepted rewrite) and a "not like this" (the original paragraph).
+  - Keep an English word once used ("rent" stays "rent").
+  - Legal meaning beats slang.
+  - **Tagging:** a section that applies to all taxpayers or everyone equally (deadlines, penalties, PINs, procedure, invoices, amnesties) gets no group (cold review S4).
+- **Sheng swaps:**
+  - New `ShengSwap {word, english}` and `sheng_swaps` lists on `Clause`, `Summary` and `GroupEntry` (Python defaults `[]`; Zod `.default([])`, so older files validate).
+  - The model returns them (`ClauseOut.sheng_swaps`, `SummaryOut.summary_sheng_swaps`, `GroupOut.sheng_swaps`), and `apply()` stores them.
+  - `lint` adds a `sheng` finding per item with swaps until it's reviewed. `review` already shows any finding and lets acceptance clear it, so it needed no change. The site never shows swaps.
+  - All three bill JSONs were re-saved through `save_bill`, so they carry `"sheng_swaps": []`. The diff is that key alone (tertiary: 68 additions). This was needed because intake's byte-equality check failed on the old files (2 FAILs), exactly as it should.
+  - The fixture's clause answers gained `"sheng_swaps": []`. c7 is still invalid for its original reason (no `sheng`).
+- **Cold review of `ed3f722..8a8f750`: no blockers.** Six should-fixes and six nits, checked against the code. Fixed now:
+  - **S1:** the summary isn't asked for, or paid for, when any clause failed. The run prints the `--summary-only` hint.
+  - **S3:** a missing result, or one for a request this bill didn't make (a wrong `--batch-id`), is an `Errored` and fails the run.
+  - **N3:** the `--summary-only` hint is printed when only the summary failed.
+  - **S4:** fixed in the prompt (above).
+  - **Deferred:**
+    - **S2:** cheap recovery for errored or expired clauses. Today it means a fresh run, and drafts aren't skipped.
+    - **S5:** a reviewed group's `clause_ids` don't refresh when tags change.
+    - **S6:** the direct summary call is the first live use of `parse` with `fallbacks`. A failure is caught and `--summary-only` recovers.
+  - The SDK timeout guard was checked by the reviewer: 450 s, under the 600 s limit, so it won't raise.
+- **Self-tests:** generate 47 (missing and stray results, the summary skipped when clauses failed, swaps landing on clause, summary and group); lint 34 (Sheng flag until reviewed); intake 22; review 33. Lint over all 3 bills: 0 findings. The build and `check-build` pass for all 3.
