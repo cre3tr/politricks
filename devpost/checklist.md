@@ -285,3 +285,13 @@ Activity mode:
   - **Spec:** the Model row now records the decision instead of "the most capable standard model". The cheaper option names `claude-haiku-5-5`, about 20× below Sonnet 5.5, replacing `claude-haiku-4-5` "about 5×". `spec.md` (6 places), `spec.html` (2) and slice 2b's verify line carry the new ID.
 - **Jev: dropped (learner decision).** It isn't part of PoliTricks. The register in `haven-ea/references/jev-use-cases.md` is untouched.
 - **Stale worktrees removed.** All three folders were deleted with the `\\?\` prefix (two held a `.venv`), then `git worktree prune`. Branches `worktree-agent-a14d…` and `…a697…` were deleted with `-d`. `…a799…` (`f4cce6b`) needed `-D` because it isn't an ancestor; `git cherry` had marked its patch as already applied first. `.vercel/` holds build output only, so there is still no linked Vercel project.
+
+### API key wired, no credit, 2026-10-13
+
+- **Key:** `pipeline-PoliTricks`, scoped to Default workspace (not Organization), expires 2026-11-12. It's in `.env`, which `git check-ignore -v .env` confirms is ignored (`.gitignore:5`). The key line is well-formed: `sk-ant-` prefix, no quotes, no trailing space.
+- **Tiny call (step 0):** 400 `invalid_request_error`, "Your credit balance is too low to access the Anthropic API" (`req_011CfzfBR7NyddWWPxz6zheW`).
+  - The key itself is valid: a bad key returns 401, and this got past authentication.
+  - The model ID is **still unproven**, because the billing check may run before model validation.
+- **`messages.count_tokens` is gated the same way at zero balance** (`req_011CfzfDGxo6hZU3SQJE6cpy`), although Anthropic doesn't bill it. So no live check, not even a free one, can run before a top-up.
+- **Billing facts (Anthropic support pages, 2026-10-13):** API usage is never charged to a Claude plan. Pro/Max usage credits extend Claude and Claude Code only. Max and Team plans include monthly API credits once a Console organization is linked to the plan.
+- **Next:** the learner tops up credit and sets a spend limit. Then rerun step 0, the 1-item batch, and `generate finance-act-2026`. The pre-run estimate for the Finance Act at Sonnet 5.5 batch rates is under about $1.50 (56 requests; the output side is assumed, not measured). Replace it with the batch's real usage after the run.
