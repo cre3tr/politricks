@@ -345,3 +345,27 @@ Activity mode:
   - The summary's groups come from a separate request from the clause tags, so the two can disagree about which sections a group covers.
   - Proposed fix: run the summary after the clause batch, feed it the clause tags, and take each group's `clause_ids` from those tags in code. **Waiting on the learner.**
 - **Length:** c32's explanation runs about ten sentences against the prompt's "two to four". The clause is 5,300 characters listing about 20 exemptions. Whether long schedule amendments may run longer is a learner call.
+
+### Summary after clauses, long amendments, preview, 2026-10-13
+
+- **Learner decisions:**
+  - The summary is written after the clauses, from their tags.
+  - Long schedule amendments may run past four sentences, shown in full. No new field and no collapse. This was asked and answered: the learner's phrase "and in background" did not mean a collapsed "more" detail.
+- **Groups now have one source of truth: the per-clause tags.**
+  - `GroupOut` has no `clause_ids`. `apply()` fills each group's sections from `tagged_sections(bill)`, and applies the summary last within any one call.
+  - A group the summary writes about but no clause is tagged with is left out, with a note. A repeated group keeps its first entry.
+- **`run()` is two phases:**
+  - Phase 1 is the clause batch: 55 requests, the summary no longer among them. The clause results are saved before phase 2 starts.
+  - Phase 2 is the summary as one **direct** call (`_call_direct`, with the fallback on), whose request lists each group's tagged sections.
+  - **Deviation from spec.md ("Uses the Message Batches API"):** the summary is a direct call. A second one-request batch would add another wait (408 s in probe 2) for about a cent of saving.
+  - `generate <bill> --summary-only` redoes just the summary from the saved tags.
+- **Prompt:**
+  - The summary section now says the tags are fixed and each group's note may mention only its tagged sections.
+  - New bullet: a long section that changes many separate things covers every change, even past four sentences, and short sections aren't padded.
+- **Self-test: 43 passed, 0 failed** (up from 37).
+  - **Positive controls:** planting "groups ignore the tags" gives 6 FAILs; planting "no phase 2" gives 4.
+  - The first control exposed a test defect: a missing group raised `KeyError` and aborted the self-test instead of failing a check. Fixed, so both plants now run to `checks:`.
+- **Preview (not committed):** probe drafts c1, c3, c32 and the summary are applied to the **working copy** of `finance-act-2026.json` as `draft`, for the learner to see the Sheng on the dev server.
+  - The full run replaces them. Lint gives 0 findings over 27 texts.
+  - `check-build` passes with them in place.
+  - Probe 1's results were re-fetched by batch id at no charge. Its raw results now sit in the scratchpad beside probe 2's.

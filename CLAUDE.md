@@ -56,22 +56,24 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `run` 409
 - `check_json` 432
 
-**`pipeline/politricks/generate.py` (844):**
+**`pipeline/politricks/generate.py` (948):**
 - `MODEL` / `EFFORT` 60–61 (`claude-sonnet-5-5`; effort set explicitly so a model swap can't change it)
-- output models 86–117
-- `build_params` 144
-- `build_summary_params` 174 (sends every section's full text in `<section id>` blocks)
-- `build_batch` 204
-- `direct_params` 213
-- `retry_params` 225 (drops only `output_config.format`, keeps effort)
-- outcomes 250–280
-- `parse_batch_line` 283
-- `apply` 338 (keeps reviewed items and groups; drops repeated groups and unknown clause ids, with a note)
-- self-test fakes: `_FakeClient` 425, `_run_offline` 459
-- `self_test` 494
-- `BATCH_RECORDS` 752
-- `_retry_direct` 755 (never raises)
-- `run` 776: saves the batch id and raw results under `pipeline/.cache/batches/`, `--batch-id` resumes, exits 1 listing anything not applied
+- output models 86–119 (`GroupOut` has no `clause_ids`: group membership comes only from clause tags)
+- `build_params` 146
+- `tagged_sections` 176 (each group's clause ids, from the per-clause tags)
+- `build_summary_params` 181 (full section text in `<section id>` blocks, plus the tag list)
+- `build_batch` 224 (clauses only; no summary)
+- `direct_params` 230
+- `retry_params` 242 (drops only `output_config.format`, keeps effort)
+- outcomes 267–297
+- `parse_batch_line` 300
+- `apply` 355 (applies the summary last; keeps reviewed items and groups; a group's `clause_ids` come from the tags; drops repeated or untagged groups, with a note)
+- self-test fakes: `_FakeClient` 441, `_run_offline` 475
+- `self_test` 513
+- `BATCH_RECORDS` 822
+- `_call_direct` 825 (refusal retries and the summary; never raises)
+- `_summarise` 848, `_report` 859
+- `run` 872: phase 1 is the clause batch (saves the batch id and raw results under `pipeline/.cache/batches/`; `--batch-id` resumes). Phase 2 is the summary as a direct call from the clause tags (`--summary-only` redoes just that). Exits 1 listing anything not applied.
 
 **`pipeline/politricks/intake.py` (454):**
 - `_clause_count` 51

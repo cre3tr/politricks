@@ -65,6 +65,9 @@ def main() -> None:
     p_generate.add_argument(
         "--batch-id", help="resume a batch already submitted (its results are kept 29 days); submits nothing new"
     )
+    p_generate.add_argument(
+        "--summary-only", action="store_true", help="redo only the bill summary, from the clause tags already saved"
+    )
 
     p_lint = sub.add_parser("lint", help="fail on banned phrases and neutrality flags in every generated text")
     p_lint.add_argument("bill_id", nargs="?", help="one bill (default: every bill in src/data/bills)")
@@ -140,7 +143,7 @@ def main() -> None:
         if not args.bill_id:
             parser.error("generate needs a bill id (or --self-test)")
         # Exit 1 if any request wasn't applied; run() lists each one and why.
-        sys.exit(generate.run(REPO_ROOT, args.bill_id, batch_id=args.batch_id))
+        sys.exit(generate.run(REPO_ROOT, args.bill_id, batch_id=args.batch_id, summary_only=args.summary_only))
 
     elif args.command == "lint":
         from . import lint

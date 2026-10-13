@@ -31,7 +31,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Union
+from typing import Union, get_args
 
 from pydantic import BaseModel, ConfigDict, ValidationError
 
@@ -105,10 +105,12 @@ class ClauseOut(BaseModel):
 
 
 class GroupOut(BaseModel):
+    # No clause_ids: which sections belong to a group comes only from the
+    # per-clause tags, filled in by apply(). One source of truth, so the
+    # summary can't disagree with the clause cards about who a section affects.
     model_config = _STRICT
     group: GroupId
     text: TriOut
-    clause_ids: list[str]
 
 
 class SummaryOut(BaseModel):
@@ -171,8 +173,17 @@ def build_params(repo_root: Path, bill: Bill, clause: Clause) -> dict:
     }
 
 
+def tagged_sections(bill: Bill) -> dict[str, list[str]]:
+    """Each group's clause ids, in bill order, from the per-clause tags."""
+    return {group: [clause.id for clause in bill.clauses if group in clause.groups] for group in get_args(GroupId)}
+
+
 def build_summary_params(repo_root: Path, bill: Bill) -> dict:
     """The Messages API params for the bill's overall summary + group blurbs.
+
+    Built AFTER the clause results are applied, because it hands the model
+    the per-clause group tags: the summary writes a note for each tagged
+    group, and never decides group membership itself.
 
     Sends every section's full text, not just its heading: a summary and
     group notes written from headings alone would be guesses. The Finance Act
@@ -180,11 +191,20 @@ def build_summary_params(repo_root: Path, bill: Bill) -> dict:
     """
     schema = SummaryOut.model_json_schema()
     assert _all_objects_forbid_additional(schema), "SummaryOut schema must forbid extra properties everywhere"
+    tags = tagged_sections(bill)
+    tag_lines = "\n".join(
+        f"- {group}: {', '.join(ids) if ids else 'no sections (write no entry for this group)'}"
+        for group, ids in tags.items()
+    )
     sections = "\n\n".join(
         f'<section id="{clause.id}">\n{clause.number}. {clause.heading}\n{clause.text}\n</section>'
         for clause in bill.clauses
     )
-    user_text = f"Bill: {bill.title}\n\nThis is the bill summary request. Every section of the bill:\n\n{sections}"
+    user_text = (
+        f"Bill: {bill.title}\n\nThis is the bill summary request.\n\n"
+        f"Sections already tagged for each group:\n{tag_lines}\n\n"
+        f"Every section of the bill:\n\n{sections}"
+    )
     return {
         "model": MODEL,
         "max_tokens": MAX_TOKENS,
@@ -202,12 +222,9 @@ def build_summary_params(repo_root: Path, bill: Bill) -> dict:
 
 
 def build_batch(repo_root: Path, bill: Bill) -> list[dict]:
-    """One batch request per clause, plus one for the bill-wide summary."""
-    requests = [
-        {"custom_id": clause.id, "params": build_params(repo_root, bill, clause)} for clause in bill.clauses
-    ]
-    requests.append({"custom_id": "summary", "params": build_summary_params(repo_root, bill)})
-    return requests
+    """One batch request per clause. The summary is NOT in the batch: it
+    needs the clause tags this batch produces, so run() asks for it after."""
+    return [{"custom_id": clause.id, "params": build_params(repo_root, bill, clause)} for clause in bill.clauses]
 
 
 def direct_params(params: dict) -> dict:
@@ -349,7 +366,9 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
     """
     clauses_by_id = {clause.id: clause for clause in bill.clauses}
     applied = 0
-    for outcome in outcomes:
+    # The summary goes last: its groups take their sections from the clause
+    # tags, which must already be on the bill when it's applied.
+    for outcome in sorted(outcomes, key=lambda outcome: outcome.custom_id == "summary"):
         if not isinstance(outcome, Applied):
             continue
 
@@ -364,31 +383,28 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
             # A reviewed group entry is a human's accepted text: keep it, matched
             # by group id, in place of that group's new draft.
             reviewed = {entry.group: entry for entry in bill.groups if entry.review.status == "reviewed"}
+            tags = tagged_sections(bill)
             groups: list[GroupEntry] = []
             seen: set[str] = set()
             for group in summary_out.groups:
-                # The model can repeat a group, or name a clause id this bill
-                # doesn't have. Neither may reach the site: keep the first
-                # entry per group, and only real ids (in order, no repeats).
+                # The model can repeat a group, or write about one no clause
+                # is tagged with. Neither may reach the site: keep the first
+                # entry per group, and only groups the clause tags back up.
                 if group.group in seen:
-                    print(f"  note: the summary named group {group.group!r} twice; kept the first")
+                    print(f"  note: the summary wrote group {group.group!r} twice; kept the first")
                     continue
                 seen.add(group.group)
                 if group.group in reviewed:
                     groups.append(reviewed.pop(group.group))
                     continue
-                known = [cid for cid in dict.fromkeys(group.clause_ids) if cid in clauses_by_id]
-                unknown = [cid for cid in group.clause_ids if cid not in clauses_by_id]
-                if unknown:
-                    print(f"  note: summary group {group.group!r} named unknown clause id(s) {', '.join(unknown)}; dropped")
-                if not known:
-                    print(f"  note: summary group {group.group!r} names no section of this bill; left out")
+                if not tags[group.group]:
+                    print(f"  note: the summary wrote about group {group.group!r}, but no section is tagged with it; left out")
                     continue
                 groups.append(
                     GroupEntry(
                         group=group.group,
                         text=Tri(en=group.text.en, sw=group.text.sw, sheng=group.text.sheng),
-                        clause_ids=known,
+                        clause_ids=list(tags[group.group]),
                         review=Review(status="draft"),
                     )
                 )
@@ -456,7 +472,9 @@ class _FakeClient:
         return [MessageBatchIndividualResponse.model_validate(line) for line in self._lines]
 
 
-def _run_offline(repo_root: Path, lines: list[dict], parse, batch_id: str | None = None) -> SimpleNamespace:
+def _run_offline(
+    repo_root: Path, lines: list[dict], parse, batch_id: str | None = None, summary_only: bool = False
+) -> SimpleNamespace:
     """Run run() in a temp copy of the repo against a fake client.
 
     The temp repo holds only what run() reads: the explainer prompt and the
@@ -474,7 +492,8 @@ def _run_offline(repo_root: Path, lines: list[dict], parse, batch_id: str | None
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             try:
-                code = run(root, FIXTURE_BILL_ID, batch_id=batch_id, client=client, poll_seconds=0)
+                code = run(root, FIXTURE_BILL_ID, batch_id=batch_id, client=client, poll_seconds=0,
+                           summary_only=summary_only)
             except Exception as error:
                 code = f"raised {type(error).__name__}: {error}"
 
@@ -502,7 +521,8 @@ def self_test(repo_root: Path) -> bool:
 
     # --- request building --------------------------------------------------
     requests = build_batch(repo_root, bill)
-    check("request count == len(clauses) + 1", len(requests) == len(bill.clauses) + 1)
+    check("one batch request per clause, and no summary in the batch", len(requests) == len(bill.clauses)
+          and all(request["custom_id"] != "summary" for request in requests))
 
     ids = [request["custom_id"] for request in requests]
     check("custom_ids are unique", len(ids) == len(set(ids)))
@@ -583,9 +603,17 @@ def self_test(repo_root: Path) -> bool:
     # draft. The new summary names trader and employee, and leaves out student
     # and transport. Expected: trader keeps the human's words, student is kept
     # even though the output omitted it, transport (a draft) is replaced,
-    # employee arrives as a fresh draft.
+    # employee arrives as a fresh draft whose sections come from the clause
+    # tags (c4 is tagged employee), never from the model.
     def tri_out(text: str) -> TriOut:
         return TriOut(en=text, sw=text, sheng=text)
+
+    def tagged_bill(**tags: list[str]) -> Bill:
+        """`reset_bill` with the given clause tags, e.g. c4=["employee"]."""
+        tagged = reset_bill(repo_root)
+        for clause in tagged.clauses:
+            clause.groups = list(tags.get(clause.id, []))
+        return tagged
 
     human_trader = GroupEntry(
         group="trader", text=Tri(en="human trader", sw="human trader", sheng="human trader"),
@@ -604,13 +632,13 @@ def self_test(repo_root: Path) -> bool:
         SummaryOut(
             summary=tri_out("new summary"),
             groups=[
-                GroupOut(group="trader", text=tri_out("new trader draft"), clause_ids=["c3"]),
-                GroupOut(group="employee", text=tri_out("new employee draft"), clause_ids=["c4"]),
+                GroupOut(group="trader", text=tri_out("new trader draft")),
+                GroupOut(group="employee", text=tri_out("new employee draft")),
             ],
         ),
     )
     trader_before, student_before = human_trader.model_copy(deep=True), human_student.model_copy(deep=True)
-    grouped = reset_bill(repo_root)
+    grouped = tagged_bill(c3=["trader"], c4=["employee"])
     grouped.groups = [human_trader, draft_transport, human_student]
     grouped_applied = apply(grouped, [summary_result])
     by_group = {entry.group: entry for entry in grouped.groups}
@@ -633,46 +661,70 @@ def self_test(repo_root: Path) -> bool:
         and by_group["employee"].text.en == "new employee draft",
         str(sorted(by_group)),
     )
+    employee = by_group.get("employee")
+    check("summary apply: a group's sections come from the clause tags",
+          employee is not None and employee.clause_ids == ["c4"], str(employee))
     check("summary apply: the summary itself is the new draft", grouped.summary.text.en == "new summary" and grouped.summary.review.status == "draft")
 
-    # --- the summary request sees section text, not just headings ------------
-    summary_request = next(request for request in requests if request["custom_id"] == "summary")
-    summary_user = summary_request["params"]["messages"][0]["content"]
+    # --- the summary request: full section text, plus the clause tags --------
+    summary_params = build_summary_params(repo_root, tagged_bill(c3=["trader"], c4=["employee", "trader"]))
+    summary_user = summary_params["messages"][0]["content"]
     longest = max(bill.clauses, key=lambda clause: len(clause.text))
     check(
         "summary request carries every section's id and full text",
         all(f'<section id="{clause.id}">' in summary_user for clause in bill.clauses) and longest.text in summary_user,
     )
+    check(
+        "summary request lists each group's tagged sections, and says when there are none",
+        "- trader: c3, c4" in summary_user and "- employee: c4" in summary_user
+        and "- student: no sections" in summary_user,
+        summary_user[:400],
+    )
+    check("summary schema forbids additional properties",
+          _all_objects_forbid_additional(summary_params["output_config"]["format"]["schema"]))
 
-    # --- a model's repeated groups and invented clause ids never get through -
+    # --- a repeated group, or one no clause is tagged with, never gets through
     messy = Applied(
         "summary",
         SummaryOut(
             summary=tri_out("summary"),
             groups=[
-                GroupOut(group="employee", text=tri_out("first employee"), clause_ids=["c3", "c999", "c3"]),
-                GroupOut(group="employee", text=tri_out("second employee"), clause_ids=["c4"]),
-                GroupOut(group="student", text=tri_out("made-up only"), clause_ids=["c999"]),
+                GroupOut(group="employee", text=tri_out("first employee")),
+                GroupOut(group="employee", text=tri_out("second employee")),
+                GroupOut(group="student", text=tri_out("no section is tagged student")),
             ],
         ),
     )
-    cleaned = reset_bill(repo_root)
+    cleaned = tagged_bill(c3=["employee"])
     with contextlib.redirect_stdout(io.StringIO()) as notes:
         apply(cleaned, [messy])
     by_group = {entry.group: entry for entry in cleaned.groups}
     check(
         "summary apply: a repeated group keeps only its first entry",
-        [entry.group for entry in cleaned.groups].count("employee") == 1 and by_group["employee"].text.en == "first employee",
+        [entry.group for entry in cleaned.groups].count("employee") == 1
+        and by_group.get("employee") is not None and by_group["employee"].text.en == "first employee",
         str([entry.group for entry in cleaned.groups]),
     )
-    check(
-        "summary apply: unknown clause ids are dropped, and repeats removed",
-        by_group["employee"].clause_ids == ["c3"],
-        str(by_group["employee"].clause_ids),
+    check("summary apply: a group no clause is tagged with is left out", "student" not in by_group, str(sorted(by_group)))
+    # 2 notes: employee repeated, student untagged.
+    check("summary apply: each repair is reported", notes.getvalue().count("note:") == 2, notes.getvalue())
+
+    # --- in one apply() call, the summary still sees the clause tags ---------
+    # Outcomes in the "wrong" order (summary first) must still give the
+    # summary's transport group the section tagged in the same call.
+    clause_result = Applied(
+        "c3",
+        ClauseOut(explanation=tri_out("c3 text"), groups=["transport"], suggested_articles=[],
+                  neutral_check=NeutralOut(ok=True, note="")),
     )
-    check("summary apply: a group naming no real section is left out", "student" not in by_group, str(sorted(by_group)))
-    # 4 notes: employee's c999, employee repeated, student's c999, student left out.
-    check("summary apply: each repair is reported", notes.getvalue().count("note:") == 4, notes.getvalue())
+    transport_summary = Applied(
+        "summary", SummaryOut(summary=tri_out("s"), groups=[GroupOut(group="transport", text=tri_out("t"))])
+    )
+    ordered = reset_bill(repo_root)
+    apply(ordered, [transport_summary, clause_result])
+    check("summary apply: clause tags from the same call are applied first",
+          [(entry.group, entry.clause_ids) for entry in ordered.groups] == [("transport", ["c3"])],
+          str([(entry.group, entry.clause_ids) for entry in ordered.groups]))
 
     # --- run() end to end, offline -------------------------------------------
     # A fake client stands in for the API, and a temp folder for the repo, so
@@ -680,12 +732,14 @@ def self_test(repo_root: Path) -> bool:
     # file, resume, the refusal retry and its failures, and the exit code.
     # Fixture lines: c3, c4 applied; c5 refused; c6 errored; c7 invalid.
     fixture_ok = next(outcome.parsed for outcome in outcomes if isinstance(outcome, Applied))
+    fake_summary = SummaryOut(summary=tri_out("fake summary"), groups=[])
     parse_calls: list[dict] = []
 
     def parse_ok(**kwargs):
         parse_calls.append(kwargs)
         # Only `parsed_output`, like the real SDK object; reading `.parsed` fails.
-        return SimpleNamespace(parsed_output=fixture_ok, stop_reason="end_turn", model="claude-opus-5-5")
+        answer = fake_summary if kwargs.get("output_format") is SummaryOut else fixture_ok
+        return SimpleNamespace(parsed_output=answer, stop_reason="end_turn", model="claude-opus-5-5")
 
     def parse_raises(**kwargs):
         raise ValueError("planted: the retry itself failed")
@@ -697,12 +751,21 @@ def self_test(repo_root: Path) -> bool:
 
     a = _run_offline(repo_root, first_three, parse_ok)
     check("run: a good retry gives exit 0", a.code == 0, f"{a.code} / {a.out}")
-    check("run: one batch submitted, with every request", a.created == [len(bill.clauses) + 1], str(a.created))
+    check("run: one batch submitted, with every clause", a.created == [len(bill.clauses)], str(a.created))
     check("run: the batch id is saved to disk the moment it's submitted", a.id_saved == _FAKE_BATCH_ID, str(a.id_saved))
     check("run: the raw results are saved (one line per result)", a.raw_lines == 3, str(a.raw_lines))
     c5 = next(clause for clause in a.bill.clauses if clause.id == "c5")
     check("run: the retried clause is saved as a draft", c5.explanation is not None and c5.review.status == "draft")
-    check("run: it says which model answered the retry", "c5 directly: answered by claude-opus-5-5" in a.out, a.out)
+    check("run: it says which model answered the retry", "c5 answered directly by claude-opus-5-5" in a.out, a.out)
+    check("run: phase 2 writes the summary as a draft", a.bill.summary is not None
+          and a.bill.summary.text.en == "fake summary" and a.bill.summary.review.status == "draft")
+    last = parse_calls[-1] if parse_calls else {}
+    check(
+        "run: the summary is asked for last, as a SummaryOut, with the clause tags in the request",
+        last.get("output_format") is SummaryOut
+        and "Sections already tagged for each group" in last.get("messages", [{}])[0].get("content", ""),
+        str(sorted(last)),
+    )
     sent = parse_calls[0] if parse_calls else {}
     check(
         "run: the retry gets the Pydantic class, the effort and the fallback, and no pre-built schema",
@@ -717,20 +780,27 @@ def self_test(repo_root: Path) -> bool:
     check("run --batch-id: resumes without submitting (or paying) again", resumed.created == [] and resumed.code == 0,
           f"{resumed.created} / {resumed.code}")
 
+    parse_calls.clear()
+    only = _run_offline(repo_root, first_three, parse_ok, summary_only=True)
+    check("run --summary-only: no batch, one direct call, summary written",
+          only.created == [] and only.code == 0 and len(parse_calls) == 1
+          and only.bill.summary.text.en == "fake summary",
+          f"{only.created} / {only.code} / {len(parse_calls)} / {only.out}")
+
     b = _run_offline(repo_root, lines, parse_raises)
     check("run: a retry that raises doesn't crash the run (exit 1)", b.code == 1, f"{b.code} / {b.out}")
     saved = {clause.id for clause in b.bill.clauses if clause.explanation is not None and clause.review.status == "draft"}
     check("run: the other results are still saved", {"c3", "c4"} <= saved, str(sorted(saved)))
     check(
         "run: every request not applied is listed",
-        all(f"NOT APPLIED {cid}" in b.out for cid in ("c5", "c6", "c7")),
+        all(f"NOT APPLIED {cid}" in b.out for cid in ("c5", "c6", "c7", "summary")),
         b.out,
     )
     check("run: the batch error keeps the API's type and message", "c6: errored: api_error: internal server error" in b.out, b.out)
 
     c = _run_offline(repo_root, first_three, parse_refused)
     check("run: a retry that's refused again is listed, not applied as None (exit 1)",
-          c.code == 1 and "NOT APPLIED c5: direct retry gave no usable output" in c.out, f"{c.code} / {c.out}")
+          c.code == 1 and "NOT APPLIED c5: direct call gave no usable output" in c.out, f"{c.code} / {c.out}")
 
     # --- nothing written -----------------------------------------------------
     check("the real bill file's SHA-256 is unchanged", sha256_file(real_path) == sha_before)
@@ -752,25 +822,51 @@ def self_test(repo_root: Path) -> bool:
 BATCH_RECORDS = ("pipeline", ".cache", "batches")
 
 
-def _retry_direct(client, custom_id: str, params: dict) -> Outcome:
-    """Retry one refused request directly, with the server-side fallback on.
+def _call_direct(client, custom_id: str, params: dict) -> Outcome:
+    """One direct (non-batch) request, with the server-side fallback on.
 
-    Never raises: anything that goes wrong becomes an `Errored`, so one bad
-    retry can't throw away every other result the batch already paid for.
+    Used for refused clauses and for the summary, which needs the clause tags
+    and so can't ride in the clause batch. Never raises: anything that goes
+    wrong becomes an `Errored`, so one bad call can't throw away every other
+    result the batch already paid for.
     """
     model_cls = SummaryOut if custom_id == "summary" else ClauseOut
     try:
         message = client.beta.messages.parse(output_format=model_cls, **retry_params(params))
-    except Exception as error:  # a second refusal, truncated JSON, a network drop...
-        return Errored(custom_id, f"direct retry failed: {type(error).__name__}: {error}")
+    except Exception as error:  # a refusal, truncated JSON, a network drop...
+        return Errored(custom_id, f"direct call failed: {type(error).__name__}: {error}")
     # The SDK puts the validated object on `parsed_output` (anthropic 1.8.0,
     # types/beta/parsed_beta_message.py). There is no `.parsed`.
     if message.stop_reason in ("refusal", "max_tokens") or message.parsed_output is None:
-        return Errored(custom_id, f"direct retry gave no usable output (stop_reason {message.stop_reason!r})")
+        return Errored(custom_id, f"direct call gave no usable output (stop_reason {message.stop_reason!r})")
     # With fallbacks on, a different model may have written this answer.
     # Say which, so the reviewer knows.
-    print(f"  retried {custom_id} directly: answered by {message.model}")
+    print(f"  {custom_id} answered directly by {message.model}")
     return Applied(custom_id, message.parsed_output)
+
+
+def _summarise(repo_root: Path, bill: Bill, client) -> list[Outcome]:
+    """Phase 2: the summary, written from the clause tags now on `bill`."""
+    if bill.summary is not None and bill.summary.review.status == "reviewed":
+        print("summary already reviewed; not asked for again")
+        return []
+    print("asking for the summary (direct call, from the clause tags)...")
+    outcome = _call_direct(client, "summary", build_summary_params(repo_root, bill))
+    apply(bill, [outcome])
+    return [outcome]
+
+
+def _report(applied: int, outcomes: list[Outcome], raw_path: Path | None) -> int:
+    """Print what landed and what didn't. Returns the exit code."""
+    print(f"applied {applied} results (status: draft)")
+    failures = [outcome for outcome in outcomes if not isinstance(outcome, Applied)]
+    for failure in failures:
+        print(f"  NOT APPLIED {failure.custom_id}: {getattr(failure, 'reason', type(failure).__name__)}")
+    if failures:
+        where = f" Raw batch results: {raw_path}" if raw_path else ""
+        print(f"{len(failures)} of {len(outcomes)} request(s) not applied.{where}")
+        return 1
+    return 0
 
 
 def run(
@@ -779,8 +875,14 @@ def run(
     batch_id: str | None = None,
     client=None,
     poll_seconds: float = 10,
+    summary_only: bool = False,
 ) -> int:
-    """Submit a batch for `bill_id` (or resume `batch_id`), wait, apply the results.
+    """Explain every clause in one batch, then write the summary from their tags.
+
+    Phase 1 submits the clause batch (or resumes `batch_id`), waits, retries
+    refusals directly and applies the results. Phase 2 asks for the summary
+    directly, because it needs the tags phase 1 produced. `summary_only`
+    skips phase 1 and redoes just the summary from the tags already saved.
 
     Returns the exit code: 0 only if every request was applied, 1 if any was
     not. Each one that wasn't is listed with its reason. `client` and
@@ -792,6 +894,12 @@ def run(
         client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
     path = bill_path(repo_root, bill_id)
     bill = load_bill(path)
+
+    if summary_only:
+        outcomes = _summarise(repo_root, bill, client)
+        save_bill(bill, path)
+        return _report(sum(isinstance(outcome, Applied) for outcome in outcomes), outcomes, None)
+
     requests = build_batch(repo_root, bill)
     records = repo_root.joinpath(*BATCH_RECORDS)
     records.mkdir(parents=True, exist_ok=True)
@@ -826,19 +934,15 @@ def run(
         if isinstance(outcome, NeedsDirect):
             params = by_custom_id.get(outcome.custom_id)
             outcomes[i] = (
-                _retry_direct(client, outcome.custom_id, params)
+                _call_direct(client, outcome.custom_id, params)
                 if params is not None
                 else Errored(outcome.custom_id, "refused, and no longer in the bill to retry")
             )
 
     applied = apply(bill, outcomes)
-    save_bill(bill, path)
-    print(f"applied {applied} results (status: draft)")
+    save_bill(bill, path)  # the clause results are safe on disk before phase 2
 
-    failures = [outcome for outcome in outcomes if not isinstance(outcome, Applied)]
-    for failure in failures:
-        print(f"  NOT APPLIED {failure.custom_id}: {getattr(failure, 'reason', type(failure).__name__)}")
-    if failures:
-        print(f"{len(failures)} of {len(outcomes)} request(s) not applied. Raw results: {raw_path}")
-        return 1
-    return 0
+    summary = _summarise(repo_root, bill, client)
+    applied += sum(isinstance(outcome, Applied) for outcome in summary)
+    save_bill(bill, path)
+    return _report(applied, outcomes + summary, raw_path)

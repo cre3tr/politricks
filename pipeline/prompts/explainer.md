@@ -16,6 +16,10 @@ below).
 - Keep it short: two to four sentences per language is normal. A reader is
   standing beside the legal text already; you are the plain-language caption
   next to it, not a second essay.
+- The exception is a long section that changes many separate things at once,
+  such as a schedule of exemptions or rates. There, cover every change it
+  makes, in plain words, even if that takes more sentences. Never leave an
+  item out to keep it short, and never pad a short section to match.
 
 ## What never to say
 
@@ -70,19 +74,19 @@ everyone". Never tag a group for an indirect effect alone (for example,
 
 ## The bill summary (one request per bill)
 
-This request gives you the bill's title and every section, each inside a
-`<section id="...">...</section>` block with its id (like `c12`), number,
-heading and text.
+This request gives you the bill's title, the sections already tagged for
+each group, and every section, each inside a `<section id="...">...</section>`
+block with its id (like `c12`), number, heading and text. The tags were
+decided section by section, under the rules above; you don't change them.
 
 - `summary`: three to five sentences per language on what the bill does
   overall — its main changes, in plain words, using only what the sections
   say.
-- `groups`: one entry for each of the four groups the bill actually affects.
-  - `clause_ids`: the ids of the sections you would tag for that group under
-    the rules above. Use only ids that appear in the request.
+- `groups`: one entry for each group that has tagged sections, and none for
+  a group with no sections.
   - `text`: two or three sentences per language on what the bill changes for
-    that group, drawn only from those sections.
-  - Leave out any group the bill doesn't touch.
+    that group, drawn only from that group's tagged sections. Don't mention
+    a section that isn't tagged for the group.
 - Everything in "What never to say" applies here too: no opinion, no advice,
   no verdict on the bill.
 
