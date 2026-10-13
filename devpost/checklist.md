@@ -438,3 +438,7 @@ Activity mode:
   - c3 is not a schedule but is now about 75% of the law's length, so the long-amendment rule may be stretching ordinary clauses.
   - The full-run projection, scaled by the 1.97× output growth, rises to about **$1.27** (was $0.71). It's an estimate: the summary's direct-call usage isn't logged yet.
 - **Groups:** c3 → employee and c32 → trader. The summary's groups now cover exactly the tagged sections (employee: c3, trader: c32), so the over-tagging seen in probe 2 is gone by design. They're thin because only three clauses carry tags in this preview.
+- **Learner decisions on the re-probe:**
+  - **Register:** English-led, but with plain words. The prompt now says to use everyday English, not the Act's English ("counted as income", not "deemed to accrue"; "pay", not "emoluments"; "a condition", not "a proviso"), with c3's legalistic line as "not like this" and a plain rewrite as "like this".
+  - **Length:** only a section listing many separate items (a schedule) covers every item. Any other section stays at two to four sentences, naming each change without restating its conditions word for word.
+  - **Swaps:** "nje ya", "inajumuisha", "kufikia" and "haichukuliwi" are normal Sheng, so an empty list was right. They're added to the prompt's examples of words not to flag. **This answers the under-reporting question: no defect.**

@@ -16,10 +16,13 @@ below).
 - Keep it short: two to four sentences per language is normal. A reader is
   standing beside the legal text already; you are the plain-language caption
   next to it, not a second essay.
-- The exception is a long section that changes many separate things at once,
-  such as a schedule of exemptions or rates. There, cover every change it
-  makes, in plain words, even if that takes more sentences. Never leave an
-  item out to keep it short, and never pad a short section to match.
+- The one exception is a section that lists many separate items, such as a
+  schedule of exemptions or rates. There, cover every item in plain words,
+  even if that takes more sentences, and never leave one out to keep it
+  short.
+- Any other section stays at two to four sentences, even when it makes two
+  or three changes: name each change in plain words, and don't restate the
+  law's conditions word for word. The legal text is right beside you.
 
 ## What never to say
 
@@ -67,6 +70,17 @@ stop, a colon or brackets instead.
   - **Keep a word once you've used it.** If the Sheng says "rent", it says
     "rent" every time, never switching to a Kiswahili word for the same thing.
     The same goes for "tax", "income", "returns" and every other term.
+  - **Everyday English, not the Act's English.** The English in Sheng is the
+    English people speak, not the law's terms: "counted as income from Kenya",
+    not "deemed to accrue in Kenya"; "pay", not "emoluments"; "a condition",
+    not "a proviso"; "end-of-contract payment", not just "gratuity". Keep a
+    legal term only when there is no plain word, and then say what it means
+    once.
+    Not like this: "haita-be deemed ku-accrue in Kenya au ku-be derived from
+    Kenya, to the extent that income ina-relate na duties..."
+    Like this: "Pay ya non-resident anayefanya kazi na national carrier
+    haitakuwa counted kama income from Kenya, kama ni ya kazi aliyofanya
+    outside Kenya."
   - **The legal meaning comes first.** Never pick a word that changes who the
     law applies to. Non-residents who receive rent are "non-residents", not
     tenants.
@@ -78,7 +92,8 @@ that is pure Kiswahili where a Nairobi speaker would more naturally say it in
 English, with that English. For example, `{"word": "wasio wakazi", "english":
 "non-residents"}` or `{"word": "mapato", "english": "income"}`. Don't list the
 glue words (`na`, `kwa`, `ya`, `ni`, `kama`, verb prefixes), and don't list a
-Kiswahili word that is the everyday word in Sheng too (like `sheria`). An
+Kiswahili word that is the everyday word in Sheng too (like `sheria`, `nje ya`,
+`inajumuisha`, `kufikia`, `haichukuliwi`). An
 empty list is the goal, so prefer fixing the Sheng to listing a swap. A human
 reviewer decides each word you list.
 
