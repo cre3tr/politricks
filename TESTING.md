@@ -31,7 +31,7 @@ prints `unchanged` / `CHANGED`. `check-build`: 117 / 141 / 47 for the three bill
 | K1 Offline self-test, writes nothing | `pipeline/politricks/{lint.py:294, review.py:418, generate.py:683, intake.py:245, verify.py:30}`; real-file SHA guard e.g. `lint.py:499` | `politricks <cmd> --self-test` | not on record | see Gaps |
 | K2 Planted-bug controls | scratch scripts (session scratchpad, not committed) | `uv run --project pipeline python <script>` | 2026-10-14 | ignore protection → 11 FAILs; fingerprint ignores tags → 4; lint treats bare "reviewed" as reviewed → 1; accept without fingerprint → 6; edit keeps fingerprint → 2; tampered vector → 1 |
 | K3 Fake client through the real `run()` | `generate.py:586` (`_FakeClient`), `:620` (`_run_offline`) | `generate --self-test` | 2026-10-13 | old `.parsed` retry → 9 FAILs |
-| K4 Fixtures built from a reset | `pipeline/politricks/selftest.py` (`reset_bill`, `fixture_bill`) | every self-test | not on record | see Gaps |
+| K4 Fixtures built from a reset | `pipeline/politricks/selftest.py` (`reset_bill`, `fixture_bill`) | every self-test | 2026-10-14 | real data changed (Ian accepted c1, c2) → 2 FAILs in generate, which built its batch from the real bill; fixed to use `reset_bill` → 0 |
 | K5 Byte-identical re-run | `intake.py:450` (check 7), `models.save_bill` | `intake --self-test` | 2026-10-13 | new field without re-save → 2 FAILs |
 | K6 Shared vectors, Python vs TS | `pipeline/tests/fixtures/review_hash_vectors.json`; checked in `review.py` (check "I. … shared vector") and `scripts/check-build.mjs` | `review --self-test`, `check-build` | 2026-10-14 | TS sort removed → 1 FAIL (c12-1); tampered expected value → Python FAIL |
 | K7 Built-artefact checks per card | `scripts/check-build.mjs` | `check-build <bill>` | 2026-10-14 | every card forced to the draft badge → 2 FAILs (c3, c4) |
@@ -49,7 +49,6 @@ prints `unchanged` / `CHANGED`. `check-build`: 117 / 141 / 47 for the three bill
 | Kind | Why it applies here | Risk if it stays missing |
 |---|---|---|
 | K1 control | Every self-test ends by asserting the real bill's SHA-256 is unchanged, but no one has planted a write to prove that assert can fail. | A self-test that writes to real data would pass silently, and real data holds Ian's reviews. |
-| K4 control | Fixtures claim independence from real data; that hasn't been shown by changing the data. | After Ian's first accepts, a self-test could start failing (or passing) for the wrong reason. |
 | K15 in the build | Lint isn't part of `npm run build` until slice 4 adds the TS matcher. | A banned phrase in a hand-edit ships unless lint is run by hand. |
 | K12, K13 tooling | The probe and control-copy scripts live in a session scratchpad. | The next bill's probe, or the next badge change, has to rebuild them, and may skip it. |
 | K12 for fetch | Kenya Law has returned 403 since 2026-10-07; live `fetch`/`verify`/`intake` can't be probed. | A changed Kenya Law page shape is found only when it's back. |
@@ -62,4 +61,5 @@ prints `unchanged` / `CHANGED`. `check-build`: 117 / 141 / 47 for the three bill
 
 ## Changes
 
+- 2026-10-14: K4 control on record. Ian's first accepts broke two generate checks that still read the real bill; they now use the reset copy. The gap row is removed.
 - 2026-10-14: created by the first `test-kinds` audit, after the review-fingerprint work. That audit ran the K7 and K9 controls for the first time on this change (both FAILed as they should). Its inventory also caught two faults in the skill's own search (see the skill's Temper note).

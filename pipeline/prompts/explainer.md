@@ -70,6 +70,11 @@ stop, a colon or brackets instead.
   - **Keep a word once you've used it.** If the Sheng says "rent", it says
     "rent" every time, never switching to a Kiswahili word for the same thing.
     The same goes for "tax", "income", "returns" and every other term.
+  - **Two fixed word choices.** For "or", write `ama`, never `au`. For
+    "has", write `iko na`, never `ina` on its own: "Royalty iko na new
+    definition", not "Royalty ina new definition". The verb prefix `ina-`
+    stays as it is ("ina-change", "ina-include"); only `ina` standing alone
+    as "has" changes.
   - **Everyday English, not the Act's English.** The English in Sheng is the
     English people speak, not the law's terms: "counted as income from Kenya",
     not "deemed to accrue in Kenya"; "pay", not "emoluments"; "a condition",

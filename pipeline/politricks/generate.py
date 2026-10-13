@@ -687,7 +687,10 @@ def self_test(repo_root: Path) -> bool:
 
     real_path = bill_path(repo_root, FIXTURE_BILL_ID)
     sha_before = sha256_file(real_path)
-    bill = load_bill(real_path)
+    # The reset copy, never the real bill: once Ian accepts clauses, the real
+    # bill's batch rightly leaves them out, and "one request per clause"
+    # would fail on healthy data (TESTING.md, K4).
+    bill = reset_bill(repo_root)
 
     # --- request building --------------------------------------------------
     requests = build_batch(repo_root, bill)
