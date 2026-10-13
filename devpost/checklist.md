@@ -35,7 +35,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   PRD ref: `prd.md > What It Does`
   Spec ref: `spec.md > Generate (Claude)`, `spec.md > Anthropic Messages API`
   Build: The learner creates the API key and puts it in `.env`. Run a tiny live call, a 1-item test batch, then `generate finance-act-2026`, retrying refusals directly.
-  Verify (mechanical): A tiny `claude-opus-5-5` call returns non-empty text. The 1-item batch returns output that parses with the Pydantic model; if the schema is rejected, record a revision and fall back to direct `messages.parse`. After `generate`, every clause has an `explanation`, no item is `"sample"`, all are `"draft"`, the Zod schema validates, and `check:build` shows "AI draft" on every card.
+  Verify (mechanical): A tiny `claude-sonnet-5-5` call returns non-empty text. The 1-item batch returns output that parses with the Pydantic model; if the schema is rejected, record a revision and fall back to direct `messages.parse`. After `generate`, every clause has an `explanation`, no item is `"sample"`, all are `"draft"`, the Zod schema validates, and `check:build` shows "AI draft" on every card.
   Learner check: Reload the Finance Bill page and read three clauses in Sheng. Do Claude's explanations sound natural and neutral? Note anything to fix in review.
   Commit: `Generate Claude explanations for Finance Act 2026`
 
@@ -275,3 +275,13 @@ Activity mode:
   - **Bill stages are now 15 days old** (`stage_checked_at: 2026-09-28` on both). The Tertiary bill still shows a closed deadline as open.
   - Three leftover agent worktrees under `.claude/worktrees/`. All have zero uncommitted changes, and their commits are on `build/poc`: two as ancestors, and `f4cce6b` marked already applied by `git cherry`. Safe to remove.
   - The banned list still holds 7 doctrine and 12 proposed phrases, from reading `banned.txt`.
+
+### Model: Sonnet 5.5, and housekeeping, 2026-10-13 (later)
+
+- **Model: `claude-opus-5-5` → `claude-sonnet-5-5` (learner decision).** This supersedes the Opus 5.5 entry above. Chosen for keeping closely to the brief: explain the clause, never editorialise. It's also the cheapest of Fable 5.1, Opus 5.5 and Sonnet 5.5 ($2/$10 per million tokens). "Better at following scope" is the learner's judgement, **not yet measured here**. Slice 2b's first real drafts, and lint's neutral flags on them, are the first evidence.
+  - **Compatibility, from the code:** Sonnet 5.5 rejects `thinking: {"type": "disabled"}` and a forced `tool_choice`; `generate.py` uses neither. The refusal fallback is the `fallbacks: "default"` form with beta `server-side-fallback-2026-07-01`, which is the only form Sonnet 5.5 accepts, and only on the Claude API. Batches still never carry it.
+  - **Effort:** Sonnet 5.5 already defaults to `high`. `EFFORT = "high"` stays explicit, so a later model swap can't quietly change it. Sonnet 5.5's effort levels are recalibrated from earlier Sonnets, so `high` vs `medium` is still worth a look at slice 2b.
+  - **Refusal categories:** Sonnet 5.5 declines in five categories (`cyber`, `bio`, `frontier_llm`, `reasoning_extraction`, `general_harms`). Contentious political text is unlikely to trip them, but the direct retry with the fallback exists for exactly that case. **Unknown until 2b runs.**
+  - **Spec:** the Model row now records the decision instead of "the most capable standard model". The cheaper option names `claude-haiku-5-5`, about 20× below Sonnet 5.5, replacing `claude-haiku-4-5` "about 5×". `spec.md` (6 places), `spec.html` (2) and slice 2b's verify line carry the new ID.
+- **Jev: dropped (learner decision).** It isn't part of PoliTricks. The register in `haven-ea/references/jev-use-cases.md` is untouched.
+- **Stale worktrees removed.** All three folders were deleted with the `\\?\` prefix (two held a `.venv`), then `git worktree prune`. Branches `worktree-agent-a14d…` and `…a697…` were deleted with `-d`. `…a799…` (`f4cce6b`) needed `-D` because it isn't an ancestor; `git cherry` had marked its patch as already applied first. `.vercel/` holds build output only, so there is still no linked Vercel project.

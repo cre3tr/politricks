@@ -46,12 +46,13 @@ from .models import (
 )
 from .selftest import FIXTURE_BILL_ID, Checker, reset_bill
 
-# Opus 5.5 replaced Opus 5 as the current Opus (and costs less). Its effort
-# defaults to "medium", one level below Opus 5's "high", so EFFORT is set
-# explicitly: these are legal explanations, and depth matters more than speed.
-# Opus 5.5 can't switch thinking off, and it rejects a forced tool_choice.
-# This file uses neither.
-MODEL = "claude-opus-5-5"
+# Sonnet 5.5, chosen for keeping closely to the brief: explain the clause and
+# never editorialise (learner decision, 2026-10-13; see checklist Revisions).
+# Its effort already defaults to "high". EFFORT is still set explicitly, so a
+# future model swap can't quietly change depth (Opus 5.5 defaults to
+# "medium"). Sonnet 5.5 can't switch thinking off with {"type": "disabled"},
+# and it rejects a forced tool_choice. This file uses neither.
+MODEL = "claude-sonnet-5-5"
 EFFORT = "high"
 MAX_TOKENS = 16000
 
