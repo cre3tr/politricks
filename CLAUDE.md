@@ -56,22 +56,22 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `run` 409
 - `check_json` 432
 
-**`pipeline/politricks/generate.py` (782):**
+**`pipeline/politricks/generate.py` (844):**
 - `MODEL` / `EFFORT` 60–61 (`claude-sonnet-5-5`; effort set explicitly so a model swap can't change it)
 - output models 86–117
 - `build_params` 144
-- `build_summary_params` 174
-- `build_batch` 196
-- `direct_params` 205
-- `retry_params` 217 (drops only `output_config.format`, keeps effort)
-- outcomes 242–272
-- `parse_batch_line` 275
-- `apply` 330 (keeps reviewed items and groups)
-- self-test fakes: `_FakeClient` 402, `_run_offline` 436
-- `self_test` 471
-- `BATCH_RECORDS` 690
-- `_retry_direct` 693 (never raises)
-- `run` 714: saves the batch id and raw results under `pipeline/.cache/batches/`, `--batch-id` resumes, exits 1 listing anything not applied
+- `build_summary_params` 174 (sends every section's full text in `<section id>` blocks)
+- `build_batch` 204
+- `direct_params` 213
+- `retry_params` 225 (drops only `output_config.format`, keeps effort)
+- outcomes 250–280
+- `parse_batch_line` 283
+- `apply` 338 (keeps reviewed items and groups; drops repeated groups and unknown clause ids, with a note)
+- self-test fakes: `_FakeClient` 425, `_run_offline` 459
+- `self_test` 494
+- `BATCH_RECORDS` 752
+- `_retry_direct` 755 (never raises)
+- `run` 776: saves the batch id and raw results under `pipeline/.cache/batches/`, `--batch-id` resumes, exits 1 listing anything not applied
 
 **`pipeline/politricks/intake.py` (454):**
 - `_clause_count` 51

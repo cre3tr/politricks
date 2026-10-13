@@ -172,11 +172,19 @@ def build_params(repo_root: Path, bill: Bill, clause: Clause) -> dict:
 
 
 def build_summary_params(repo_root: Path, bill: Bill) -> dict:
-    """The Messages API params for the bill's overall summary + group blurbs."""
+    """The Messages API params for the bill's overall summary + group blurbs.
+
+    Sends every section's full text, not just its heading: a summary and
+    group notes written from headings alone would be guesses. The Finance Act
+    adds about 14k input tokens to this one request.
+    """
     schema = SummaryOut.model_json_schema()
     assert _all_objects_forbid_additional(schema), "SummaryOut schema must forbid extra properties everywhere"
-    sections = "\n".join(f"{clause.id}: {clause.number}. {clause.heading}" for clause in bill.clauses)
-    user_text = f"Bill: {bill.title}\n\nSections in this bill:\n{sections}"
+    sections = "\n\n".join(
+        f'<section id="{clause.id}">\n{clause.number}. {clause.heading}\n{clause.text}\n</section>'
+        for clause in bill.clauses
+    )
+    user_text = f"Bill: {bill.title}\n\nThis is the bill summary request. Every section of the bill:\n\n{sections}"
     return {
         "model": MODEL,
         "max_tokens": MAX_TOKENS,
@@ -357,18 +365,33 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
             # by group id, in place of that group's new draft.
             reviewed = {entry.group: entry for entry in bill.groups if entry.review.status == "reviewed"}
             groups: list[GroupEntry] = []
+            seen: set[str] = set()
             for group in summary_out.groups:
+                # The model can repeat a group, or name a clause id this bill
+                # doesn't have. Neither may reach the site: keep the first
+                # entry per group, and only real ids (in order, no repeats).
+                if group.group in seen:
+                    print(f"  note: the summary named group {group.group!r} twice; kept the first")
+                    continue
+                seen.add(group.group)
                 if group.group in reviewed:
                     groups.append(reviewed.pop(group.group))
-                else:
-                    groups.append(
-                        GroupEntry(
-                            group=group.group,
-                            text=Tri(en=group.text.en, sw=group.text.sw, sheng=group.text.sheng),
-                            clause_ids=list(group.clause_ids),
-                            review=Review(status="draft"),
-                        )
+                    continue
+                known = [cid for cid in dict.fromkeys(group.clause_ids) if cid in clauses_by_id]
+                unknown = [cid for cid in group.clause_ids if cid not in clauses_by_id]
+                if unknown:
+                    print(f"  note: summary group {group.group!r} named unknown clause id(s) {', '.join(unknown)}; dropped")
+                if not known:
+                    print(f"  note: summary group {group.group!r} names no section of this bill; left out")
+                    continue
+                groups.append(
+                    GroupEntry(
+                        group=group.group,
+                        text=Tri(en=group.text.en, sw=group.text.sw, sheng=group.text.sheng),
+                        clause_ids=known,
+                        review=Review(status="draft"),
                     )
+                )
             # Reviewed groups the new output left out are still kept (at the end).
             groups.extend(reviewed.values())
             bill.groups = groups
@@ -384,7 +407,7 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
         )
         clause.review = Review(status="draft")
         clause.neutral_check = NeutralCheck(ok=clause_out.neutral_check.ok, note=clause_out.neutral_check.note)
-        clause.groups = list(clause_out.groups)
+        clause.groups = list(dict.fromkeys(clause_out.groups))  # no repeats
         clause.suggested_articles = []
         applied += 1
     return applied
@@ -611,6 +634,45 @@ def self_test(repo_root: Path) -> bool:
         str(sorted(by_group)),
     )
     check("summary apply: the summary itself is the new draft", grouped.summary.text.en == "new summary" and grouped.summary.review.status == "draft")
+
+    # --- the summary request sees section text, not just headings ------------
+    summary_request = next(request for request in requests if request["custom_id"] == "summary")
+    summary_user = summary_request["params"]["messages"][0]["content"]
+    longest = max(bill.clauses, key=lambda clause: len(clause.text))
+    check(
+        "summary request carries every section's id and full text",
+        all(f'<section id="{clause.id}">' in summary_user for clause in bill.clauses) and longest.text in summary_user,
+    )
+
+    # --- a model's repeated groups and invented clause ids never get through -
+    messy = Applied(
+        "summary",
+        SummaryOut(
+            summary=tri_out("summary"),
+            groups=[
+                GroupOut(group="employee", text=tri_out("first employee"), clause_ids=["c3", "c999", "c3"]),
+                GroupOut(group="employee", text=tri_out("second employee"), clause_ids=["c4"]),
+                GroupOut(group="student", text=tri_out("made-up only"), clause_ids=["c999"]),
+            ],
+        ),
+    )
+    cleaned = reset_bill(repo_root)
+    with contextlib.redirect_stdout(io.StringIO()) as notes:
+        apply(cleaned, [messy])
+    by_group = {entry.group: entry for entry in cleaned.groups}
+    check(
+        "summary apply: a repeated group keeps only its first entry",
+        [entry.group for entry in cleaned.groups].count("employee") == 1 and by_group["employee"].text.en == "first employee",
+        str([entry.group for entry in cleaned.groups]),
+    )
+    check(
+        "summary apply: unknown clause ids are dropped, and repeats removed",
+        by_group["employee"].clause_ids == ["c3"],
+        str(by_group["employee"].clause_ids),
+    )
+    check("summary apply: a group naming no real section is left out", "student" not in by_group, str(sorted(by_group)))
+    # 4 notes: employee's c999, employee repeated, student's c999, student left out.
+    check("summary apply: each repair is reported", notes.getvalue().count("note:") == 4, notes.getvalue())
 
     # --- run() end to end, offline -------------------------------------------
     # A fake client stands in for the API, and a temp folder for the repo, so
