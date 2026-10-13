@@ -23,7 +23,7 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 ```
 
 **Pipeline commands:**
-- `intake`, `fetch`, `probe`, `extract [--check-json]`, `samples`, `generate`, `lint [id]`, `review <id>`, `verify`.
+- `intake`, `fetch`, `probe`, `extract [--check-json]`, `samples`, `generate [--batch-id X] [--summary-only] [--tags-only]`, `lint [id]`, `review <id>`, `verify`.
 - Self-tests: `lint`, `review`, `intake`, `generate` and `verify` each take `--self-test`. All are offline, write nothing, and assert the real bill files' SHA-256 is unchanged.
 - **Before committing:** every self-test, then `lint`, then `npm run build`, then `check-build` for each bill.
 
@@ -41,6 +41,14 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
   - Write any backslash-bearing pattern with the Write tool, never through a Bash heredoc. A `\b` once landed as a 0x08 byte.
   - Worktrees holding `pipeline/.venv` exceed MAX_PATH. Delete them with a `\\?\`-prefixed path, then `git worktree prune`.
 - **The Browser pane** paints no frames while hidden, so rAF and screenshots stall. Measure styles and layout instead.
+- **Live generation (Sonnet 5.5, Batches):**
+  - **Timing:** a batch takes 2–7 minutes, whether it holds 1 or 55 requests. The summary is a separate direct call afterwards.
+  - **Measured cost** for the Finance Act (55 clauses): $0.62 for the explanation batch and $0.08 for a tags-only pass. Thinking is most of the output on explanations and little on tags, so never estimate tags from explanations.
+  - **Logging a background run:** `uv run --env-file .env --project pipeline python -u -m politricks.cli generate <id>`. Without `-u`, piped output stays empty until the run exits.
+  - **Recovering a run:** batch ids and raw results are in `pipeline/.cache/batches/` (gitignored). A stopped run resumes free with `--batch-id`, plus `--tags-only` for a tags batch.
+  - **Spending:** a run with `ANTHROPIC_API_KEY` spends real credit. Probe first (filter `build_batch` to a few ids) and ask Ian before a full run.
+- **No em dashes** in UI copy, data labels or the explainer prompt (Ian's call). Clause text keeps its own, because it's verbatim and fingerprinted.
+- **Never set `review.status: "reviewed"` from code or a script.** Only `politricks review` does that, driven by Ian.
 - **Bill JSON is written deterministically** (`models.save_bill`). Re-running a stage must give byte-identical output, and a diff means something changed.
 
 ## Line maps (files over 300 lines)

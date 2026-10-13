@@ -29,7 +29,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   Learner check: Open `http://localhost:4321/bills/finance-act-2026` in a phone-sized window. Read a sample clause in Sheng beside the legal text, flip the whole page to Kiswahili, then flip one card back to Sheng. Does it look and sound like PoliTricks? (The Sheng here is sample text; you'll review the real generated Sheng in slice 3.)
   Commit: `Show Finance Bill clauses beside sample trilingual explanations`
 
-- [ ] **2b. Real Claude explanations for every clause**
+- [x] **2b. Real Claude explanations for every clause**
   Becomes usable: Every Finance Bill clause and the summary carry Claude-generated EN/SW/Sheng explanations (badged *AI draft*), replacing the samples.
   Why now: This runs as soon as the API key exists, and before slice 3's review gate, which needs real drafts to review. It proves the second risk: Claude via Batches with structured outputs.
   PRD ref: `prd.md > What It Does`
@@ -498,3 +498,28 @@ Activity mode:
   - c36 is the excise schedule. Its vehicle item is a 50% rate on antique, vintage and classic cars, not boda, matatu or delivery vehicles.
   - c55 (the fuel levy cut) is the intended case.
   - Drop or keep each in `review`.
+
+### Slice 2b ticked, and checkpoint before compaction, 2026-10-14
+
+- **Learner check passed:** "Sheng reads well" (learner, 2026-10-14). **Slice 2b is ticked.**
+- **State at this checkpoint:**
+  - `build/poc` = `main`, both fast-forwarded. Still no git remote, so nothing is pushed or backed up off this machine.
+  - The Finance Act carries 55 clause drafts, a summary draft and 3 group drafts, all `draft`. Nothing is `reviewed`.
+  - The batch records are in `pipeline/.cache/batches/` (gitignored), for the explanations (`finance-act-2026.batch-id`) and the tags pass (`finance-act-2026.tags.batch-id`).
+  - The dev server was started with `preview_start politricks-dev`.
+- **Credit:** $5 topped up (Pro plan; API credit is separate from the plan). About $1.15 spent, an estimate:
+  - Measured: full batch $0.618, tags batch $0.081, probe 2 about $0.084.
+  - Not logged: the direct summary calls, about $0.10 each.
+- **Next, in order:**
+  1. **Slice 3 review gate.** The learner walks the 56 drafts plus 3 group notes in `politricks review finance-act-2026`, prunes the 12 proposed banned phrases, decides the c33/c36 transport tags, and adds hand context where the law text gives none (e.g. what the c55 levy is charged on).
+  2. **Decide before the first accept:** the reviewed-badge hash proposal (tie "Reviewed" to the text the human saw). Cold-review S4 (reruns overwrite edited drafts; reviewed clauses are re-paid) and S5 (reviewed groups keep stale `clause_ids`) hang on it.
+  3. Still open from the start of this session:
+     - re-check both live bills' stages from Parliament (Tertiary still shows an expired deadline as open; Kenya Law has returned 403 since 2026-10-07);
+     - slice 6 civic facts;
+     - a git remote (the learner's call; slice 7 Vercel needs one);
+     - lint doesn't gate `npm run build` until slice 4.
+  4. The Tertiary and Public Participation bills have no explanations yet. Cost them from the Finance Act's measured $0.62 for 55 clauses, scaled by clause count and length.
+- **Deferred cold-review items:**
+  - S2: cheap recovery for errored or expired clauses (today that means a fresh run).
+  - S5: refresh reviewed groups' `clause_ids`.
+  - The direct calls' usage isn't logged. Add that before costing the next bill.
