@@ -22,10 +22,15 @@ messages.parse`, which does accept it.
 
 from __future__ import annotations
 
+import contextlib
+import io
 import json
+import shutil
+import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Union
 
 from pydantic import BaseModel, ConfigDict, ValidationError
@@ -286,7 +291,12 @@ def parse_batch_line(obj: dict) -> Outcome:
     custom_id = response.custom_id
     result = response.result
 
-    if result.type in ("errored", "expired", "canceled"):
+    if result.type == "errored":
+        # Keep the API's own error type and message: "errored" alone can't
+        # tell an overloaded server from a request we built wrong.
+        error = result.error.error
+        return Errored(custom_id, f"errored: {error.type}: {error.message}")
+    if result.type in ("expired", "canceled"):
         return Errored(custom_id, result.type)
 
     # result.type == "succeeded" from here on.
@@ -297,6 +307,10 @@ def parse_batch_line(obj: dict) -> Outcome:
         # Truncated output can never be valid JSON for our schema — treat it
         # as a hard failure rather than trying (and likely failing) to parse it.
         return Errored(custom_id, "max_tokens")
+    if message.stop_reason not in ("end_turn", "stop_sequence"):
+        # e.g. pause_turn or model_context_window_exceeded: say which, rather
+        # than letting it surface later as a confusing JSON error.
+        return Invalid(custom_id, f"unexpected stop_reason {message.stop_reason!r}")
 
     # `stop_reason` is checked before content is read (spec.md > Generate),
     # so by this point we expect ordinary structured-output text. Thinking
@@ -380,6 +394,78 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
 # Self-test: proves the above offline, against a recorded fixture. No network,
 # no Anthropic client is ever constructed.
 # --------------------------------------------------------------------------
+
+
+_FAKE_BATCH_ID = "msgbatch_selftest"
+
+
+class _FakeClient:
+    """Just enough of `anthropic.Anthropic` for run(): batches and beta parse.
+
+    Results come from recorded fixture lines, turned into the SDK's own
+    response type, as the real `batches.results()` would give them.
+    """
+
+    def __init__(self, lines: list[dict], parse) -> None:
+        self.created: list[int] = []
+        self._lines = lines
+        self.messages = SimpleNamespace(
+            batches=SimpleNamespace(create=self._create, retrieve=self._retrieve, results=self._results)
+        )
+        self.beta = SimpleNamespace(messages=SimpleNamespace(parse=parse))
+
+    def _batch(self, status: str) -> SimpleNamespace:
+        counts = SimpleNamespace(model_dump=lambda: {"fake": len(self._lines)})
+        return SimpleNamespace(id=_FAKE_BATCH_ID, processing_status=status, request_counts=counts)
+
+    def _create(self, requests: list[dict]) -> SimpleNamespace:
+        self.created.append(len(requests))
+        return self._batch("in_progress")
+
+    def _retrieve(self, batch_id: str) -> SimpleNamespace:
+        return self._batch("ended")
+
+    def _results(self, batch_id: str) -> list:
+        from anthropic.types.messages.message_batch_individual_response import (
+            MessageBatchIndividualResponse,
+        )
+
+        return [MessageBatchIndividualResponse.model_validate(line) for line in self._lines]
+
+
+def _run_offline(repo_root: Path, lines: list[dict], parse, batch_id: str | None = None) -> SimpleNamespace:
+    """Run run() in a temp copy of the repo against a fake client.
+
+    The temp repo holds only what run() reads: the explainer prompt and the
+    test bill (`reset_bill`, never the real file). Its exceptions are caught
+    and returned as the code, so a crash fails a check instead of the test.
+    """
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        prompts = root / "pipeline" / "prompts"
+        prompts.mkdir(parents=True)
+        shutil.copy(repo_root / "pipeline" / "prompts" / "explainer.md", prompts)
+        save_bill(reset_bill(repo_root), bill_path(root, FIXTURE_BILL_ID))
+
+        client = _FakeClient(lines, parse)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            try:
+                code = run(root, FIXTURE_BILL_ID, batch_id=batch_id, client=client, poll_seconds=0)
+            except Exception as error:
+                code = f"raised {type(error).__name__}: {error}"
+
+        records = root.joinpath(*BATCH_RECORDS)
+        id_file = records / f"{FIXTURE_BILL_ID}.batch-id"
+        raw_file = records / f"{_FAKE_BATCH_ID}.jsonl"
+        return SimpleNamespace(
+            code=code,
+            out=out.getvalue(),
+            bill=load_bill(bill_path(root, FIXTURE_BILL_ID)),
+            created=client.created,
+            id_saved=id_file.read_text(encoding="utf-8").strip() if id_file.exists() else None,
+            raw_lines=len(raw_file.read_text(encoding="utf-8").splitlines()) if raw_file.exists() else 0,
+        )
 
 
 def self_test(repo_root: Path) -> bool:
@@ -526,6 +612,64 @@ def self_test(repo_root: Path) -> bool:
     )
     check("summary apply: the summary itself is the new draft", grouped.summary.text.en == "new summary" and grouped.summary.review.status == "draft")
 
+    # --- run() end to end, offline -------------------------------------------
+    # A fake client stands in for the API, and a temp folder for the repo, so
+    # run()'s own code is what's tested: the saved batch id, the raw results
+    # file, resume, the refusal retry and its failures, and the exit code.
+    # Fixture lines: c3, c4 applied; c5 refused; c6 errored; c7 invalid.
+    fixture_ok = next(outcome.parsed for outcome in outcomes if isinstance(outcome, Applied))
+    parse_calls: list[dict] = []
+
+    def parse_ok(**kwargs):
+        parse_calls.append(kwargs)
+        # Only `parsed_output`, like the real SDK object; reading `.parsed` fails.
+        return SimpleNamespace(parsed_output=fixture_ok, stop_reason="end_turn", model="claude-opus-5-5")
+
+    def parse_raises(**kwargs):
+        raise ValueError("planted: the retry itself failed")
+
+    def parse_refused(**kwargs):
+        return SimpleNamespace(parsed_output=None, stop_reason="refusal", model=MODEL)
+
+    first_three = lines[:3]  # c3, c4, c5 (the refusal)
+
+    a = _run_offline(repo_root, first_three, parse_ok)
+    check("run: a good retry gives exit 0", a.code == 0, f"{a.code} / {a.out}")
+    check("run: one batch submitted, with every request", a.created == [len(bill.clauses) + 1], str(a.created))
+    check("run: the batch id is saved to disk the moment it's submitted", a.id_saved == _FAKE_BATCH_ID, str(a.id_saved))
+    check("run: the raw results are saved (one line per result)", a.raw_lines == 3, str(a.raw_lines))
+    c5 = next(clause for clause in a.bill.clauses if clause.id == "c5")
+    check("run: the retried clause is saved as a draft", c5.explanation is not None and c5.review.status == "draft")
+    check("run: it says which model answered the retry", "c5 directly: answered by claude-opus-5-5" in a.out, a.out)
+    sent = parse_calls[0] if parse_calls else {}
+    check(
+        "run: the retry gets the Pydantic class, the effort and the fallback, and no pre-built schema",
+        sent.get("output_format") is ClauseOut
+        and sent.get("output_config", {}).get("effort") == EFFORT
+        and "format" not in sent.get("output_config", {})
+        and sent.get("fallbacks") == "default",
+        str(sorted(sent)),
+    )
+
+    resumed = _run_offline(repo_root, first_three, parse_ok, batch_id=_FAKE_BATCH_ID)
+    check("run --batch-id: resumes without submitting (or paying) again", resumed.created == [] and resumed.code == 0,
+          f"{resumed.created} / {resumed.code}")
+
+    b = _run_offline(repo_root, lines, parse_raises)
+    check("run: a retry that raises doesn't crash the run (exit 1)", b.code == 1, f"{b.code} / {b.out}")
+    saved = {clause.id for clause in b.bill.clauses if clause.explanation is not None and clause.review.status == "draft"}
+    check("run: the other results are still saved", {"c3", "c4"} <= saved, str(sorted(saved)))
+    check(
+        "run: every request not applied is listed",
+        all(f"NOT APPLIED {cid}" in b.out for cid in ("c5", "c6", "c7")),
+        b.out,
+    )
+    check("run: the batch error keeps the API's type and message", "c6: errored: api_error: internal server error" in b.out, b.out)
+
+    c = _run_offline(repo_root, first_three, parse_refused)
+    check("run: a retry that's refused again is listed, not applied as None (exit 1)",
+          c.code == 1 and "NOT APPLIED c5: direct retry gave no usable output" in c.out, f"{c.code} / {c.out}")
+
     # --- nothing written -----------------------------------------------------
     check("the real bill file's SHA-256 is unchanged", sha256_file(real_path) == sha_before)
 
@@ -533,56 +677,106 @@ def self_test(repo_root: Path) -> bool:
 
 
 # --------------------------------------------------------------------------
-# Live entry point. NOT exercised in slice 2a — no ANTHROPIC_API_KEY and no
-# network egress exist in this environment. Written so slice 2b has
-# something real to run the moment a key exists, not left as a stub.
+# Live entry point. The self-test drives it end to end with a fake client
+# (no network). Against the real API, only a 1-request probe of build_batch
+# and parse_batch_line has run so far (2026-10-13), not run() itself.
 # --------------------------------------------------------------------------
 
+# Where a run keeps what it paid for, under repo_root (gitignored via
+# pipeline/.cache/): "<bill-id>.batch-id" is written the moment a batch is
+# submitted, and "<batch-id>.jsonl" holds the raw results before anything
+# parses them. Anthropic keeps results for 29 days, so with the id on disk a
+# crash or Ctrl-C costs a resume, not a second payment.
+BATCH_RECORDS = ("pipeline", ".cache", "batches")
 
-def run(repo_root: Path, bill_id: str) -> None:
-    """Submit a batch for `bill_id`, poll it to completion, apply the results.
 
-    [UNKNOWN — unverified]: this function has never actually been run. It is
-    built directly from the installed SDK's own type signatures (confirmed
-    2026-09-25 against anthropic==1.8.0), not from guesswork, but "the types
-    line up" is not the same claim as "this has executed against the real
-    API". Treat the first live run as the actual test of this function.
+def _retry_direct(client, custom_id: str, params: dict) -> Outcome:
+    """Retry one refused request directly, with the server-side fallback on.
+
+    Never raises: anything that goes wrong becomes an `Errored`, so one bad
+    retry can't throw away every other result the batch already paid for.
     """
-    import anthropic
+    model_cls = SummaryOut if custom_id == "summary" else ClauseOut
+    try:
+        message = client.beta.messages.parse(output_format=model_cls, **retry_params(params))
+    except Exception as error:  # a second refusal, truncated JSON, a network drop...
+        return Errored(custom_id, f"direct retry failed: {type(error).__name__}: {error}")
+    # The SDK puts the validated object on `parsed_output` (anthropic 1.8.0,
+    # types/beta/parsed_beta_message.py). There is no `.parsed`.
+    if message.stop_reason in ("refusal", "max_tokens") or message.parsed_output is None:
+        return Errored(custom_id, f"direct retry gave no usable output (stop_reason {message.stop_reason!r})")
+    # With fallbacks on, a different model may have written this answer.
+    # Say which, so the reviewer knows.
+    print(f"  retried {custom_id} directly: answered by {message.model}")
+    return Applied(custom_id, message.parsed_output)
 
-    client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
+
+def run(
+    repo_root: Path,
+    bill_id: str,
+    batch_id: str | None = None,
+    client=None,
+    poll_seconds: float = 10,
+) -> int:
+    """Submit a batch for `bill_id` (or resume `batch_id`), wait, apply the results.
+
+    Returns the exit code: 0 only if every request was applied, 1 if any was
+    not. Each one that wasn't is listed with its reason. `client` and
+    `poll_seconds` exist so the self-test can drive this offline with a fake.
+    """
+    if client is None:
+        import anthropic
+
+        client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
     path = bill_path(repo_root, bill_id)
     bill = load_bill(path)
-
     requests = build_batch(repo_root, bill)
-    batch = client.messages.batches.create(requests=requests)
-    print(f"submitted batch {batch.id} ({len(requests)} requests)")
+    records = repo_root.joinpath(*BATCH_RECORDS)
+    records.mkdir(parents=True, exist_ok=True)
+
+    if batch_id is None:
+        batch = client.messages.batches.create(requests=requests)
+        batch_id = batch.id
+        (records / f"{bill_id}.batch-id").write_text(batch_id + "\n", encoding="utf-8")
+        print(f"submitted batch {batch_id} ({len(requests)} requests)")
+        print(f"  if this stops, resume without paying again: politricks generate {bill_id} --batch-id {batch_id}")
+    else:
+        print(f"resuming batch {batch_id} (nothing new is submitted)")
+        batch = client.messages.batches.retrieve(batch_id)
 
     while batch.processing_status != "ended":
-        time.sleep(10)
-        batch = client.messages.batches.retrieve(batch.id)
+        time.sleep(poll_seconds)
+        batch = client.messages.batches.retrieve(batch_id)
         print(f"  status: {batch.processing_status}")
+    print(f"batch ended: {batch.request_counts.model_dump()}")
 
-    outcomes: list[Outcome] = []
-    needs_direct: list[str] = []
-    for response in client.messages.batches.results(batch.id):
-        outcome = parse_batch_line(response.model_dump(mode="json"))
-        if isinstance(outcome, NeedsDirect):
-            needs_direct.append(outcome.custom_id)
-        outcomes.append(outcome)
+    # Save the raw results BEFORE parsing anything, so a parsing bug can never
+    # cost us what the API already returned.
+    raw = [response.model_dump(mode="json") for response in client.messages.batches.results(batch_id)]
+    raw_path = records / f"{batch_id}.jsonl"
+    raw_path.write_text("".join(json.dumps(line, ensure_ascii=False) + "\n" for line in raw), encoding="utf-8")
+    outcomes = [parse_batch_line(line) for line in raw]
 
     # Refusals are retried one at a time, directly, with the fallback on —
     # never inside a batch, which rejects the fallback option outright.
     by_custom_id = {request["custom_id"]: request["params"] for request in requests}
-    for custom_id in needs_direct:
-        # A Pydantic class (not the pre-built schema) is what populates
-        # `.parsed` on the response; see retry_params.
-        params = retry_params(by_custom_id[custom_id])
-        model_cls = SummaryOut if custom_id == "summary" else ClauseOut
-        parsed_message = client.beta.messages.parse(output_format=model_cls, **params)
-        outcomes = [o for o in outcomes if not (isinstance(o, NeedsDirect) and o.custom_id == custom_id)]
-        outcomes.append(Applied(custom_id, parsed_message.parsed))
+    for i, outcome in enumerate(outcomes):
+        if isinstance(outcome, NeedsDirect):
+            params = by_custom_id.get(outcome.custom_id)
+            outcomes[i] = (
+                _retry_direct(client, outcome.custom_id, params)
+                if params is not None
+                else Errored(outcome.custom_id, "refused, and no longer in the bill to retry")
+            )
 
     applied = apply(bill, outcomes)
     save_bill(bill, path)
     print(f"applied {applied} results (status: draft)")
+
+    failures = [outcome for outcome in outcomes if not isinstance(outcome, Applied)]
+    for failure in failures:
+        print(f"  NOT APPLIED {failure.custom_id}: {getattr(failure, 'reason', type(failure).__name__)}")
+    if failures:
+        print(f"{len(failures)} of {len(outcomes)} request(s) not applied. Raw results: {raw_path}")
+        return 1
+    return 0

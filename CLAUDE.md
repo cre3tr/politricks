@@ -56,27 +56,30 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `run` 409
 - `check_json` 432
 
-**`pipeline/politricks/generate.py` (588):**
-- `MODEL` / `EFFORT` 55–56 (`claude-sonnet-5-5`; effort set explicitly so a model swap can't change it)
-- output models 81–112
-- `build_params` 139
-- `build_summary_params` 169
-- `build_batch` 191
-- `direct_params` 200
-- `retry_params` 212 (drops only `output_config.format`, keeps effort)
-- outcomes 237–267
-- `parse_batch_line` 270
-- `apply` 316 (keeps reviewed items and groups)
-- `self_test` 385
-- `run` 542, never run live yet
+**`pipeline/politricks/generate.py` (782):**
+- `MODEL` / `EFFORT` 60–61 (`claude-sonnet-5-5`; effort set explicitly so a model swap can't change it)
+- output models 86–117
+- `build_params` 144
+- `build_summary_params` 174
+- `build_batch` 196
+- `direct_params` 205
+- `retry_params` 217 (drops only `output_config.format`, keeps effort)
+- outcomes 242–272
+- `parse_batch_line` 275
+- `apply` 330 (keeps reviewed items and groups)
+- self-test fakes: `_FakeClient` 402, `_run_offline` 436
+- `self_test` 471
+- `BATCH_RECORDS` 690
+- `_retry_direct` 693 (never raises)
+- `run` 714: saves the batch id and raw results under `pipeline/.cache/batches/`, `--batch-id` resumes, exits 1 listing anything not applied
 
-**`pipeline/politricks/intake.py` (447):**
+**`pipeline/politricks/intake.py` (454):**
 - `_clause_count` 51
 - `_remove_if_incomplete` 59
-- `_first_load` 85
-- `run` 113
-- `_blank_pdf` 212
-- `self_test` 238
+- `_first_load` 85 (raises if generate leaves requests unapplied)
+- `run` 120
+- `_blank_pdf` 219
+- `self_test` 245
 
 **`pipeline/politricks/lint.py` (440):**
 - `Finding` 69

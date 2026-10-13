@@ -299,3 +299,31 @@ Activity mode:
 - **Real input size from `count_tokens`** over the exact 56 requests `build_batch` makes: **119,343 input tokens**. Per request: c1 1,876, c2 2,444, summary 3,098. The pre-run guess of ~60k was about 2× low, probably because the output schema and the system prompt count toward every request.
   - Re-estimate at batch rates: input $0.12, plus output $0.43–$1.13 if output runs 85k–225k tokens. Total **$0.54–$1.24**. The output range is still assumed.
   - Scripts used: `tiny_call.py` and `count_tokens.py` in the session scratchpad (not committed). The second sends only the counted fields of each batch request.
+
+### Probe batch, adversarial review, blocker fixes, 2026-10-13
+
+- **1-request probe batch (clause c1), through the real `build_batch` and `parse_batch_line`, nothing written to the bill.** Batch `msgbatch_01CHdsBPHS2b5X2xWB3kuuLR` ended in 126 s: 1 succeeded, `stop_reason: end_turn`, content `[thinking, text]`, outcome `Applied`.
+  - **Structured output works inside a batch** with adaptive thinking and effort `high`, for the clause schema. The summary schema is still untested live.
+  - Usage: 134 input, 1,742 written to the cache (5-minute TTL), 898 output (439 of it thinking).
+  - Projection from that: about $0.40 for the whole Finance Act. c1 is a short-title clause, so treat that as a floor.
+  - Script: `probe_batch.py` in the session scratchpad.
+- **Cold Sonnet adversarial review of the live path** (read-only, no API calls): 4 blockers, 6 should-fix, 4 nits. The lead checked the key claims before acting on them. Grades as set by the lead:
+  - **B1 (fixed):** the refusal retry read `.parsed`. SDK 1.8.0 has only `parsed_output` (`types/beta/parsed_beta_message.py:42,90`), so any refusal crashed the run before saving.
+  - **B2 (fixed):** a retry that raised, or returned `None`, crashed `apply()`. Confirmed by planting it: `'NoneType' object has no attribute 'explanation'`.
+  - **B3 (fixed):** the batch id and raw results were never saved, and there was no resume.
+  - **B4 (fixed):** errored, expired and invalid lines were dropped silently, with exit 0. Errored reasons now keep the API's type and message, and unexpected stop reasons are named (N3 folded in).
+  - **S2, promoted to blocker, open (needs the learner's approval):** `explainer.md` never defines the four groups or the summary task. A grep of its 58 lines found no group or summary terms. The summary request sends headings only.
+  - **S5:** half closed by the probe; the summary schema is still to test.
+  - **S3 and S6, should-fix, open:** unknown group `clause_ids` aren't rejected; the retry's answering model is now printed but not stored.
+  - **S1, downgraded:** a review during a batch would be overwritten (likely only for a run longer than the 2 minutes seen).
+  - **S4, deferred** to the reviewed-hash decision.
+  - **N2 refuted:** the reviewer guessed the prompt was too short to cache, but the probe shows 1,742 tokens written to it.
+- **The fixes:**
+  - `run()` now writes `pipeline/.cache/batches/<bill>.batch-id` as soon as the batch is submitted, and `<batch-id>.jsonl` with the raw results before parsing. That folder is already gitignored.
+  - `generate <bill> --batch-id X` resumes without submitting anything.
+  - `_retry_direct` never raises, and prints which model answered.
+  - `run()` returns 1 and lists every request not applied. The CLI exits with that code.
+  - `intake` now raises when generate leaves anything unapplied, so the bill counts as failed and the message says how to finish it. **Not covered by a self-test:** intake's self-test always runs without a key, so it never reaches generate.
+- **Self-test:** generate now drives the real `run()` offline, using `_FakeClient` and a temp copy of the repo. 32 passed, 0 failed, up from 19.
+  - **Positive controls:** planting the old `.parsed` retry gives 9 FAILs; planting a retry with the right attribute but no guard gives 6 FAILs.
+  - All other self-tests, lint, the build and `check-build` for all 3 bills pass.

@@ -62,6 +62,9 @@ def main() -> None:
     p_generate.add_argument(
         "--self-test", action="store_true", help="offline check of request-building and result-parsing (no network)"
     )
+    p_generate.add_argument(
+        "--batch-id", help="resume a batch already submitted (its results are kept 29 days); submits nothing new"
+    )
 
     p_lint = sub.add_parser("lint", help="fail on banned phrases and neutrality flags in every generated text")
     p_lint.add_argument("bill_id", nargs="?", help="one bill (default: every bill in src/data/bills)")
@@ -136,9 +139,8 @@ def main() -> None:
             sys.exit(0 if generate.self_test(REPO_ROOT) else 1)
         if not args.bill_id:
             parser.error("generate needs a bill id (or --self-test)")
-        # Live generation is not exercised in slice 2a — it needs a real
-        # ANTHROPIC_API_KEY and network egress, neither of which exist here.
-        generate.run(REPO_ROOT, args.bill_id)
+        # Exit 1 if any request wasn't applied; run() lists each one and why.
+        sys.exit(generate.run(REPO_ROOT, args.bill_id, batch_id=args.batch_id))
 
     elif args.command == "lint":
         from . import lint

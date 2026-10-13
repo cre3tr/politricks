@@ -104,7 +104,14 @@ def _first_load(repo_root: Path, bill_id: str) -> bool:
     extract.run(repo_root, bill_id, pdf.name)
 
     if os.environ.get("ANTHROPIC_API_KEY"):
-        generate.run(repo_root, bill_id)
+        if generate.run(repo_root, bill_id) != 0:
+            # The bill now has clauses, so the next intake will skip it. The
+            # missing explanations have to be finished by hand, from the batch
+            # already paid for.
+            raise RuntimeError(
+                f"generate left requests unapplied (listed above). Finish with "
+                f"`politricks generate {bill_id} --batch-id <id from pipeline/.cache/batches/{bill_id}.batch-id>`"
+            )
         return True
     print(f"  {NO_KEY_MESSAGE}")
     return False
