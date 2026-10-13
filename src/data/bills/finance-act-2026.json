@@ -4,7 +4,7 @@
   "chamber": "national",
   "kind": "bill",
   "status": "passed",
-  "stage": "Law — assented 23 June 2026 (Act No. 19 of 2026)",
+  "stage": "Law: assented 23 June 2026 (Act No. 19 of 2026)",
   "stage_checked_at": "2026-09-25",
   "source_changed": false,
   "sources": [
@@ -20,16 +20,54 @@
   ],
   "summary": {
     "text": {
-      "en": "The Finance Act, 2026 changes several of Kenya's tax laws at once: the Income Tax Act, the Value Added Tax Act, the Excise Duty Act, the Tax Procedures Act, the Miscellaneous Fees and Levies Act, the Affordable Housing Act, the Stamp Duty Act and the Road Maintenance Levy Fund Act. Most changes started on 1 July 2026; a few start later.",
-      "sw": "Sheria ya Fedha, 2026 inabadilisha sheria kadhaa za kodi za Kenya kwa pamoja: Sheria ya Kodi ya Mapato, Sheria ya VAT, Sheria ya Ushuru wa Bidhaa, Sheria ya Taratibu za Kodi, Sheria ya Ada na Tozo Mbalimbali, Sheria ya Nyumba za Bei Nafuu, Sheria ya Ushuru wa Stempu na Sheria ya Mfuko wa Tozo ya Matengenezo ya Barabara. Mabadiliko mengi yalianza tarehe 1 Julai 2026; machache yanaanza baadaye.",
-      "sheng": "Finance Act ya 2026 inabadilisha sheria kibao za ushuru mara moja: Income Tax, VAT, Excise Duty, Tax Procedures, fees na levies, Affordable Housing, Stamp Duty na ile levy ya kurepair barabara. Mingi zilianza kuwork 1st July 2026; zingine zinaanza baadaye."
+      "en": "The Finance Act, 2026 changes several tax laws: the Income Tax Act, the Value Added Tax (VAT) Act, the Excise Duty Act, the Tax Procedures Act, and a few others on fees, levies and stamp duty. Under Income Tax, it creates a final tax on rent that non-residents earn from property in Kenya, adds the sale of scrap metal and winnings to the payments taxed at source (1.5% of the gross amount for scrap metal and 20% for winnings), and sets the deadline for individual returns at the last day of the fourth month after the year of income. It also changes which goods and services are exempt from VAT, sets new excise duty rates on items such as juices, tobacco products, sugar and some imported building materials, and lowers an amount in the Road Maintenance Levy Fund Act from three shillings to one shilling and fifty cents. Under the Tax Procedures Act, virtual asset service providers must file information returns, the Commissioner may work out a person's tax as if a tax avoidance scheme had not happened, and the Commissioner may issue pre-populated tax returns. Most sections start on 1st July 2026, with some starting on 1st September 2026 and 1st January 2027.",
+      "sw": "Sheria ya Fedha ya 2026 inarekebisha sheria kadhaa za kodi: Sheria ya Ushuru wa Mapato, Sheria ya Ushuru wa Ongezeko la Thamani (VAT), Sheria ya Ushuru wa Bidhaa, Sheria ya Taratibu za Kodi, na nyingine kuhusu ada, tozo na ushuru wa stempu. Katika Ushuru wa Mapato, inaanzisha kodi ya mwisho kwa kodi ya pango wanayopata wasio wakazi kutoka kwa mali iliyo Kenya, inaongeza uuzaji wa chuma chakavu na zawadi za ushindi kwenye malipo yanayokatwa kodi chanzoni (asilimia 1.5 ya jumla kwa chuma chakavu na asilimia 20 kwa zawadi za ushindi), na inaweka tarehe ya mwisho ya marejesho ya watu binafsi kuwa siku ya mwisho ya mwezi wa nne baada ya mwaka wa mapato. Pia inabadilisha bidhaa na huduma zisizotozwa VAT, inaweka viwango vipya vya ushuru wa bidhaa kwa vitu kama juisi, bidhaa za tumbaku, sukari na baadhi ya vifaa vya ujenzi vinavyoagizwa kutoka nje, na inapunguza kiasi kimoja katika Sheria ya Hazina ya Ushuru wa Matengenezo ya Barabara kutoka shilingi tatu hadi shilingi moja na senti hamsini. Katika Sheria ya Taratibu za Kodi, watoa huduma za mali pepe wanatakiwa kuwasilisha marejesho ya taarifa, Kamishna anaweza kukokotoa kodi ya mtu kana kwamba mpango wa kukwepa kodi haukufanyika, na Kamishna anaweza kutoa marejesho ya kodi yaliyojazwa mapema. Vifungu vingi vinaanza tarehe 1 Julai 2026, vingine tarehe 1 Septemba 2026 na tarehe 1 Januari 2027.",
+      "sheng": "Finance Act 2026 ina-amend sheria kadhaa za tax: Income Tax, VAT, Excise Duty, Tax Procedures, na zingine za fees, levies na stamp duty. Kwa Income Tax, ina-introduce final tax kwa non-residents wanaopata rent from property in Kenya, ina-add sale ya scrap metal na winnings kwa payments zenye tax inakatwa at source (1.5% ya gross kwa scrap metal, 20% kwa winnings), na ina-set deadline ya individual returns iwe last day ya fourth month after the year of income. Kwa VAT na Excise Duty, ina-change goods na services ambazo ni exempt kutoka VAT, ina-set excise rates mpya kwa juices, tobacco, sugar na some imported building materials, na Road Maintenance Levy Fund Act ina-reduce amount kutoka three shillings hadi one shilling fifty cents. Kwa Tax Procedures, virtual asset service providers wana-file information returns, Commissioner anaweza ku-work out tax ya mtu kama tax avoidance scheme haikufanyika, na anaweza ku-issue pre-populated returns. Most sections zina-start 1st July 2026, na zingine zina-start 1st September 2026 na 1st January 2027."
     },
     "review": {
-      "status": "sample",
+      "status": "draft",
       "at": null
-    }
+    },
+    "sheng_swaps": []
   },
-  "groups": [],
+  "groups": [
+    {
+      "group": "employee",
+      "text": {
+        "en": "Pay of a non-resident individual working for a resident airline that the Government has designated as the national carrier is not counted as income from Kenya, to the extent it relates to duties done outside Kenya and the airline's international transport operation. A contribution to a gratuity (an end-of-contract payment) is added as a new item in section 5(4) of the Income Tax Act, where the contract ran for at least three years and the gratuity is not more than 31% of the pay earned over the contract. A separate change alters the condition in section 12(1)(a) so that it turns on a person's belief that their only taxable income for the year will be emoluments (pay from employment).",
+        "sw": "Mapato ya mtu binafsi asiye mkazi anayefanya kazi na shirika la ndege la humu nchini ambalo Serikali imeliteua kuwa kampuni ya kitaifa ya usafiri wa anga hayahesabiwi kuwa mapato yanayotoka Kenya, kwa kiasi yanapohusiana na kazi zilizofanywa nje ya Kenya na shughuli za usafiri wa kimataifa za shirika hilo. Mchango wa malipo ya mwisho wa mkataba (gratuity) unaongezwa kama kipengele kipya katika kifungu cha 5(4) cha Sheria ya Ushuru wa Mapato, ikiwa mkataba ulidumu angalau miaka mitatu na malipo hayo hayazidi asilimia 31 ya mshahara uliopatikana katika kipindi cha mkataba. Badiliko jingine linarekebisha sharti katika kifungu cha 12(1)(a) ili lizingatie imani ya mtu kwamba mapato yake pekee yanayotozwa kodi kwa mwaka huo yatakuwa mshahara na marupurupu ya ajira.",
+        "sheng": "Pay ya non-resident anayefanya kazi na airline ya Kenya ambayo Government ime-name kama national carrier haitakuwa counted kama income from Kenya, kama ni ya kazi aliyofanya outside Kenya na international transport operation ya airline. Contribution kwa gratuity (end-of-contract payment) ina-added kama item mpya kwa section 5(4) ya Income Tax Act, kama contract ilikuwa at least three years na gratuity haizidi 31% ya pay aliyopata kwa contract. Pia section 12(1)(a) ina-change condition ili iangalie kama mtu anaamini income yake taxable ya mwaka ni pay from employment tu."
+      },
+      "clause_ids": [
+        "c3",
+        "c9"
+      ],
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "sheng_swaps": []
+    },
+    {
+      "group": "trader",
+      "text": {
+        "en": "Sale of scrap metal and winnings are added to the lists of payments in sections 10 and 35 of the Income Tax Act, and the Third Schedule sets the tax at 1.5% of the gross amount for scrap metal and 20% for winnings. Section 35 also changes the word 'travel' to 'transport services' in one paragraph, deletes one paragraph, and says the section does not apply to payments by the national carrier airline to non-residents for using payment platforms and networks. In the VAT First Schedule, scrap metal is added to the exempt goods, several paragraphs are deleted, and the exempt money transfer services description is changed so that payment processing, settlement, merchant acquiring, gateway and aggregation services by payment service providers are not included.",
+        "sw": "Uuzaji wa chuma chakavu na zawadi za ushindi vinaongezwa kwenye orodha za malipo katika vifungu vya 10 na 35 vya Sheria ya Ushuru wa Mapato, na Jedwali la Tatu linaweka kodi kuwa asilimia 1.5 ya jumla kwa chuma chakavu na asilimia 20 kwa zawadi za ushindi. Kifungu cha 35 pia kinabadilisha neno 'travel' kuwa 'transport services' katika aya moja, kinafuta aya moja, na kinasema kifungu hicho hakitumiki kwa malipo yanayofanywa na shirika la ndege la kitaifa kwa wasio wakazi kwa matumizi ya majukwaa na mitandao ya malipo. Katika Jedwali la Kwanza la VAT, chuma chakavu kinaongezwa kwenye bidhaa zisizotozwa VAT, aya kadhaa zinafutwa, na maelezo ya huduma za kutuma pesa zisizotozwa VAT yanabadilishwa ili huduma za uchakataji wa malipo, usuluhishi, ukusanyaji wa malipo ya wafanyabiashara, lango na ujumuishaji zinazotolewa na watoa huduma za malipo zisijumuishwe.",
+        "sheng": "Sale ya scrap metal na winnings zina-added kwa lists za payments kwa section 10 na section 35 za Income Tax Act, na Third Schedule ina-set tax at 1.5% ya gross kwa scrap metal na 20% kwa winnings. Section 35 pia ina-change word 'travel' kuwa 'transport services' kwa paragraph moja, ina-delete paragraph moja, na haihusu payments za national carrier airline kwa non-residents kwa kutumia payment platforms na networks. Kwa VAT First Schedule, scrap metal ina-added kwa list ya exempt goods, paragraphs kadhaa zina-deleted, na description ya exempt money transfer services ina-change ili payment processing, settlement, merchant acquiring, gateway na aggregation services za payment service providers zisiwe included."
+      },
+      "clause_ids": [
+        "c7",
+        "c16",
+        "c21",
+        "c32"
+      ],
+      "review": {
+        "status": "draft",
+        "at": null
+      },
+      "sheng_swaps": []
+    }
+  ],
   "clauses": [
     {
       "id": "c1",
@@ -42,20 +80,21 @@
         2
       ],
       "explanation": {
-        "en": "This is the Act's name and start dates. Most of the Act took effect on 1 July 2026. Section 43 takes effect on 1 September 2026, and sections 17, 18 and 24 take effect on 1 January 2027.",
-        "sw": "Hiki ni jina la Sheria na tarehe zake za kuanza. Sehemu kubwa ya Sheria ilianza kutumika tarehe 1 Julai 2026. Kifungu cha 43 kinaanza tarehe 1 Septemba 2026, na vifungu vya 17, 18 na 24 vinaanza tarehe 1 Januari 2027.",
-        "sheng": "Hii ni jina ya hii Act na lini inaanza kuwork. Mingi ilianza 1st July 2026. Section 43 inaanza 1st September 2026, na sections 17, 18 na 24 zinaanza 1st January 2027."
+        "en": "This section gives the law its name: the Finance Act, 2026. It also sets the dates when the sections start to apply. Sections 17, 18 and 24 start on 1st January 2027, section 43 starts on 1st September 2026, and all the other sections start on 1st July 2026.",
+        "sw": "Kifungu hiki kinaipa sheria jina lake: Finance Act, 2026 (Sheria ya Fedha, 2026). Pia kinaweka tarehe ambazo vifungu vinaanza kutumika. Vifungu vya 17, 18 na 24 vinaanza tarehe 1 Januari 2027, kifungu cha 43 kinaanza tarehe 1 Septemba 2026, na vifungu vingine vyote vinaanza tarehe 1 Julai 2026.",
+        "sheng": "Section hii ina-give Act jina: Finance Act, 2026. Pia ina-set dates ambazo sections zina-start kufanya kazi. Sections 17, 18 na 24 zina-start 1st January 2027, section 43 ina-start 1st September 2026, na all the other sections zina-start 1st July 2026."
       },
       "review": {
-        "status": "sample",
+        "status": "draft",
         "at": null
       },
       "neutral_check": {
         "ok": true,
-        "note": "Hand-written sample"
+        "note": "Short title and commencement dates only, described as written with no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c2",
@@ -69,20 +108,21 @@
         3
       ],
       "explanation": {
-        "en": "This changes definitions in the Income Tax Act. \"Management or professional fee\" now includes the interchange fees and merchant service fees charged when a card is used to pay. \"Royalty\" gets a new definition covering payments for using copyright works and software, including licence, development, training, maintenance or support fees. Which definition a payment falls under affects how it is taxed.",
-        "sw": "Kifungu hiki kinabadilisha maana za maneno katika Sheria ya Kodi ya Mapato. \"Ada ya usimamizi au ya kitaaluma\" sasa inajumuisha ada za interchange na ada za huduma kwa wafanyabiashara zinazotozwa kadi inapotumika kulipa. \"Mrabaha\" unapata maana mpya inayojumuisha malipo ya kutumia kazi zenye hakimiliki na programu za kompyuta, pamoja na ada za leseni, utengenezaji, mafunzo, matengenezo au usaidizi. Maana ambayo malipo yanaangukia huathiri jinsi yanavyotozwa kodi.",
-        "sheng": "Hii inabadilisha maana ya maneno kwa Income Tax Act. \"Management or professional fee\" sasa inaingiza zile fees za interchange na merchant service zinakatwa ukilipa na card. \"Royalty\" imepewa maana mpya: malipo ya kutumia kazi ya copyright na software, pamoja na fees za licence, development, training, maintenance ama support. Malipo ikiingia kwa definition gani ndio inaamua itakatwa ushuru aje."
+        "en": "Section 2 of the Income Tax Act changes five definitions. In \"immovable property\", the word \"and\" after item (a) becomes \"or\", and \"management or professional fee\" now also includes interchange fees and merchant service fees from card payments. \"Royalty\" gets a new definition covering payments for using copyright, software, films, patents, trademarks, designs, equipment and related information, gains from selling those rights, and use of a proprietary digital payment card network or platform, whatever the charge is called. \"Withdrawals\" now means money or its equivalent paid to a player's account by a person licensed under the Gambling Control Act, 2025, and \"winnings\" is newly defined as a pay-out from a lottery or prize competition by such a licensed person.",
+        "sw": "Kifungu cha 2 cha Sheria ya Kodi ya Mapato kinabadilisha fasili tano. Katika \"immovable property\", neno \"and\" baada ya kipengele (a) linakuwa \"or\", na \"management or professional fee\" sasa inajumuisha pia ada za interchange na ada za huduma za wafanyabiashara zinazotokana na malipo ya kadi. \"Royalty\" inapata fasili mpya inayohusu malipo ya kutumia hakimiliki, programu za kompyuta, filamu, hataza, chapa za biashara, michoro, vifaa na taarifa zinazohusiana, faida za kuuza haki hizo, na matumizi ya mtandao au jukwaa la kadi za malipo la kidijitali lenye umiliki, bila kujali malipo hayo yanaitwaje. \"Withdrawals\" sasa inamaanisha pesa au kitu kinacholingana na pesa kilicholipwa kwenye akaunti ya mchezaji na mtu mwenye leseni chini ya Sheria ya Udhibiti wa Michezo ya Kubahatisha ya mwaka 2025, na \"winnings\" inafafanuliwa upya kama malipo ya ushindi kutoka bahati nasibu au mashindano ya zawadi yanayotolewa na mwenye leseni.",
+        "sheng": "Section 2 ya Income Tax Act ina-change definitions tano. Kwa \"immovable property\", word \"and\" after item (a) inakuwa \"or\", na \"management or professional fee\" sasa ina-include interchange fees na merchant service fees from card payments. \"Royalty\" ina new definition: payment for use ya copyright, software, films, patents, trademarks, designs, equipment na related information, gains from selling hizo rights, na pia use ya proprietary digital payment card network au platform, hata fee ikiitwa name yoyote. \"Withdrawals\" sasa ni pesa paid to account ya player na person licensed under Gambling Control Act, 2025, na \"winnings\" ni pay-out from lottery au prize competition na licensed person huyo."
       },
       "review": {
-        "status": "sample",
+        "status": "draft",
         "at": null
       },
       "neutral_check": {
         "ok": true,
-        "note": "Hand-written sample"
+        "note": "Definitions clause described factually, with no opinion, advice or judgment on legality."
       },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c3",
@@ -95,14 +135,24 @@
         3,
         4
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes section 5 of the Income Tax Act in two ways. First, it adds a condition: the income of a non-resident individual who works for, or is engaged on behalf of, a Kenyan air transport operator designated by the Government as a national carrier is not treated as earned in or coming from Kenya, to the extent it relates to duties done outside Kenya and the carrier's international transport operation. Second, it adds a new item to the list in subsection (4): contributions to a gratuity (an end-of-contract payment), where the contract ran for at least three continuous years, or was renewed or extended beyond three years, and the gratuity is not more than 31% of what the employee earned over the contract period.",
+        "sw": "Kifungu hiki kinarekebisha kifungu cha 5 cha Sheria ya Kodi ya Mapato kwa njia mbili. Kwanza, kinaongeza sharti kwamba mapato ya mtu asiye mkazi anayeajiriwa na kampuni ya usafiri wa anga ya hapa nchini iliyoteuliwa na Serikali kuwa shirika la taifa, au anayehudumu kwa niaba yake, hayachukuliwi kuwa yamepatikana Kenya au kutoka Kenya, kadiri yanavyohusiana na kazi alizofanya nje ya Kenya na shughuli za kimataifa za usafiri za shirika hilo. Pili, kinaongeza kipengele kipya katika orodha ya kifungu kidogo cha (4): michango ya kiinua mgongo (gratuity), yaani malipo ya mwisho wa mkataba, ikiwa mkataba ulikuwa wa angalau miaka mitatu mfululizo, au uliongezwa muda zaidi ya miaka mitatu, na kiinua mgongo hicho hakizidi asilimia 31 ya mapato aliyopata mfanyakazi katika kipindi cha mkataba.",
+        "sheng": "Section hii inarekebisha section 5 ya Income Tax Act kwa njia mbili. Kwanza, income ya non-resident anayefanya kazi na national carrier (airline ambayo Government imeteua) haitakuwa counted kama income from Kenya, kama ni ya work aliyofanya outside Kenya na international flights za airline hiyo. Pili, ina-add contributions za gratuity (end-of-contract payment) kwa list ya subsection (4), kama contract ilikuwa at least three years continuous au ime-extend beyond three years, na gratuity haizidi 31% ya pay ya employee kwa contract period."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
-      "groups": [],
-      "suggested_articles": []
+      "neutral_check": {
+        "ok": true,
+        "note": "Described only what the two amendments do and their stated conditions, with no opinion, advice or legal verdict."
+      },
+      "groups": [
+        "employee"
+      ],
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c4",
@@ -115,14 +165,22 @@
         4,
         5
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section adds a new section 6B to the Income Tax Act. A non-resident person (someone not resident in Kenya for tax purposes) whose income comes from using or occupying property in Kenya pays a tax called non-resident rental income tax, at the rate in the Third Schedule. It is a final tax, so no further income tax is charged on that income. That person must register through a simplified system set by the Commissioner, and file a return and pay by the 20th day of the month after the month the rent is paid. These steps do not apply where a resident person receives the rent on behalf of the non-resident and tax is deducted under section 35(1)(c).",
+        "sw": "Kifungu hiki kinaongeza kifungu kipya cha 6B kwenye Sheria ya Kodi ya Mapato. Mtu asiye mkazi wa Kenya kwa madhumuni ya kodi, ambaye mapato yake yanatokana na matumizi au ukaaji wa mali iliyoko Kenya, hulipa kodi inayoitwa kodi ya mapato ya kodi ya pango ya wasio wakazi, kwa kiwango kilichoainishwa katika Jedwali la Tatu. Hii ni kodi ya mwisho, kwa hiyo hakuna kodi nyingine ya mapato inayotozwa kwa mapato hayo. Mtu huyo husajiliwa kupitia mfumo rahisi wa usajili ulioamuliwa na Kamishna, na huwasilisha marejesho na kulipa kodi kabla ya siku ya ishirini ya mwezi unaofuata mwezi ambao pango lililipwa. Hatua hizi hazitumiki pale mtu mkazi anapopokea pango kwa niaba ya asiye mkazi na kodi ikakatwa chini ya kifungu cha 35(1)(c).",
+        "sheng": "Section 4 ina-add section mpya 6B kwa Income Tax Act. Non-resident (mtu ambaye si resident wa Kenya kwa tax) anayepata income from property iliyo Kenya ana-pay non-resident rental income tax kwa rate iliyo kwa Third Schedule. Hii ni final tax, so hakuna income tax nyingine kwa hiyo rent income. Huyo non-resident ana-register kupitia simplified registration system ya Commissioner, na ana-submit return na ku-pay tax by 20th ya month after the month rent ilipolipwa. Kama resident person ana-receive rent on behalf ya non-resident na tax ina-deductiwa under section 35(1)(c), hizo steps za register na return haziu-apply."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only who pays, the final tax, the registration and payment deadline, and the exception, with no opinion or advice."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c5",
@@ -134,14 +192,22 @@
       "pages": [
         5
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section removes subsection (SA) from section 8 of the Income Tax Act. It is a deletion only: nothing is added in its place. The clause does not say what subsection (SA) contained, so that content is found in the Income Tax Act itself.",
+        "sw": "Kifungu hiki kinafuta kifungu kidogo cha (SA) kutoka kifungu cha 8 cha Sheria ya Kodi ya Mapato. Ni ufutaji tu: hakuna kinachoongezwa badala yake. Kifungu hiki hakieleza kifungu kidogo cha (SA) kilikuwa na nini, kwa hivyo maudhui yake yako katika Sheria ya Kodi ya Mapato yenyewe.",
+        "sheng": "Section 5 ina-delete subsection (SA) kutoka section 8 ya Income Tax Act. Ni small amendment: ina-delete tu, na hakuna new text inayowekwa badala yake. Clause hii haisemi subsection (SA) ilikuwa na nini, so text yake iko kwa Income Tax Act yenyewe."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the deletion of subsection (SA); the clause does not state its content, so no effect or judgement is described."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c6",
@@ -153,14 +219,22 @@
       "pages": [
         5
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section adds a new subsection (1A) to section 9 of the Income Tax Act. It sets a deadline for paying the tax charged on the income covered by subsection (1): within five days after the payment is received, or after the ship leaves the port where its cargo was loaded (the port of lading), whichever comes first.",
+        "sw": "Kifungu hiki kinaongeza kifungu kidogo kipya cha (1A) katika kifungu cha 9 cha Sheria ya Kodi ya Mapato. Kinaweka muda wa kulipa kodi inayotozwa kwa mapato yaliyo chini ya kifungu kidogo cha (1): ndani ya siku tano baada ya malipo kupokelewa, au baada ya meli kuondoka bandarini ambako mizigo ilipakiwa, yoyote itakayotangulia.",
+        "sheng": "Section 6 ina-add new subsection (1A) kwa section 9 ya Income Tax Act. Inasema tax kwa income ya subsection (1) ni payable within five days after payment ku-receiviwa, au after ship ku-leave port where cargo ilipakiwa (port of lading), whichever comes first."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the new payment deadline in subsection (1A), with no opinion on the policy."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c7",
@@ -172,14 +246,24 @@
       "pages": [
         5
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes section 10(1) of the Income Tax Act by adding two new items to the list, straight after item (m): (n) sale of scrap metal and (o) winnings. These two items now sit in the list of payments that section 10 covers, where tax is deducted at source, meaning before the money reaches the person receiving it. This section does not itself give any tax rates.",
+        "sw": "Kifungu hiki kinarekebisha kifungu cha 10(1) cha Sheria ya Kodi ya Mapato kwa kuongeza vipengele viwili vipya mara baada ya kipengele (m): (n) uuzaji wa vyuma chakavu na (o) zawadi za ushindi. Vipengele hivi vinaingia kwenye orodha ya malipo yanayohusika na kifungu cha 10, ambapo kodi hukatwa chanzoni, yaani kabla pesa hazijamfikia mpokeaji. Kifungu hiki chenyewe hakitaji viwango vyovyote vya kodi.",
+        "sheng": "Section hii ina-amend section 10(1) ya Income Tax Act kwa ku-add two new items kwa list, right after (m): (n) sale ya scrap metal na (o) winnings. Items hizi mbili sasa ziko kwa list ya payments ambazo section 10 inacover, ambapo tax ina-deducted at source, yaani kabla pesa i-reach the person receiving it. Section hii yenyewe haina rates za tax."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
-      "groups": [],
-      "suggested_articles": []
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the two items added to the list in section 10(1); no rates, opinion, advice or legal verdict stated."
+      },
+      "groups": [
+        "trader"
+      ],
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c8",
@@ -191,14 +275,22 @@
       "pages": [
         5
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section removes the current section 11 of the Income Tax Act and puts a new one in its place, about income received by a trustee, executor or administrator (a person who manages property for others, or an estate for someone who has died). Income that is chargeable to tax and received in that role is treated as that person's own income. Qualifying dividend or qualifying interest counted in that income is not taxed again under the Act. If the trustee, executor or administrator has already paid tax on the chargeable income of the trust, a beneficiary does not pay tax on that same income.",
+        "sw": "Kifungu hiki kinafuta kifungu cha 11 cha Sheria ya Kodi ya Mapato na kukibadilisha na kipya kuhusu mapato yanayopokelewa na mdhamini, msimamizi wa wasia au msimamizi wa mali ya marehemu. Mapato yanayotozwa kodi na kupokelewa kwa nafasi hiyo huchukuliwa kuwa mapato ya mdhamini au msimamizi huyo. Gawio au riba inayostahili iliyojumuishwa katika mapato hayo haitozwi kodi tena chini ya Sheria hii. Ikiwa mdhamini au msimamizi amelipa kodi kwa mapato yanayotozwa kodi ya amana hiyo, mnufaika wa amana hatalazimika kulipa kodi kwa mapato hayo.",
+        "sheng": "Section 8 ina-repeal section 11 ya Income Tax Act na ku-replace na new section about income inayopokelewa na trustee, executor au administrator (person anayesimamia property ya wengine au estate ya mtu aliyekufa). Income yoyote inayotozwa tax ikipokelewa kwa role hiyo ina-count kama income ya trustee, executor au administrator mwenyewe. Qualifying dividend na qualifying interest zilizo kwa income hiyo haziwi taxed tena chini ya Act. Kama trustee, executor au administrator ameshalipa tax kwa income ya trust, beneficiary hatalipa tax kwa income hiyo."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only what the replacement section 11 does for trustees, executors, administrators and beneficiaries, with no opinion, advice or legal verdict."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c9",
@@ -210,14 +302,24 @@
       "pages": [
         6
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes section 12(1) of the Income Tax Act. It removes paragraph (a) and puts a new paragraph (a) in its place. The new paragraph sets this condition: a person believes, to the best of their judgement, that for that year of income they will have no taxable income other than emoluments (pay from employment, such as salary and wages).",
+        "sw": "Kifungu hiki kinarekebisha kifungu cha 12(1) cha Sheria ya Kodi ya Mapato. Kinafuta aya (a) na kuweka aya mpya (a) mahali pake. Aya mpya inaweka sharti kwamba mtu anaamini, kwa kadiri ya uamuzi wake bora, kwamba kwa mwaka huo wa mapato hatakuwa na mapato yanayotozwa kodi isipokuwa malipo ya ajira (kama mshahara na ujira).",
+        "sheng": "Section 9 ina-amend section 12 ya Income Tax Act. Ina-delete paragraph (a) ya subsection (1) na ku-replace na new paragraph (a). Hii new paragraph inaweka condition hii: mtu ana-believe, kwa best ya judgement yake, kwamba kwa that year of income hatakuwa na taxable income other than pay ya employment (kama salary na wages)."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
-      "groups": [],
-      "suggested_articles": []
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the replaced paragraph and its condition as written, with no judgement on its effect."
+      },
+      "groups": [
+        "employee"
+      ],
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c10",
@@ -229,14 +331,22 @@
       "pages": [
         6
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 10 makes two changes to section 15 of the Income Tax Act. First, for a money lending business and for a bank or financial institution licensed under the Banking Act, the Microfinance Act and the Central Bank of Kenya Act, a debt that has become bad under the Commissioner's guidelines includes the principal, the interest and any other amount linked to the debt. Second, a person who had invested at least ten billion shillings in Kenya before 1 July 2025, and who had a deficit (income that came out below expenses) ascertained for a period before that date, has that deficit treated as arising in their 2025 year of income. The deduction for it can then be used beyond the period set in subsection (4) until it is used up.",
+        "sw": "Sehemu ya 10 inafanya mabadiliko mawili kwa kifungu cha 15 cha Sheria ya Kodi ya Mapato. Kwanza, kwa biashara ya kukopesha pesa na kwa benki au taasisi ya fedha yenye leseni chini ya Sheria ya Benki, Sheria ya Taasisi za Fedha Ndogo na Sheria ya Benki Kuu ya Kenya, deni lililogeuka kuwa deni mbaya kulingana na miongozo ya Kamishna linajumuisha mtaji, riba na kiasi kingine chochote kinachohusiana na deni hilo. Pili, mtu aliyewekeza angalau shilingi bilioni kumi nchini Kenya kabla ya tarehe 1 Julai 2025, na ambaye alikuwa na nakisi (mapato yaliyokuwa chini ya matumizi) iliyothibitishwa kwa kipindi cha kabla ya tarehe hiyo, nakisi hiyo inachukuliwa kuwa ilitokea katika mwaka wake wa mapato wa 2025. Makato yake yanaweza kutumika zaidi ya kipindi kilichowekwa katika kifungu kidogo cha (4) hadi yamalizike kabisa.",
+        "sheng": "Section 10 ina-change section 15 ya Income Tax Act kwa njia mbili. Kwanza, kwa money lending business na kwa bank au financial institution yenye licence chini ya Banking Act, Microfinance Act na Central Bank of Kenya Act, bad debt kulingana na guidelines za Commissioner ina-include principal, interest na amount nyingine yoyote ya debt hiyo. Pili, mtu aliyekuwa ame-invest at least ten billion shillings Kenya before 1st July 2025, na alikuwa na deficit (income ilikuwa chini ya expenses) for period before that date, deficit hiyo ina-count kama ilitokea kwa 2025 year of income yake. Deduction yake inaweza kutumika hata after period ya subsection (4) mpaka deficit imeisha kabisa."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the two provisos only, with no opinion on policy, legality or advice."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c11",
@@ -248,14 +358,22 @@
       "pages": [
         6
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section makes a small wording change to section 16 of the Income Tax Act, in subsection (2)(j)(iii)(E). It deletes the words \"lending and leasing business\" after \"involved in\" and puts in \"lending or leasing business, or both\". The wording now names lending, leasing, or both, instead of joining the two with \"and\" alone. It adds no new rate, amount or date.",
+        "sw": "Kifungu hiki kinafanya badiliko dogo la maneno katika kifungu cha 16 cha Sheria ya Kodi ya Mapato, kifungu kidogo cha (2)(j)(iii)(E). Kinafuta maneno \"lending and leasing business\" yanayokuja baada ya \"involved in\" na kuweka \"lending or leasing business, or both\", yaani biashara ya kukopesha, ya kukodisha, au zote mbili. Hakuna kiwango, kiasi wala tarehe mpya inayowekwa.",
+        "sheng": "Section 11 ina-amend section 16 ya Income Tax Act, kwa subsection (2)(j)(iii)(E). Ina-delete words \"lending and leasing business\" baada ya \"involved in\" na ku-replace na \"lending or leasing business, or both\". Ni small change ya wording: sasa inataja lending, leasing, au both. Haina rate, amount wala date mpya."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Technical wording amendment described literally, with no opinion on its effect or merit."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c12",
@@ -268,14 +386,22 @@
         6,
         7
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 12 makes three small technical corrections to section 18D of the Income Tax Act. Each one only changes a reference to another subsection. In subsection (1), the reference to subsection (3) becomes a reference to subsection (2). In subsections (2) and (5), the reference to subsection (1) becomes a reference to subsections (1) and (1A).",
+        "sw": "Kifungu cha 12 kinafanya marekebisho matatu madogo ya kiufundi katika kifungu cha 18D cha Sheria ya Kodi ya Mapato. Kila marekebisho yanabadilisha tu rejeleo la kifungu kidogo kingine. Katika kifungu kidogo cha (1), rejeleo la kifungu kidogo cha (3) linakuwa rejeleo la kifungu kidogo cha (2). Katika vifungu vidogo vya (2) na (5), rejeleo la kifungu kidogo cha (1) linakuwa rejeleo la vifungu vidogo vya (1) na (1A).",
+        "sheng": "Section 12 ina-make three small technical changes kwa section 18D ya Income Tax Act. Kila change ina-update tu reference kwenda subsection nyingine. Kwa subsection (1), reference ya subsection (3) inakuwa reference ya subsection (2). Kwa subsections (2) na (5), reference ya subsection (1) inakuwa reference ya subsections (1) na (1A)."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Purely technical cross-reference changes, described as they are with no opinion or advice."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c13",
@@ -287,14 +413,22 @@
       "pages": [
         7
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 18F of the Income Tax Act holds definitions used for country-by-country reports of multinational groups, and this section changes three of them. Two are updates to cross-references: the definition of a country-by-country report now points to section 18D (1) and (1A), and the definition of an excluded multinational enterprise group now points to section 18D (1B). The third replaces the definition of \"ultimate parent entity\". It is a member of a multinational group that owns a sufficient stake, directly or indirectly, in other members, that must prepare consolidated financial statements in the country where it is tax resident (or would have to if its shares were publicly traded there), and that has no other member of the group above it owning a sufficient stake in the group's other members.",
+        "sw": "Kifungu cha 18F cha Sheria ya Kodi ya Mapato kina fasili zinazotumika kwa ripoti za nchi-kwa-nchi za makundi ya kimataifa ya kampuni, na kifungu hiki kinabadilisha fasili tatu. Mbili ni masahihisho ya marejeleo: fasili ya ripoti ya nchi-kwa-nchi sasa inarejelea kifungu cha 18D (1) na (1A), na fasili ya kundi la kimataifa la kampuni lililoondolewa inarejelea kifungu cha 18D (1B). Ya tatu inaondoa fasili ya \"taasisi mama ya mwisho\" na kuweka mpya: ni mwanachama wa kundi la kimataifa anayemiliki hisa za kutosha, moja kwa moja au kwa njia isiyo ya moja kwa moja, katika wanachama wengine, anayetakiwa kuandaa taarifa za fedha zilizounganishwa katika nchi anakoishi kikodi (au angetakiwa ikiwa hisa zake zingeuzwa hadharani huko), na ambaye hakuna mwanachama mwingine wa kundi aliye juu yake anayemiliki hisa za kutosha katika wanachama wengine wa kundi.",
+        "sheng": "Section 18F ya Income Tax Act ina definitions za country-by-country report za multinational groups, na section hii ina-change definitions tatu. Definition ya country-by-country report sasa ina-refer section 18D (1) na (1A), na ile ya excluded multinational enterprise group ina-refer section 18D (1B). Pia ina-replace definition ya ultimate parent entity: ni member wa group anayeya-own stake ya kutosha kwa members wengine, anatakiwa ku-prepare consolidated financial statements kwa country anayolipia tax (au angetakiwa kama shares zake zingekuwa listed kwa stock exchange huko), na hakuna member mwingine wa group juu yake anayeya-own stake ya kutosha kwa members wengine wa group."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Definitions and cross-reference amendment only; described what changes without opinion, advice or legal judgment."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c14",
@@ -306,14 +440,22 @@
       "pages": [
         8
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section is a technical amendment to section 19 of the Income Tax Act. In subsections (5), (5A), (6), (6A) and (7) (including the definition of \"annuity fund\"), the words \"life insurance fund\" are replaced with \"statutory fund\". The old definition of \"life insurance fund\" is deleted, and a new definition is added: a \"statutory fund\" means a fund established under section 45 of the Insurance Act.",
+        "sw": "Kifungu hiki ni marekebisho madogo ya kiufundi kwa kifungu cha 19 cha Sheria ya Kodi ya Mapato. Katika vifungu vidogo vya (5), (5A), (6), (6A) na (7) (pamoja na ufafanuzi wa \"annuity fund\"), maneno \"life insurance fund\" yanabadilishwa na \"statutory fund\". Ufafanuzi wa \"life insurance fund\" unafutwa, na ufafanuzi mpya unaongezwa: \"statutory fund\" ni hazina iliyoanzishwa chini ya kifungu cha 45 cha Sheria ya Bima.",
+        "sheng": "Section 14 ni technical amendment ya section 19 ya Income Tax Act, na ni change ya name tu. Kila time subsections (5), (5A), (6), (6A) na (7) (pamoja na definition ya \"annuity fund\") zinasema \"life insurance fund\", sasa zitasema \"statutory fund\". Definition ya \"life insurance fund\" inadeletiwa, na definition mpya ina-add: \"statutory fund\" ni fund established under section 45 ya Insurance Act."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Purely a wording and definition change, described as it stands with no opinion, advice or legal judgment."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c15",
@@ -325,14 +467,22 @@
       "pages": [
         8
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section removes section 23 from the Income Tax Act (Cap. 470). To repeal means the section is deleted and is no longer part of the Act. The clause itself does not say what section 23 covered.",
+        "sw": "Kifungu hiki kinafuta kifungu cha 23 cha Sheria ya Ushuru wa Mapato (Cap. 470). Kufuta kunamaanisha kwamba kifungu hicho kinaondolewa na hakiendelei kuwa sehemu ya sheria hiyo. Maandishi ya kifungu hiki hayaelezi kifungu cha 23 kilihusu nini.",
+        "sheng": "Section hii ina-repeal section 23 ya Income Tax Act (Cap. 470). Ku-repeal ni ku-remove section hiyo kutoka Act, so haitakuwa part ya Act tena. Clause hii haisemi section 23 ilikuwa inahusu nini."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Only states that section 23 is repealed; the clause does not describe its content, so no effect is described or judged."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c16",
@@ -345,14 +495,24 @@
         8,
         9
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes the list of payments in section 35 of the Income Tax Act that have tax deducted at source. In subsection (1), the word \"travel\" becomes \"transport services\" in one paragraph, paragraph (u) is deleted, and sale of scrap metal and winnings are added as new paragraphs (v) and (w). A new subsection (1A) says subsection (1) does not apply to payments by a resident airline that the Government has designated as the national carrier, when paid to a non-resident for access to or use of a digital or payment system (such as a card scheme or payment network), whatever the fee is called. In subsection (3), sale of scrap metal and winnings are also added to the list, as paragraphs (p) and (q).",
+        "sw": "Kifungu hiki kinabadilisha orodha ya malipo yanayokatwa kodi chini ya kifungu cha 35 cha Sheria ya Kodi ya Mapato (Income Tax Act), ambapo kodi hukatwa wakati wa malipo. Katika kifungu kidogo cha (1), neno \"travel\" linabadilishwa kuwa \"transport services\" katika aya moja, aya (u) inafutwa, na uuzaji wa vyuma chakavu na ushindi (winnings) vinaongezwa kama aya mpya (v) na (w). Kifungu kidogo kipya cha (1A) kinasema kifungu kidogo cha (1) hakitumiki kwa malipo yanayofanywa na shirika la ndege la humu nchini lililoteuliwa na Serikali kuwa shirika la taifa, kwa mtu asiye mkazi, kwa ajili ya kufikia au kutumia mfumo wa kidijitali au wa malipo (kama mtandao wa malipo au mpango wa kadi), bila kujali ada hiyo inaitwaje. Katika kifungu kidogo cha (3), uuzaji wa vyuma chakavu na ushindi pia vinaongezwa kwenye orodha, kama aya (p) na (q).",
+        "sheng": "Section 35 ya Income Tax Act ina list ya payments zenye tax deducted at source, na section hii ina-change list hiyo. Kwa subsection (1), word \"travel\" inakuwa \"transport services\" kwa one paragraph, paragraph (u) ina-delete-iwa, na sale ya scrap metal na winnings zina-add-iwa kama paragraphs (v) na (w). Pia kuna new subsection (1A): subsection (1) haiapply kwa payments za airline ya Kenya ambayo Government ime-designate kama national carrier, kama inalipa non-resident kwa access au use ya digital platform au payment system (kama card scheme au payment network), hata fee iitwe nini. Kwa subsection (3), sale ya scrap metal na winnings pia zina-add-iwa kwa list, kama paragraphs (p) na (q)."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
-      "groups": [],
-      "suggested_articles": []
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the list changes and the new exception only, with no opinion, advice or verdict. Tax rates are not in the text, so none are stated."
+      },
+      "groups": [
+        "trader"
+      ],
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c17",
@@ -364,14 +524,22 @@
       "pages": [
         9
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 17 changes section 52(1) of the Income Tax Act. Before, a person had to give what the notice asked for within a reasonable time, which could not be less than thirty days from the date the notice was served. Now the deadline is the last day of the fourth month after the end of that person's year of income.",
+        "sw": "Kifungu cha 17 kinarekebisha kifungu cha 52(1) cha Sheria ya Kodi ya Mapato. Awali, muda wa kutoa kile ambacho notisi inahitaji ulikuwa \"muda unaofaa\", usiopungua siku thelathini tangu notisi ilipotolewa. Sasa muda huo ni siku ya mwisho ya mwezi wa nne baada ya mwaka wa mapato wa mtu huyo kuisha.",
+        "sheng": "Section 17 ina-change section 52(1) ya Income Tax Act. Deadline ya ku-send information ambayo notice ina-ask ilikuwa reasonable time, si chini ya thirty days from the date notice ina-delivered. Sasa deadline ni last day ya fourth month baada ya year of income ya person kuisha."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the change of deadline in the text, with no opinion, advice or legal judgment. It applies to any person, so no group is tagged."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c18",
@@ -384,14 +552,22 @@
         9,
         10
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 18 replaces subsection (1) of section 52B of the Income Tax Act, which sets the deadlines for filing tax returns. Every individual who is chargeable to tax must give the Commissioner a return of income for the year of income, including their own calculation of tax (self-assessment) on income from all sources. The deadline is the last day of the fourth month after the year of income ends. Every other person chargeable to tax, such as a company, must file a return with a self-assessment for the accounting period by the last day of the sixth month after that period ends.",
+        "sw": "Kifungu cha 18 kinabadilisha kifungu kidogo cha (1) cha kifungu cha 52B cha Sheria ya Kodi ya Mapato, kinachoweka tarehe za kuwasilisha ritani za kodi. Kila mtu binafsi anayetozwa kodi anatakiwa kumwasilishia Kamishna ritani ya mapato ya mwaka wa mapato, pamoja na ukadiriaji wake mwenyewe wa kodi kutoka vyanzo vyote vya mapato. Tarehe ya mwisho ni siku ya mwisho ya mwezi wa nne baada ya mwaka wa mapato kuisha. Kila mtu mwingine anayetozwa kodi, kama kampuni, anatakiwa kuwasilisha ritani na ukadiriaji wa kodi wa kipindi cha uhasibu kufikia siku ya mwisho ya mwezi wa sita baada ya kipindi hicho kuisha.",
+        "sheng": "Section 18 ina-replace subsection (1) ya section 52B ya Income Tax Act, ambayo ina-set deadline za kufile returns. Every individual anayetozwa tax ana-file return of income kwa Commissioner pamoja na self-assessment (ana-calculate tax yake mwenyewe) from all sources za income, kufikia last day ya fourth month after year of income iishe. Every other person anayetozwa tax, kama company, ana-file return na self-assessment kwa accounting period kufikia last day ya sixth month after accounting period iishe."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section sets filing deadlines for all taxpayers; described only what it does, with no opinion, advice or legal verdict."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c19",
@@ -403,14 +579,22 @@
       "pages": [
         10
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes the list of income that is exempt from tax in Part I of the First Schedule to the Income Tax Act. First, it adds a new item (d), \"benefits arising due to death\", to the conditions attached to paragraph 53. Second, it adds a new paragraph 76 to the list: any capital gains from transferring property to a real estate investment trust registered by the Commissioner under section 20(1).",
+        "sw": "Kifungu hiki kinarekebisha orodha ya mapato yasiyotozwa kodi katika Sehemu ya I ya Jedwali la Kwanza la Sheria ya Kodi ya Mapato. Kwanza, kinaongeza kipengele kipya (d), \"manufaa yanayotokana na kifo\", kwenye masharti yaliyoambatanishwa na aya ya 53. Pili, kinaongeza aya mpya ya 76 kwenye orodha hiyo: faida yoyote ya mtaji inayotokana na kuhamisha mali kwa mfuko wa uwekezaji katika mali isiyohamishika uliosajiliwa na Kamishna chini ya kifungu cha 20(1).",
+        "sheng": "Section hii ina-amend list ya income isiyo na tax kwenye Part I ya First Schedule ya Income Tax Act. Kwanza, ina-add item mpya (d), benefits zinazolipwa kwa sababu ya death, kwa conditions za paragraph 53. Pili, ina-add paragraph mpya 76 kwa list hiyo: capital gains zozote kutoka transfer ya property kwa real estate investment trust iliyo-registeriwa na Commissioner under section 20(1)."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the two list changes in plain words without opinion, advice or any view on legality."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c20",
@@ -422,14 +606,22 @@
       "pages": [
         10
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes the table in paragraph 1(1) of the Second Schedule to the Income Tax Act in two ways. First, in item (iv), it adds a condition to the rate: where the investment is more than ten billion shillings, the rate is 100% in the first year of use. Second, in item (a)(viii), it adds the words \"per year, in equal instalments\" after the 10% rate, so the 10% applies each year in equal parts.",
+        "sw": "Kifungu hiki kinarekebisha jedwali lililo katika aya ya 1(1) ya Jedwali la Pili la Sheria ya Kodi ya Mapato kwa njia mbili. Kwanza, katika kipengee cha (iv), kinaongeza sharti kwamba pale uwekezaji unapozidi shilingi bilioni kumi, kiwango ni asilimia 100 katika mwaka wa kwanza wa matumizi. Pili, katika kipengee cha (a)(viii), kinaongeza maneno \"kwa mwaka, kwa awamu sawa\" baada ya asilimia 10, kwa hiyo asilimia 10 inatumika kila mwaka kwa sehemu sawa.",
+        "sheng": "Section hii ina-amend table ya rates kwenye paragraph 1(1) ya Second Schedule ya Income Tax Act, kwa njia mbili. Kwanza, kwa item (iv), ina-add condition kwa rate: kama investment ni above ten billion shillings, rate ni 100% kwa first year ya use. Pili, kwa item (a)(viii), ina-add words \"per year, in equal instalments\" baada ya 10%, kwa hivyo 10% ina-apply every year in equal parts."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the two textual changes to the table and the conditions in them, with no judgement on the policy."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c21",
@@ -442,14 +634,24 @@
         10,
         11
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 21 amends Head B of the Third Schedule to the Income Tax Act. It deletes subparagraph (i) of paragraph 2, and deletes the condition (proviso) attached to subparagraph (d) of paragraph 3. In both paragraph 3 and paragraph 5 it adds two new rates: 1.5% of the gross amount (the total before anything is taken off) for the sale of scrap metal, and 20% for winnings.",
+        "sw": "Kifungu cha 21 kinarekebisha Sehemu B ya Jedwali la Tatu la Sheria ya Kodi ya Mapato. Kinafuta kifungu kidogo (i) cha aya ya 2, na kufuta sharti lililoambatana na kifungu kidogo (d) cha aya ya 3. Katika aya ya 3 na aya ya 5, kinaongeza viwango viwili vipya: asilimia 1.5 ya jumla ya kiasi kizima (kabla ya makato yoyote) kwa mauzo ya vyuma chakavu, na asilimia 20 kwa zawadi za ushindi.",
+        "sheng": "Section 21 ina-amend Head B ya Third Schedule ya Income Tax Act. Ina-delete subparagraph (i) ya paragraph 2, na pia ina-delete condition (proviso) iliyokuwa kwa subparagraph (d) ya paragraph 3. Kwa paragraph 3 na paragraph 5, ina-add two new rates: 1.5% ya gross amount (total before kitu yoyote kukatwa) kwa sale ya scrap metal, na 20% kwa winnings."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
-      "groups": [],
-      "suggested_articles": []
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the deletions and the two new rates stated in the text, with no opinion on them and no claims about what the deleted provisions contained."
+      },
+      "groups": [
+        "trader"
+      ],
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c22",
@@ -461,14 +663,22 @@
       "pages": [
         11
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 22 amends the Fourth Schedule to the Income Tax Act by adding one new item to its list: a financial institution licensed under the Microfinance Act (Cap. 493C). That is the only change this section makes. What being on that list means is set out in the Income Tax Act itself, not in this clause.",
+        "sw": "Kifungu cha 22 kinarekebisha Jedwali la Nne la Sheria ya Kodi ya Mapato (Income Tax Act) kwa kuongeza kipengee kimoja kipya kwenye orodha yake: taasisi ya kifedha iliyopewa leseni chini ya Sheria ya Microfinance (Cap. 493C). Hiyo ndiyo mabadiliko pekee katika kifungu hiki. Maana ya kuwa kwenye orodha hiyo imo katika Sheria ya Kodi ya Mapato yenyewe, si katika kifungu hiki.",
+        "sheng": "Section 22 ina-amend Fourth Schedule ya Income Tax Act kwa ku-add new item kwa list: financial institution yenye licence under Microfinance Act (Cap. 493C). Hiyo ndiyo change pekee kwenye section hii. Meaning ya kuwa kwenye list hiyo iko kwa Income Tax Act yenyewe, si kwa clause hii."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the single added item in the schedule; no opinion, advice or judgement on legality, and no claim about the schedule's purpose beyond the text."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c23",
@@ -480,14 +690,22 @@
       "pages": [
         11
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 23 makes three changes to the Eighth Schedule of the Income Tax Act. In paragraph 2(c), it corrects a cross-reference so it points to subparagraph (b) instead of subparagraph (a). It also adds a new item (d) to paragraph 2: gains from the sale or transfer of shares by a non-resident, where the shares get their value from Kenya, or the transfer changes the group membership of a company resident in Kenya, or changes ownership of or interest in property in Kenya. In paragraph 8(4A), it adds words after \"Capital Gains Tax\" so that a transfer covered by paragraph 6(2)(i) is left out of that subparagraph.",
+        "sw": "Kifungu cha 23 kinafanya mabadiliko matatu kwenye Jedwali la Nane la Sheria ya Ushuru wa Mapato. Katika aya ya 2(c), kinarekebisha rejeleo ili lielekeze kwenye kifungu kidogo (b) badala ya (a). Pia kinaongeza kipengele kipya (d) kwenye aya ya 2: faida kutokana na uuzaji au uhamisho wa hisa unaofanywa na mtu asiye mkazi, pale hisa hizo zinapopata thamani yake kutoka Kenya, au uhamisho huo unapobadilisha uanachama wa kikundi wa kampuni inayokaa Kenya, au umiliki wa mali au haki katika mali iliyoko Kenya. Katika aya ya 8(4A), kinaongeza maneno baada ya \"Capital Gains Tax\" ili uhamisho unaohusika na aya ya 6(2)(i) usijumuishwe katika kifungu hicho kidogo.",
+        "sheng": "Section 23 inarekebisha Eighth Schedule ya Income Tax Act kwa changes tatu. Kwa paragraph 2(c), ina-correct reference: badala ya subparagraph (a), sasa inaenda kwa subparagraph (b). Pia ina-add item (d) kwa paragraph 2: gains kutoka sale au transfer ya shares na non-resident, kama shares zinapata value yao kutoka Kenya, au transfer ina-change group membership ya company iliyo Kenya, au ownership ya property iliyo Kenya. Kwa paragraph 8(4A), ina-add maneno baada ya Capital Gains Tax ili transfer inayofunikwa na paragraph 6(2)(i) isiwe included kwa hiyo subparagraph."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only what the amendments change (a cross-reference fix, a new item on non-resident share gains, and an exclusion in paragraph 8(4A)), with no opinion, advice or legal judgment."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c24",
@@ -500,14 +718,22 @@
         11,
         12
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes the Ninth Schedule of the Income Tax Act, which lists tax rates. It sets a 15% tax rate for non-residents on repatriated income (income sent out of Kenya) of a licensee under section 7B, and the same 15% rate for a contractor under section 7B. It also lowers the rate for a non-resident company in paragraph 7(3)(b) from 37.5% to 30%.",
+        "sw": "Kifungu hiki kinarekebisha Jedwali la Tisa la Sheria ya Kodi ya Mapato, linaloorodhesha viwango vya kodi. Kinaweka kiwango cha kodi cha asilimia 15 kwa wasio wakazi kwa mapato yanayopelekwa nje ya Kenya na mwenye leseni chini ya kifungu cha 7B, na kiwango hicho hicho kwa mkandarasi chini ya kifungu cha 7B. Pia kinapunguza kiwango cha kampuni ya mtu asiye mkazi katika aya ya 7(3)(b) kutoka asilimia 37.5 hadi asilimia 30.",
+        "sheng": "Section hii ina-amend Ninth Schedule ya Income Tax Act, ambayo ina list ya tax rates. Ina-set tax rate ya 15% kwa non-residents kwa repatriated income (income inayotumwa nje ya Kenya) ya licensee under section 7B, na 15% pia kwa contractor under section 7B. Pia ina-reduce tax rate ya non-resident company kwa paragraph 7(3)(b) kutoka 37.5% hadi 30%."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the rate changes for licensees, contractors and non-resident companies only, with no opinion, advice or legal judgment. The trailing 'PART III-VALUE ADDED TAX' is a heading, not part of this section, so it is not explained."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c25",
@@ -519,14 +745,22 @@
       "pages": [
         12
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes the list of definitions at the start of the Value Added Tax (VAT) Act, in section 2(1). It deletes three definitions: \"assessment\", \"information technology\" and \"tax computerized system\". It is a small technical amendment to a definitions clause, and the section itself adds nothing new.",
+        "sw": "Kifungu hiki kinarekebisha orodha ya ufafanuzi wa maneno mwanzoni mwa Sheria ya Ushuru wa Ongezeko la Thamani (VAT), katika kifungu cha 2(1). Kinafuta ufafanuzi wa maneno matatu: \"assessment\" (tathmini ya kodi), \"information technology\" (teknolojia ya habari) na \"tax computerized system\" (mfumo wa kodi wa kompyuta). Ni marekebisho madogo ya kiufundi ya ufafanuzi tu, na kifungu chenyewe hakiongezi kitu kipya.",
+        "sheng": "Section 25 ina-amend section 2(1) ya Value Added Tax Act (VAT Act), ile part ya definitions. Ina-delete three definitions: \"assessment\", \"information technology\" na \"tax computerized system\". Ni small technical change ya definitions tu, na section yenyewe haija-add kitu kipya."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Technical deletion of three definitions, described plainly with no opinion, advice or legal judgement."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c26",
@@ -539,14 +773,22 @@
         12,
         13
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 26 changes section 13 of the VAT Act in two ways. First, it adds two new subsections: when a supplier of labour, outsourcing or employee placement services pays employee-related costs (salaries, wages, statutory deductions and similar costs), those costs are treated as disbursements, meaning money paid on behalf of the client. Second, it replaces paragraph (a) of subsection (6) with new wording: for goods supplied by a licensed hire purchase business under a hire purchase agreement registered under the Hire Purchase Act, the paragraph covers any financial charge payable for the credit under that agreement.",
+        "sw": "Kifungu hiki kinarekebisha kifungu cha 13 cha Sheria ya VAT kwa njia mbili. Kwanza, kinaongeza vifungu vidogo viwili vipya: mtoaji wa huduma za wafanyakazi, utoaji wa kazi nje (outsourcing) au uwekaji wa wafanyakazi akilipa gharama za wafanyakazi (mishahara, ujira, makato ya kisheria na gharama zinazofanana), gharama hizo huchukuliwa kama malipo yaliyofanywa kwa niaba ya mteja. Pili, kinabadilisha aya (a) ya kifungu kidogo cha (6) ili, kwa bidhaa zinazotolewa na mwenye leseni ya biashara ya hire purchase chini ya mkataba uliosajiliwa kwa mujibu wa Sheria ya Hire Purchase, aya hiyo itaje ada yoyote ya kifedha inayolipwa kwa mkopo chini ya mkataba huo.",
+        "sheng": "Section 26 ina-amend section 13 ya VAT Act kwa njia mbili. Kwanza, ina-add subsections mbili mpya: kama supplier wa labour, outsourcing au employee placement services ana-pay employee costs kama salaries, wages na statutory deductions, costs hizo zina-count kama disbursements, yaani pesa alizolipa on behalf of the client. Pili, ina-replace paragraph (a) ya subsection (6): kwa goods zinazotoka kwa business yenye hire purchase licence chini ya agreement iliyo-registered kwa Hire Purchase Act, paragraph hiyo inataja financial charge yoyote ya credit chini ya agreement hiyo."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only what the two amendments do, with no opinion on their effect. Not tagged to a group because the text applies to labour suppliers and licensed hire purchase businesses generally, not to a named group."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c27",
@@ -558,14 +800,22 @@
       "pages": [
         13
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes section 17 of the VAT Act, which deals with input tax (the VAT a business pays on what it buys). It adds a new item (e) to the list in subsection 5 covering input tax linked to supplies to the Kenya Defence Forces, the Defence Forces Welfare Services, the National Intelligence Service and the National Police Service, where those supplies are listed as exempt in paragraphs 57 and 101 of the First Schedule. It also adds subsections 7 and 8: a registered person can deduct input tax on supplies to those four bodies, as long as the supplies have the documents the Commissioner prescribes and the deduction covers only input tax directly attributable to them. Input tax deducted this way is not apportioned under subsection 5 when it is wholly attributable to those supplies.",
+        "sw": "Kifungu hiki kinarekebisha kifungu cha 17 cha Sheria ya Ushuru wa Ongezeko la Thamani (VAT), kinachohusu kodi ya pembejeo (VAT anayolipa mfanyabiashara kwa bidhaa na huduma anazonunua). Kinaongeza aya mpya (e) kwenye orodha ya kifungu kidogo cha (5) kuhusu kodi ya pembejeo inayohusiana na bidhaa na huduma zinazotolewa kwa Jeshi la Ulinzi la Kenya, Huduma za Ustawi wa Vikosi vya Ulinzi, Huduma ya Kitaifa ya Ujasusi na Huduma ya Taifa ya Polisi, ambapo zimeorodheshwa kama zisizotozwa VAT katika aya ya 57 na 101 za Jedwali la Kwanza. Pia kinaongeza vifungu vidogo vya (7) na (8): mtu aliyesajiliwa anaweza kukata kodi ya pembejeo kwa bidhaa na huduma zinazotolewa kwa taasisi hizo nne, mradi kuna nyaraka atakazobainisha Kamishna na makato yanahusu kodi ya pembejeo inayohusiana moja kwa moja nazo. Kodi ya pembejeo iliyokatwa kwa njia hii haigawanywi chini ya kifungu kidogo cha (5) ikiwa inahusiana kikamilifu na bidhaa na huduma hizo.",
+        "sheng": "Section 27 ina-amend section 17 ya VAT Act, inayohusu input tax (VAT anayolipa business kwa vitu ana-buy). Ina-add item new (e) kwa list ya subsection 5 kuhusu input tax ya supplies kwa Kenya Defence Forces, Defence Forces Welfare Services, National Intelligence Service na National Police Service, kama supplies hizo zime-listed kama exempt kwa paragraphs 57 na 101 za First Schedule. Pia ina-add subsections 7 na 8: registered person anaweza ku-deduct input tax ya supplies kwa hizo four bodies, kama kuna documents ambazo Commissioner ana-prescribe na deduction ni ya input tax inayo-relate directly na supplies hizo. Input tax iliyo-deductiwa hivyo haiwezi ku-apportionwa chini ya subsection 5 kama ni wholly ya supplies hizo."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Described only what the amendments add and the conditions attached, with no opinion, advice or judgement on legality."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c28",
@@ -578,14 +828,22 @@
         13,
         14
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 28 adds a new section 17A to the VAT Act. It covers a VAT-registered person whose taxable supplies (goods or services) become exempt from VAT after the person has already deducted input tax (the VAT paid on buying them) on supplies that are still unsold. For that unsold stock, the person adds an amount equal to the input tax to the tax return for the period when the supplies became exempt, using the same method used when the input tax was first deducted. If the adjustment leaves excess input tax, the person owes that tax to the Commissioner.",
+        "sw": "Kifungu cha 28 kinaongeza kifungu kipya cha 17A katika Sheria ya VAT. Kinahusu mtu aliyesajiliwa kwa VAT ambaye bidhaa au huduma zake zinazotozwa VAT zinakuwa zisizotozwa ushuru (exempt), baada ya kuwa amekata ushuru wa pembejeo (input tax, yaani VAT aliyolipa wakati wa kununua) kwa bidhaa ambazo bado hazijauzwa. Kwa bidhaa hizo, anaongeza kiasi sawa na ushuru huo wa pembejeo kwenye marejesho ya kodi ya kipindi ambacho zilikuwa exempt, akitumia njia ile ile aliyotumia kukata ushuru huo mwanzoni. Marekebisho yakisababisha ushuru wa pembejeo wa ziada, mtu huyo anawajibika kulipa ushuru huo kwa Kamishna.",
+        "sheng": "Section 28 ina-insert section 17A mpya kwa VAT Act. Inahusu registered person ambaye supplies zake zina-become exempt kutoka VAT, na tayari ame-deduct input tax (VAT aliyolipa ku-buy hizo supplies) kwa supplies ambazo bado ni unsold. Kwa hizo unsold supplies, ana-add amount sawa na input tax kwa tax return ya period ambayo supplies zilikuwa exempt, akitumia method ile ile aliyotumia ku-deduct input tax mwanzoni. Kama adjustment inaleta excess input tax, ana-pay hiyo tax kwa Commissioner."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the new VAT adjustment rule and who it applies to, with no opinion, advice or legal judgement."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c29",
@@ -597,14 +855,22 @@
       "pages": [
         14
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section amends section 31 of the Value Added Tax Act. In subsection (1), paragraph (a), the period of \"two years\" is replaced with \"three years\". It is a small technical change that lengthens that one period by a year and changes nothing else in the section.",
+        "sw": "Kifungu hiki kinarekebisha kifungu cha 31 cha Sheria ya Ushuru wa Thamani Iliyoongezwa (VAT). Katika kifungu kidogo cha (1), aya (a), muda wa \"miaka miwili\" unabadilishwa kuwa \"miaka mitatu\". Ni marekebisho madogo ya kiufundi yanayoongeza muda huo kwa mwaka mmoja tu, na hakuna kingine kinachobadilika katika kifungu hicho.",
+        "sheng": "Section 29 ina-amend section 31 ya VAT Act. Kwa subsection (1), paragraph (a), period ya \"two years\" ina-replaciwa na \"three years\". Ni technical change ndogo tu: period moja inaongezwa na one year, na kitu kingine hakibadiliki kwa hiyo section."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "The clause only swaps one number, and the explanation describes that change without opinion, advice or any comment on legality."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c30",
@@ -616,14 +882,22 @@
       "pages": [
         14
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section removes subsection (2) of section 42 of the Value Added Tax (VAT) Act and puts a new subsection (2) in its place. The new subsection says an invoice that shows an amount claimed to be tax can only be issued for a taxable supply. A taxable supply is a sale of goods or services that VAT applies to.",
+        "sw": "Kifungu hiki kinafuta kifungu kidogo cha (2) cha kifungu cha 42 cha Sheria ya Ushuru wa Ongezeko la Thamani (VAT) na kuweka kifungu kidogo kipya cha (2). Kifungu kipya kinasema ankara inayoonyesha kiasi kinachodaiwa kuwa ushuru inaweza kutolewa tu kwa bidhaa au huduma zinazotozwa VAT (taxable supply).",
+        "sheng": "Section 30 ina-delete subsection (2) ya section 42 ya VAT Act na ina-put subsection (2) mpya. Subsection mpya inasema invoice ina-show amount inayosemekana ni tax inaweza ku-be issued tu kwa taxable supply, yaani sale ya goods au services ambazo VAT ina-apply."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the replacement of one subsection and what the new wording says, with no opinion or advice."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c31",
@@ -635,14 +909,22 @@
       "pages": [
         14
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section removes section 66 from the Value Added Tax Act completely. The clause does not say what section 66 covered, so the effect depends on what that section provided. After the repeal, section 66 no longer forms part of the Act.",
+        "sw": "Kifungu hiki kinaondoa kabisa kifungu cha 66 kutoka kwa Sheria ya Ushuru wa Thamani ya Ziada (VAT). Kifungu hiki hakisemi kifungu cha 66 kilihusu nini, kwa hivyo athari inategemea kilichokuwa kimeandikwa humo. Baada ya kufutwa, kifungu cha 66 hakitakuwa tena sehemu ya Sheria hiyo.",
+        "sheng": "Section hii in-repeal section 66 ya VAT Act, yaani inaondolewa kabisa kwa Act. Clause haisemi section 66 ilikuwa inahusu nini, kwa hivyo effect inategemea ilichokuwa imeandikwa huko. Baada ya repeal, section 66 haitakuwa tena part ya Act."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the repeal of a section, without opinion, advice or any comment on its validity. No group is tagged because the clause does not show who is affected."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c32",
@@ -659,14 +941,24 @@
         18,
         19
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes the list of VAT-exempt goods and services in the First Schedule. In Part 1 (goods), paragraphs 49, 58, 62 and 109 are deleted. Paragraph 51 now also covers spare parts, and a spare parts exemption granted before 30 June 2026 continues until the project ends. In paragraph 89, the words \"any other aircraft spare\" become \"aircraft\", and in paragraph 99(i), \"three hundred\" becomes \"two thousand\". Paragraph 146 is replaced: it now covers capital goods that the Cabinet Secretary decides to exempt to promote manufacturing investment, where the investment is at least two billion shillings. New exempt goods are: dialyzers (tariff 8421.29.00); scrap metal; inputs or raw materials, bought locally or imported, for making pharmaceutical products, on the health Cabinet Secretary's recommendation; bioethanol vapour stoves (HS 7321.12.00); goods used directly and only for public private partnership infrastructure projects, once the Cabinet Secretary approves; goods used directly and only for projects funded by the National Infrastructure Fund, as approved by the Treasury Cabinet Secretary; plant, machinery, equipment and spare parts for a project with total investment of at least three billion shillings, approved by the Treasury Cabinet Secretary on the trade and investment Cabinet Secretary's recommendation; taxable goods for building liquefied petroleum gas (LPG) storage tanks and related infrastructure, where the investment in Kenya is at least five billion shillings and the energy Cabinet Secretary recommends it; and making advances or granting credit, including selling collateral, repossessed assets or secured property when a lender enforces security for loans, credit or other exempt financial services. In Part II (services), paragraph 1(b) is replaced. Dealing in money, including money transfer services and accepting over-the-counter payments of household bills, stays exempt. Carrying cash, restocking cash machines, and sorting or counting money are not exempt. Payment processing, settlement, merchant acquiring, gateway and aggregation services that a payment service provider supplies over a software or platform for a fee or commission are also not exempt. A payment service provider is a person or organization that owns or runs a public switched network for payment services, or one that processes or stores data for such a provider or its users. Paragraph 25 gets two definitions: a tour operator is a tour or safari operator licensed by the tourism sector regulator, and in-house supplies are supplies made from the operator's own resources, or bought from others but changed so much that the supply is substantially different. Paragraph 26 is deleted. Two new exempt services are added: services used directly and only for public private partnership infrastructure projects, with Cabinet Secretary approval (paragraph 39), and taxable services for building LPG storage tanks and related infrastructure, with the same five billion shilling investment and energy Cabinet Secretary recommendation (paragraph 40).",
+        "sw": "Sehemu hii inabadilisha orodha ya bidhaa na huduma zisizotozwa VAT (zilizosamehewa) katika Jedwali la Kwanza. Katika Sehemu ya 1 (bidhaa), aya ya 49, 58, 62 na 109 zinafutwa. Aya ya 51 sasa inajumuisha pia vipuri, na msamaha wa vipuri uliotolewa kabla ya tarehe 30 Juni 2026 unaendelea hadi mradi ukamilike. Katika aya ya 89, maneno \"any other aircraft spare\" yanabadilishwa kuwa \"aircraft\", na katika aya ya 99(i), \"three hundred\" inakuwa \"two thousand\". Aya ya 146 inabadilishwa: sasa inahusu bidhaa za mtaji ambazo Waziri (Cabinet Secretary) ataamua kuzisamehe ili kuhimiza uwekezaji katika utengenezaji bidhaa, ikiwa thamani ya uwekezaji ni angalau shilingi bilioni mbili. Bidhaa mpya zilizosamehewa ni: dialyzers (namba ya ushuru 8421.29.00); vyuma chakavu; malighafi zinazonunuliwa humu nchini au kuagizwa kutoka nje kwa ajili ya kutengeneza dawa, kwa mapendekezo ya Waziri wa Afya; jiko la bioethanol vapour (HS 7321.12.00); bidhaa zinazotumika moja kwa moja na kwa kipekee katika miradi ya miundombinu ya ubia wa umma na sekta binafsi, Waziri akiidhinisha; bidhaa zinazotumika moja kwa moja na kwa kipekee katika miradi inayofadhiliwa na Mfuko wa Kitaifa wa Miundombinu, kwa idhini ya Waziri wa Hazina; mitambo, vifaa na vipuri vya mradi wenye uwekezaji wa angalau shilingi bilioni tatu, kwa idhini ya Waziri wa Hazina kwa mapendekezo ya Waziri wa Biashara na Kukuza Uwekezaji; bidhaa zinazotozwa ushuru zinazotumika kujenga matangi ya kuhifadhi gesi ya kupikia (LPG) na miundombinu inayohusiana, ikiwa uwekezaji nchini ni angalau shilingi bilioni tano na Waziri wa Nishati amependekeza; na utoaji wa mikopo au advansi, pamoja na kuuza dhamana, mali iliyotwaliwa au mali iliyowekwa rehani benki inapotekeleza dhamana ya mikopo au huduma nyingine za kifedha zilizosamehewa. Katika Sehemu ya II (huduma), aya ya 1(b) inabadilishwa. Shughuli za fedha, ikiwemo huduma za kutuma pesa na kupokea malipo ya bili za nyumbani kwenye kaunta, zinabaki zimesamehewa. Usafirishaji wa fedha taslimu, kujaza pesa kwenye mashine za ATM, na kupanga au kuhesabu pesa hazijasamehewa. Huduma za kuchakata malipo, kusuluhisha malipo, merchant acquiring, gateway na aggregation zinazotolewa kupitia programu au jukwaa kwa ada au kamisheni na mtoa huduma za malipo pia hazijasamehewa. Mtoa huduma za malipo ni mtu au shirika linalomiliki au kuendesha mtandao wa umma wa huduma za malipo, au anayechakata au kuhifadhi data kwa niaba ya mtoa huduma huyo au watumiaji wake. Aya ya 25 inapata fasili mbili: tour operator ni mwendeshaji wa utalii au safari aliyepewa leseni na mamlaka ya kudhibiti sekta ya utalii, na in-house supplies ni huduma zinazotolewa kutoka rasilimali zake mwenyewe, au zilizonunuliwa kutoka kwa wengine lakini zikabadilishwa kiasi kwamba zinatofautiana sana na zilizonunuliwa. Aya ya 26 inafutwa. Huduma mpya mbili zinaongezwa kwenye orodha ya msamaha: huduma zinazotumika moja kwa moja na kwa kipekee katika miradi ya miundombinu ya ubia wa umma na sekta binafsi, Waziri akiidhinisha (aya ya 39), na huduma zinazotozwa ushuru za kujenga matangi ya LPG na miundombinu inayohusiana, kwa masharti yale yale ya uwekezaji wa shilingi bilioni tano na mapendekezo ya Waziri wa Nishati (aya ya 40).",
+        "sheng": "Section hii inabadilisha list ya goods na services ambazo ni exempt from VAT kwa First Schedule. Kwa Part 1 (goods), paragraphs 49, 58, 62 na 109 zina-be deleted. Paragraph 51 sasa inajumuisha pia spare parts, na exemption ya spare parts iliyopewa before 30 June 2026 inaendelea mpaka project iishe. Kwa paragraph 89, words \"any other aircraft spare\" zina-change kuwa \"aircraft\", na kwa paragraph 99(i), \"three hundred\" inakuwa \"two thousand\". Paragraph 146 ina-be replaced: sasa ni capital goods ambazo Cabinet Secretary ataamua ziwe exempt ili ku-promote investment kwa manufacturing, kama investment ni at least two billion shillings. Goods mpya zilizo exempt ni: dialyzers (tariff 8421.29.00); scrap metal; inputs au raw materials, local au imported, za ku-manufacture pharmaceutical products, kwa recommendation ya Health Cabinet Secretary; bioethanol vapour stoves (HS 7321.12.00); goods za direct na exclusive use kwa public private partnership infrastructure projects, Cabinet Secretary akiapprove; goods za direct na exclusive use kwa projects zinazofunded na National Infrastructure Fund, kwa approval ya Treasury Cabinet Secretary; plant, machinery, equipment na spare parts za project yenye total investment ya at least three billion shillings, kwa approval ya Treasury Cabinet Secretary baada ya recommendation ya Trade and Investment Promotion Cabinet Secretary; taxable goods za ku-build liquefied petroleum gas (LPG) storage tanks na infrastructure inayohusiana, kama investment kwa Kenya ni at least five billion shillings na Energy Cabinet Secretary ame-recommend; na ku-make advances au ku-grant credit, pamoja na ku-sell collateral, repossessed assets au secured property lender anapo-enforce security ya loans, credit au exempt financial services zingine. Kwa Part II (services), paragraph 1(b) ina-be replaced. Kushughulika na money, pamoja na money transfer services na ku-accept over the counter payments za household bills, bado ni exempt. Carriage ya cash, ku-restock cash machines, na ku-sort au ku-count money si exempt. Payment processing, settlement, merchant acquiring, gateway na aggregation services zinazotolewa kupitia software au platform kwa fee au commission na payment service provider pia si exempt. Payment service provider ni mtu au organization inayomiliki au ku-run public switched network ya payment services, au anayeprocess au ku-store data kwa niaba ya provider huyo au users wake. Paragraph 25 inapata definitions mbili: tour operator ni tour au safari operator mwenye licence ya regulator wa tourism sector, na in-house supplies ni supplies zinazotoka kwa own resources za operator, au zilizonunuliwa kwa wengine lakini zika-change sana hadi ni different kabisa na zilizonunuliwa. Paragraph 26 ina-be deleted. Services mbili mpya zina-added kwa exempt list: services za direct na exclusive use kwa public private partnership infrastructure projects, Cabinet Secretary akiapprove (paragraph 39), na taxable services za ku-build LPG storage tanks na infrastructure inayohusiana, kwa conditions zile zile za five billion shillings investment na recommendation ya Energy Cabinet Secretary (paragraph 40)."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
-      "groups": [],
-      "suggested_articles": []
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only what each paragraph adds, removes or changes in the exempt list, with no opinion, advice or legal verdict."
+      },
+      "groups": [
+        "trader"
+      ],
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c33",
@@ -678,14 +970,22 @@
       "pages": [
         19
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes Part A of the Second Schedule to the VAT Act. It removes paragraph 11 and paragraph 35 from that Part. It also adds a customs classification code (tariff heading) to two paragraphs: \"of tariff heading 8712.00.00\" after the word \"bicycle\" in paragraph 31, and \"of tariff heading 8507.60.00\" after the word \"batteries\" in paragraph 32.",
+        "sw": "Kifungu hiki kinarekebisha Sehemu A ya Jedwali la Pili la Sheria ya Ushuru wa Ongezeko la Thamani (VAT). Kinafuta aya ya 11 na aya ya 35. Pia kinaongeza msimbo wa uainishaji wa bidhaa za forodha katika aya mbili: \"of tariff heading 8712.00.00\" baada ya neno \"bicycle\" katika aya ya 31, na \"of tariff heading 8507.60.00\" baada ya neno \"batteries\" katika aya ya 32.",
+        "sheng": "Section 33 ina-amend Part A ya Second Schedule kwa VAT Act. Ina-delete paragraph 11 na paragraph 35. Pia ina-add tariff heading (code ya customs ya kuainisha goods) kwa paragraphs mbili: \"of tariff heading 8712.00.00\" baada ya word \"bicycle\" kwa paragraph 31, na \"of tariff heading 8507.60.00\" baada ya word \"batteries\" kwa paragraph 32."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the deletions and the added tariff heading wording, with no opinion on their effect."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c34",
@@ -697,14 +997,22 @@
       "pages": [
         19
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 34 adds a new definition to section 2 of the Excise Duty Act, the part that explains the Act's terms. An \"antique, vintage or classic vehicle\" is a motor vehicle first registered at least thirty years before the date it is bought, and worth at least ten million shillings before any reduction for depreciation (loss of value as it gets older). The new definition goes in its alphabetical place. This section only defines the term; it does not set any tax or rate itself.",
+        "sw": "Kifungu cha 34 kinaongeza ufafanuzi mpya katika kifungu cha 2 cha Sheria ya Ushuru wa Bidhaa (Excise Duty Act), kinachoeleza maana ya maneno yanayotumika katika Sheria hiyo. \"Gari la kale, la zamani au la kihistoria\" (antique, vintage or classic vehicle) ni gari lililosajiliwa mara ya kwanza angalau miaka thelathini kabla ya tarehe ya kulinunua, na ambalo thamani yake ni angalau shilingi milioni kumi bila kupunguzwa kwa sababu ya kushuka thamani (depreciation). Kifungu hiki kinafafanua neno hilo tu; hakiweki ushuru au kiwango chochote chenyewe.",
+        "sheng": "Section 34 ina-add new definition kwa section 2 ya Excise Duty Act. Definition ni ya \"antique, vintage or classic vehicle\": motor vehicle ambayo first registration yake ilikuwa at least thirty years before date ya purchase, na value yake ni at least ten million shillings, without depreciation (depreciation ni value loss as the vehicle inapata old). Ni definition tu, na section hii haiseti tax wala rate yoyote."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section is a plain definition; explained only who and what the term covers, with no opinion on its effect."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c35",
@@ -717,14 +1025,22 @@
         19,
         20
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 35 adds a new item (c) to the list in section 29(1) of the Excise Duty Act. The new item covers a licensed or registered manufacturer who has paid excise duty on inputs (the materials and other things used up in production) to make goods that are normally exempt under Paragraph 12 of Part A of the Second Schedule. It applies only where those inputs are directly attributable to the manufactured goods, meaning they can be traced straight to those goods.",
+        "sw": "Kifungu cha 35 kinaongeza aya mpya (c) katika kifungu kidogo cha 29(1) cha Sheria ya Ushuru wa Bidhaa (Excise Duty Act). Hali hiyo mpya inahusu mtengenezaji mwenye leseni au aliyesajiliwa ambaye amelipa ushuru wa bidhaa kwa pembejeo alizotumia kutengeneza bidhaa ambazo kwa kawaida zimesamehewa ushuru huo chini ya Aya ya 12 ya Sehemu A ya Jedwali la Pili. Inahusu pembejeo zinazoweza kuhusishwa moja kwa moja na bidhaa zilizotengenezwa.",
+        "sheng": "Section 35 ina-add new paragraph (c) kwa list ya section 29(1) ya Excise Duty Act. Case hiyo mpya ni ya manufacturer mwenye licence au aliye-register, ambaye amelipa excise duty kwa inputs alizotumia ku-make goods ambazo normally ni exempt chini ya Paragraph 12 ya Part A ya Second Schedule. Inahusu tu inputs ambazo ni directly attributable kwa goods hizo, yaani zinaweza ku-link straight na goods alizo-make."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only what the new paragraph adds and its conditions, with no opinion, advice or judgment on legality."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c36",
@@ -740,14 +1056,22 @@
         23,
         24
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 36 changes the First Schedule of the Excise Duty Act, which lists goods and services and the excise duty on each. In Part I (second table): the entry for imported gas cylinders now adds tariff code 7311.00.10. The old entry for fruit and vegetable juice is deleted and replaced by two new entries: juice with no added sugar at KSh 14.14 per litre, and juice with added sugar or other sweetener at KSh 20 per litre. The words \"bottled or similarly packaged waters and other\" are removed from the non-alcoholic beverages entry, so it now reads \"non-alcoholic beverages, not including fruit or vegetable juices\". New rates: cigars, cheroots and cigarillos, KSh 18,000 per kilogram; other manufactured tobacco and tobacco substitutes, KSh 12,550 per kilogram; imported sugar (with the existing exclusions for pharmaceutical manufacturers and licensed sugar refineries), KSh 40 per kilogram; imported ceramic sanitary fixtures (tariff 6910) and imported ceramic tiles and paving (tariff 6907), each 5% of the excisable value or KSh 50 per kilogram, whichever is higher; and extra neutral alcohol above 90% strength bought by licensed spirit makers, KSh 80 per litre. The two old entries for imported plastic articles (heading 3923.30.00, and 3923.30.00 with 3923.90.00) are deleted. In the float glass entry (tariff 7005), the exclusion for goods from East African Community Partner States that meet the EAC Rules of Origin is removed, while the exclusion for registered processors recommended by the Cabinet Secretary stays. New entries added: imported plastic articles (3923.30.00 and 3923.90.90), 10%; antique, vintage and classic vehicles, 50% of the excisable value; imported MDF, particle boards, block board, plywood and timber of tariff 4407.19.00, each 30% of the excisable value; imported unprinted banner sheeting, flex banner and unprinted PVC sheeting (3921.12.10 and 3921.90.10), KSh 200 per kilogram or 35% of the excisable value; imported shower heads (8516.10) and heating elements used only to make them, each 35%; oral smokeless tobacco such as Swedish-style snus, KSh 2,000 per kilogram; unprinted plastic sheets (3920.43.10), 10%; and pre-personal chip modules (8542.31.00), 10%. In Part II: in paragraph 4A, \"deposited into a customer's betting wallet\" becomes \"deposited for betting purposes\", and the proviso to paragraph 4A is deleted. In paragraph 4B, the same words become \"deposited for gambling purposes\". In paragraph 9, the word \"service\" is inserted before \"providers\". In Part III: the definition of \"amount deposited into a customer's betting wallet\" is deleted. A new definition of \"amount deposited\" is added: the total money or money's worth paid, transferred, credited or made available for betting or gambling to a person licensed under the Gambling Control Act, whether from a player or the operator, in cash or cash equivalents, whether or not held in an account, or turned into chips, tokens, tickets or credits. Definitions of \"virtual asset\" and \"virtual asset service provider\" are added, taking the meaning in section 2 of the Virtual Asset Service Providers Act, 2025.",
+        "sw": "Kifungu cha 36 kinabadilisha Jedwali la Kwanza la Sheria ya Ushuru wa Bidhaa, linaloorodhesha bidhaa na huduma pamoja na ushuru wa bidhaa wa kila moja. Katika Sehemu ya I (jedwali la pili): maelezo ya mitungi ya gesi inayoagizwa kutoka nje sasa yanaongeza msimbo wa ushuru 7311.00.10. Kipengele cha zamani cha juisi ya matunda na ya mboga kinafutwa, na vipengele viwili vipya vinaingizwa: juisi isiyo na sukari iliyoongezwa, KSh 14.14 kwa lita, na juisi yenye sukari au kitamu kilichoongezwa, KSh 20 kwa lita. Maneno \"bottled or similarly packaged waters and other\" yanaondolewa kwenye kipengele cha vinywaji visivyo na kileo, hivyo sasa kinasomeka \"non-alcoholic beverages, not including fruit or vegetable juices\". Viwango vipya ni: sigara za cigar, cheroot na cigarillo, KSh 18,000 kwa kilo; tumbaku nyingine iliyotengenezwa na mbadala wake, KSh 12,550 kwa kilo; sukari inayoagizwa kutoka nje (isipokuwa ile ya watengenezaji wa dawa na viwanda vya kusafisha sukari vyenye leseni), KSh 40 kwa kilo; vifaa vya usafi vya kauri vinavyoagizwa (aina ya 6910) na vigae vya kauri vinavyoagizwa (aina ya 6907), kila kimoja asilimia 5 ya thamani inayotozwa ushuru au KSh 50 kwa kilo, kutegemea kiasi kikubwa zaidi; na pombe ya extra neutral alcohol yenye nguvu zaidi ya asilimia 90 inayonunuliwa na watengenezaji wenye leseni, KSh 80 kwa lita. Vipengele viwili vya zamani vya bidhaa za plastiki zinazoagizwa (3923.30.00, na 3923.30.00 pamoja na 3923.90.00) vinafutwa. Katika kipengele cha kioo cha float (aina ya 7005), kutotozwa ushuru kwa bidhaa kutoka nchi wanachama wa Jumuiya ya Afrika Mashariki zinazokidhi Kanuni za Asili ya Bidhaa kunaondolewa, ilhali msamaha kwa wasindikaji waliosajiliwa wanaopendekezwa na Waziri unabaki. Vipengele vipya vinavyoongezwa: bidhaa za plastiki zinazoagizwa (3923.30.00 na 3923.90.90), asilimia 10; magari ya kale, ya zamani na ya kawaida ya kihistoria, asilimia 50 ya thamani inayotozwa ushuru; MDF, mbao za chembe, block board, plywood na mbao za aina ya 4407.19.00 zinazoagizwa, kila kimoja asilimia 30; karatasi za bango zisizochapishwa, flex banner na karatasi za PVC zisizochapishwa (3921.12.10 na 3921.90.10), KSh 200 kwa kilo au asilimia 35 ya thamani inayotozwa ushuru; vichwa vya bafu (shower heads) vinavyoagizwa (8516.10) na vipengele vya kupasha joto vinavyotumika kutengeneza vichwa hivyo pekee, kila kimoja asilimia 35; bidhaa za tumbaku ya mdomoni zisizovutwa kama snus, KSh 2,000 kwa kilo; karatasi za plastiki zisizochapishwa (3920.43.10), asilimia 10; na pre-personal chip modules (8542.31.00), asilimia 10. Katika Sehemu ya II: katika aya ya 4A, maneno \"deposited into a customer's betting wallet\" yanakuwa \"deposited for betting purposes\", na sharti la aya ya 4A linafutwa. Katika aya ya 4B, maneno hayo yanakuwa \"deposited for gambling purposes\". Katika aya ya 9, neno \"service\" linaingizwa kabla ya \"providers\". Katika Sehemu ya III: ufafanuzi wa \"amount deposited into a customer's betting wallet\" unafutwa. Ufafanuzi mpya wa \"amount deposited\" unaongezwa: jumla ya fedha au thamani ya fedha iliyolipwa, kuhamishwa, kuwekwa au kutolewa kwa ajili ya kubashiri au kucheza kamari kwa mtu mwenye leseni chini ya Sheria ya Udhibiti wa Kamari, iwe imetoka kwa mchezaji au mwendeshaji, kwa fedha taslimu au vitu vinavyolingana nazo, iwe imehifadhiwa kwenye akaunti au la, au imegeuzwa kuwa chips, tokeni, tiketi au krediti. Ufafanuzi wa \"virtual asset\" na \"virtual asset service provider\" unaongezwa, ukichukua maana iliyo katika kifungu cha 2 cha Sheria ya Watoa Huduma za Mali Pepe, 2025.",
+        "sheng": "Section 36 ina-amend First Schedule ya Excise Duty Act, ambayo ina-list goods na services na excise duty ya kila moja. Kwa Part I, second table: description ya imported gas cylinders sasa ina-add tariff code 7311.00.10. Description ya zamani ya fruit juices na vegetable juice ina-delete, na inaingia entries mbili mpya: juice bila added sugar ni KSh 14.14 per litre, na juice na added sugar au sweetener ni KSh 20 per litre. Maneno \"bottled or similarly packaged waters and other\" yana-delete kwa entry ya non-alcoholic beverages, so sasa inasoma \"non-alcoholic beverages, not including fruit or vegetable juices\". Kuna new rates: cigars, cheroots na cigarillos ni KSh 18,000 per kilogram; other manufactured tobacco na tobacco substitutes ni KSh 12,550 per kilogram; imported sugar ni KSh 40 per kilogram (pharmaceutical manufacturers na licensed sugar refineries bado hawajumuishwi); imported ceramic sanitary fixtures (tariff 6910) na imported ceramic tiles na paving (tariff 6907) ni 5% ya excisable value au KSh 50 per kilogram, whichever ni higher; na extra neutral alcohol ya zaidi ya 90% strength inayonunuliwa na licensed spirit makers ni KSh 80 per litre. Entries mbili za zamani za imported plastic articles (3923.30.00, na 3923.30.00 pamoja na 3923.90.00) zina-delete. Kwa entry ya float glass (tariff 7005), exemption ya goods kutoka East African Community Partner States zinazo-meet EAC Rules of Origin inaondolewa, ila exemption ya registered processors wanaopendekezwa na Cabinet Secretary inabaki. New entries zinazo-add: imported plastic articles (3923.30.00 na 3923.90.90) ni 10%; antique, vintage na classic vehicles ni 50% ya excisable value; imported MDF, particle boards, block board, plywood na timber ya tariff 4407.19.00 ni 30% kila moja; imported unprinted banner sheeting, flex banner na unprinted PVC sheeting (3921.12.10 na 3921.90.10) ni KSh 200 per kilogram au 35% ya excisable value; imported shower heads (8516.10) na heating elements zinazotumika tu kutengeneza shower heads ni 35% kila moja; oral smokeless tobacco kama snus ni KSh 2,000 per kilogram; unprinted plastic sheets (3920.43.10) ni 10%; na pre-personal chip modules (8542.31.00) ni 10%. Kwa Part II: kwa paragraph 4A, \"deposited into a customer's betting wallet\" inakuwa \"deposited for betting purposes\", na proviso ya 4A ina-delete. Kwa paragraph 4B, maneno hayo yanakuwa \"deposited for gambling purposes\". Kwa paragraph 9, neno \"service\" linaingia kabla ya \"providers\". Kwa Part III: definition ya \"amount deposited into a customer's betting wallet\" ina-delete. Kuna new definition ya \"amount deposited\": total ya money au money's worth iliyolipwa, kuhamishwa, credited au kupewa kwa ajili ya betting au gambling kwa mtu mwenye licence chini ya Gambling Control Act, iwe imetoka kwa player au operator, cash au cash equivalents, iwe iko kwa account au la, au imebadilishwa kuwa chips, tokens, tickets au credits. Pia kuna definitions mpya za \"virtual asset\" na \"virtual asset service provider\", zinazo-take meaning ya section 2 ya Virtual Asset Service Providers Act, 2025."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Only describes the schedule changes, rates and definitions as written, with no opinion, advice or legal verdict."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c37",
@@ -759,14 +1083,22 @@
       "pages": [
         24
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section makes a small wording change to the Second Schedule of the Excise Duty Act. In Part A, paragraph 11, the words \"National Intelligence Service\" are added right after the words \"Kenya Defence Forces\". After the change, that paragraph names both bodies.",
+        "sw": "Kifungu cha 37 kinarekebisha Jedwali la Pili la Sheria ya Ushuru wa Bidhaa (Excise Duty Act) kwa mabadiliko madogo ya maneno. Katika Sehemu A, aya ya 11, maneno \"National Intelligence Service\" yanaongezwa mara baada ya maneno \"Kenya Defence Forces\". Baada ya marekebisho haya, aya hiyo inataja taasisi zote mbili.",
+        "sheng": "Section 37 ina-amend Second Schedule ya Excise Duty Act kwa small change ya wording. Kwa Part A, paragraph 11, ina-insert words \"National Intelligence Service\" right after \"Kenya Defence Forces\". Paragraph 11 sasa ina-mention both."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Technical insertion of words; described only what the text does, with no opinion, advice or legal verdict."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c38",
@@ -779,14 +1111,22 @@
         24,
         25
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 38 changes the definitions part (section 3) of the Tax Procedures Act. It removes the definition of \"certificate of origin\". It also adds two new definitions, \"virtual asset\" and \"virtual asset service provider\", and each one simply takes the meaning given in section 2 of the Virtual Asset Service Providers Act, 2025. This is a change to definitions only.",
+        "sw": "Kifungu cha 38 kinarekebisha kifungu cha 3 cha Sheria ya Taratibu za Ushuru (Tax Procedures Act), sehemu inayotoa maana za maneno. Kinaondoa maana ya \"certificate of origin\" (cheti cha asili ya bidhaa). Kinaongeza maana mbili mpya, \"virtual asset\" (mali pepe) na \"virtual asset service provider\" (mtoa huduma wa mali pepe), na kila moja inatumia maana iliyotolewa katika kifungu cha 2 cha Sheria ya Watoa Huduma wa Mali Pepe, 2025. Ni mabadiliko ya maana za maneno tu.",
+        "sheng": "Section 38 ina-amend section 3 ya Tax Procedures Act, ile part ya definitions. Ina-delete definition ya \"certificate of origin\". Ina-add two new definitions, \"virtual asset\" na \"virtual asset service provider\", na zote zina-use meaning iliyo kwa section 2 ya Virtual Asset Service Providers Act, 2025. Ni definitions change tu."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Technical definitions amendment, described plainly with no opinion, advice or legal judgement."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c39",
@@ -801,14 +1141,22 @@
         27,
         28
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section adds two new sections to the Tax Procedures Act: 6C and 6D. Under 6C, each virtual asset service provider (a business that carries out exchange transactions or runs a trading platform for customers) must file a yearly information return with the Commissioner on its users who are reportable, or whose controlling persons are reportable. The return may hold only information that is necessary, relevant and proportionate, handled under the Data Protection Act. A false statement is an offence with a fine of KSh 100,000 per statement, up to three years in prison, or both; each omission carries a KSh 100,000 penalty, and failing to file an information return (including a nil return) carries a KSh 1 million penalty per failure, but there is no liability if a reasonable effort was made to get the information from the other person. Under 6D, Kenya may sign agreements with other countries to automatically exchange information on virtual asset transactions, and the Commissioner may share information only if satisfied the other country has adequate safeguards for personal information, and must keep a record of each disclosure.",
+        "sw": "Kifungu hiki kinaongeza vifungu viwili vipya katika Sheria ya Taratibu za Kodi: 6C na 6D. Kwa mujibu wa 6C, kila mtoa huduma wa mali pepe (biashara inayofanya miamala ya kubadilishana mali pepe au kuendesha jukwaa la biashara kwa wateja) anatakiwa kuwasilisha kwa Kamishna ripoti ya taarifa kila mwaka kuhusu watumiaji wake wanaoripotiwa, au ambao watu wanaowadhibiti wanaripotiwa. Taarifa hizo lazima ziwe zile tu zinazohitajika, zinazohusika na zinazolingana na madhumuni, na zishughulikiwe kwa mujibu wa Sheria ya Ulinzi wa Data. Taarifa ya uongo ni kosa lenye faini ya shilingi 100,000 kwa kila taarifa, au kifungo cha hadi miaka mitatu, au vyote viwili; kila taarifa iliyoachwa ina adhabu ya shilingi 100,000, na kutowasilisha ripoti (hata ripoti tupu) kuna adhabu ya shilingi milioni moja kwa kila kosa, ila hakuna dhima iwapo juhudi za busara zilifanywa kupata taarifa kutoka kwa mtu mwingine. Kwa mujibu wa 6D, Kenya inaweza kuingia makubaliano na nchi nyingine ya kubadilishana taarifa kiotomatiki kuhusu miamala ya mali pepe, na Kamishna anaweza kushiriki taarifa tu akiridhika kwamba nchi inayopokea ina ulinzi wa kutosha wa taarifa binafsi, na lazima atunze kumbukumbu ya kila ufichuzi.",
+        "sheng": "Section hii ina-add two new sections kwa Tax Procedures Act: 6C na 6D. Kwa 6C, kila virtual asset service provider (company inayofanya exchange transactions au ku-run trading platform kwa customers) ana-required ku-file information return na Commissioner kila year, kuhusu users wake ambao ni reportable, au ambao controlling persons wao ni reportable. Information iwe necessary, relevant na proportionate, na ihandliwe kulingana na Data Protection Act. False statement ni offence: fine ya KSh 100,000 kwa kila statement, au jail term ya hadi three years, au both; kila omission ina penalty ya KSh 100,000, na ku-fail ku-file information return (hata nil return) ni penalty ya KSh 1 million kwa kila failure, ila hakuna liability kama reasonable effort ilifanywa kupata information kutoka kwa the other person. Kwa 6D, Kenya inaweza ku-sign agreement na another country ya automatic exchange ya information kuhusu virtual asset transactions, na Commissioner anaweza ku-share information tu kama ame-satisfy kwamba country hiyo ina safeguards za ku-protect personal information, na lazima aku-keep record ya kila disclosure."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the filing duties, penalties and information-exchange rules as written, with no opinion, advice or comment on legality. Applies to service providers, so no group tagged."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c40",
@@ -820,14 +1168,22 @@
       "pages": [
         28
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section adds three new subsections to section 10 of the Tax Procedures Act, which deals with removing people from the tax register (deregistration). A person who was deregistered and now qualifies to register again under section 8 applies to the Commissioner to have the registration reinstated. The Commissioner gives the person a written decision within ninety days of receiving the application. If the Commissioner is satisfied that the person is liable for tax under a tax law, the person is registered again and gets the same PIN as before.",
+        "sw": "Kifungu hiki kinaongeza vifungu vidogo vitatu katika kifungu cha 10 cha Sheria ya Taratibu za Kodi, kinachohusu kufutwa kwa usajili. Mtu aliyefutiwa usajili ambaye sasa anastahili kusajiliwa upya chini ya kifungu cha 8 anamwomba Kamishna airejeshe usajili wake. Kamishna anamjulisha mtu huyo kwa maandishi uamuzi wake ndani ya siku tisini baada ya kupokea ombi. Kamishna akiridhika kwamba mtu huyo anawajibika kulipa kodi chini ya sheria ya kodi, anamsajili tena na kumpa PIN ile ile aliyokuwa nayo kabla ya kufutiwa usajili.",
+        "sheng": "Section hii ina-add subsections three kwa section 10 ya Tax Procedures Act, ile inahusu deregistration. Kama mtu alikuwa deregistered, halafu sasa ana-qualify ku-register chini ya section 8, ana-apply kwa Commissioner ili registration i-be reinstated. Commissioner ana-notify mtu huyo in writing kuhusu decision ndani ya ninety days baada ya ku-receive application. Kama Commissioner ni satisfied kwamba mtu ana-owe tax chini ya tax law, ana-register mtu huyo again na ku-issue PIN ile ile aliyokuwa nayo before."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the reinstatement process and timeline as written, with no opinion, advice or legal judgment. Applies to all taxpayers, so no group is tagged."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c41",
@@ -839,14 +1195,22 @@
       "pages": [
         28
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section adds a new subsection (5B) to section 12 of the Tax Procedures Act. It says a non-resident person does not need a PIN (the Personal Identification Number used as a tax number) when opening an account with an investment bank or a financial institution.",
+        "sw": "Kifungu hiki kinaongeza kifungu kidogo kipya cha (5B) kwenye kifungu cha 12 cha Sheria ya Taratibu za Ushuru (Tax Procedures Act). Kinasema mtu asiye mkazi hahitajiki kuwa na PIN (nambari ya utambulisho inayotumika kama nambari ya kodi) anapofungua akaunti kwenye benki ya uwekezaji au taasisi za kifedha.",
+        "sheng": "Section 41 ina-add new subsection (5B) kwa section 12 ya Tax Procedures Act. Kwa subsection hii, non-resident hana requirement ya PIN (tax number ya KRA) akiwa ana-open account na investment bank au financial institution."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only what the new subsection does for non-residents opening accounts, with no opinion or advice."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c42",
@@ -861,14 +1225,22 @@
         30,
         31
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section adds a new section 18A to the Tax Procedures Act on tax avoidance schemes. Where the Commissioner finds that a person entered a scheme to get a tax benefit, the Commissioner may work out that person's tax as if the scheme had never happened. The Commissioner must rely on information submitted or obtained under the listed laws and systems, issue an assessment within five years from the last day of the tax period, and give written reasons within thirty days. A taxpayer may apply for a private ruling on complex transactions, and \"scheme\" (for example a plan or agreement) and \"tax benefit\" (for example a lower tax bill, a refund or a delayed payment) are defined broadly.",
+        "sw": "Kifungu hiki kinaongeza kifungu kipya cha 18A kwenye Sheria ya Taratibu za Kodi kuhusu mipango ya kukwepa kodi. Kamishna akiamua kwamba mtu aliingia katika mpango ili kupata faida ya kodi, anaweza kukokotoa deni la kodi la mtu huyo kana kwamba mpango huo haukufanyika. Kamishna lazima atumie taarifa zilizowasilishwa au kupatikana chini ya sheria na mifumo iliyotajwa, atoe tathmini ndani ya miaka mitano tangu siku ya mwisho ya kipindi cha kodi husika, na atoe sababu kwa maandishi ndani ya siku thelathini. Mlipakodi anaweza kuomba uamuzi wa kibinafsi (private ruling) kuhusu miamala changamano, na maneno \"mpango\" (kwa mfano mkataba au pendekezo) na \"faida ya kodi\" (kwa mfano kodi ya chini, marejesho au kuchelewesha malipo) yamefafanuliwa kwa upana.",
+        "sheng": "Finance Act ina-add section mpya 18A kwa Tax Procedures Act kuhusu tax avoidance schemes. Kama Commissioner ataona person ameingia kwa scheme ili apate tax benefit, anaweza ku-calculate tax ya huyo person kama scheme haikuwahi happen. Commissioner anatumia information iliyo-submitted under sheria na systems zilizo-listed, ana-issue assessment within five years from last day ya tax period, na ana-give written reasons within thirty days. Taxpayer anaweza ku-apply for private ruling kwa complex transactions, na \"scheme\" na \"tax benefit\" zime-defined broadly, kama plan au agreement, na lower tax, refund au delayed payment."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the Commissioner's new power, the information used, the time limits and the definitions without opinion, advice or any view on legality."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c43",
@@ -881,14 +1253,22 @@
         31,
         32
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section adds a new section 23B to the Tax Procedures Act. Anyone who imports goods into Kenya, or claims to have imported them, must get and keep a document from the exporting country's customs (such as an export declaration) showing the goods were lawfully exported. The document must carry details such as the exporter and importer names and addresses, a description, quality, value and tariff classification of the goods, the countries involved, the date and a reference number. The importer keeps it for five years and produces it when the Commissioner asks. If it is not produced, the Commissioner may reject claims about the goods, set the customs value and tax from the information available, and impose prescribed penalties. The Commissioner may waive the requirement where the exporting country does not issue export declarations for that category of goods, and the Cabinet Secretary may make regulations on the form and acceptable documents.",
+        "sw": "Kifungu hiki kinaongeza kifungu kipya cha 23B kwenye Sheria ya Taratibu za Kodi. Yeyote anayeingiza bidhaa nchini Kenya, au anayedai kuziingiza, lazima apate na ahifadhi hati kutoka forodha ya nchi ya mauzo ya nje (kama tamko la mauzo ya nje) inayoonyesha bidhaa zilisafirishwa kihalali. Hati hiyo ina maelezo kama majina na anwani za muuzaji na mwagizaji, maelezo ya bidhaa, ubora, thamani na uainishaji wa ushuru, nchi husika, tarehe na nambari ya kumbukumbu. Mwagizaji anaihifadhi kwa miaka mitano na kuiwasilisha Kamishna akiomba. Asipoiwasilisha, Kamishna anaweza kukataa madai kuhusu bidhaa, kuamua thamani ya forodha na kodi kwa kutumia taarifa alizonazo, na kutoza adhabu zilizowekwa. Kamishna anaweza kuondoa sharti hilo ikiwa nchi ya mauzo haitoi matamko kwa aina hiyo ya bidhaa, na Waziri anaweza kutunga kanuni kuhusu fomu na hati zinazokubalika.",
+        "sheng": "Section hii ina-add section mpya 23B kwa Tax Procedures Act. Anyone anayeimport goods Kenya, au anayesema ameimport, lazima apate na ana-keep export declaration kutoka customs ya country iliyo-export goods, inayo-show goods ziliexportiwa legally, na ina details kama names na addresses za exporter na importer, description, value, tariff classification, countries, date na reference number. Importer ana-keep documents kwa five years na ku-produce Commissioner akiomba, na akikosa, Commissioner anaweza ku-reject claims kuhusu goods, ku-decide customs value na tax kutoka information aliyonayo, na ku-impose penalties. Commissioner anaweza pia ku-waive requirement kama country ya export haitoi export declarations kwa hizo goods, na Cabinet Secretary anaweza ku-make regulations kuhusu form na documents zinazokubalika."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Described the documents, retention period and Commissioner's powers as written, with no opinion, advice or view on legality."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c44",
@@ -901,14 +1281,22 @@
         32,
         33
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This adds a new section 29A to the Tax Procedures Act. It lets the Commissioner issue an assessment (a formal calculation of a person's income for tax purposes) based on information already obtained. The Commissioner must rely on these sources: information submitted under section 35(5) of the Income Tax Act, records of tax deducted under section 37(1) of that Act, information under section 5A of the Kenya Revenue Authority Act, the electronic system under section 23A and information under section 24A of the Tax Procedures Act, inspections of goods and records (section 58), audits of records (section 59), the data management and reporting system (section 59A), and information submitted under any other written law. The Commissioner may ask the taxpayer in writing for relevant information at least thirty days before issuing the assessment, and the taxpayer may object to the assessment under section 51.",
+        "sw": "Kifungu hiki kinaongeza kifungu kipya cha 29A kwenye Sheria ya Taratibu za Kodi. Kinamruhusu Kamishna kutoa tathmini ya mapato ya mtu (hesabu rasmi ya mapato kwa madhumuni ya kodi) kwa kutegemea taarifa alizokwisha zipata. Kamishna atategemea taarifa kutoka vyanzo hivi: taarifa zilizowasilishwa chini ya kifungu cha 35(5) cha Sheria ya Kodi ya Mapato, rekodi za kodi iliyokatwa chini ya kifungu cha 37(1) cha sheria hiyo, taarifa chini ya kifungu cha 5A cha Sheria ya Mamlaka ya Mapato ya Kenya, mfumo wa kielektroniki wa kifungu cha 23A na taarifa chini ya kifungu cha 24A vya Sheria ya Taratibu za Kodi, ukaguzi wa bidhaa na rekodi (kifungu cha 58), ukaguzi wa hesabu za rekodi (kifungu cha 59), mfumo wa usimamizi wa data na utoaji wa ripoti (kifungu cha 59A), na taarifa zilizowasilishwa chini ya sheria nyingine yoyote iliyoandikwa. Kamishna anaweza kumwomba mlipakodi taarifa husika kwa maandishi angalau siku thelathini kabla ya kutoa tathmini, na mlipakodi anaweza kupinga tathmini hiyo chini ya kifungu cha 51.",
+        "sheng": "Section hii ina-add new section 29A kwa Tax Procedures Act. Ina-allow Commissioner ku-issue assessment (calculation rasmi ya income ya mtu kwa ajili ya tax) based on information ambayo ako nayo tayari. Commissioner ana-rely on information kutoka sources hizi: information submitted under section 35(5) ya Income Tax Act, records za tax deducted under section 37(1) ya Income Tax Act, information under section 5A ya Kenya Revenue Authority Act, electronic system ya section 23A na information under section 24A ya Tax Procedures Act, inspection ya goods na records (section 58), audit ya records (section 59), data management and reporting system (section 59A), na information yoyote submitted under written law nyingine. Commissioner anaweza ku-request information kutoka kwa taxpayer in writing at least thirty days kabla ya assessment, na taxpayer anaweza ku-object kwa assessment under section 51."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the new assessment power, the listed information sources, the thirty-day written request and the right to object, with no opinion or advice."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c45",
@@ -920,14 +1308,22 @@
       "pages": [
         34
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 45 changes dates in section 37E of the Tax Procedures Act. The date 31st December 2023 becomes 31st December 2025 in subsections (1), (2), (3)(a) and (4). The date 30th June 2025 becomes 31st December 2026 in subsections (3)(b) and (4). Only the dates change, nothing else in section 37E.",
+        "sw": "Kifungu cha 45 kinabadilisha tarehe katika kifungu cha 37E cha Sheria ya Taratibu za Kodi (Tax Procedures Act). Tarehe 31 Desemba 2023 inabadilishwa kuwa 31 Desemba 2025 katika vifungu vidogo vya (1), (2), (3)(a) na (4). Tarehe 30 Juni 2025 inabadilishwa kuwa 31 Desemba 2026 katika vifungu vidogo vya (3)(b) na (4). Hakuna badiliko lingine katika kifungu cha 37E.",
+        "sheng": "Section 45 ina-change dates kwa section 37E ya Tax Procedures Act. Ile date ya 31st December 2023 sasa ni 31st December 2025 kwa subsections (1), (2), (3)(a) na (4). Ile ya 30th June 2025 ina-become 31st December 2026 kwa subsections (3)(b) na (4). Ni dates tu zina-change, hakuna kitu kingine kwa section 37E."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Date-only amendment, described as written with no opinion, advice or legal judgement."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c46",
@@ -940,14 +1336,22 @@
         34,
         35
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 46 adds a new section 39B to the Tax Procedures Act. Where the Commissioner is the collector of a fee, levy or charge under any other law, the Commissioner can recover an unpaid amount as if it were an unpaid tax under a tax law. If the unpaid amount is KSh 100,000 or less, it can be recovered summarily, which means through a quicker and simpler procedure.",
+        "sw": "Kifungu cha 46 kinaongeza kifungu kipya cha 39B kwenye Sheria ya Taratibu za Kodi. Pale ambapo Kamishna ndiye mkusanyaji wa ada, tozo au malipo chini ya sheria nyingine, Kamishna anaweza kurejesha kiasi ambacho hakijalipwa kana kwamba ni kodi isiyolipwa chini ya sheria ya kodi. Kama kiasi hicho hakizidi shilingi laki moja (KSh 100,000), kinaweza kurejeshwa kwa njia ya muhtasari, yaani utaratibu wa haraka na rahisi zaidi.",
+        "sheng": "Section 46 ina-add section mpya 39B kwa Tax Procedures Act. Kama Commissioner ni collector wa fee, levy au charge chini ya sheria nyingine, anaweza ku-recover unpaid amount kama ni unpaid tax chini ya tax law. Kama unpaid amount ni KSh 100,000 or less, anaweza ku-recover hiyo pesa summarily, yaani kwa quick and simple process."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Described only what the new section does: who can recover, what is recovered, and the KSh 100,000 summary threshold. No opinion, advice or legal verdict."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c47",
@@ -959,14 +1363,22 @@
       "pages": [
         35
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section adds new subsections (3) to (8) to section 75 of the Tax Procedures Act. The Commissioner may use information technology to prepare a pre-populated tax return, which is a return already filled in with details, for a person who has to file one. The Commissioner must notify the person, and the return must be issued on or before the end of January of each year of income. The person may confirm or amend it within two months from the date it is issued, and may rely on it to file their return.",
+        "sw": "Kifungu hiki kinaongeza vifungu vidogo vipya (3) hadi (8) kwenye kifungu cha 75 cha Sheria ya Taratibu za Kodi. Kamishna anaweza kutumia teknolojia ya habari kuandaa ritani ya kodi iliyojazwa awali, yaani ritani yenye maelezo tayari, kwa mtu anayetakiwa kuwasilisha ritani. Kamishna lazima amjulishe mtu huyo, na ritani hiyo hutolewa kabla au ifikapo mwisho wa Januari ya kila mwaka wa mapato. Mtu huyo anaweza kuithibitisha au kuirekebisha ndani ya miezi miwili tangu ilipotolewa, na anaweza kuitegemea kuwasilisha ritani yake.",
+        "sheng": "Section 47 ina-add subsections mpya (3) hadi (8) kwa section 75 ya Tax Procedures Act. Commissioner anaweza ku-use information technology ku-generate pre-populated return (return ambayo tayari ina details ndani) kwa person anayetakiwa ku-file return. Commissioner ana-notify huyo person, na return inatolewa on or before end ya January ya kila year of income. Person anaweza ku-confirm au ku-amend return hiyo within two months from the date ilipotolewa, na pia anaweza kuitegemea ku-file return yake."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only what the new subsections do. The section applies to all persons who must file returns, so no group is tagged."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c48",
@@ -979,14 +1391,22 @@
         35,
         36
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section replaces section 86 of the Tax Procedures Act, which deals with failure to use the electronic tax system. If the Commissioner finds that a taxpayer did not issue an electronic tax invoice, file a return electronically, or pay tax electronically as required, the Commissioner sends a written notice asking for reasons. The Commissioner then considers whether the failure was beyond the taxpayer's reasonable control, was not wilful neglect or deliberate default, and whether the taxpayer took reasonable steps to comply as soon as practicable. If the Commissioner is not satisfied with the reasons, the taxpayer pays whichever is higher: 5% of the tax due, or a fixed amount of 100,000 shillings for a company or 10,000 shillings for an individual.",
+        "sw": "Kifungu hiki kinabadilisha kifungu cha 86 cha Sheria ya Taratibu za Kodi, kinachohusu kushindwa kutumia mfumo wa kielektroniki wa kodi. Kamishna akibaini kuwa mlipakodi hakutoa ankara ya kodi ya kielektroniki, hakuwasilisha marejesho ya kodi kielektroniki, au hakulipa kodi kielektroniki kama inavyotakiwa, anatuma notisi ya maandishi akitaka sababu za kutotii. Kisha Kamishna anazingatia kama kushindwa huko kulitokana na mazingira yaliyo nje ya uwezo wa mlipakodi, kama hakukutokana na uzembe wa makusudi au kosa la kimakusudi, na kama mlipakodi alichukua hatua zinazofaa kutii mapema iwezekanavyo. Kamishna asiporidhika na sababu hizo, mlipakodi hulipa adhabu iliyo kubwa zaidi kati ya asilimia tano ya kodi inayodaiwa, au kiasi maalum cha shilingi laki moja kwa kampuni au shilingi elfu kumi kwa mtu binafsi.",
+        "sheng": "Section 48 ina-replace section 86 ya Tax Procedures Act, inayohusu failure ya ku-comply na electronic tax system. Kama Commissioner anaona taxpayer hakuissue electronic tax invoice, hakufile return electronically, au hakupay tax electronically kama ilivyo required, ana-send notice in writing ya kuomba reasons. Kisha ana-check kama failure ilitokana na mambo nje ya control ya taxpayer, kama haikuwa on purpose (neglect au deliberate default), na kama taxpayer alijaribu ku-comply asap. Kama Commissioner hana-accept reasons, taxpayer ana-pay penalty iliyo juu kati ya 5% ya tax due na fixed amount: 100,000 shillings kwa company au 10,000 shillings kwa individual."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the notice, the three points the Commissioner considers and the penalty amounts as written, with no opinion or advice. Applies to all taxpayers equally, so no group is tagged."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c49",
@@ -999,14 +1419,22 @@
         36,
         37
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes the part of the Tax Procedures Act that lets the Commissioner waive penalties and interest. The words about a malfunction of an electronic tax system are taken out of paragraph (c) and made their own paragraph, (ca), in subsection (5A). It also adds a new subsection (5B): the Commissioner may waive all or part of a penalty or interest of up to two million shillings if it was caused by an error generated by an electronic tax system.",
+        "sw": "Kifungu hiki kinabadilisha sehemu ya Sheria ya Taratibu za Ushuru (Tax Procedures Act) inayomruhusu Kamishna kusamehe adhabu na riba. Maneno kuhusu hitilafu ya mfumo wa kielektroniki wa ushuru yanaondolewa kwenye aya (c) na kuwekwa katika aya yake mpya, (ca), ndani ya kifungu kidogo cha (5A). Pia kinaongeza kifungu kidogo kipya cha (5B): Kamishna anaweza kusamehe adhabu au riba yote au sehemu yake, ikiwa kiasi hakizidi shilingi milioni mbili na kilitokana na kosa lililozalishwa na mfumo wa kielektroniki wa ushuru.",
+        "sheng": "Section hii ina-amend Tax Procedures Act, kwa part ambayo Commissioner anaweza ku-waive penalty na interest. Words kuhusu malfunction ya electronic tax system zina-move kutoka paragraph (c) na kuwa paragraph yao wenyewe, (ca), ndani ya subsection (5A). Pia ina-add subsection mpya (5B): Commissioner anaweza ku-waive penalty au interest all au part yake kama haizidi two million shillings na ilitokana na error from electronic tax system."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the drafting changes and the new waiver power with its two million shilling limit, with no opinion on policy or legality."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c50",
@@ -1018,14 +1446,22 @@
       "pages": [
         37
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section adds one new item, paragraph (ba), to the list in subsection (2) of section 112 of the Tax Procedures Act. The new item is the procedure for submitting or lodging returns that are based on pre-populated tax returns (returns the Commissioner has already filled in with information) generated by the Commissioner. It is a small technical amendment that adds an item to a list.",
+        "sw": "Kifungu cha 50 kinarekebisha kifungu cha 112 cha Sheria ya Taratibu za Ushuru (Tax Procedures Act). Kinaongeza kipengele kipya (ba) kwenye orodha iliyo katika kifungu kidogo cha (2). Kipengele hicho kinahusu utaratibu wa kuwasilisha marejesho ya ushuru yanayotegemea marejesho yaliyojazwa awali na Kamishna kwa taarifa tayari. Ni marekebisho madogo ya kiufundi ya kuongeza kipengele kwenye orodha.",
+        "sheng": "Section 50 ina-amend section 112 ya Tax Procedures Act. Ina-add item mpya, paragraph (ba), kwa list iliyo kwa subsection (2). Item hiyo ni procedure ya ku-submit returns zinazotumia pre-populated tax returns, yaani returns ambazo Commissioner ame-generate na zina information tayari. Ni technical amendment ndogo ya kuongeza item kwa list."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only a small technical addition to a list in section 112(2), with no opinion, advice or legal verdict."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c51",
@@ -1037,14 +1473,22 @@
       "pages": [
         37
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 51 changes section 9 of the Miscellaneous Fees and Levies Act. It removes the words \"import declaration fee, railway development levy and export levy\" that come right after \"payment of\", and puts in \"the fees and levies imposed under Part III\". It is a wording change: instead of naming three charges one by one, section 9 now points to whatever fees and levies Part III imposes.",
+        "sw": "Kifungu cha 51 kinarekebisha kifungu cha 9 cha Sheria ya Ada na Ushuru Mbalimbali (Miscellaneous Fees and Levies Act). Kinaondoa maneno \"import declaration fee, railway development levy and export levy\" yanayofuata maneno \"payment of\", na kuweka maneno \"the fees and levies imposed under Part III\". Ni mabadiliko ya maneno tu: badala ya kutaja ada tatu moja moja, kifungu cha 9 sasa kinarejelea ada na ushuru wowote unaotozwa chini ya Sehemu ya III.",
+        "sheng": "Section 51 ina-amend section 9 ya Miscellaneous Fees and Levies Act. Ina-delete words \"import declaration fee, railway development levy and export levy\" zinazokuja baada ya \"payment of\", na ina-put \"the fees and levies imposed under Part III\". Ni change ya wording tu: badala ya ku-list three fees and levies, section 9 sasa ina-refer kwa fees and levies zote under Part III."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Small technical wording amendment described as it reads, with no opinion, advice or legal judgement."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c52",
@@ -1057,14 +1501,22 @@
         37,
         38
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes the lists of goods in Part A and Part B of the Second Schedule to the Miscellaneous Fees and Levies Act. In each part, it replaces one existing entry with a new entry covering all of chapter 88 of the tariff (aircraft and their parts) and tariff headings 8802.30.00 and 8802.40.00 (aeroplanes). In each part it also adds a new entry for goods used to build liquefied petroleum gas (LPG) storage tanks and related infrastructure. That entry applies only if the investment in Kenya is at least five billion shillings and the Cabinet Secretary for energy has recommended it.",
+        "sw": "Kifungu hiki kinabadilisha orodha za bidhaa katika Sehemu A na Sehemu B za Jedwali la Pili la Sheria ya Ada na Ushuru Mbalimbali. Katika kila sehemu, kinafuta kipengele kimoja na kuweka kipya kinachojumuisha sehemu zote za sura ya 88 ya ushuru (ndege na vipuri vyake) pamoja na vichwa vya ushuru 8802.30.00 na 8802.40.00 (ndege aina ya aeroplane). Pia kinaongeza kipengele kipya cha bidhaa zinazotumika kujenga matangi ya kuhifadhi gesi ya petroli iliyoyeyushwa (LPG) na miundombinu inayohusiana. Kipengele hicho kinatumika tu kama uwekezaji nchini Kenya ni angalau shilingi bilioni tano na Waziri anayehusika na nishati ameupendekeza.",
+        "sheng": "Section hii ina-amend Second Schedule ya Miscellaneous Fees and Levies Act, kwa Part A na Part B zote. Kwa kila part, ina-replace item moja na item mpya inayo-cover all parts za chapter 88 (aircraft na parts zake) na tariff headings 8802.30.00 na 8802.40.00 (aeroplanes). Pia ina-add item mpya ya goods zinazotumika kwa construction ya LPG (liquefied petroleum gas) storage tanks na infrastructure inayohusiana. Item hiyo inafanya kazi tu kama investment ya Kenya ni at least five billion shillings na Cabinet Secretary wa energy ame-recommend."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the two changes in each part (the replaced aircraft entry and the new LPG storage entry) and its conditions, with no opinion, advice or legal verdict."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c53",
@@ -1076,14 +1528,22 @@
       "pages": [
         38
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section replaces paragraph (a) of section 11(4) of the Affordable Housing Act with a new paragraph. The new paragraph says that up to 2% of the monies can go to the collector, for collecting the Affordable Housing Levy. The amount needs approval from the Cabinet Secretary responsible for the National Treasury, on the recommendation of the Cabinet Secretary.",
+        "sw": "Sehemu hii inafuta aya ndogo (a) ya kifungu cha 11(4) cha Sheria ya Nyumba za Bei Nafuu na kuweka aya mpya. Aya hiyo mpya inasema kwamba hadi asilimia mbili (2%) ya fedha inaweza kupewa mkusanyaji kwa ajili ya kukusanya Ushuru huo. Kiasi hicho kinahitaji idhini ya Waziri anayehusika na Hazina ya Taifa, kwa pendekezo la Waziri.",
+        "sheng": "Section hii ina-replace paragraph (a) ya section 11(4) ya Affordable Housing Act na paragraph mpya. Paragraph mpya inasema up to 2% ya monies inaweza kwenda kwa collector kwa ajili ya ku-collect Levy. Amount hiyo ina-need approval ya Cabinet Secretary wa National Treasury, kwa recommendation ya Cabinet Secretary."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Small technical amendment, described only by what it changes, with no opinion or advice."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c54",
@@ -1095,14 +1555,22 @@
       "pages": [
         38
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 54 changes section 96A of the Stamp Duty Act. In subsection (1), it adds a new paragraph (c) straight after paragraph (b). The new paragraph covers a document whose effect is to move a beneficial interest in property (the right to benefit from the property, such as its use or income, even if someone else holds the legal title) from one or more people to a real estate investment trust.",
+        "sw": "Kifungu cha 54 kinarekebisha kifungu cha 96A cha Sheria ya Stamp Duty. Katika kifungu kidogo cha (1), kinaongeza aya mpya (c) mara baada ya aya (b). Aya hiyo inahusu hati ambayo athari yake ni kuhamisha maslahi ya kunufaika (beneficial interest) katika mali kutoka kwa mtu mmoja au zaidi hadi kwa mfuko wa uwekezaji katika mali isiyohamishika (real estate investment trust).",
+        "sheng": "Section 54 ina-amend section 96A ya Stamp Duty Act, kwa subsection (1). Ina-add new paragraph (c) baada ya paragraph (b). Paragraph hiyo ni ya document ambayo effect yake ni ku-transfer beneficial interest kutoka kwa one or more persons kwenda kwa real estate investment trust. Beneficial interest ni right ya ku-benefit kutoka property, hata kama title iko kwa someone else."
+      },
       "review": {
         "status": "draft",
         "at": null
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the added paragraph (c) and what the text says, with no opinion, advice or judgement. Does not state what the rest of section 96A does, since that text is not provided."
+      },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     },
     {
       "id": "c55",
@@ -1115,20 +1583,21 @@
         38
       ],
       "explanation": {
-        "en": "This changes the Road Maintenance Levy set in section 3(2) of the Road Maintenance Levy Fund Act from three shillings to one shilling and fifty cents.",
-        "sw": "Kifungu hiki kinabadilisha Tozo ya Matengenezo ya Barabara iliyowekwa katika kifungu cha 3(2) cha Sheria ya Mfuko wa Tozo ya Matengenezo ya Barabara, kutoka shilingi tatu hadi shilingi moja na senti hamsini.",
-        "sheng": "Hii inabadilisha ile levy ya kurepair barabara iko kwa section 3(2) ya Road Maintenance Levy Fund Act, kutoka bob tatu hadi bob moja na senti hamsini."
+        "en": "Section 55 changes subsection (2) of section 3 of the Road Maintenance Levy Fund Act (Cap 427). It removes the words \"three shillings\" and puts in \"one shilling and fifty cents\". This is a change to one amount only, and nothing else in that section is changed.",
+        "sw": "Kifungu cha 55 kinarekebisha kifungu kidogo cha (2) cha kifungu cha 3 cha Sheria ya Mfuko wa Ushuru wa Matengenezo ya Barabara (Road Maintenance Levy Fund Act, Sura ya 427). Kinafuta maneno \"shilingi tatu\" na kuweka \"shilingi moja na senti hamsini\". Ni badiliko la kiasi kimoja tu, na hakuna kingine kinachobadilishwa katika kifungu hicho.",
+        "sheng": "Section 55 ina-amend Section 3(2) ya Road Maintenance Levy Fund Act (Cap 427) kwa ku-change amount moja tu: three shillings inakuwa one shilling and fifty cents. Hakuna change nyingine kwa section hiyo."
       },
       "review": {
-        "status": "sample",
+        "status": "draft",
         "at": null
       },
       "neutral_check": {
         "ok": true,
-        "note": "Hand-written sample"
+        "note": "Small technical amendment replacing one amount; described only what the text does, with no opinion on the change."
       },
       "groups": [],
-      "suggested_articles": []
+      "suggested_articles": [],
+      "sheng_swaps": []
     }
   ],
   "stage_next": null,
