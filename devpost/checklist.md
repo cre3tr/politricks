@@ -422,3 +422,19 @@ Activity mode:
     - **S6:** the direct summary call is the first live use of `parse` with `fallbacks`. A failure is caught and `--summary-only` recovers.
   - The SDK timeout guard was checked by the reviewer: 450 s, under the 600 s limit, so it won't raise.
 - **Self-tests:** generate 47 (missing and stray results, the summary skipped when clauses failed, swaps landing on clause, summary and group); lint 34 (Sheng flag until reviewed); intake 22; review 33. Lint over all 3 bills: 0 findings. The build and `check-build` pass for all 3.
+
+### Re-probe with the English-led prompt, 2026-10-13
+
+- **Batch `msgbatch_014kXsH8fEAPsXuKKYPX2HAQ`** (c3 and c32): 2/2 `end_turn`, 392 s. Then phase 2 (`_summarise`, the real direct call): the summary was answered by `claude-sonnet-5-5`, so no fallback model was used.
+  - **The first live direct `parse` with `fallbacks` worked**, which closes cold-review S6.
+  - Applied to the working copy for the preview. 0 em dashes in any generated text.
+- **Sheng is now clearly English-led**, for example c3: "Clause hii ina-amend Section 5 ya Income Tax Act kwa njia mbili."
+  - It may overshoot into the Act's own phrasing: "haita-be deemed ku-accrue in Kenya au ku-be derived from Kenya", "ina-add proviso", "emoluments". That is legal English with Sheng prefixes, not plain words. **Learner call.**
+- **`sheng_swaps` came back empty on all 5 items** (c3, c32, summary, 2 groups).
+  - Kiswahili content words do remain, e.g. "nje ya" (outside), "inajumuisha" / "hazijumuishwi" (includes), "kufikia" (by), "haichukuliwi" (isn't counted).
+  - So the self-flag may under-report. Unproven either way, until the learner reads them.
+- **Length grew.** Output tokens: c3 1,996 → 2,818 (1.4×), c32 2,636 → 6,301 (2.4×).
+  - Explanation word counts against the legal text: c3 en 133 / sw 130 / sheng 109, for 171 words of law; c32 452 / 465 / 378, for 800 words.
+  - c3 is not a schedule but is now about 75% of the law's length, so the long-amendment rule may be stretching ordinary clauses.
+  - The full-run projection, scaled by the 1.97× output growth, rises to about **$1.27** (was $0.71). It's an estimate: the summary's direct-call usage isn't logged yet.
+- **Groups:** c3 → employee and c32 → trader. The summary's groups now cover exactly the tagged sections (employee: c3, trader: c32), so the over-tagging seen in probe 2 is gone by design. They're thin because only three clauses carry tags in this preview.
