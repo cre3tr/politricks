@@ -582,3 +582,32 @@ Activity mode:
 - **Checked before the push:** of the 89 tracked files, the only env file is `.env.example`, with an empty key; no `.env` was ever added in history; `.env` is gitignored.
 - **Read back:** visibility `PRIVATE`, default branch `main`, and both remote branches at `e7ad079`.
 - Slice 7 (Vercel) can link this repo. Making it public for judging is a later decision for the learner.
+
+### First review sitting, paused, 2026-10-14
+
+- **Where it stands:** none of the 59 items are currently reviewed.
+  - c1 and c2 were accepted, then changed by the rule rewrite below, so both read *Changed since review* and lint flags them (2 findings). They come first in the walk.
+  - 57 drafts follow: c3 to c55, then the summary, then the 3 group notes. Drafts edited by hand, or rewritten under the rules, are hand-edited, so `generate` won't overwrite them.
+- **The learner's Sheng rules from this sitting, now standing in `pipeline/prompts/explainer.md`:**
+  - `Hii section`, not `Section hii`: "this" and "that" go first, and "that" is spelled `hio`;
+  - `ama`, not `au`;
+  - `iko na`, not a bare `ina`;
+  - `person`, not `mtu`;
+  - "new" before the noun, not `mpya` after it;
+  - plain verb forms, not the formal `iliyo-`/`anaye-`/`zinazo-` forms;
+  - `ina-change`, not `ina-amend`.
+- **Applied to the drafts by hand (`b93bc3a`):**
+  - 54 of the 59 Sheng texts were rewritten, with wording changes only. Every rewrite keeps exactly the same numbers.
+  - A rule check over all 59 texts finds 0 breaks of any rule above and 0 em dashes.
+  - Unchanged, because they already passed: c12, c17, c45, and the trader and transport group notes.
+- **Found while doing it:**
+  - **The walk holds the bill in memory** and saves the whole file on every accept. Never edit the JSON while it runs; quit first (now a CLAUDE.md gotcha).
+  - **The real data broke two generate self-tests.** Once real clauses were reviewed, two checks that built their batch from the real bill failed (`cbccbce`); they now use the reset copy. K4 has a control on record (TESTING.md).
+  - **A miscount:** the first count of `Section hii` was 16; the true count was 20. It only looked at the opening, and a second search over the whole text found the other 4.
+- **Next, when the learner resumes:**
+  1. Run `uv run --project pipeline politricks review finance-act-2026` and accept c1 and c2 again.
+  2. Continue from c3. c3 is the learner's own edit, with `ina-change` and `ama` applied.
+  3. Tags to decide on the way: c33 and c36 (transport). Changing a tag means quitting, editing the JSON, then rerunning the walk.
+  4. c55: add what the levy is charged on (`e`, then accept).
+  5. After the walk: lint, build and `check-build`, then commit and push the accepts.
+  6. Still open: prune the 12 proposed banned phrases (`banned.txt`); GitHub Dependabot reported vulnerable dependencies on the first push (run `dependency-review`); re-check the live bills' stages; slice 6 civic facts.
