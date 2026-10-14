@@ -15,6 +15,7 @@ uv run --project pipeline politricks generate --self-test
 uv run --project pipeline politricks intake --self-test
 uv run --project pipeline politricks verify --self-test
 uv run --project pipeline politricks export --self-test
+uv run --project pipeline politricks review --sheet-self-test
 uv run --project pipeline politricks lint
 npm run build
 node scripts/check-build.mjs <bill-id>        # once per bill in src/data/bills/
@@ -29,7 +30,7 @@ prints `unchanged` / `CHANGED`. `check-build`: 117 / 141 / 47 for the three bill
 
 | Kind | Where | Command | Control last run | Result |
 |---|---|---|---|---|
-| K1 Offline self-test, writes nothing | `pipeline/politricks/{lint.py:294, review.py:418, generate.py:683, intake.py:245, verify.py:30, export.py}`; real-file SHA guard e.g. `lint.py:499` | `politricks <cmd> --self-test` | not on record | see Gaps |
+| K1 Offline self-test, writes nothing | `pipeline/politricks/{lint.py:294, review.py:418, generate.py:683, intake.py:245, verify.py:30, export.py, review_sheet.py}`; real-file SHA guard e.g. `lint.py:499` | `politricks <cmd> --self-test` | not on record | see Gaps |
 | K2 Planted-bug controls | scratch scripts (session scratchpad, not committed) | `uv run --project pipeline python <script>` | 2026-10-14 | ignore protection → 11 FAILs; fingerprint ignores tags → 4; lint treats bare "reviewed" as reviewed → 1; accept without fingerprint → 6; edit keeps fingerprint → 2; tampered vector → 1 |
 | K3 Fake client through the real `run()` | `generate.py:586` (`_FakeClient`), `:620` (`_run_offline`) | `generate --self-test` | 2026-10-13 | old `.parsed` retry → 9 FAILs |
 | K4 Fixtures built from a reset | `pipeline/politricks/selftest.py` (`reset_bill`, `fixture_bill`) | every self-test | 2026-10-14 | real data changed (Ian accepted c1, c2) → 2 FAILs in generate, which built its batch from the real bill; fixed to use `reset_bill` → 0 |

@@ -23,8 +23,8 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 ```
 
 **Pipeline commands:**
-- `intake`, `fetch`, `probe`, `extract [--check-json]`, `samples`, `generate [--batch-id X] [--summary-only] [--tags-only]`, `lint [id]`, `review <id>`, `verify`, `export <id> [--out X]`.
-- Self-tests: `lint`, `review`, `intake`, `generate`, `verify` and `export` each take `--self-test`. All are offline, write nothing, and assert the real bill files' SHA-256 is unchanged.
+- `intake`, `fetch`, `probe`, `extract [--check-json]`, `samples`, `generate [--batch-id X] [--summary-only] [--tags-only]`, `lint [id]`, `review <id> [--from-sheet X]`, `verify`, `export <id> [--out X]`.
+- Self-tests: `lint`, `review`, `intake`, `generate`, `verify` and `export` each take `--self-test`; `review --sheet-self-test` covers `--from-sheet`. All are offline, write nothing, and assert the real bill files' SHA-256 is unchanged.
 - **Before committing:** every self-test, then `lint`, then `npm run build`, then `check-build` for each bill.
 - Test kinds and their controls: `TESTING.md` (test-kinds skill).
 
@@ -50,7 +50,7 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
   - **Spending:** a run with `ANTHROPIC_API_KEY` spends real credit. Probe first (filter `build_batch` to a few ids) and ask Ian before a full run.
 - **No em dashes** in UI copy, data labels or the explainer prompt (Ian's call). Clause text keeps its own, because it's verbatim and fingerprinted.
 - **Never set `review.status: "reviewed"` from code or a script.** Only `politricks review` does that, driven by Ian.
-- **`politricks export <id>`** writes `exports/<id>-review.xlsx` (gitignored) for Ian to review in Excel. It only reads the JSON. A returned sheet has no import yet, and an "Accept" in it is not an accept: see the 2026-10-14 export entry in `devpost/checklist.md`.
+- **Reviewing in Excel:** `politricks export <id>` writes `exports/<id>-review.xlsx` (gitignored) and only reads the JSON. `politricks review <id> --from-sheet <file>` (`review_sheet.py`) applies the filled-in sheet: Ian's call (2026-10-15) is that his Accept rows are his accepts **when he runs it**. It refuses piped input (`echo yes |`) before reading anything, so only Ian at a terminal can run it. It plans on a copy, shows every new text in full, and saves only on `yes`. It skips rows whose item changed since export, and refuses an Accept on a group note whose sections moved through tag edits in the same sheet. A sheet that may not mean what it shows fails whole: a column sorted on its own, a number or date Excel made of typed text, a formula. **The walk itself still accepts piped answers** (its self-test drives it that way).
 - **Never edit a bill JSON while `politricks review` is running.** The walk holds the bill in memory and saves the whole file on every accept, so a hand or script edit made meanwhile is silently overwritten. Ask Ian to quit (`q`; his edits are kept as drafts), edit, then restart the walk. A tab he has typed in can't be stopped from here.
 - **"Reviewed" is tied to a fingerprint** (`review.sha256`, from `models.current_sha256`). It covers the three texts, plus a clause's legal text and sorted tags, or a group's section list. The site recomputes it at build time (`src/lib/reviewHash.ts`) and shows *Reviewed* only on a match, otherwise *Changed since review*. Lint flags those until Ian accepts again.
   - **Python and TS must agree.** Change both twins together, then regenerate the shared vectors with `uv run --project pipeline python -m politricks.hashvectors` and commit them. `check-build` checks the TS side against them and `review --self-test` the Python side, so neither can drift alone.
@@ -120,6 +120,16 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `_ask_from_terminal` 385
 - `run` 394
 - `self_test` 418
+
+**`pipeline/politricks/review_sheet.py` (659):**
+- `TEXT_COLUMNS` 80 (cells that must be text, not numbers or dates)
+- `read_sheet` 125 (refuses formulas, numbers, repeats, renamed columns, another bill's sheet)
+- `_check_rows` 208 (unknown ids, empty texts, a column sorted on its own)
+- `plan` 242 (on a copy: skip stale rows, apply edits, refresh group sections, then accepts)
+- `_save_atomically` 350
+- `review_from_sheet` 359 (prints the plan, asks for `yes`, refuses if the bill file changed meanwhile)
+- `run` 412 (refuses a non-terminal stdin)
+- `self_test` 433
 
 **`pipeline/politricks/models.py` (248), review fingerprints:** `current_sha256` 155, `is_reviewed` 181, `changed_since_review` 187, `HAND_EDITED` 194, `is_hand_edited` 197, `is_protected` 207, `draft_review` 213.
 

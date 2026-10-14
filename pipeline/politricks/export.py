@@ -9,12 +9,11 @@ Why it exists: the review walk shows one item at a time in a terminal. A sheet
 lets the learner read the whole bill at once, edit in place and note a
 decision per row.
 
-What it does NOT do: change the bill. The export only reads the JSON. Nothing
-in a returned sheet can mark an item "Reviewed" on its own, because only an
-accept in `politricks review` does that (CLAUDE.md). The hidden `fingerprint`
-column records each item's `current_sha256` at export time, so whatever
-reads the sheet back later can tell which rows changed and whether the JSON
-moved on since.
+What it does NOT do: change the bill. The export only reads the JSON. The
+filled-in sheet goes back through `politricks review <id> --from-sheet <file>`
+(`review_sheet.py`), run by the learner, where his Accept rows are his
+accepts. The hidden `fingerprint` column records each item's `current_sha256`
+at export time, so that command skips any row whose item moved on since.
 """
 
 from __future__ import annotations
@@ -52,7 +51,7 @@ from .selftest import FIXTURE_BILL_ID, FIXTURE_SAMPLE_ID, Checker, fixture_bill,
 EXCEL_CELL_LIMIT = 32_767
 
 # The choices offered in the Decision column (a dropdown). Free text is
-# allowed too; these are the ones a later import will understand.
+# allowed too, but only an exact "Accept" accepts (`review_sheet.py`).
 DECISIONS = ("Accept", "Edited", "Needs work", "Skip")
 
 # (header, width, editable). Order is the sheet's column order.
@@ -197,8 +196,9 @@ def _guide(sheet, bill: Bill, exported_on: str, count: int) -> None:
         ("", False),
         ("Example: c55 | Decision: Edited | Notes: added what the levy is charged on | Sheng: (your new wording)", False),
         ("", False),
-        ("Filling in this sheet does not mark anything Reviewed. Only an accept in `politricks review` does.", True),
-        ("Don't edit the bill JSON or rerun the export while you hold edits here: send the sheet back first.", False),
+        ("Your Accept rows count as your accept only when you run, and type yes at the end:", True),
+        (f"   uv run --project pipeline politricks review {bill.id} --from-sheet <this file>", False),
+        ("A row whose item changed in the bill since this export is skipped, so apply the sheet before other edits.", False),
     ]
     for r, (text, bold) in enumerate(lines, start=1):
         cell = sheet.cell(row=r, column=1, value=text)

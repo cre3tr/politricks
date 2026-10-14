@@ -623,3 +623,17 @@ Activity mode:
 - **New dependency:** `openpyxl` 3.1.5 (pipeline only).
 - **Tests:** `export --self-test`, 11 checks, offline, temp folder, real-bill SHA guard. Planted-bug control: swapping the Kiswahili and Sheng columns and dropping the "changed since review" state gave 2 FAILs; restored, 11 pass.
 - **Open, the learner's call:** there is no import yet. Rule: only an accept in `politricks review` marks anything Reviewed. So an "Accept" in the sheet can't set Reviewed directly unless the learner decides the sheet is his accept. The two ways: import his edits as hand-edited drafts and then accept them in the walk, or have the walk read the sheet with him driving it.
+
+### Review from the sheet, 2026-10-15
+
+- **The learner's call:** a row he marks Accept in the export sheet is his accept, **when he runs the import himself**. This supersedes the 2026-10-14 entry's "no import yet". That entry stays as written, because this log is append-only.
+- **Built:** `politricks review <bill-id> --from-sheet <file>` (`pipeline/politricks/review_sheet.py`). It plans the whole sheet on a copy of the bill, prints every action and every new text in full, and saves once, on `yes`, with an atomic replace. It keeps the walk's rules: a banned phrase blocks an Accept; a sample stays a sample; an edit without an Accept is a hand-edited draft; an item already reviewed and unchanged keeps its date.
+- **Guards, all from the design or the cold review:**
+  - piped input is refused before anything is read (run on the real paths: `echo yes | … --from-sheet …` gives FAILED, exit 1, bill unchanged);
+  - a row whose item changed since the export is skipped;
+  - an Accept on a group note whose sections moved through tag edits in the same sheet is refused, and so is one on a group the edits dropped;
+  - the bill file changing while the prompt is open means no save;
+  - the whole sheet fails, writing nothing, on: another bill's sheet; a renamed column; an unknown or repeated row id; an emptied text cell; an unknown group name; a formula; a number or date Excel made of typed text; a Legal text cell that isn't its section's; or an edited text that is exactly another row's original (a column sorted on its own).
+- **Sonnet cold review** of the first version found that piped stdin could answer `yes`, that a column sorted on its own was accepted as edits, that numbers typed into cells were saved as their stored value (`5%` as `0.05`), and that the plan showed ids but not content. It also listed 11 mutations the 18 checks missed. All of these are fixed and covered.
+- **Not fixed, documented:** a walk already open in another terminal saves its whole in-memory bill on its next accept and would overwrite a sheet import. The prompt says so; there is no lock. The walk also still takes piped answers.
+- **Tests:** `review --sheet-self-test`, 35 checks. Planted-bug controls: 18 mutations, each one alone. 17 fail a named check; removing the Ctrl-C catch crashes the self-test, which is loud (and saves nothing either way).
