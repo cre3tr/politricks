@@ -12,6 +12,7 @@ Run from anywhere; paths are resolved from the repo root, not your current folde
     uv run --project pipeline politricks generate finance-act-2026 [--self-test]
     uv run --project pipeline politricks lint [finance-act-2026] [--self-test]
     uv run --project pipeline politricks review finance-act-2026 [--self-test]
+    uv run --project pipeline politricks export finance-act-2026 [--self-test]
 """
 
 from __future__ import annotations
@@ -80,6 +81,11 @@ def main() -> None:
     p_review = sub.add_parser("review", help="walk every draft text: accept, edit or skip (the human gate)")
     p_review.add_argument("bill_id", nargs="?")
     p_review.add_argument("--self-test", action="store_true", help="offline scripted walk (writes nothing)")
+
+    p_export = sub.add_parser("export", help="write the bill's texts to an Excel sheet for review (reads only)")
+    p_export.add_argument("bill_id", nargs="?")
+    p_export.add_argument("--out", help="where to write the .xlsx (default: exports/<bill-id>-review.xlsx)")
+    p_export.add_argument("--self-test", action="store_true", help="offline round-trip in a temp folder (writes nothing real)")
 
     args = parser.parse_args()
 
@@ -169,6 +175,15 @@ def main() -> None:
         if not args.bill_id:
             parser.error("review needs a bill id (or --self-test)")
         sys.exit(review.run(REPO_ROOT, args.bill_id))
+
+    elif args.command == "export":
+        from . import export
+
+        if args.self_test:
+            sys.exit(0 if export.self_test(REPO_ROOT) else 1)
+        if not args.bill_id:
+            parser.error("export needs a bill id (or --self-test)")
+        sys.exit(export.run(REPO_ROOT, args.bill_id, Path(args.out).resolve() if args.out else None))
 
 
 if __name__ == "__main__":

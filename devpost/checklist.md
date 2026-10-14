@@ -611,3 +611,15 @@ Activity mode:
   4. c55: add what the levy is charged on (`e`, then accept).
   5. After the walk: lint, build and `check-build`, then commit and push the accepts.
   6. Still open: prune the 12 proposed banned phrases (`banned.txt`); GitHub Dependabot reported vulnerable dependencies on the first push (run `dependency-review`); re-check the live bills' stages; slice 6 civic facts.
+
+### Review sheet export, 2026-10-14
+
+- **The learner's request:** the bill as an Excel sheet with English, Kiswahili, Sheng and a state per row, to review and edit by hand and send back complete.
+- **Built:** `politricks export <bill-id>` (`pipeline/politricks/export.py`) writes `exports/<bill-id>-review.xlsx`. It reads the JSON and never writes it; the SHA-256 before and after the real export matched (`fd891a4f…`).
+  - One row per item in the walk's order: 55 clauses, the summary, then the 3 group notes (59 rows). Yellow columns are his to change: Decision (dropdown: Accept, Edited, Needs work, Skip), Notes, Groups / sections, English, Kiswahili, Sheng. Grey columns are context: ID, heading, state now, legal text, Sheng words flagged, neutral check.
+  - "State now" uses the site's rules (Reviewed, Changed since review, Hand-edited draft, AI draft, Sample, No explanation). The real export read: 52 hand-edited, 5 AI draft, 2 changed since review.
+  - A hidden `fingerprint` column holds each row's `current_sha256` at export, so a later import can tell which rows he changed and whether the JSON moved since.
+  - Texts starting with `=` are stored as text, not formulas; a text over Excel's 32,767-character cell limit stops the export instead of being cut.
+- **New dependency:** `openpyxl` 3.1.5 (pipeline only).
+- **Tests:** `export --self-test`, 11 checks, offline, temp folder, real-bill SHA guard. Planted-bug control: swapping the Kiswahili and Sheng columns and dropping the "changed since review" state gave 2 FAILs; restored, 11 pass.
+- **Open, the learner's call:** there is no import yet. Rule: only an accept in `politricks review` marks anything Reviewed. So an "Accept" in the sheet can't set Reviewed directly unless the learner decides the sheet is his accept. The two ways: import his edits as hand-edited drafts and then accept them in the walk, or have the walk read the sheet with him driving it.
