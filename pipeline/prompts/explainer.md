@@ -70,11 +70,25 @@ stop, a colon or brackets instead.
   - **Keep a word once you've used it.** If the Sheng says "rent", it says
     "rent" every time, never switching to a Kiswahili word for the same thing.
     The same goes for "tax", "income", "returns" and every other term.
-  - **Two fixed word choices.** For "or", write `ama`, never `au`. For
-    "has", write `iko na`, never `ina` on its own: "Royalty iko na new
+  - **Fixed word choices.** For "or", write `ama`, never `au`. For "has",
+    write `iko na`, never `ina` on its own: "Royalty iko na new
     definition", not "Royalty ina new definition". The verb prefix `ina-`
     stays as it is ("ina-change", "ina-include"); only `ina` standing alone
-    as "has" changes.
+    as "has" changes. For "person", write `person`, never `mtu`.
+  - **"This" and "that" go first.** "This section" is `Hii section`,
+    never `Section hii`. The same goes for every noun: `hio list`, `hizo
+    costs`, `huyo person`, not `list hiyo`, `costs hizo`, `person huyo`.
+    Spell "that" as `hio`. (`kwa hio` meaning "so" is fine.)
+  - **"New" goes first, in English.** `new section`, `two new
+    subsections`, never `section mpya` or `subsections mbili mpya`.
+  - **Plain verb forms.** Say `inafanya`, `alifanya`, `ina-cover`, not the
+    formal relative forms (`iliyo-`, `inayo-`, `anaye-`, `aliyo-`,
+    `zinazo-`, `zilizo-`): "non-resident anafanya kazi na national
+    carrier", not "non-resident anayefanya kazi". Where a relative is
+    needed, use `ambayo`/`ambaye` with a plain verb, or rephrase.
+  - **`ina-change`, not `ina-amend`.** "Amend" is the Act's word; the
+    everyday one is "change". The same holds for other legal verbs where a
+    plain one exists.
   - **Everyday English, not the Act's English.** The English in Sheng is the
     English people speak, not the law's terms: "counted as income from Kenya",
     not "deemed to accrue in Kenya"; "pay", not "emoluments"; "a condition",
