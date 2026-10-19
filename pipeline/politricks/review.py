@@ -46,6 +46,7 @@ from __future__ import annotations
 import json
 import os
 import shlex
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -82,6 +83,7 @@ from .models import (
     load_bill,
     save_bill,
 )
+from .reviewlock import BillLocked, bill_lock
 from .selftest import FIXTURE_DRAFT_IDS, FIXTURE_SAMPLE_ID, Checker, fixture_bill, mark_reviewed
 
 LEGAL_PREVIEW_CHARS = 300
@@ -396,16 +398,30 @@ def run(repo_root: Path, bill_id: str) -> int:
     try:
         phrases = load_phrases(repo_root)
         path = bill_path(repo_root, bill_id)
-        bill = load_bill(path)
-    except (LintError, ValueError, OSError) as error:
+    except (LintError, ValueError) as error:
         print(f"FAILED: {error}")
         return 1
+    if not path.exists():
+        print(f"FAILED: no bill file at {path}")
+        return 1
+    # Held for the whole walk: it saves the whole file on every accept, so
+    # anything else writing the bill meanwhile would be overwritten.
     try:
-        result = walk(bill, phrases, _ask_from_terminal, print, lambda saved: save_bill(saved, path))
-    except KeyboardInterrupt:
-        # Ctrl-C outside the walk's own prompts (e.g. while the final lint ran).
-        # Accepted items were already saved as they were accepted.
-        print("\ninterrupted")
+        with bill_lock(path):
+            try:
+                bill = load_bill(path)
+            except (ValueError, OSError) as error:
+                print(f"FAILED: {error}")
+                return 1
+            try:
+                result = walk(bill, phrases, _ask_from_terminal, print, lambda saved: save_bill(saved, path))
+            except KeyboardInterrupt:
+                # Ctrl-C outside the walk's own prompts (e.g. while the final lint ran).
+                # Accepted items were already saved as they were accepted.
+                print("\ninterrupted")
+                return 1
+    except BillLocked as error:
+        print(f"FAILED: {error}")
         return 1
     return 0 if result.ok else 1
 
@@ -818,6 +834,40 @@ def self_test(repo_root: Path) -> bool:
     recorded = json.loads(repo_root.joinpath(*hashvectors.FIXTURE).read_text(encoding="utf-8"))["vectors"]
     check("I. models.current_sha256 matches every shared vector (regenerate: python -m politricks.hashvectors)",
           len(recorded) > 0 and recorded == hashvectors.build(), f"{len(recorded)} recorded")
+
+    # === Scenario J: one writer at a time (reviewlock.py) ======================
+    # A temp repo with a copy of the test bill. stdin is emptied for the run()
+    # call, so if the lock ever stops working the walk ends at its first prompt
+    # (and the check fails) instead of waiting for someone to type.
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        (root / "pipeline" / "prompts").mkdir(parents=True)
+        shutil.copy(repo_root / "pipeline" / "prompts" / "banned.txt", root / "pipeline" / "prompts")
+        path = bill_path(root, "finance-act-2026")
+        save_bill(fixture_bill(repo_root), path)
+        before = sha256_file(path)
+        real_stdin = sys.stdin
+        with bill_lock(path):
+            try:
+                with bill_lock(path):
+                    second = "taken twice"
+            except BillLocked:
+                second = "refused"
+            sys.stdin = io.StringIO("")
+            try:
+                with contextlib.redirect_stdout(io.StringIO()) as said:
+                    code = run(root, "finance-act-2026")
+            finally:
+                sys.stdin = real_stdin
+        check("J. a second lock on the same bill is refused at once", second == "refused", second)
+        check("J. a walk on a bill another writer holds refuses before asking anything (exit 1), bill unchanged",
+              code == 1 and "is open in another" in said.getvalue() and sha256_file(path) == before, said.getvalue())
+        try:
+            with bill_lock(path):
+                again = "taken again"
+        except BillLocked:
+            again = "still held"
+        check("J. once let go, the lock can be taken again", again == "taken again", again)
 
     # === Nothing written ========================================================
     check("the real bill file's SHA-256 is unchanged", sha256_file(real_path) == sha_before)

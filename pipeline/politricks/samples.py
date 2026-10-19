@@ -19,6 +19,7 @@ from pathlib import Path
 import yaml
 
 from .models import Bill, NeutralCheck, Review, Tri, bill_path, load_bill, save_bill
+from .reviewlock import bill_lock
 
 SAMPLE_NOTE = "Hand-written sample"
 
@@ -84,7 +85,8 @@ def _summary_from(data: dict):
 def run(repo_root: Path, bill_id: str) -> None:
     data = load_samples(repo_root, bill_id)
     path = bill_path(repo_root, bill_id)
-    bill = load_bill(path)
-    applied = apply_samples(bill, data)
-    save_bill(bill, path)
+    with bill_lock(path):  # reviewlock.py: no review walk can overwrite this
+        bill = load_bill(path)
+        applied = apply_samples(bill, data)
+        save_bill(bill, path)
     print(f"applied {applied} clauses + summary (status: sample)")

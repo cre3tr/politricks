@@ -57,6 +57,7 @@ from .models import (
     load_bill,
     save_bill,
 )
+from .reviewlock import BillLocked, bill_lock
 from .selftest import FIXTURE_BILL_ID, Checker, mark_reviewed, reset_bill
 
 # Sonnet 5.5, chosen for keeping closely to the brief: explain the clause and
@@ -626,6 +627,7 @@ def _run_offline(
     clause_ids: list[str] | None = None,
     tags_only: bool = False,
     prepare=None,
+    hold_lock: bool = False,
 ) -> SimpleNamespace:
     """Run run() in a temp copy of the repo against a fake client.
 
@@ -635,7 +637,8 @@ def _run_offline(
     for exactly what the fake returns unless a test says otherwise. Its
     exceptions are caught and returned as the code, so a crash fails a check
     instead of the test. `prepare(bill)`, if given, changes the test bill
-    before the run (e.g. marks a clause reviewed).
+    before the run (e.g. marks a clause reviewed). `hold_lock` holds the
+    bill's lock around the run, as a review walk in another terminal would.
     """
     keep = clause_ids if clause_ids is not None else [line["custom_id"] for line in lines]
     with tempfile.TemporaryDirectory() as tmp:
@@ -651,7 +654,8 @@ def _run_offline(
 
         client = _FakeClient(lines, parse)
         out = io.StringIO()
-        with contextlib.redirect_stdout(out):
+        held = bill_lock(bill_path(root, FIXTURE_BILL_ID)) if hold_lock else contextlib.nullcontext()
+        with held, contextlib.redirect_stdout(out):
             try:
                 code = run(root, FIXTURE_BILL_ID, batch_id=batch_id, client=client, poll_seconds=0,
                            summary_only=summary_only, tags_only=tags_only)
@@ -659,6 +663,11 @@ def _run_offline(
                 code = f"raised {type(error).__name__}: {error}"
 
         records = root.joinpath(*BATCH_RECORDS)
+        usage_file = _usage_log(root, FIXTURE_BILL_ID)
+        usage_lines = (
+            [json.loads(line) for line in usage_file.read_text(encoding="utf-8").splitlines()]
+            if usage_file.exists() else []
+        )
         id_file = records / f"{FIXTURE_BILL_ID}.batch-id"
         tags_id_file = records / f"{FIXTURE_BILL_ID}.tags.batch-id"
         raw_file = records / f"{_FAKE_BATCH_ID}.jsonl"
@@ -670,6 +679,7 @@ def _run_offline(
             id_saved=id_file.read_text(encoding="utf-8").strip() if id_file.exists() else None,
             tags_id_saved=tags_id_file.read_text(encoding="utf-8").strip() if tags_id_file.exists() else None,
             raw_lines=len(raw_file.read_text(encoding="utf-8").splitlines()) if raw_file.exists() else 0,
+            usage_lines=usage_lines,
         )
 
 
@@ -933,7 +943,8 @@ def self_test(repo_root: Path) -> bool:
         parse_calls.append(kwargs)
         # Only `parsed_output`, like the real SDK object; reading `.parsed` fails.
         answer = fake_summary if kwargs.get("output_format") is SummaryOut else fixture_ok
-        return SimpleNamespace(parsed_output=answer, stop_reason="end_turn", model="claude-opus-5-5")
+        usage = SimpleNamespace(model_dump=lambda **_: {"input_tokens": 100, "output_tokens": 20})
+        return SimpleNamespace(parsed_output=answer, stop_reason="end_turn", model="claude-opus-5-5", usage=usage)
 
     def parse_raises(**kwargs):
         raise ValueError("planted: the retry itself failed")
@@ -968,6 +979,20 @@ def self_test(repo_root: Path) -> bool:
         and "format" not in sent.get("output_config", {})
         and sent.get("fallbacks") == "default",
         str(sorted(sent)),
+    )
+
+    check(
+        "run: every direct call's usage is logged (the c5 retry, then the summary)",
+        [line["custom_id"] for line in a.usage_lines] == ["c5", "summary"]
+        and all(line["usage"] == {"input_tokens": 100, "output_tokens": 20} for line in a.usage_lines),
+        str(a.usage_lines),
+    )
+
+    locked = _run_offline(repo_root, first_three, parse_ok, hold_lock=True)
+    check(
+        "run: a bill another writer holds (a review walk) is refused before anything is sent",
+        locked.code == 1 and locked.created == [] and "Nothing was sent" in locked.out and locked.id_saved is None,
+        f"{locked.code} / {locked.created} / {locked.out}",
     )
 
     resumed = _run_offline(repo_root, first_three, parse_ok, batch_id=_FAKE_BATCH_ID)
@@ -1193,19 +1218,51 @@ def self_test(repo_root: Path) -> bool:
 BATCH_RECORDS = ("pipeline", ".cache", "batches")
 
 
-def _call_direct(client, custom_id: str, params: dict, tags_only: bool = False) -> Outcome:
+def _usage_log(repo_root: Path, bill_id: str) -> Path:
+    """Where direct calls record what they cost: "<bill-id>.direct.jsonl", one
+    line per answer that came back. Batch usage is already in the raw results
+    file; before this (2026-10-19) direct calls left no record, so a run's cost
+    was an estimate. It is still a LOWER bound: a call that raised (a network
+    drop, JSON the SDK couldn't parse) may have been billed and leaves no line."""
+    return repo_root.joinpath(*BATCH_RECORDS, f"{bill_id}.direct.jsonl")
+
+
+def _log_usage(log: Path | None, custom_id: str, message) -> None:
+    """Append one direct call's token usage. A write error (OSError) is printed,
+    not raised: losing a cost line must not lose the answer it paid for."""
+    if log is None:
+        return
+    usage = getattr(message, "usage", None)
+    line = {
+        "at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+        "custom_id": custom_id,
+        "model": getattr(message, "model", None),
+        "stop_reason": getattr(message, "stop_reason", None),
+        "usage": usage.model_dump(mode="json") if usage is not None else None,
+    }
+    try:
+        log.parent.mkdir(parents=True, exist_ok=True)
+        with log.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(line, ensure_ascii=False) + "\n")
+    except OSError as error:
+        print(f"  (usage for {custom_id} not logged: {error})")
+
+
+def _call_direct(client, custom_id: str, params: dict, tags_only: bool = False, usage_log: Path | None = None) -> Outcome:
     """One direct (non-batch) request, with the server-side fallback on.
 
     Used for refused clauses and for the summary, which needs the clause tags
     and so can't ride in the clause batch. Never raises: anything that goes
     wrong becomes an `Errored`, so one bad call can't throw away every other
-    result the batch already paid for.
+    result the batch already paid for. Every answer that came back, used or
+    not, is logged to `usage_log`, because it was paid for either way.
     """
     model_cls = _out_model(custom_id, tags_only)
     try:
         message = client.beta.messages.parse(output_format=model_cls, **retry_params(params))
     except Exception as error:  # a refusal, truncated JSON, a network drop...
         return Errored(custom_id, f"direct call failed: {type(error).__name__}: {error}")
+    _log_usage(usage_log, custom_id, message)
     # The SDK puts the validated object on `parsed_output` (anthropic 1.8.0,
     # types/beta/parsed_beta_message.py). There is no `.parsed`.
     if message.stop_reason in ("refusal", "max_tokens") or message.parsed_output is None:
@@ -1222,7 +1279,7 @@ def _summarise(repo_root: Path, bill: Bill, client) -> list[Outcome]:
         print("summary already reviewed or edited by a human; not asked for again")
         return []
     print("asking for the summary (direct call, from the clause tags)...")
-    outcome = _call_direct(client, "summary", build_summary_params(repo_root, bill))
+    outcome = _call_direct(client, "summary", build_summary_params(repo_root, bill), usage_log=_usage_log(repo_root, bill.id))
     apply(bill, [outcome])
     return [outcome]
 
@@ -1263,12 +1320,27 @@ def run(
     Returns the exit code: 0 only if every request was applied, 1 if any was
     not. Each one that wasn't is listed with its reason. `client` and
     `poll_seconds` exist so the self-test can drive this offline with a fake.
+
+    Holds the bill's lock (reviewlock.py) for the whole run, before anything
+    is sent: the run loads the bill, waits minutes for the batch, then saves
+    the whole file, so a review walk accepting meanwhile would be overwritten.
     """
+    path = bill_path(repo_root, bill_id)
+    try:
+        with bill_lock(path):
+            return _run(repo_root, bill_id, path, batch_id, client, poll_seconds, summary_only, tags_only)
+    except BillLocked as error:
+        print(f"FAILED: {error} Nothing was sent.")
+        return 1
+
+
+def _run(repo_root: Path, bill_id: str, path: Path, batch_id, client, poll_seconds: float,
+         summary_only: bool, tags_only: bool) -> int:
+    """run()'s body, with the bill's lock already held."""
     if client is None:
         import anthropic
 
         client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
-    path = bill_path(repo_root, bill_id)
     bill = load_bill(path)
 
     if summary_only:
@@ -1344,7 +1416,7 @@ def run(
         if isinstance(outcome, NeedsDirect):
             params = by_custom_id.get(outcome.custom_id)
             outcomes[i] = (
-                _call_direct(client, outcome.custom_id, params, tags_only)
+                _call_direct(client, outcome.custom_id, params, tags_only, _usage_log(repo_root, bill_id))
                 if params is not None
                 else Errored(outcome.custom_id, "refused, and no longer in the bill to retry")
             )

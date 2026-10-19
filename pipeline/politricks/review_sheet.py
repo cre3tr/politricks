@@ -32,6 +32,7 @@ from __future__ import annotations
 import contextlib
 import io
 import os
+import shutil
 import sys
 import tempfile
 import time
@@ -62,6 +63,7 @@ from .models import (
     save_bill,
 )
 from .review import QuitReview, _ask_from_terminal
+from .reviewlock import BillLocked, bill_lock
 from .selftest import FIXTURE_BILL_ID, Checker, fixture_bill, mark_reviewed
 
 Ask = Callable[[str], str]
@@ -384,7 +386,6 @@ def review_from_sheet(bill_file: Path, sheet_file: Path, phrases: list[str], ask
         show("nothing to save")
         return 0
 
-    show("Before saying yes: make sure no `politricks review` walk is open on this bill. It would overwrite this when it next saves.")
     try:
         answer = ask("Type yes to save all of this to the bill (anything else quits, saving nothing) > ")
     except (QuitReview, KeyboardInterrupt):
@@ -393,8 +394,9 @@ def review_from_sheet(bill_file: Path, sheet_file: Path, phrases: list[str], ask
     if answer.strip() != "yes":
         show("not saved")
         return 1
-    # The walk saves on every accept, so a walk running in another terminal
-    # could have written meanwhile. Never overwrite that.
+    # run() holds the bill's lock (reviewlock.py), so no politricks command
+    # can have written meanwhile. This still catches what the lock can't: a
+    # hand edit, or a walk started before the lock existed (2026-10-19).
     if sha256_file(bill_file) != sha_at_load:
         show("NOT saved: the bill file changed while this was open (another review?). Run this again.")
         return 1
@@ -421,7 +423,17 @@ def run(repo_root: Path, bill_id: str, sheet: Path, is_terminal: Callable[[], bo
     except (LintError, ValueError) as error:
         print(f"FAILED: {error}")
         return 1
-    return review_from_sheet(path, sheet, phrases, _ask_from_terminal, print, date.today().isoformat())
+    if not path.exists():
+        print(f"FAILED: no bill file at {path}")
+        return 1
+    # Held from before the bill is read until after it's saved, so a walk or
+    # generate run can't write it in between (or overwrite this afterwards).
+    try:
+        with bill_lock(path):
+            return review_from_sheet(path, sheet, phrases, _ask_from_terminal, print, date.today().isoformat())
+    except BillLocked as error:
+        print(f"FAILED: {error} Nothing was changed.")
+        return 1
 
 
 # --------------------------------------------------------------------------
@@ -654,6 +666,28 @@ def self_test(repo_root: Path) -> bool:
         with contextlib.redirect_stdout(io.StringIO()) as said:
             code = run(repo_root, FIXTURE_BILL_ID, sheet_file, is_terminal=lambda: False)
         check("K: run() with input piped in refuses (exit 1)", code == 1 and "at a terminal" in said.getvalue(), said.getvalue())
+
+        # --- L. one writer at a time (reviewlock.py) ---------------------------
+        # A temp repo whose bill another writer holds. The sheet is a fresh,
+        # unedited export, so even with the lock broken there is nothing to ask:
+        # the run can never sit waiting for someone to type "yes".
+        root = tmp / "repo"
+        (root / "pipeline" / "prompts").mkdir(parents=True)
+        shutil.copy(repo_root / "pipeline" / "prompts" / "banned.txt", root / "pipeline" / "prompts")
+        held = bill_path(root, FIXTURE_BILL_ID)
+        bill = fixture_bill(repo_root)
+        save_bill(bill, held)
+        clean_sheet = tmp / "clean.xlsx"
+        build_workbook(bill, today).save(clean_sheet)
+        before = sha256_file(held)
+        with bill_lock(held), contextlib.redirect_stdout(io.StringIO()) as said:
+            code = run(root, FIXTURE_BILL_ID, clean_sheet, is_terminal=lambda: True)
+        check("L: an import while a walk or generate holds the bill refuses (exit 1), bill unchanged",
+              code == 1 and "is open in another" in said.getvalue() and sha256_file(held) == before, said.getvalue())
+        with contextlib.redirect_stdout(io.StringIO()) as said:
+            code = run(root, FIXTURE_BILL_ID, clean_sheet, is_terminal=lambda: True)
+        check("L: once the other writer lets go, the same import runs (nothing to save, exit 0)",
+              code == 0 and "nothing to save" in said.getvalue(), said.getvalue())
 
     check("the real bill file is unchanged", sha256_file(real) == sha_before)
     return check.finish()

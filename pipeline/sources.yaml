@@ -32,8 +32,17 @@ tertiary-education-bill-2026:
   chamber: national
   kind: bill
   status: active
-  stage: "Before the National Assembly Education Committee. Public views open until 2 October 2026"
-  stage_checked_at: "2026-09-28"
+  # Re-checked 2026-10-19 from the National Assembly Bills Tracker "as at
+  # Thursday, 8th October 2026" (row 330, NA Bill No. 49 of 2026): First
+  # Reading 11/08/2026, no Second Reading date. Not on the 21 October order
+  # paper. https://www.parliament.go.ke/sites/default/files/2026-10/BILLS%20TRACKER%20AS%20AT%20THURSDAY%2C%208TH%20OCTOBER%202026_2.pdf
+  # And from the Education Committee chair's statement, Hansard 6 October 2026
+  # (p. 6-7): committed to the Committee on First Reading; written memoranda
+  # deadline extended from 24 September to Friday 2 October 2026, 5.00 p.m.;
+  # the Committee is preparing its report, to be tabled for Second Reading.
+  # https://www.parliament.go.ke/sites/default/files/2026-10/The%20Hansard%20-%20Tuesday,%206%20October%202026.pdf
+  stage: "Before the National Assembly Education Committee, which is preparing its report for Second Reading. Public views closed 2 October 2026, 5pm"
+  stage_checked_at: "2026-10-19"
   sources:
     - label: "Tertiary Education, Placement and Funding Bill, 2026 (as published, 24 Jul 2026)"
       url: "https://new.kenyalaw.org/akn/ke/bill/na/2026-07-24/the-tertiary-education-placement-and-funding-bill-2026/eng@2026-07-24/source.pdf"
@@ -49,8 +58,12 @@ public-participation-bill-2025:
   chamber: senate
   kind: bill
   status: active
-  stage: "Before the Senate Justice, Legal Affairs and Human Rights Committee. Public views closed 28 September 2026, 5pm"
-  stage_checked_at: "2026-09-28"
+  # Re-checked 2026-10-19 from the Senate Bills Tracker "updated as at 16th
+  # October, 2026" (row 167): Second Reading 07/10/26 and 08/10/26, remarks
+  # "Bill awaiting Division at Second Reading Stage".
+  # https://www.parliament.go.ke/sites/default/files/2026-10/Bills%20Tracker%20updated%20as%20at%2016.10.2026.pdf
+  stage: "Second Reading in the Senate (7 and 8 October 2026); the decision (Division) is still to come. Public views closed 28 September 2026, 5pm"
+  stage_checked_at: "2026-10-19"
   sources:
     - label: "Public Participation Bill, 2025 (as first published, 1 Oct 2025; not the National Assembly-approved text)"
       url: "https://new.kenyalaw.org/akn/ke/bill/na/2025-10-01/the-public-participation-bill-2025/eng@2025-10-01/source.pdf"

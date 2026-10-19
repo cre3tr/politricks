@@ -141,13 +141,13 @@ Implements `prd.md > Automatic Bill Intake`, `prd.md > What It Does` (content), 
 
 #### Civic Data
 Implements `prd.md > Have Your Say` (content). **Your decision: hand-entered facts, AI translation only.**
-- You write `pipeline/civic/<bill-id>.yaml` from the official notice. It holds `participation` (open, deadline, channels, requirements, source_url, checked_at), `stage_next` (English text + source_url), and for passed bills, `challenge.avenues` (English text + source_url each).
+- You write `pipeline/civic/<bill-id>.yaml` from the official notice. *(2026-10-19, Ian's call: Claude drafts the YAML with a source on every fact and Ian checks each one before slice 6 ships. See checklist.md Revisions.)* It holds `participation` (open, deadline, channels, requirements, source_url, checked_at), `stage_next` (English text + source_url), and for passed bills, `challenge.avenues` (English text + source_url each).
 - `politricks civic <bill-id>` validates the YAML, including that **every fact has a `source_url`**, then asks Claude to **translate** (not write) the English text into SW and Sheng. Translations land as drafts and get reviewed.
 - Challenge avenues are general information only. The prompt forbids advice or any prediction of outcome.
 
 #### Lint
 - Implements the doctrine as a check that fails the run, not a hope.
-- `politricks lint` scans **every generated string** for banned phrases: "unconstitutional", "kinyume cha katiba", "haramu", "illegal", "invalid", "you should", "vote", with the list kept in `pipeline/prompts/banned.txt`. It also lists every clause whose `neutral_check.ok` is false, and schema-validates the bill JSON.
+- `politricks lint` scans **every generated string** for banned phrases: "unconstitutional", "kinyume cha katiba", "haramu", "illegal", "invalid", "you should", "vote", with the list kept in `pipeline/prompts/banned.txt`. Since 2026-10-19 the doctrine also covers twelve Kiswahili/Sheng twins and advice phrases ("unlawful", "batili", "unapaswa", "piga kura", "make sure" and the rest; `lint.py DOCTRINE_PHRASES` holds the full list). It also lists every clause whose `neutral_check.ok` is false, and schema-validates the bill JSON.
 - `review` refuses to mark a bill done while lint has failures.
 
 #### Review

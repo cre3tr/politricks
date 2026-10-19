@@ -40,8 +40,10 @@ LANGS = ("en", "sw", "sheng")
 # and the item a human is looking at can never disagree about what to call it.
 SUMMARY_ID = "summary"
 
-# The seven phrases devpost/spec.md > Lint names. banned.txt may hold more, but
-# never fewer: `lint --self-test` fails if one of these goes missing.
+# The seven phrases devpost/spec.md > Lint names, plus the twelve Ian made
+# permanent on 2026-10-19 (Kiswahili/Sheng twins and advice phrases).
+# banned.txt may hold more, but never fewer: `lint --self-test` fails if one of
+# these goes missing.
 DOCTRINE_PHRASES = (
     "unconstitutional",
     "kinyume cha katiba",
@@ -50,6 +52,18 @@ DOCTRINE_PHRASES = (
     "invalid",
     "you should",
     "vote",
+    "unlawful",
+    "violates the constitution",
+    "kinyume na katiba",
+    "inakiuka katiba",
+    "si halali",
+    "kinyume cha sheria",
+    "batili",
+    "unapaswa",
+    "mnapaswa",
+    "piga kura",
+    "you must",
+    "make sure",
 )
 
 # Bill fields that have no typed model yet (later slices). A Tri hiding inside
@@ -298,11 +312,11 @@ def self_test(repo_root: Path) -> bool:
     sha_before = sha256_file(real_path)
     phrases = load_phrases(repo_root)
 
-    # All seven doctrine phrases, not just the three this test happens to plant:
+    # Every doctrine phrase, not just the three this test happens to plant:
     # deleting "haramu" from banned.txt must fail here, not pass silently.
     bare = {phrase[:-1].rstrip() if phrase.endswith("*") else phrase for phrase in phrases}
     missing = [phrase for phrase in DOCTRINE_PHRASES if phrase not in bare]
-    check("banned.txt holds all 7 doctrine phrases", not missing, f"missing {missing}")
+    check(f"banned.txt holds all {len(DOCTRINE_PHRASES)} doctrine phrases", not missing, f"missing {missing}")
     check(
         'banned.txt: "illegal*" is starred (inflections caught) and "vote" is not ("voting rights" stays allowed)',
         "illegal*" in phrases and "vote" in phrases,

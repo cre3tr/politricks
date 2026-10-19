@@ -21,8 +21,9 @@ invalid*
 you should*
 vote
 
-# Proposed — Kiswahili/Sheng twins and the explainer prompt's own advice phrases.
-# Ian prunes or extends these at his first real review.
+# Doctrine too: Kiswahili/Sheng twins and the explainer prompt's own advice
+# phrases. Proposed in slice 3, made permanent by Ian on 2026-10-19. Lint's
+# self-test fails if any of these goes missing (lint.py DOCTRINE_PHRASES).
 unlawful*
 violates the constitution
 kinyume na katiba

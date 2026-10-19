@@ -39,6 +39,7 @@ import yaml
 
 from .hashing import normalise, sha256_text
 from .models import Bill, Clause, bill_path, load_bill, save_bill, validate_bill_id
+from .reviewlock import bill_lock
 
 # Header/footer patterns used unless an override replaces them.
 DEFAULT_STRIP_PATTERNS = [
@@ -410,19 +411,22 @@ def run(repo_root: Path, bill_id: str, pdf_file: str) -> None:
     """Extract, check, and save into the bill JSON (keeping existing explanations)."""
     clauses, report = extract(repo_root, bill_id, pdf_file)
     path = bill_path(repo_root, bill_id)
-    bill = load_bill(path)
-    previous = {c.id: c for c in bill.clauses}
-    merged: list[Clause] = []
-    for clause in clauses:
-        old = previous.get(clause.id)
-        if old and old.text_sha256 == clause.text_sha256:
-            # Same words as before: keep explanations, reviews and samples.
-            clause = old.model_copy(
-                update={"heading": clause.heading, "heading_source": clause.heading_source, "pages": clause.pages}
-            )
-        merged.append(clause)
-    bill.clauses = merged
-    save_bill(bill, path)
+    # Load to save under the bill's lock (reviewlock.py), so an open review
+    # walk can't overwrite this on its next accept.
+    with bill_lock(path):
+        bill = load_bill(path)
+        previous = {c.id: c for c in bill.clauses}
+        merged: list[Clause] = []
+        for clause in clauses:
+            old = previous.get(clause.id)
+            if old and old.text_sha256 == clause.text_sha256:
+                # Same words as before: keep explanations, reviews and samples.
+                clause = old.model_copy(
+                    update={"heading": clause.heading, "heading_source": clause.heading_source, "pages": clause.pages}
+                )
+            merged.append(clause)
+        bill.clauses = merged
+        save_bill(bill, path)
     print(f"sections: {report['sections']}  parts: {report['parts']}  schedules: {report['schedules']}")
     print(f"header/footer lines stripped: {report['stripped']} (logged to sources/{bill_id}/*.stripped.txt)")
     for note in report["ignored_starts"]:

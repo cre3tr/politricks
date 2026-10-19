@@ -637,3 +637,57 @@ Activity mode:
 - **Sonnet cold review** of the first version found that piped stdin could answer `yes`, that a column sorted on its own was accepted as edits, that numbers typed into cells were saved as their stored value (`5%` as `0.05`), and that the plan showed ids but not content. It also listed 11 mutations the 18 checks missed. All of these are fixed and covered.
 - **Not fixed, documented:** a walk already open in another terminal saves its whole in-memory bill on its next accept and would overwrite a sheet import. The prompt says so; there is no lock. The walk also still takes piped answers.
 - **Tests:** `review --sheet-self-test`, 35 checks. Planted-bug controls: 18 mutations, each one alone. 17 fail a named check; removing the Ctrl-C catch crashes the self-test, which is loud (and saves nothing either way).
+
+### Outstanding items started, 2026-10-19
+
+The learner asked to start the open items while he reviews the Finance Act in the Excel sheet. His answers (AskUserQuestion, same day):
+- keep all 12 proposed banned phrases, permanently;
+- generate the Tertiary and Public Participation explanations only **after** his sheet review is imported, so new Sheng rules reach the prompt first;
+- for civic facts, "I draft, you check";
+- wait out the Kenya Law 403.
+
+**The Finance Act JSON was not touched.** Its SHA-256 is still `fd891a4f…`, the same as at export, so every row of his sheet stays current.
+
+- **Banned phrases:**
+  - The 12 are now doctrine, in `banned.txt` and in `lint.py DOCTRINE_PHRASES`, so the self-test fails if one is deleted. Control: deleting `batili` gave 1 FAIL.
+  - Lint over the 177 Finance Act texts: 0 banned hits. Its 2 findings are c1 and c2, changed since review, which are his to re-accept.
+  - spec.md > Lint now names them.
+- **One writer at a time (`reviewlock.py`).** This closes the 2026-10-15 "Not fixed, documented" item: a walk overwriting a sheet import.
+  - Every command that saves a bill holds an OS file lock from load to save: the walk, `--from-sheet`, `generate`, `fetch`, `extract`, `samples` and `verify`. Any other command refuses at once, exit 1.
+  - The OS frees the lock when the process ends, so it can't go stale.
+  - The sheet import holds the lock across its `yes` prompt.
+  - `generate` refuses before anything is sent, because a run loads the bill, waits minutes, then saves the whole file.
+  - The import's "make sure no walk is open" warning is gone. Its bill-changed check stays, for hand edits and walks started before this code. At the time of this change no `politricks` process was running.
+- **Direct-call cost log.** Refusal retries and the summary append their token usage to `pipeline/.cache/batches/<bill>.direct.jsonl`. This closes 2026-10-14's "add that before costing the next bill". It is a lower bound: a call that raised leaves no line.
+- **Stages re-checked from Parliament.** Recorded in both `sources.yaml` and the bill JSONs, because `fetch` (which copies them) is blocked.
+  - **Tertiary:** NA Bills Tracker as at 8 Oct, row 330 (First Reading 11 Aug 2026, no Second Reading), and the Education Committee chair's statement, Hansard 6 Oct, pp. 6-7. Written memoranda were first due 24 Sep and were extended to Fri 2 Oct 2026, 5pm, so our earlier "2 October" was right. The Committee is preparing its report for Second Reading.
+  - **Public Participation:** Senate Bills Tracker as at 16 Oct, row 167. Second Reading was 7 and 8 Oct 2026, "Bill awaiting Division at Second Reading Stage".
+  - The first wording said "awaiting the vote", which breaks the `vote` doctrine. It now reads "the decision (Division) is still to come".
+- **Civic YAML drafted** (`pipeline/civic/`, three files), for Ian to check fact by fact before slice 6 ships. Each fact is marked:
+  - `[OFFICIAL]`: the Hansard, the trackers, and the Constitution (Parliament's copy, since Kenya Law is down);
+  - `[NEWS]`: the Senate notice's deadline and channels, from Eastleigh Voice (14 Sep 2026), quoting Senate Clerk Jeremiah Nyegenye. The notice itself wasn't found online;
+  - `[UNKNOWN]`: the Tertiary channels.
+  - **Schema:** `deadline_time` is an addition to the spec's schema.
+  - **Checks:** a scan with lint's own matcher over all 9 texts found 0 banned phrases and 0 em dashes, and every text has a `source_url`. Control: a planted string hit 3 phrases.
+  - **Not built yet:** `civic.py`, the panels and the translations stay in slice 6.
+- **Dependabot:** 4 high alerts (npm: sharp, source-map-js, http-cache-semantics, path-to-regexp). Started in a separate session on its own branch. Not merged here.
+- **Sonnet cold review** of the diff: no blockers. Every date, quote and article was checked against the downloaded PDFs.
+  - **Fixed from it:**
+    - S1: the Tertiary P.O. Box and venue were in no source we read. Removed and marked `[UNKNOWN]`.
+    - S2: the Tertiary next step stated past plans as current. It now carries the date.
+    - S3: CLAUDE.md line maps and gotchas.
+    - S4: the lock now also covers fetch, extract, samples and verify, and the CLI prints their refusal.
+    - N1: a failed unlock can't mask the real result.
+    - N2: a typo, and the refusal message.
+    - N3: the log docstring now says lower bound.
+    - N5: the avenue names are now nouns, not imperatives, and the spec notes the drafting decision.
+  - **Left:** N4. The self-tests take both locks in one process. The reviewer checked cross-process refusal and release-on-kill by hand, and the POSIX branch is unexercised.
+- **Tests:**
+  - Self-tests: lint 36, review 43, sheet 37, generate 77, intake 22, export 11, all passing.
+  - Lock controls (each alone): a different lock file per call gave review 2 FAILs, sheet 1, generate 1. Removing the usage log call gave 1 FAIL.
+  - `npm run build`: 0 errors. `check-build`: 117 / 47 / 141 PASS.
+- **Next:**
+  1. Ian finishes the sheet, saves it, and runs `politricks review finance-act-2026 --from-sheet exports/finance-act-2026-review.xlsx` at a terminal. Then lint, build and `check-build`, then commit and push.
+  2. New Sheng rules from that review go into `explainer.md`. Then probe and run Tertiary and Public Participation, about $0.70 to $1.20 for both by the Finance Act's measured cost [MEDIUM], with Ian's OK.
+  3. Ian checks the civic YAML. The Tertiary channels and the Senate notice still need the official notices.
+  4. Slice 3's learner check, then slice 4.

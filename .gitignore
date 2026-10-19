@@ -18,5 +18,8 @@ pipeline/.cache/
 # Agent worktrees (Claude Code)
 .claude/worktrees/
 
+# One-writer-at-a-time locks beside each bill (pipeline/politricks/reviewlock.py)
+src/data/bills/*.lock
+
 # Review sheets (`politricks export`): a working copy, the bill JSON is the record
 exports/

@@ -31,6 +31,19 @@ def main() -> None:
     # curly quotes, which Kenyan legal text is full of. Force UTF-8 output.
     sys.stdout.reconfigure(encoding="utf-8")
 
+    # fetch, extract, samples and verify take the bill's lock (reviewlock.py)
+    # but have no exit-code path of their own: a refusal ends here, plainly.
+    from .reviewlock import BillLocked
+
+    try:
+        _dispatch()
+    except BillLocked as error:
+        print(f"FAILED: {error} Nothing was changed.")
+        sys.exit(1)
+
+
+def _dispatch() -> None:
+
     parser = argparse.ArgumentParser(prog="politricks")
     sub = parser.add_subparsers(dest="command", required=True)
 
