@@ -691,3 +691,49 @@ The learner asked to start the open items while he reviews the Finance Act in th
   2. New Sheng rules from that review go into `explainer.md`. Then probe and run Tertiary and Public Participation, about $0.70 to $1.20 for both by the Finance Act's measured cost [MEDIUM], with Ian's OK.
   3. Ian checks the civic YAML. The Tertiary channels and the Senate notice still need the official notices.
   4. Slice 3's learner check, then slice 4.
+
+### Ian's trilingual alignment of the Finance Act, 2026-10-19
+
+The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause cleanup of the Finance Act across the three languages. His calls (AskUserQuestion, same day):
+- **The doc is his review.** It replaces the sheet he had open, which was never saved after the 2026-10-14 export. Edits land as hand-edited drafts, never Reviewed.
+- **Restore the print.** Headings are corrected only where the scan misread them, and c5's legal text stays as fingerprinted.
+- **Its rules apply everywhere they occur,** and go into the prompt.
+- **VAT is "Kodi ya Ongezeko la Thamani"** (the doc proposed "Kodi ya Thamani Iliyoongezwa").
+
+**Checked against the bill and the printed page before applying:**
+- Two of the doc's "current state" cells didn't match the data. c33's Sheng already opened "Section 33 ina-", and c45 already said "Taratibu za Kodi". Five rows were no-ops.
+- **c5:** the page image prints "(5A)". The text layer says "(SA)", and that text layer is what the legal text and its fingerprint come from.
+- **Six headings the doc rewrote are printed that way in the Act:** c34 "Amendment of the section 2", c43 "new 23B section", c42 and c46 with no "a", c46 with no full stop, and c55 "Cap 427." Per his call they keep the printed wording.
+- **Numbers:** the Act writes amounts and durations in words ("twentieth day", "ten billion shillings", "thirty days"). So the Kiswahili number words already follow "as in the legal text" and were left alone. The exception is his c4 row ("siku ya ishirini" → "tarehe 20"), applied as he wrote it.
+
+**Applied (the edit scripts are in the session scratchpad; this entry is the record):**
+- **38 items changed and are now hand-edited drafts** (counted by comparing every item's texts against HEAD). Lint shows 1 finding: c2, changed since review, untouched by this pass. States are now 55 hand-edited drafts, 3 AI drafts and 1 changed since review.
+- **Sheng opens with the section's number:** `Section N ina-` in 16 clauses that opened "Hii section ina-", plus c42 ("Finance Act ina-add").
+- **c5 explanations:** "(SA)" → "(5A)" in all three languages, 6 places. The legal text is unchanged.
+- **Kiswahili:**
+  - "asilimia N" → "N%" in 9 items (c3, c20, c21, c24, c36, the summary and the 3 group notes), matching the English and Sheng columns. A first pattern missed "asilimia 30." at a sentence end; a second pass fixed c24 and c36. 0 are left.
+  - "Sehemu" → "Kifungu" where it means a section: c10, c32, c53, with verb agreement. "Sehemu" for a Part of a Schedule is kept.
+  - One name per Act:
+    - Income Tax Act: `Sheria ya Kodi ya Mapato` (c15, c23, the summary, the employee note);
+    - VAT Act: `Sheria ya Kodi ya Ongezeko la Thamani (VAT)` (c25-c31, c33, the summary);
+    - Tax Procedures Act: `Sheria ya Taratibu za Kodi` (c38, c41, c49, c50, the summary);
+    - Excise Duty Act: `(Excise Duty Act)` added in c36, the summary and the transport note;
+    - Stamp Duty Act: `Sheria ya Ushuru wa Stempu (Stamp Duty Act)` (c54).
+  - c4: "tarehe 20 ya mwezi".
+- **Headings:** 9 transcriptions copied from the page images go into `pipeline/overrides/finance-act-2026.yaml` `heading_transcriptions` (c4, c7, c11, c13, c40, c42, c45, c46, c47). Re-running `extract` changed exactly those 9 headings and their `heading_source`, nothing else. Headings aren't in the review fingerprint.
+- **The prompt** (`explainer.md`) now carries the rules:
+  - Sheng opens with `Section <N> ina-`, while "this section" mid-text stays `hii section`;
+  - Kifungu for a section, Sehemu for a Part;
+  - percentages as `31%`;
+  - one Kiswahili name per Act;
+  - the doc's fixed terms (kukatwa chanzoni, zisizotozwa ushuru/zilizosamehewa, kuwasilisha marejesho; ku-repeal na ku-replace, ku-file return).
+- **Fresh review sheet:** `exports/finance-act-2026-review-2026-10-19.xlsx`. The old sheet is stale for every changed row.
+
+**Tests:**
+- Lint: 177 texts, 0 banned phrases.
+- Self-tests: lint 36, review 43, sheet 37, generate 77, intake 22, export 11, verify (`CHANGED` on the tampered copy), all passing.
+- **BLOCKED: `npm run build`.** It exits 1 with EPERM opening `node_modules/astro/dist/cli/index.js`. Every file under `node_modules/astro/dist` is unreadable ("Access to the path is denied", 300 of 300 sampled), while the other 270 packages read fine. The ACLs are normal, no node process is running, and the files date from 2026-09-25. The build passed at about 20:41 the same day. `check-build` against the stale `dist` gave 36 FAILs: the new texts missing from old pages. **Nothing is committed until the build passes.**
+
+**Not done, and why:**
+- **c5's legal text still reads "(SA)".** Correcting the legal text needs a decision on an OCR-correction mechanism, because the fingerprint ties it to the PDF's text layer. Other clauses carry the same kind of noise ("m proper alphabetical sequence", "couectorto").
+- **The doc's grammar edits to the six printed headings** were left out, per his call.

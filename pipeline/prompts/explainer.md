@@ -46,6 +46,24 @@ stop, a colon or brackets instead.
 - **English (`en`):** plain, direct, no legal jargon left unexplained.
 - **Kiswahili (`sw`):** standard Kiswahili, the register used in Kenyan public
   life. Not academic Kiswahili, not slang.
+  - **Section is `Kifungu`, Part is `Sehemu`.** "Section 10" is `Kifungu cha
+    10`, "this section" is `Kifungu hiki` (with its agreement:
+    `kinabadilisha`, `kinafuta`). A subsection is `kifungu kidogo`, a
+    paragraph is `aya`. Use `Sehemu` only for a Part, such as `Sehemu A ya
+    Jedwali la Pili`.
+  - **Percentages as the other columns write them:** `31%`, `1.5%`, never
+    `asilimia 31`.
+  - **One name per Act**, every time:
+    - Income Tax Act (Cap. 470): `Sheria ya Kodi ya Mapato`;
+    - Value Added Tax Act (Cap. 476): `Sheria ya Kodi ya Ongezeko la Thamani
+      (VAT)`;
+    - Tax Procedures Act (Cap. 469B): `Sheria ya Taratibu za Kodi`;
+    - Excise Duty Act (Cap. 472): `Sheria ya Ushuru wa Bidhaa (Excise Duty
+      Act)`;
+    - Stamp Duty Act (Cap. 480): `Sheria ya Ushuru wa Stempu (Stamp Duty Act)`.
+  - **Fixed terms:** tax deducted at source is `kukatwa chanzoni`; exempt
+    goods or supplies are `bidhaa zisizotozwa ushuru` or `zilizosamehewa`;
+    filing a return is `kuwasilisha marejesho`.
 - **Sheng (`sheng`):** everyday Nairobi Sheng, the way a young person in
   Nairobi would explain this to a friend. Sheng is Swahili-English, and here
   it leans on **English**: English words carry the meaning (the nouns, the
@@ -75,10 +93,17 @@ stop, a colon or brackets instead.
     definition", not "Royalty ina new definition". The verb prefix `ina-`
     stays as it is ("ina-change", "ina-include"); only `ina` standing alone
     as "has" changes. For "person", write `person`, never `mtu`.
-  - **"This" and "that" go first.** "This section" is `Hii section`,
-    never `Section hii`. The same goes for every noun: `hio list`, `hizo
-    costs`, `huyo person`, not `list hiyo`, `costs hizo`, `person huyo`.
-    Spell "that" as `hio`. (`kwa hio` meaning "so" is fine.)
+  - **Open with the section's own number.** A section's Sheng starts
+    `Section <its number> ina-...`: "Section 4 ina-add new section 6B kwa
+    Income Tax Act...", not "Hii section ina-add..." and not "Finance Act
+    ina-add...".
+  - **"This" and "that" go first.** Later in the text, "this section" is
+    `hii section`, never `section hii`. The same goes for every noun: `hio
+    list`, `hizo costs`, `huyo person`, not `list hiyo`, `costs hizo`,
+    `person huyo`. Spell "that" as `hio`. (`kwa hio` meaning "so" is fine.)
+  - **Fixed terms:** `ku-repeal na ku-replace` (not "ku-futa kabisa na
+    ku-weka ingine"), `ku-file return`, `exempt goods`, `tax deducted at
+    source`.
   - **"New" goes first, in English.** `new section`, `two new
     subsections`, never `section mpya` or `subsections mbili mpya`.
   - **Plain verb forms.** Say `inafanya`, `alifanya`, `ina-cover`, not the
