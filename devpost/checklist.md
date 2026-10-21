@@ -611,3 +611,147 @@ Activity mode:
   4. c55: add what the levy is charged on (`e`, then accept).
   5. After the walk: lint, build and `check-build`, then commit and push the accepts.
   6. Still open: prune the 12 proposed banned phrases (`banned.txt`); GitHub Dependabot reported vulnerable dependencies on the first push (run `dependency-review`); re-check the live bills' stages; slice 6 civic facts.
+
+### Review sheet export, 2026-10-14
+
+- **The learner's request:** the bill as an Excel sheet with English, Kiswahili, Sheng and a state per row, to review and edit by hand and send back complete.
+- **Built:** `politricks export <bill-id>` (`pipeline/politricks/export.py`) writes `exports/<bill-id>-review.xlsx`. It reads the JSON and never writes it; the SHA-256 before and after the real export matched (`fd891a4f…`).
+  - One row per item in the walk's order: 55 clauses, the summary, then the 3 group notes (59 rows). Yellow columns are his to change: Decision (dropdown: Accept, Edited, Needs work, Skip), Notes, Groups / sections, English, Kiswahili, Sheng. Grey columns are context: ID, heading, state now, legal text, Sheng words flagged, neutral check.
+  - "State now" uses the site's rules (Reviewed, Changed since review, Hand-edited draft, AI draft, Sample, No explanation). The real export read: 52 hand-edited, 5 AI draft, 2 changed since review.
+  - A hidden `fingerprint` column holds each row's `current_sha256` at export, so a later import can tell which rows he changed and whether the JSON moved since.
+  - Texts starting with `=` are stored as text, not formulas; a text over Excel's 32,767-character cell limit stops the export instead of being cut.
+- **New dependency:** `openpyxl` 3.1.5 (pipeline only).
+- **Tests:** `export --self-test`, 11 checks, offline, temp folder, real-bill SHA guard. Planted-bug control: swapping the Kiswahili and Sheng columns and dropping the "changed since review" state gave 2 FAILs; restored, 11 pass.
+- **Open, the learner's call:** there is no import yet. Rule: only an accept in `politricks review` marks anything Reviewed. So an "Accept" in the sheet can't set Reviewed directly unless the learner decides the sheet is his accept. The two ways: import his edits as hand-edited drafts and then accept them in the walk, or have the walk read the sheet with him driving it.
+
+### Review from the sheet, 2026-10-15
+
+- **The learner's call:** a row he marks Accept in the export sheet is his accept, **when he runs the import himself**. This supersedes the 2026-10-14 entry's "no import yet". That entry stays as written, because this log is append-only.
+- **Built:** `politricks review <bill-id> --from-sheet <file>` (`pipeline/politricks/review_sheet.py`). It plans the whole sheet on a copy of the bill, prints every action and every new text in full, and saves once, on `yes`, with an atomic replace. It keeps the walk's rules: a banned phrase blocks an Accept; a sample stays a sample; an edit without an Accept is a hand-edited draft; an item already reviewed and unchanged keeps its date.
+- **Guards, all from the design or the cold review:**
+  - piped input is refused before anything is read (run on the real paths: `echo yes | … --from-sheet …` gives FAILED, exit 1, bill unchanged);
+  - a row whose item changed since the export is skipped;
+  - an Accept on a group note whose sections moved through tag edits in the same sheet is refused, and so is one on a group the edits dropped;
+  - the bill file changing while the prompt is open means no save;
+  - the whole sheet fails, writing nothing, on: another bill's sheet; a renamed column; an unknown or repeated row id; an emptied text cell; an unknown group name; a formula; a number or date Excel made of typed text; a Legal text cell that isn't its section's; or an edited text that is exactly another row's original (a column sorted on its own).
+- **Sonnet cold review** of the first version found that piped stdin could answer `yes`, that a column sorted on its own was accepted as edits, that numbers typed into cells were saved as their stored value (`5%` as `0.05`), and that the plan showed ids but not content. It also listed 11 mutations the 18 checks missed. All of these are fixed and covered.
+- **Not fixed, documented:** a walk already open in another terminal saves its whole in-memory bill on its next accept and would overwrite a sheet import. The prompt says so; there is no lock. The walk also still takes piped answers.
+- **Tests:** `review --sheet-self-test`, 35 checks. Planted-bug controls: 18 mutations, each one alone. 17 fail a named check; removing the Ctrl-C catch crashes the self-test, which is loud (and saves nothing either way).
+
+### Outstanding items started, 2026-10-19
+
+The learner asked to start the open items while he reviews the Finance Act in the Excel sheet. His answers (AskUserQuestion, same day):
+- keep all 12 proposed banned phrases, permanently;
+- generate the Tertiary and Public Participation explanations only **after** his sheet review is imported, so new Sheng rules reach the prompt first;
+- for civic facts, "I draft, you check";
+- wait out the Kenya Law 403.
+
+**The Finance Act JSON was not touched.** Its SHA-256 is still `fd891a4f…`, the same as at export, so every row of his sheet stays current.
+
+- **Banned phrases:**
+  - The 12 are now doctrine, in `banned.txt` and in `lint.py DOCTRINE_PHRASES`, so the self-test fails if one is deleted. Control: deleting `batili` gave 1 FAIL.
+  - Lint over the 177 Finance Act texts: 0 banned hits. Its 2 findings are c1 and c2, changed since review, which are his to re-accept.
+  - spec.md > Lint now names them.
+- **One writer at a time (`reviewlock.py`).** This closes the 2026-10-15 "Not fixed, documented" item: a walk overwriting a sheet import.
+  - Every command that saves a bill holds an OS file lock from load to save: the walk, `--from-sheet`, `generate`, `fetch`, `extract`, `samples` and `verify`. Any other command refuses at once, exit 1.
+  - The OS frees the lock when the process ends, so it can't go stale.
+  - The sheet import holds the lock across its `yes` prompt.
+  - `generate` refuses before anything is sent, because a run loads the bill, waits minutes, then saves the whole file.
+  - The import's "make sure no walk is open" warning is gone. Its bill-changed check stays, for hand edits and walks started before this code. At the time of this change no `politricks` process was running.
+- **Direct-call cost log.** Refusal retries and the summary append their token usage to `pipeline/.cache/batches/<bill>.direct.jsonl`. This closes 2026-10-14's "add that before costing the next bill". It is a lower bound: a call that raised leaves no line.
+- **Stages re-checked from Parliament.** Recorded in both `sources.yaml` and the bill JSONs, because `fetch` (which copies them) is blocked.
+  - **Tertiary:** NA Bills Tracker as at 8 Oct, row 330 (First Reading 11 Aug 2026, no Second Reading), and the Education Committee chair's statement, Hansard 6 Oct, pp. 6-7. Written memoranda were first due 24 Sep and were extended to Fri 2 Oct 2026, 5pm, so our earlier "2 October" was right. The Committee is preparing its report for Second Reading.
+  - **Public Participation:** Senate Bills Tracker as at 16 Oct, row 167. Second Reading was 7 and 8 Oct 2026, "Bill awaiting Division at Second Reading Stage".
+  - The first wording said "awaiting the vote", which breaks the `vote` doctrine. It now reads "the decision (Division) is still to come".
+- **Civic YAML drafted** (`pipeline/civic/`, three files), for Ian to check fact by fact before slice 6 ships. Each fact is marked:
+  - `[OFFICIAL]`: the Hansard, the trackers, and the Constitution (Parliament's copy, since Kenya Law is down);
+  - `[NEWS]`: the Senate notice's deadline and channels, from Eastleigh Voice (14 Sep 2026), quoting Senate Clerk Jeremiah Nyegenye. The notice itself wasn't found online;
+  - `[UNKNOWN]`: the Tertiary channels.
+  - **Schema:** `deadline_time` is an addition to the spec's schema.
+  - **Checks:** a scan with lint's own matcher over all 9 texts found 0 banned phrases and 0 em dashes, and every text has a `source_url`. Control: a planted string hit 3 phrases.
+  - **Not built yet:** `civic.py`, the panels and the translations stay in slice 6.
+- **Dependabot:** 4 high alerts (npm: sharp, source-map-js, http-cache-semantics, path-to-regexp). Started in a separate session on its own branch. Not merged here.
+- **Sonnet cold review** of the diff: no blockers. Every date, quote and article was checked against the downloaded PDFs.
+  - **Fixed from it:**
+    - S1: the Tertiary P.O. Box and venue were in no source we read. Removed and marked `[UNKNOWN]`.
+    - S2: the Tertiary next step stated past plans as current. It now carries the date.
+    - S3: CLAUDE.md line maps and gotchas.
+    - S4: the lock now also covers fetch, extract, samples and verify, and the CLI prints their refusal.
+    - N1: a failed unlock can't mask the real result.
+    - N2: a typo, and the refusal message.
+    - N3: the log docstring now says lower bound.
+    - N5: the avenue names are now nouns, not imperatives, and the spec notes the drafting decision.
+  - **Left:** N4. The self-tests take both locks in one process. The reviewer checked cross-process refusal and release-on-kill by hand, and the POSIX branch is unexercised.
+- **Tests:**
+  - Self-tests: lint 36, review 43, sheet 37, generate 77, intake 22, export 11, all passing.
+  - Lock controls (each alone): a different lock file per call gave review 2 FAILs, sheet 1, generate 1. Removing the usage log call gave 1 FAIL.
+  - `npm run build`: 0 errors. `check-build`: 117 / 47 / 141 PASS.
+- **Next:**
+  1. Ian finishes the sheet, saves it, and runs `politricks review finance-act-2026 --from-sheet exports/finance-act-2026-review.xlsx` at a terminal. Then lint, build and `check-build`, then commit and push.
+  2. New Sheng rules from that review go into `explainer.md`. Then probe and run Tertiary and Public Participation, about $0.70 to $1.20 for both by the Finance Act's measured cost [MEDIUM], with Ian's OK.
+  3. Ian checks the civic YAML. The Tertiary channels and the Senate notice still need the official notices.
+  4. Slice 3's learner check, then slice 4.
+
+### Ian's trilingual alignment of the Finance Act, 2026-10-19
+
+The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause cleanup of the Finance Act across the three languages. His calls (AskUserQuestion, same day):
+- **The doc is his review.** It replaces the sheet he had open, which was never saved after the 2026-10-14 export. Edits land as hand-edited drafts, never Reviewed.
+- **Restore the print.** Headings are corrected only where the scan misread them, and c5's legal text stays as fingerprinted.
+- **Its rules apply everywhere they occur,** and go into the prompt.
+- **VAT is "Kodi ya Ongezeko la Thamani"** (the doc proposed "Kodi ya Thamani Iliyoongezwa").
+
+**Checked against the bill and the printed page before applying:**
+- Two of the doc's "current state" cells didn't match the data. c33's Sheng already opened "Section 33 ina-", and c45 already said "Taratibu za Kodi". Five rows were no-ops.
+- **c5:** the page image prints "(5A)". The text layer says "(SA)", and that text layer is what the legal text and its fingerprint come from.
+- **Six headings the doc rewrote are printed that way in the Act:** c34 "Amendment of the section 2", c43 "new 23B section", c42 and c46 with no "a", c46 with no full stop, and c55 "Cap 427." Per his call they keep the printed wording.
+- **Numbers:** the Act writes amounts and durations in words ("twentieth day", "ten billion shillings", "thirty days"). So the Kiswahili number words already follow "as in the legal text" and were left alone. The exception is his c4 row ("siku ya ishirini" → "tarehe 20"), applied as he wrote it.
+
+**Applied (the edit scripts are in the session scratchpad; this entry is the record):**
+- **38 items changed and are now hand-edited drafts** (counted by comparing every item's texts against HEAD). Lint shows 1 finding: c2, changed since review, untouched by this pass. States are now 55 hand-edited drafts, 3 AI drafts and 1 changed since review.
+- **Sheng opens with the section's number:** `Section N ina-` in 16 clauses that opened "Hii section ina-", plus c42 ("Finance Act ina-add").
+- **c5 explanations:** "(SA)" → "(5A)" in all three languages, 6 places. The legal text is unchanged.
+- **Kiswahili:**
+  - "asilimia N" → "N%" in 9 items (c3, c20, c21, c24, c36, the summary and the 3 group notes), matching the English and Sheng columns. A first pattern missed "asilimia 30." at a sentence end; a second pass fixed c24 and c36. 0 are left.
+  - "Sehemu" → "Kifungu" where it means a section: c10, c32, c53, with verb agreement. "Sehemu" for a Part of a Schedule is kept.
+  - One name per Act:
+    - Income Tax Act: `Sheria ya Kodi ya Mapato` (c15, c23, the summary, the employee note);
+    - VAT Act: `Sheria ya Kodi ya Ongezeko la Thamani (VAT)` (c25-c31, c33, the summary);
+    - Tax Procedures Act: `Sheria ya Taratibu za Kodi` (c38, c41, c49, c50, the summary);
+    - Excise Duty Act: `(Excise Duty Act)` added in c36, the summary and the transport note;
+    - Stamp Duty Act: `Sheria ya Ushuru wa Stempu (Stamp Duty Act)` (c54).
+  - c4: "tarehe 20 ya mwezi".
+- **Headings:** 9 transcriptions copied from the page images go into `pipeline/overrides/finance-act-2026.yaml` `heading_transcriptions` (c4, c7, c11, c13, c40, c42, c45, c46, c47). Re-running `extract` changed exactly those 9 headings and their `heading_source`, nothing else. Headings aren't in the review fingerprint.
+- **The prompt** (`explainer.md`) now carries the rules:
+  - Sheng opens with `Section <N> ina-`, while "this section" mid-text stays `hii section`;
+  - Kifungu for a section, Sehemu for a Part;
+  - percentages as `31%`;
+  - one Kiswahili name per Act;
+  - the doc's fixed terms (kukatwa chanzoni, zisizotozwa ushuru/zilizosamehewa, kuwasilisha marejesho; ku-repeal na ku-replace, ku-file return).
+- **Fresh review sheet:** `exports/finance-act-2026-review-2026-10-19.xlsx`. The old sheet is stale for every changed row.
+
+**Tests:**
+- Lint: 177 texts, 0 banned phrases.
+- Self-tests: lint 36, review 43, sheet 37, generate 77, intake 22, export 11, verify (`CHANGED` on the tampered copy), all passing.
+- **BLOCKED: `npm run build`.** It exits 1 with EPERM opening `node_modules/astro/dist/cli/index.js`. Every file under `node_modules/astro/dist` is unreadable ("Access to the path is denied", 300 of 300 sampled), while the other 270 packages read fine. The ACLs are normal, no node process is running, and the files date from 2026-09-25. The build passed at about 20:41 the same day. `check-build` against the stale `dist` gave 36 FAILs: the new texts missing from old pages. **Nothing is committed until the build passes.**
+
+**Not done, and why:**
+- **c5's legal text still reads "(SA)".** Correcting the legal text needs a decision on an OCR-correction mechanism, because the fingerprint ties it to the PDF's text layer. Other clauses carry the same kind of noise ("m proper alphabetical sequence", "couectorto").
+- **The doc's grammar edits to the six printed headings** were left out, per his call.
+### Dependabot alerts, 2026-10-19
+
+- **Re-measured:** `gh api "repos/cre3tr/politricks/dependabot/alerts?state=open"` returned the same 4 high, npm, `package-lock.json` alerts first filed 2026-10-13 (#1 to #4). `npm audit` counts them as 6 packages, because it also lists the two Vercel packages in the path-to-regexp chain. `package-lock.json` is identical on `main` and `build/poc`, so the alerts on `main` describe this branch too.
+- **Fixed, all in-range lockfile bumps** (`package.json` unchanged; 29 of 471 lock entries moved, all of them these three packages or sharp's per-platform binaries):
+  - `sharp` 0.35.4 to 0.35.5 (GHSA-wq5f-xc86-pv6w, librsvg). Optional dependency of `astro@7.3.5` at `^0.35.4`.
+  - `source-map-js` 1.2.1 to 1.2.2 (GHSA-68fv-2mgg-jv7q). Declared at `^1.x` by postcss, `@tailwindcss/node`, css-tree and magicast.
+  - `http-cache-semantics` 4.2.0 to 4.3.0 (GHSA-ch52-4w7c-c8xp). The advisory lists no patched version, but its range is `<= 4.2.0`, and `astro@7.4.1` now declares `^4.3.0`.
+  - Every target was queried in the GitHub advisory database (`gh api "advisories?ecosystem=npm&affects=<pkg>@<ver>"`) and returned none. Control: the same query on each old version returned its alert.
+- **Not fixed, path-to-regexp 6.1.0 (GHSA-9wv6-86v2-598j, patched 6.3.0):**
+  - It's pinned exactly by `@vercel/routing-utils@6.6.0`, which is that package's latest, and `@astrojs/vercel@11.0.16` (latest) still takes `^6.6.0`.
+  - Vercel already ships 6.3.0 next to it under the alias `path-to-regexp-updated`. Its `superstatic.js` compiles every route with both copies and logs any difference. So keeping 6.1.0 is a deliberate migration probe, and an `overrides` entry would defeat it. No override was added.
+  - Reachability: it runs at build time, on route patterns we write, never on visitor input. The only pattern this site compiles is `/_astro/(.*)`. With `FORCE_PATH_TO_REGEXP_LOG=1`, Vercel's probe printed the same regex from both copies (`^\/_astro(?:\/(.*))$`, keys identical). That's the patched output.
+  - **Recheck when:** `@vercel/routing-utils` goes above 6.6.0, or slice 4 adds API routes or redirects. Each new pattern gets compiled too, so rerun the build with that variable and read the diff lines.
+  - **The learner's call:** dismiss alert #1 on GitHub as tolerable risk with this reason, or leave it open. It wasn't dismissed from here.
+- **Added `.github/dependabot.yml`:** monthly npm updates, patch and minor grouped, majors kept separate (not ignored), at most 3 open PRs. It takes effect only once it's on `main`. There's no CI, so nothing runs `npm audit` on a push.
+- **Verified:** `npm run build` exit 0 (0 errors, 0 warnings), and `check-build` exit 0 for `finance-act-2026`, `public-participation-bill-2025` and `tertiary-education-bill-2026`. All 9 files in `.vercel/output` hash the same before and after the bumps, from a fresh build (timestamps 20:32 against a 20:30 baseline). No bill JSON or pipeline file was touched.
+- **Done when it reaches `main`:** Dependabot reads only `main`, so alerts #2 to #4 close after this branch is merged and GitHub rescans. Until then they still show as open.
+- **2026-10-21 note:** this entry's three lockfile bumps reached `build/poc` through politricks PR #1 (`b6d83ff`, which also took vite 8.3.5). The 2026-10-19 branch's lockfile was therefore superseded, and only `.github/dependabot.yml` and this entry were carried over from it.

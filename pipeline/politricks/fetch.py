@@ -23,6 +23,7 @@ import yaml
 
 from .hashing import sha256_bytes
 from .models import Bill, Source, bill_path, load_bill, save_bill
+from .reviewlock import bill_lock
 
 # Official domains. A host is allowed if it IS one of these or is a subdomain
 # of one (e.g. new.kenyalaw.org). The match is on a dot boundary, so
@@ -98,7 +99,16 @@ def load_registry(repo_root: Path) -> dict:
 
 
 def fetch_bill(repo_root: Path, bill_id: str) -> Bill:
-    """Download and fingerprint every source for one bill; update its JSON."""
+    """Download and fingerprint every source for one bill; update its JSON.
+
+    Holds the bill's lock (reviewlock.py) from load to save: a review walk
+    open meanwhile would otherwise overwrite this fetch on its next accept.
+    """
+    with bill_lock(bill_path(repo_root, bill_id)):
+        return _fetch_bill(repo_root, bill_id)
+
+
+def _fetch_bill(repo_root: Path, bill_id: str) -> Bill:
     registry = load_registry(repo_root)
     if bill_id not in registry:
         raise SystemExit(f"unknown bill id '{bill_id}' — add it to pipeline/sources.yaml")

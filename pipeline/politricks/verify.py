@@ -21,6 +21,7 @@ from pathlib import Path
 from .fetch import download_pdf
 from .hashing import sha256_bytes, sha256_file
 from .models import load_bill, save_bill
+from .reviewlock import bill_lock
 
 
 def compare(stored_sha256: str, candidate: Path) -> str:
@@ -53,18 +54,21 @@ def self_test(repo_root: Path) -> bool:
 
 def verify_all(repo_root: Path) -> None:
     for json_path in sorted((repo_root / "src" / "data" / "bills").glob("*.json")):
-        bill = load_bill(json_path)
-        changed = False
-        for source in bill.sources:
-            if not source.official:
-                continue
-            try:
-                body, _ = download_pdf(source.url)
-                status = "unchanged" if sha256_bytes(body) == source.sha256 else "CHANGED"
-            except Exception as error:  # network trouble is reported, not fatal
-                status = f"unreachable ({type(error).__name__})"
-            print(f"{bill.id}: {source.label}: {status}")
-            changed = changed or status == "CHANGED"
-        if changed and not bill.source_changed:
-            bill.source_changed = True
-            save_bill(bill, json_path)
+        # Load to save under the bill's lock (reviewlock.py), so an open
+        # review walk can't overwrite a source_changed flag on its next accept.
+        with bill_lock(json_path):
+            bill = load_bill(json_path)
+            changed = False
+            for source in bill.sources:
+                if not source.official:
+                    continue
+                try:
+                    body, _ = download_pdf(source.url)
+                    status = "unchanged" if sha256_bytes(body) == source.sha256 else "CHANGED"
+                except Exception as error:  # network trouble is reported, not fatal
+                    status = f"unreachable ({type(error).__name__})"
+                print(f"{bill.id}: {source.label}: {status}")
+                changed = changed or status == "CHANGED"
+            if changed and not bill.source_changed:
+                bill.source_changed = True
+                save_bill(bill, json_path)

@@ -1,0 +1,45 @@
+# Civic facts for the Public Participation Bill, 2025 (in the Senate)
+# (spec.md > Civic Data). English only: `politricks civic` (slice 6) will
+# validate this and have Claude translate it, never write it.
+#
+# DRAFTED BY CLAUDE ON 2026-10-19, NOT YET CHECKED BY IAN (his call, same day:
+# "I draft, you check"). Before slice 6 ships, Ian checks every fact below
+# against the source on its line and deletes this paragraph.
+#
+# Source strength, per fact:
+#   [OFFICIAL] parliament.go.ke documents (Senate Bills Tracker).
+#   [NEWS]     a newspaper report of the Senate Clerk's notice (Jeremiah
+#              Nyegenye). The notice itself has not been found online yet, so
+#              `source_url` below is the news report, which spec.md does not
+#              allow at ship time: replace it with the notice.
+
+participation:
+  open: false
+  # [NEWS] Eastleigh Voice, 14 Sep 2026: "submissions must be received by
+  # 5:00 p.m. on Monday, September 28, 2026."
+  deadline: 2026-09-28
+  deadline_time: "5pm"
+  channels:
+    # [NEWS] same report. The two addresses were decoded from the page's
+    # email-protection markup, not read as plain text.
+    - type: email
+      value: "clerk.senate@parliament.go.ke (copy to senatejlahrc@parliament.go.ke)"
+    - type: venue
+      value: "Office of the Clerk of the Senate, Main Parliament Buildings, Nairobi"
+  requirements: >-
+    Written memoranda addressed to the Clerk of the Senate,
+    P.O. Box 41842-00100, Nairobi, for the Standing Committee on Justice,
+    Legal Affairs and Human Rights.
+  source_url: "https://eastleighvoice.co.ke/news/400271/senate-sets-september-28-deadline-for-kenyans-to-submit-views-on-public-participation-bill"
+  checked_at: 2026-10-19
+
+stage_next:
+  # [OFFICIAL] Senate Bills Tracker "updated as at 16th October, 2026", row
+  # 167: Second Reading 07/10/26 and 08/10/26, remarks "Bill awaiting Division
+  # at Second Reading Stage". The tracker's next columns are "CoTW/3RD READ".
+  text: >-
+    The Senate debated the Bill at Second Reading on 7 and 8 October 2026. The
+    decision on it (the Division) is still to come. If it passes, the whole
+    Senate goes through it clause by clause (Committee of the Whole House),
+    then holds the Third Reading.
+  source_url: "https://www.parliament.go.ke/sites/default/files/2026-10/Bills%20Tracker%20updated%20as%20at%2016.10.2026.pdf"

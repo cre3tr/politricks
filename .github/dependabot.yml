@@ -1,0 +1,17 @@
+# Monthly npm version updates for the site (package-lock.json at the repo root).
+# Security alerts arrive whether or not this file exists; this adds the
+# routine bumps that keep them from piling up.
+# - Patch and minor bumps are grouped into one PR.
+# - Majors are kept apart, not ignored, so each one is reviewed on its own.
+# - Dependabot reads this file only from the default branch (main), so it takes
+#   effect once this lands there.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 3
+    groups:
+      safe-updates:
+        update-types: ["patch", "minor"]

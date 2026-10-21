@@ -25,3 +25,22 @@ start_after: 'ENACTED by the Parliament of Kenya'
 # Sections 1..55 run unbroken in the body stream; 55 ends on page 38 and
 # page 39 is blank. Pinning the count makes any future mis-split fail loudly.
 expected_clause_count: 55
+
+# Marginal notes whose text layer misread digits ("lO", "JO", "I 8F", "3 7E",
+# "7 5"...) or ran words together ("ofa"). Each one is copied from the PRINTED
+# note, read off the page image on 2026-10-19, and keeps the printed wording
+# exactly: c34 ("of the section 2"), c43 ("new 23B section") and c55 ("Cap
+# 427.") are printed that way and are left alone, as are the missing "a" in
+# c42/c46 and c46's missing full stop. Headings are signposts, NOT legal text:
+# the legal text itself is never edited. Ian's call (2026-10-19): restore the
+# print, don't improve it.
+heading_transcriptions:
+  c4: "Insertion of a new section 6B to Cap. 470."
+  c7: "Amendment to section 10 of Cap. 470."
+  c11: "Amendment of section 16 of Cap. 470."
+  c13: "Amendment of section 18F of Cap. 470."
+  c40: "Amendment of section 10 of Cap. 469B."
+  c42: "Insertion of new section 18A to Cap. 469B."
+  c45: "Amendment of section 37E of Cap. 469B."
+  c46: "Insertion of new section 39B in Cap. 469B"
+  c47: "Amendment of section 75 of Cap. 469B."

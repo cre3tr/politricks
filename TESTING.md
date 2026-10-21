@@ -14,6 +14,8 @@ uv run --project pipeline politricks review --self-test
 uv run --project pipeline politricks generate --self-test
 uv run --project pipeline politricks intake --self-test
 uv run --project pipeline politricks verify --self-test
+uv run --project pipeline politricks export --self-test
+uv run --project pipeline politricks review --sheet-self-test
 uv run --project pipeline politricks lint
 npm run build
 node scripts/check-build.mjs <bill-id>        # once per bill in src/data/bills/
@@ -23,12 +25,12 @@ All of these are offline and free. Nothing here calls the Anthropic API.
 
 ## Kinds in use
 
-Counts as of 2026-10-14: lint 36, review 40, generate 75, intake 22. Verify
-prints `unchanged` / `CHANGED`. `check-build`: 117 / 141 / 47 for the three bills.
+Check counts: see the newest entry under Changes. Verify prints `unchanged` /
+`CHANGED`. `check-build`: 117 / 141 / 47 for the three bills (2026-10-19).
 
 | Kind | Where | Command | Control last run | Result |
 |---|---|---|---|---|
-| K1 Offline self-test, writes nothing | `pipeline/politricks/{lint.py:294, review.py:418, generate.py:683, intake.py:245, verify.py:30}`; real-file SHA guard e.g. `lint.py:499` | `politricks <cmd> --self-test` | not on record | see Gaps |
+| K1 Offline self-test, writes nothing | `pipeline/politricks/{lint.py:294, review.py:418, generate.py:683, intake.py:245, verify.py:30, export.py, review_sheet.py}`; real-file SHA guard e.g. `lint.py:499` | `politricks <cmd> --self-test` | not on record | see Gaps |
 | K2 Planted-bug controls | scratch scripts (session scratchpad, not committed) | `uv run --project pipeline python <script>` | 2026-10-14 | ignore protection → 11 FAILs; fingerprint ignores tags → 4; lint treats bare "reviewed" as reviewed → 1; accept without fingerprint → 6; edit keeps fingerprint → 2; tampered vector → 1 |
 | K3 Fake client through the real `run()` | `generate.py:586` (`_FakeClient`), `:620` (`_run_offline`) | `generate --self-test` | 2026-10-13 | old `.parsed` retry → 9 FAILs |
 | K4 Fixtures built from a reset | `pipeline/politricks/selftest.py` (`reset_bill`, `fixture_bill`) | every self-test | 2026-10-14 | real data changed (Ian accepted c1, c2) → 2 FAILs in generate, which built its batch from the real bill; fixed to use `reset_bill` → 0 |
@@ -60,6 +62,16 @@ prints `unchanged` / `CHANGED`. `check-build`: 117 / 141 / 47 for the three bill
 | (none) | Every catalog kind was earned in this repo. |
 
 ## Changes
+
+- 2026-10-19: the bill lock, direct-call usage log and permanent banned phrases.
+  - **New checks:** review scenario J, sheet section L and generate "a bill another writer holds…" (the lock); generate "every direct call's usage is logged"; lint now guards all 19 doctrine phrases. Counts are now lint 36, review 43, sheet 37, generate 77, intake 22, export 11.
+  - **K2 controls, each mutation alone, all caught:**
+    - a different lock file per call → review 2 FAILs, sheet 1, generate 1;
+    - the `_log_usage` call removed → 1 FAIL;
+    - `batili` deleted from `banned.txt` → 1 FAIL.
+  - **Not hanging:** with the lock broken, scenario J ends at its first prompt (stdin is emptied), and L uses an unedited sheet, so neither can sit waiting for input.
+  - **Real-path checks (a lock held from a second process):** a real `politricks review finance-act-2026` exited 1 with the Finance Act SHA unchanged, and `politricks verify` refused the held Public Participation bill through the CLI (exit 1, SHA unchanged).
+  - **Cross-process and crash release:** checked by the cold reviewer by hand (holder process → second process `REFUSED`; holder force-killed → `ACQUIRED`). The self-tests take both locks in one process, so this stays a manual control. The POSIX `fcntl` branch is unexercised on this machine.
 
 - 2026-10-14: K4 control on record. Ian's first accepts broke two generate checks that still read the real bill; they now use the reset copy. The gap row is removed.
 - 2026-10-14: created by the first `test-kinds` audit, after the review-fingerprint work. That audit ran the K7 and K9 controls for the first time on this change (both FAILed as they should). Its inventory also caught two faults in the skill's own search (see the skill's Temper note).

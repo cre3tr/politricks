@@ -1,0 +1,44 @@
+# Civic facts for the Finance Act, 2026 (a passed law, so no participation)
+# (spec.md > Civic Data). English only: `politricks civic` (slice 6) will
+# validate this and have Claude translate it, never write it.
+#
+# DRAFTED BY CLAUDE ON 2026-10-19, NOT YET CHECKED BY IAN (his call, same day:
+# "I draft, you check"). Before slice 6 ships, Ian checks every fact below
+# against the source on its line and deletes this paragraph.
+#
+# Challenge avenues are general information only (spec.md > Civic Data): no
+# advice, no prediction of any outcome, and none of the banned phrases
+# (pipeline/prompts/banned.txt), which `politricks lint` will scan for.
+#
+# Source for every avenue: [OFFICIAL] the Constitution of Kenya, 2010, as
+# hosted by Parliament (Kenya Law, the usual source, has returned 403 since
+# 2026-10-07). Each quoted article was read in that PDF on 2026-10-19.
+
+participation: null
+stage_next: null
+
+challenge:
+  checked_at: 2026-10-19
+  avenues:
+    - name: "A High Court petition"
+      # Article 258(1) and Article 165(3)(d)(i).
+      text: >-
+        Under Article 258 of the Constitution, every person has the right to go
+        to court claiming that the Constitution has been contravened, or is
+        threatened with contravention. Under Article 165, the High Court hears
+        questions on whether any law is inconsistent with the Constitution.
+      source_url: "https://www.parliament.go.ke/sites/default/files/2017-05/The_Constitution_of_Kenya_2010.pdf"
+    - name: "A Bill of Rights claim in court"
+      # Article 22(1).
+      text: >-
+        Under Article 22, every person has the right to go to court claiming
+        that a right or fundamental freedom in the Bill of Rights has been
+        denied, violated or infringed, or is threatened.
+      source_url: "https://www.parliament.go.ke/sites/default/files/2017-05/The_Constitution_of_Kenya_2010.pdf"
+    - name: "A petition to Parliament"
+      # Article 119(1).
+      text: >-
+        Under Article 119, every person has a right to petition Parliament to
+        consider any matter within its authority, including to amend or repeal
+        any law.
+      source_url: "https://www.parliament.go.ke/sites/default/files/2017-05/The_Constitution_of_Kenya_2010.pdf"
