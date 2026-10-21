@@ -737,3 +737,21 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 **Not done, and why:**
 - **c5's legal text still reads "(SA)".** Correcting the legal text needs a decision on an OCR-correction mechanism, because the fingerprint ties it to the PDF's text layer. Other clauses carry the same kind of noise ("m proper alphabetical sequence", "couectorto").
 - **The doc's grammar edits to the six printed headings** were left out, per his call.
+### Dependabot alerts, 2026-10-19
+
+- **Re-measured:** `gh api "repos/cre3tr/politricks/dependabot/alerts?state=open"` returned the same 4 high, npm, `package-lock.json` alerts first filed 2026-10-13 (#1 to #4). `npm audit` counts them as 6 packages, because it also lists the two Vercel packages in the path-to-regexp chain. `package-lock.json` is identical on `main` and `build/poc`, so the alerts on `main` describe this branch too.
+- **Fixed, all in-range lockfile bumps** (`package.json` unchanged; 29 of 471 lock entries moved, all of them these three packages or sharp's per-platform binaries):
+  - `sharp` 0.35.4 to 0.35.5 (GHSA-wq5f-xc86-pv6w, librsvg). Optional dependency of `astro@7.3.5` at `^0.35.4`.
+  - `source-map-js` 1.2.1 to 1.2.2 (GHSA-68fv-2mgg-jv7q). Declared at `^1.x` by postcss, `@tailwindcss/node`, css-tree and magicast.
+  - `http-cache-semantics` 4.2.0 to 4.3.0 (GHSA-ch52-4w7c-c8xp). The advisory lists no patched version, but its range is `<= 4.2.0`, and `astro@7.4.1` now declares `^4.3.0`.
+  - Every target was queried in the GitHub advisory database (`gh api "advisories?ecosystem=npm&affects=<pkg>@<ver>"`) and returned none. Control: the same query on each old version returned its alert.
+- **Not fixed, path-to-regexp 6.1.0 (GHSA-9wv6-86v2-598j, patched 6.3.0):**
+  - It's pinned exactly by `@vercel/routing-utils@6.6.0`, which is that package's latest, and `@astrojs/vercel@11.0.16` (latest) still takes `^6.6.0`.
+  - Vercel already ships 6.3.0 next to it under the alias `path-to-regexp-updated`. Its `superstatic.js` compiles every route with both copies and logs any difference. So keeping 6.1.0 is a deliberate migration probe, and an `overrides` entry would defeat it. No override was added.
+  - Reachability: it runs at build time, on route patterns we write, never on visitor input. The only pattern this site compiles is `/_astro/(.*)`. With `FORCE_PATH_TO_REGEXP_LOG=1`, Vercel's probe printed the same regex from both copies (`^\/_astro(?:\/(.*))$`, keys identical). That's the patched output.
+  - **Recheck when:** `@vercel/routing-utils` goes above 6.6.0, or slice 4 adds API routes or redirects. Each new pattern gets compiled too, so rerun the build with that variable and read the diff lines.
+  - **The learner's call:** dismiss alert #1 on GitHub as tolerable risk with this reason, or leave it open. It wasn't dismissed from here.
+- **Added `.github/dependabot.yml`:** monthly npm updates, patch and minor grouped, majors kept separate (not ignored), at most 3 open PRs. It takes effect only once it's on `main`. There's no CI, so nothing runs `npm audit` on a push.
+- **Verified:** `npm run build` exit 0 (0 errors, 0 warnings), and `check-build` exit 0 for `finance-act-2026`, `public-participation-bill-2025` and `tertiary-education-bill-2026`. All 9 files in `.vercel/output` hash the same before and after the bumps, from a fresh build (timestamps 20:32 against a 20:30 baseline). No bill JSON or pipeline file was touched.
+- **Done when it reaches `main`:** Dependabot reads only `main`, so alerts #2 to #4 close after this branch is merged and GitHub rescans. Until then they still show as open.
+- **2026-10-21 note:** this entry's three lockfile bumps reached `build/poc` through politricks PR #1 (`b6d83ff`, which also took vite 8.3.5). The 2026-10-19 branch's lockfile was therefore superseded, and only `.github/dependabot.yml` and this entry were carried over from it.
