@@ -12,6 +12,7 @@ Run from anywhere; paths are resolved from the repo root, not your current folde
     uv run --project pipeline politricks generate finance-act-2026 [--self-test]
     uv run --project pipeline politricks lint [finance-act-2026] [--self-test]
     uv run --project pipeline politricks review finance-act-2026 [--self-test]
+    uv run --project pipeline politricks review finance-act-2026 --flagged      (or --only c2 summary)
     uv run --project pipeline politricks review finance-act-2026 --from-sheet exports/finance-act-2026-review.xlsx
     uv run --project pipeline politricks export finance-act-2026 [--self-test]
 """
@@ -99,6 +100,13 @@ def _dispatch() -> None:
         "--from-sheet", help="apply a filled-in export sheet: its Accept rows are your accepts (asks before saving)"
     )
     p_review.add_argument("--sheet-self-test", action="store_true", help="offline check of --from-sheet (writes nothing)")
+    narrow = p_review.add_mutually_exclusive_group()
+    narrow.add_argument(
+        "--flagged", action="store_true", help="walk only what lint flags (e.g. to re-accept one changed item); drafts are left out"
+    )
+    narrow.add_argument(
+        "--only", nargs="+", metavar="ID", help="walk only these items, whatever their status: c12, summary, group:trader"
+    )
 
     p_export = sub.add_parser("export", help="write the bill's texts to an Excel sheet for review (reads only)")
     p_export.add_argument("bill_id", nargs="?")
@@ -197,10 +205,12 @@ def _dispatch() -> None:
         if not args.bill_id:
             parser.error("review needs a bill id (or --self-test)")
         if args.from_sheet:
+            if args.flagged or args.only:
+                parser.error("--flagged and --only narrow the walk; they don't apply to --from-sheet")
             from . import review_sheet
 
             sys.exit(review_sheet.run(REPO_ROOT, args.bill_id, Path(args.from_sheet).resolve()))
-        sys.exit(review.run(REPO_ROOT, args.bill_id))
+        sys.exit(review.run(REPO_ROOT, args.bill_id, flagged_only=args.flagged, only=args.only))
 
     elif args.command == "export":
         from . import export

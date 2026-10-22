@@ -27,6 +27,16 @@ dead-end on it ("not done" with no way to fix it):
 - sample -> accepting keeps it a sample. Only `generate` replaces a sample, and
   a sample never renders as "AI draft" or "Reviewed" (spec > Clause Card).
 
+Narrowing the walk (2026-10-22). The full walk offers every draft after the
+flagged ones, and each accept saves at once, so re-accepting one flagged item
+by answering "a" to everything accepted 59 items. Two options walk less:
+- `--flagged`: only what lint flags. The drafts are left out (and counted).
+- `--only ID [ID ...]`: only the named items (c12, summary, group:trader),
+  whatever their status, so a reviewed text can be reopened to fix a typo. An
+  id that doesn't exist, or has no explanation yet, refuses the whole run
+  before anything is shown.
+The "not done while lint fails" rule below still looks at the whole bill.
+
 Rules the walk enforces:
 - You cannot ACCEPT an item that still carries a banned phrase, at any status.
   Edit it first.
@@ -150,13 +160,8 @@ class ReviewResult:
 # --------------------------------------------------------------------------
 
 
-def _collect(bill: Bill, phrases: list[str]) -> tuple[list[Item], dict[str, int]]:
-    """Split every reviewable thing into the ones to walk and the rest (counted).
-
-    Walked: every draft, plus anything lint flags whatever its status (a
-    reviewed item changed since is flagged), flagged ones first. A stable sort
-    keeps the order inside each half: clauses, then the summary, then groups.
-    """
+def _candidates(bill: Bill) -> list[Item]:
+    """Every reviewable thing in bill order: clauses, then the summary, then groups."""
     candidates: list[Item] = []
     for clause in bill.clauses:
         candidates.append(
@@ -166,16 +171,56 @@ def _collect(bill: Bill, phrases: list[str]) -> tuple[list[Item], dict[str, int]
         candidates.append(Item(SUMMARY_ID, bill.summary))
     for entry in bill.groups:
         candidates.append(Item(group_item_id(entry.group), entry))
+    return candidates
 
+
+def selection_errors(bill: Bill, only: list[str]) -> list[str]:
+    """Why each id given to `--only` can't be walked (an empty list = all fine).
+
+    A typo must refuse the run, never quietly walk nothing and report "done".
+    """
+    texts = {item.id: item.tri for item in _candidates(bill)}
+    errors = []
+    for item_id in only:
+        if item_id not in texts:
+            errors.append(f"{item_id}: no such item in this bill (ids look like c12, summary, group:trader)")
+        elif texts[item_id] is None:
+            errors.append(f"{item_id}: has no explanation yet, so there is nothing to review")
+    return errors
+
+
+def _collect(
+    bill: Bill, phrases: list[str], flagged_only: bool = False, only: Optional[list[str]] = None
+) -> tuple[list[Item], dict[str, int]]:
+    """Split every reviewable thing into the ones to walk and the rest (counted).
+
+    Walked: every draft, plus anything lint flags whatever its status (a
+    reviewed item changed since is flagged), flagged ones first. A stable sort
+    keeps the order inside each half: clauses, then the summary, then groups.
+
+    Narrowed: `flagged_only` walks just the flagged items, `only` just the named
+    ones (whatever their status). Whatever the full walk would have offered
+    but the filter kept back is counted as "left out", so the walk can say so.
+    """
     flagged = {finding.item for finding in lint_bill(bill, phrases)}
     to_walk: list[Item] = []
-    not_walked = {"sample": 0, "reviewed": 0, "no explanation": 0}
-    for item in candidates:
+    not_walked = {"sample": 0, "reviewed": 0, "no explanation": 0, "left out": 0}
+    for item in _candidates(bill):
         status = item.owner.review.status
         if item.tri is None:
             not_walked["no explanation"] += 1
-        elif status == "draft" or item.id in flagged:
+            continue
+        offered = status == "draft" or item.id in flagged  # what the full walk offers
+        if only is not None:
+            chosen = item.id in only
+        elif flagged_only:
+            chosen = item.id in flagged
+        else:
+            chosen = offered
+        if chosen:
             to_walk.append(item)
+        elif offered:
+            not_walked["left out"] += 1
         elif status == "sample":
             not_walked["sample"] += 1
         else:
@@ -266,21 +311,38 @@ def _edit_text(current: str, lang: str, ask: Ask, show: Show, editor: Optional[s
 # --------------------------------------------------------------------------
 
 
-def walk(bill: Bill, phrases: list[str], ask: Ask, show: Show, save: Save, editor: Optional[str] = "auto") -> ReviewResult:
+def walk(
+    bill: Bill,
+    phrases: list[str],
+    ask: Ask,
+    show: Show,
+    save: Save,
+    editor: Optional[str] = "auto",
+    flagged_only: bool = False,
+    only: Optional[list[str]] = None,
+) -> ReviewResult:
     """Walk every item that needs a human. `editor`: "auto" = $EDITOR/Notepad,
-    None = always type inline, or an explicit command. Mutates `bill` in place."""
-    to_walk, not_walked = _collect(bill, phrases)
+    None = always type inline, or an explicit command. `flagged_only` / `only`
+    narrow the walk (see the module docstring). Mutates `bill` in place."""
+    if flagged_only and only is not None:
+        raise ValueError("choose --flagged or --only, not both")
+    if only is not None and selection_errors(bill, only):
+        raise ValueError("; ".join(selection_errors(bill, only)))
+    to_walk, not_walked = _collect(bill, phrases, flagged_only, only)
     result = ReviewResult(not_drafts=not_walked)
     start_findings = lint_bill(bill, phrases)
     flagged = {finding.item for finding in start_findings}
     had_banned = {finding.item for finding in start_findings if finding.kind == "banned"}
     n_flagged = sum(1 for item in to_walk if item.id in flagged)
+    left_out = not_walked["left out"]
     show(
         f"{len(to_walk)} text(s) to review ({n_flagged} flagged by lint, shown first). "
-        f"Skipping {sum(not_walked.values())} that need nothing: "
+        f"Skipping {sum(not_walked.values()) - left_out} that need nothing: "
         f"{not_walked['sample']} sample (hand-written placeholders), {not_walked['reviewed']} already reviewed, "
         f"{not_walked['no explanation']} clause(s) with no explanation yet."
     )
+    if left_out:
+        show(f"{left_out} other draft(s) left out by --flagged / --only: run without it to see them.")
 
     def findings_for(item: Item) -> list[Finding]:
         return [finding for finding in lint_bill(bill, phrases) if finding.item == item.id]
@@ -393,8 +455,9 @@ def _ask_from_terminal(prompt: str) -> str:
         raise QuitReview("end of input") from error
 
 
-def run(repo_root: Path, bill_id: str) -> int:
-    """Returns the exit code: 0 done, 1 lint failures remain or the bill wouldn't load."""
+def run(repo_root: Path, bill_id: str, flagged_only: bool = False, only: Optional[list[str]] = None) -> int:
+    """Returns the exit code: 0 done, 1 lint failures remain, the bill wouldn't
+    load, or an `--only` id can't be walked."""
     try:
         phrases = load_phrases(repo_root)
         path = bill_path(repo_root, bill_id)
@@ -413,8 +476,21 @@ def run(repo_root: Path, bill_id: str) -> int:
             except (ValueError, OSError) as error:
                 print(f"FAILED: {error}")
                 return 1
+            errors = selection_errors(bill, only) if only is not None else []
+            if errors:
+                for error in errors:
+                    print(f"FAILED: {error}")
+                return 1
             try:
-                result = walk(bill, phrases, _ask_from_terminal, print, lambda saved: save_bill(saved, path))
+                result = walk(
+                    bill,
+                    phrases,
+                    _ask_from_terminal,
+                    print,
+                    lambda saved: save_bill(saved, path),
+                    flagged_only=flagged_only,
+                    only=only,
+                )
             except KeyboardInterrupt:
                 # Ctrl-C outside the walk's own prompts (e.g. while the final lint ran).
                 # Accepted items were already saved as they were accepted.
@@ -456,10 +532,11 @@ def self_test(repo_root: Path) -> bool:
         def shown(self) -> str:
             return "\n".join(self.lines)
 
-    def drive(bill: Bill, answers: list, editor: Optional[str] = None) -> Driven:
+    def drive(bill: Bill, answers: list, editor: Optional[str] = None, **narrow) -> Driven:
         """Run walk() with scripted answers. An entry that is an exception is
         RAISED when asked for; when the script runs out the reviewer is gone
-        (QuitReview), exactly like a closed pipe. It never answers "q"."""
+        (QuitReview), exactly like a closed pipe. It never answers "q".
+        `narrow` passes flagged_only= / only= through to walk()."""
         queue = list(answers)
         lines: list[str] = []
         saves: list[Bill] = []
@@ -473,7 +550,9 @@ def self_test(repo_root: Path) -> bool:
             return answer
 
         try:
-            result = walk(bill, phrases, ask, lines.append, lambda b: saves.append(b.model_copy(deep=True)), editor=editor)
+            result = walk(
+                bill, phrases, ask, lines.append, lambda b: saves.append(b.model_copy(deep=True)), editor=editor, **narrow
+            )
         except KeyboardInterrupt:
             return Driven(ReviewResult(), queue, lines, saves, escaped=True)
         return Driven(result, queue, lines, saves)
@@ -868,6 +947,106 @@ def self_test(repo_root: Path) -> bool:
         except BillLocked:
             again = "still held"
         check("J. once let go, the lock can be taken again", again == "taken again", again)
+
+    # === Scenario K: narrowing the walk (--flagged, --only) ====================
+    # The trap this closes (2026-10-22): re-accepting ONE flagged item walked on
+    # into every draft, and answering "a" each time accepted 59 items. The trap
+    # bill rebuilds that shape: one reviewed clause changed since (c3, a tag
+    # added), plus the fixture's drafts (c4, group:trader).
+    def trap_bill() -> Bill:
+        bill = fixture_bill(repo_root)
+        c3 = clause_of(bill, "c3")
+        mark_reviewed(c3)
+        c3.groups = [*c3.groups, "student"]
+        return bill
+
+    # Control: without a filter, the same answers really do take the drafts too,
+    # so the checks after it test the filter and not a bill with nothing to trap.
+    bill = trap_bill()
+    run_k0 = drive(bill, ["a", "a", "a"])
+    check("K. control: the full walk accepts the drafts after the flagged item too (the trap)",
+          run_k0.result.accepted == ["c3", "c4", "group:trader"], str(run_k0.result.accepted))
+
+    bill = trap_bill()
+    run_k1 = drive(bill, ["a", "a", "a"], flagged_only=True)
+    check("K. --flagged: the same answers accept the flagged c3 alone, and the rest of the script is never asked",
+          run_k1.result.visited == ["c3"] and run_k1.result.accepted == ["c3"] and run_k1.left == ["a", "a"],
+          f"visited {run_k1.result.visited}, left {run_k1.left}")
+    check("K. --flagged: c3 is reviewed again, the drafts are untouched, and the walk ended by itself (no quit)",
+          is_reviewed(clause_of(bill, "c3"))
+          and clause_of(bill, "c4").review.status == "draft"
+          and bill.groups[0].review.status == "draft"
+          and not run_k1.result.quit,
+          str(clause_of(bill, "c4").review))
+    check("K. --flagged says how many drafts it left out",
+          "2 other draft(s) left out" in run_k1.shown and run_k1.result.not_drafts["left out"] == 2,
+          str(run_k1.result.not_drafts))
+
+    bill = fixture_bill(repo_root)
+    run_k2 = drive(bill, [], flagged_only=True)
+    check("K. --flagged with nothing flagged walks nothing and finishes clean",
+          run_k2.result.visited == [] and not run_k2.result.quit and run_k2.result.ok and "0 text(s) to review" in run_k2.shown,
+          run_k2.lines[0] if run_k2.lines else "nothing shown")
+
+    bill = trap_bill()
+    run_k3 = drive(bill, ["a", "a"], only=["c4"])
+    check("K. --only c4 walks c4 alone, even with a flagged item in the bill",
+          run_k3.result.visited == ["c4"] and run_k3.result.accepted == ["c4"] and run_k3.left == ["a"]
+          and not is_reviewed(clause_of(bill, "c3")),
+          f"visited {run_k3.result.visited}")
+
+    bill = fixture_bill(repo_root)
+    run_k4 = drive(bill, ["s", "s"], only=["group:trader", "c3"])
+    check("K. --only with two ids walks both, in bill order (clauses before groups)",
+          run_k4.result.visited == ["c3", "group:trader"] and run_k4.left == [], str(run_k4.result.visited))
+
+    # A named item is walked even when it is reviewed and unchanged: that is how
+    # a typo spotted on the site gets fixed.
+    bill = fixture_bill(repo_root)
+    c4 = clause_of(bill, "c4")
+    mark_reviewed(c4)
+    run_k5 = drive(bill, ["s"], only=["c4"])
+    check("K. --only walks a named item that is already reviewed (skipping it leaves it reviewed)",
+          run_k5.result.visited == ["c4"] and is_reviewed(c4), str(run_k5.result.visited))
+
+    bill = fixture_bill(repo_root)
+    errors = selection_errors(bill, ["c3", "c999", "c2", "summary", "group:trader", "group:nobody"])
+    check("K. selection_errors refuses an unknown id and a clause with no explanation, and nothing else",
+          [error.partition(": ")[0] for error in errors] == ["c999", "c2", "group:nobody"], str(errors))
+    try:
+        drive(fixture_bill(repo_root), ["a"], only=["c999"])
+        bad_id = "walked"
+    except ValueError:
+        bad_id = "refused"
+    try:
+        drive(fixture_bill(repo_root), ["a"], flagged_only=True, only=["c3"])
+        both = "walked"
+    except ValueError:
+        both = "refused"
+    check("K. walk() itself refuses an unknown id, and --flagged with --only together",
+          bad_id == "refused" and both == "refused", f"{bad_id}, {both}")
+
+    # run(): a typo refuses the whole run before anything is shown, bill
+    # unchanged. stdin is empty, so a walk that started would end at its first
+    # prompt with exit 0, not 1.
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        (root / "pipeline" / "prompts").mkdir(parents=True)
+        shutil.copy(repo_root / "pipeline" / "prompts" / "banned.txt", root / "pipeline" / "prompts")
+        path = bill_path(root, "finance-act-2026")
+        save_bill(fixture_bill(repo_root), path)
+        before = sha256_file(path)
+        real_stdin = sys.stdin
+        sys.stdin = io.StringIO("")
+        try:
+            with contextlib.redirect_stdout(io.StringIO()) as said:
+                code = run(root, "finance-act-2026", only=["c3", "c999"])
+        finally:
+            sys.stdin = real_stdin
+        check("K. run --only with an unknown id exits 1 before showing any item, bill unchanged",
+              code == 1 and "c999: no such item" in said.getvalue() and "text(s) to review" not in said.getvalue()
+              and sha256_file(path) == before,
+              said.getvalue())
 
     # === Nothing written ========================================================
     check("the real bill file's SHA-256 is unchanged", sha256_file(real_path) == sha_before)

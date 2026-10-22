@@ -30,7 +30,7 @@ Check counts: see the newest entry under Changes. Verify prints `unchanged` /
 
 | Kind | Where | Command | Control last run | Result |
 |---|---|---|---|---|
-| K1 Offline self-test, writes nothing | `pipeline/politricks/{lint.py:294, review.py:418, generate.py:683, intake.py:245, verify.py:30, export.py, review_sheet.py}`; real-file SHA guard e.g. `lint.py:499` | `politricks <cmd> --self-test` | not on record | see Gaps |
+| K1 Offline self-test, writes nothing | `pipeline/politricks/{lint.py:294, review.py:510, generate.py:683, intake.py:245, verify.py:30, export.py, review_sheet.py}`; real-file SHA guard e.g. `lint.py:499` | `politricks <cmd> --self-test` | not on record | see Gaps |
 | K2 Planted-bug controls | scratch scripts (session scratchpad, not committed) | `uv run --project pipeline python <script>` | 2026-10-14 | ignore protection → 11 FAILs; fingerprint ignores tags → 4; lint treats bare "reviewed" as reviewed → 1; accept without fingerprint → 6; edit keeps fingerprint → 2; tampered vector → 1 |
 | K3 Fake client through the real `run()` | `generate.py:586` (`_FakeClient`), `:620` (`_run_offline`) | `generate --self-test` | 2026-10-13 | old `.parsed` retry → 9 FAILs |
 | K4 Fixtures built from a reset | `pipeline/politricks/selftest.py` (`reset_bill`, `fixture_bill`) | every self-test | 2026-10-14 | real data changed (Ian accepted c1, c2) → 2 FAILs in generate, which built its batch from the real bill; fixed to use `reset_bill` → 0 |
@@ -40,7 +40,7 @@ Check counts: see the newest entry under Changes. Verify prints `unchanged` /
 | K8 Second observer (Reviewed invariant) | `scripts/check-build.mjs` (clause cards and summary) | `check-build <bill>` | 2026-10-14 | `displayStatus` ignoring the fingerprint → 1 FAIL (c4) |
 | K9 Exhaustiveness by type check | `src/lib/badge.ts:37` (`never`) | `npm run build` | 2026-10-14 | `DisplayStatus` grew a value → `ts(2322)` at `badge.ts:37` |
 | K10 One test per state-table row | generate checks "fingerprints:" and "refresh:"; review scenario I | `generate`/`review --self-test` | 2026-10-14 | rows: reviewed+match, changed, hand-edited, edit-back, null fingerprint, sample |
-| K11 Scripted interactive walk | `review.py:443` (`drive`), `:724` (`drive_terminal`) | `review --self-test` | 2026-10-07 | the cold review's 17 named mutations (lint, review and intake together) all caught, including "abort" read as accept and EOF written as text |
+| K11 Scripted interactive walk | `review.py:535` (`drive`), `:819` (`drive_terminal`) | `review --self-test` | 2026-10-07 | the cold review's 17 named mutations (lint, review and intake together) all caught, including "abort" read as accept and EOF written as text |
 | K12 Live probe before a paid run | session scratchpad only (`probe_batch.py`, `reprobe*.py`) | n/a (costs credit; ask first) | 2026-10-13 | 1-request batch `msgbatch_01CHds…`, 126 s, `Applied` |
 | K13 Control build from a scratch copy | session scratchpad (`sitectl/`, `make_control_bill.py`) | `npm run build` + `check-build zz-control` in the copy | 2026-10-14 | c3 *Reviewed*, c4 *Changed since review*, c5 *AI draft*; read in raw HTML too |
 | K14 One-byte tamper check | `pipeline/politricks/verify.py:30` | `verify --self-test` | 2026-10-14 (runs on every call) | intact `unchanged`, one-byte copy `CHANGED` |
@@ -62,6 +62,12 @@ Check counts: see the newest entry under Changes. Verify prints `unchanged` /
 | (none) | Every catalog kind was earned in this repo. |
 
 ## Changes
+
+- 2026-10-22: `politricks review --flagged` / `--only`, closing the walk trap that accepted 59 items.
+  - **New checks:** review scenario K, 11 checks. Counts are now lint 36, review 54, sheet 37, generate 77, intake 22, export 11.
+  - **Control inside K:** the unfiltered walk on the same trap bill, with the same answers, accepts all three items. So K tests the filter, not a bill with nothing to trap.
+  - **K2 controls, each mutation alone, all caught:** `--flagged` ignored (`chosen = offered`) → 4 FAILs; `selection_errors` always empty → 3 FAILs.
+  - **Real-path checks (read-only, stdin closed):** `--only c999 c2` on the Finance Act exited 1 naming c999; `--flagged` walked 0 and reported "58 other draft(s) left out", matching the 58 drafts counted from the JSON; both argparse refusals fired. The Finance Act SHA was unchanged.
 
 - 2026-10-22: CI (`.github/workflows/ci.yml`) now runs the full "Run them" list on every PR, on Ubuntu. Job `test` covers the self-tests, build and check-build. Job `content` runs real-data `lint`. First run: identical counts to the 2026-10-19 entry. The POSIX branch of the bill lock (`fcntl.flock`; review J, sheet L) passed. Until now it was "unexercised on this machine".
 

@@ -35,7 +35,7 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 ```
 
 **Pipeline commands:**
-- `intake`, `fetch`, `probe`, `extract [--check-json]`, `samples`, `generate [--batch-id X] [--summary-only] [--tags-only]`, `lint [id]`, `review <id> [--from-sheet X]`, `verify`, `export <id> [--out X]`.
+- `intake`, `fetch`, `probe`, `extract [--check-json]`, `samples`, `generate [--batch-id X] [--summary-only] [--tags-only]`, `lint [id]`, `review <id> [--flagged | --only ID ...] [--from-sheet X]`, `verify`, `export <id> [--out X]`.
 - Self-tests: `lint`, `review`, `intake`, `generate`, `verify` and `export` each take `--self-test`; `review --sheet-self-test` covers `--from-sheet`. All are offline, write nothing, and assert the real bill files' SHA-256 is unchanged.
 - **Before committing:** every self-test, then `lint`, then `npm run build`, then `check-build` for each bill.
 - **CI** (`.github/workflows/ci.yml`, 2026-10-22) runs that same suite on every PR and on pushes to `main` and `build/poc`, offline with no secrets. Job `test` covers the self-tests, the build and check-build. Job `content` is `lint` on the real bills, and it stays red while any reviewed text has changed since review, until Ian accepts it again. A red `content` with a green `test` means the code is fine and the review is pending. Ubuntu runs the bill lock's POSIX `flock` branch, which Windows never exercises.
@@ -68,6 +68,7 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - **No em dashes** in UI copy, data labels or the explainer prompt (Ian's call). Clause text keeps its own, because it's verbatim and fingerprinted.
 - **Never set `review.status: "reviewed"` from code or a script.** Only `politricks review` does that, driven by Ian.
 - **Reviewing in Excel:** `politricks export <id>` writes `exports/<id>-review.xlsx` (gitignored) and only reads the JSON. `politricks review <id> --from-sheet <file>` (`review_sheet.py`) applies the filled-in sheet: Ian's call (2026-10-15) is that his Accept rows are his accepts **when he runs it**. It refuses piped input (`echo yes |`) before reading anything, so only Ian at a terminal can run it. It plans on a copy, shows every new text in full, and saves only on `yes`. It skips rows whose item changed since export, and refuses an Accept on a group note whose sections moved through tag edits in the same sheet. A sheet that may not mean what it shows fails whole: a column sorted on its own, a number or date Excel made of typed text, a formula. **The walk itself still accepts piped answers** (its self-test drives it that way).
+- **The full walk offers every draft after the flagged items, and each `a` saves at once.** Answering `a` to re-accept one changed clause accepted 59 items on 2026-10-22. To re-accept what lint flags, use `politricks review <id> --flagged`; to reopen named items (any status, e.g. a typo seen on the site), `--only c12 summary group:trader`. Still diff the bill against `HEAD` field by field before committing a review.
 - **Never edit a bill JSON while `politricks review` is running.** The walk holds the bill in memory and saves the whole file on every accept, so a hand or script edit made meanwhile is silently overwritten. Ask Ian to quit (`q`; his edits are kept as drafts), edit, then restart the walk. A tab he has typed in can't be stopped from here.
   - **The bill lock** (`reviewlock.py`, 2026-10-19): every command that saves a bill (the walk, `--from-sheet`, `generate`, `fetch`, `extract`, `samples`, `verify`) holds an OS lock on `<bill>.json.lock` from load to save, and refuses at once (exit 1, "is open in another politricks command") if another holds it. The OS frees it when the process ends however it ends, so it can't go stale. The `.lock` files are gitignored.
   - **What it doesn't cover:** a hand edit, a script that calls `save_bill` directly, and a walk started before 2026-10-19's code. A script editing a bill should take `bill_lock(path)` itself (as the stage update of 2026-10-19 did).
@@ -132,15 +133,16 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `run` 248
 - `self_test` 308
 
-**`pipeline/politricks/review.py` (875):**
-- `QuitReview` 109
-- `_collect` 153 (flagged first; then clauses, summary, groups)
-- `_describe` 187 (shows a clause's GROUPS or a group's SECTIONS: accepting accepts them too)
-- `_edit_text` 231
-- `walk` 269 (accept stores the fingerprint; any edit makes a hand-edited draft, `sha256: "hand-edited"`)
-- `_ask_from_terminal` 387
-- `run` 396 (holds the bill lock for the whole walk)
-- `self_test` 434 (scenario J: the lock)
+**`pipeline/politricks/review.py` (1054):**
+- `QuitReview` 119
+- `_candidates` 163, `selection_errors` 177 (why an `--only` id can't be walked)
+- `_collect` 192 (flagged first; then clauses, summary, groups; `--flagged` / `--only` narrow it and count the rest as "left out")
+- `_describe` 232 (shows a clause's GROUPS or a group's SECTIONS: accepting accepts them too)
+- `_edit_text` 276
+- `walk` 314 (accept stores the fingerprint; any edit makes a hand-edited draft, `sha256: "hand-edited"`)
+- `_ask_from_terminal` 449
+- `run` 458 (refuses a bad `--only` id before showing anything; holds the bill lock for the whole walk)
+- `self_test` 510 (scenario J 917: the lock; K 951: `--flagged` / `--only`, with the 59-accept trap as its control)
 
 **`pipeline/politricks/review_sheet.py` (693):**
 - `TEXT_COLUMNS` 82 (cells that must be text, not numbers or dates)

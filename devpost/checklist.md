@@ -786,3 +786,14 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
   - `extract <bill> --check-json` passed on both versions. A copy with one word changed in c1 failed `VERBATIM FAIL c1` on both, which proves the check can fail.
 - **CI:** both jobs passed on the PR. The first run's `test` record showed `in_progress` for minutes after every step had succeeded. Closing and reopening the PR gave a clean second run, and both jobs passed there too. `main` at `c74acc2` passed `test`, `content` and `update-uv-graph`.
 - **Alerts:** the dependency graph showed 13.0.0 at about 15:15Z, and all 29 pip alerts (#8 to #36) were marked fixed between 15:16:04 and 15:16:10Z. politricks now has 1 open alert, path-to-regexp, kept by decision (2026-10-19 above).
+
+### `review --flagged` and `--only`, 2026-10-22
+
+- **Closes the walk trap** from "c2 re-accepted" above, where answering `a` to re-accept one flagged clause accepted 59 items. The full walk is unchanged. Two options walk less:
+  - `politricks review <id> --flagged` walks only what lint flags. The drafts it leaves out are counted and named in one line ("58 other draft(s) left out" on the Finance Act today).
+  - `politricks review <id> --only c12 summary group:trader` walks only the named items, **whatever their status**. So a reviewed text can be reopened to fix a typo spotted on the site. An unknown id, or a clause with no explanation, refuses the whole run (exit 1) before anything is shown, so a typo can't walk nothing and report "done".
+  - The two can't be combined, and neither applies to `--from-sheet` (argparse refuses both). "Not done while lint fails" still covers the whole bill.
+- **This supersedes** the "press `q` right after it" workaround above. Diffing the bill field by field against `HEAD` before committing a review still applies.
+- **Tests:** review self-test 43 → 54 (scenario K). Its first check is a control: the unfiltered walk on the same trap bill, with the same answers, accepts all three items. Planted bugs, each alone: `--flagged` ignored → 4 FAILs; `selection_errors` always empty → 3 FAILs.
+  - Read-only CLI runs against the real Finance Act, stdin closed: `--only c999 c2` exited 1 naming c999; `--flagged` walked 0. The bill's SHA-256 was unchanged.
+  - All self-tests pass (lint 36, review 54, sheet 37, generate 77, intake 22, export 11, verify `CHANGED`). Lint: 0 findings over 177 texts. `npm run build` exit 0. `check-build` exit 0 for all three bills (118 / 47 / 141 PASS).
