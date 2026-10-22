@@ -1,0 +1,91 @@
+name: CI
+
+# Added 2026-10-22, ahead of going live. Until then .github held only
+# dependabot.yml, so nothing ran the pre-commit suite (CLAUDE.md "Before
+# committing") on a push or a Dependabot PR. Everything here is offline and
+# free: no secrets, no Anthropic API calls, no fetch from Kenya Law.
+#
+# Two jobs, so a red check says which kind of problem it is:
+# - test: does the code work? Self-tests, the typed build, per-card checks.
+# - content: is the real data ready to publish? `politricks lint` over every
+#   bill. A "changed since review" finding is cleared only by Ian, in
+#   `politricks review`; never by code (CLAUDE.md).
+
+on:
+  push:
+    branches: [main, build/poc]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Pinned, not 'latest', and matching local (v24.14.0).
+          node-version: '24'
+          cache: npm
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+
+      # --locked fails if uv.lock no longer matches pyproject.toml. Python comes
+      # from pipeline/.python-version (3.14).
+      - name: Install pipeline
+        run: uv sync --project pipeline --locked
+
+      # ci, not install: npm install can resolve differently from the lockfile.
+      - run: npm ci
+
+      # Each self-test ends by asserting the real bill files' SHA-256 is
+      # unchanged, so a test that writes to real data fails here.
+      - name: Pipeline self-tests
+        run: |
+          uv run --project pipeline politricks lint --self-test
+          uv run --project pipeline politricks review --self-test
+          uv run --project pipeline politricks generate --self-test
+          uv run --project pipeline politricks intake --self-test
+          uv run --project pipeline politricks verify --self-test
+          uv run --project pipeline politricks export --self-test
+          uv run --project pipeline politricks review --sheet-self-test
+
+      # npm run build is `astro check && astro build`. Bare `astro build` skips
+      # the type check, and badge.ts's `never` branch only bites through it.
+      - name: Build (types, then site)
+        run: npm run build
+
+      # One run per bill. An empty bills directory is a failure, not a pass.
+      - name: Check built pages
+        run: |
+          shopt -s nullglob
+          bills=(src/data/bills/*.json)
+          if [ ${#bills[@]} -eq 0 ]; then echo "no bills in src/data/bills"; exit 2; fi
+          for bill in "${bills[@]}"; do
+            node scripts/check-build.mjs "$(basename "$bill" .json)"
+          done
+
+  content:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+
+      # Exit 1 = a banned phrase, a neutrality or Sheng flag not yet reviewed,
+      # or a reviewed text that has changed since. Exit 2 = no bills to scan.
+      - name: Lint every bill
+        run: uv run --project pipeline politricks lint
