@@ -63,6 +63,8 @@ Check counts: see the newest entry under Changes. Verify prints `unchanged` /
 
 ## Changes
 
+- 2026-10-22: CI (`.github/workflows/ci.yml`) now runs the full "Run them" list on every PR, on Ubuntu. Job `test` covers the self-tests, build and check-build. Job `content` runs real-data `lint`. First run: identical counts to the 2026-10-19 entry. The POSIX branch of the bill lock (`fcntl.flock`; review J, sheet L) passed. Until now it was "unexercised on this machine".
+
 - 2026-10-19: the bill lock, direct-call usage log and permanent banned phrases.
   - **New checks:** review scenario J, sheet section L and generate "a bill another writer holds…" (the lock); generate "every direct call's usage is logged"; lint now guards all 19 doctrine phrases. Counts are now lint 36, review 43, sheet 37, generate 77, intake 22, export 11.
   - **K2 controls, each mutation alone, all caught:**
@@ -75,4 +77,3 @@ Check counts: see the newest entry under Changes. Verify prints `unchanged` /
 
 - 2026-10-14: K4 control on record. Ian's first accepts broke two generate checks that still read the real bill; they now use the reset copy. The gap row is removed.
 - 2026-10-14: created by the first `test-kinds` audit, after the review-fingerprint work. That audit ran the K7 and K9 controls for the first time on this change (both FAILed as they should). Its inventory also caught two faults in the skill's own search (see the skill's Temper note).
-- 2026-10-22: CI (`.github/workflows/ci.yml`) now runs the full "Run them" list on every PR, on Ubuntu. Job `test` covers the self-tests, build and check-build. Job `content` runs real-data `lint`. First run: identical counts to the 2026-10-19 entry. The POSIX `flock` branch of the bill lock (review J, sheet L) passed. Until now it was "unexercised on this machine".
