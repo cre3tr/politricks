@@ -4,6 +4,18 @@ PoliTricks explains Kenyan bills in English, Kiswahili and Sheng. Each explanati
 
 **Planning and record:** `devpost/`. `scope.md`, `prd.md` and `spec.md` are the approved plan. `checklist.md` is the build doc: slices, verify steps, and an append-only **Revisions** log of every decision and finding. Read the Revisions before changing anything. Don't fork a second build doc.
 
+## Before You Start
+
+Read, in this order, before changing anything:
+
+1. `devpost/checklist.md` in this repo, Revisions first: how the project works and what was decided.
+2. `../haven-ea/references/ledger/projects/devpost-basics-2026.md`: rules this repo has already taught, earned from real failures.
+3. `../haven-ea/references/ledger/portfolio.md`: cross-repo rules.
+
+Ledger entries are dated. If one names a file, flag, or command, verify it still exists before acting on it.
+
+When this session learns something that cost real time or shipped a defect, append it to the ledger via the `lessons` skill. Do not leave it in a session summary — nothing loads those.
+
 ## Working with Ian here
 
 - Use AskUserQuestion, always leaving "Other" open. He answers compactly ("1, 2"), so play back your reading of it before acting on it.

@@ -768,3 +768,13 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **Dependabot PRs:**
   - **#4 (astro 7.3.5 to 7.4.0, @astrojs/vercel 11.0.11 to 11.0.15, zod 4.6.5 to 4.6.7):** builds clean locally, 0 errors, and `check-build` passes for all three bills. It targets `main`, so it gets CI once `ci.yml` is on `main` and Dependabot rebases it.
   - **#5 (TypeScript 6 to 7):** cannot install. `npm ci` fails with ERESOLVE, because `@astrojs/check` peers `typescript ^5.0.0 || ^6.0.0`, and that's still true at its latest version (0.9.12, 2026-10-21). Leave it open, because majors are kept, not ignored (`dependabot.yml`). **Recheck when:** `@astrojs/check` widens its peer range.
+
+### c2 re-accepted and #4 merged, 2026-10-22
+
+- **c2 re-accepted (`ad5ce8a`, on `main`).** Its 10-14 stamp `d55865b4` matched neither its text before nor after `b93bc3a`, the Sheng rules pass. So the site has shown c2 as *Changed since review* since 10-14. Ian re-accepted it in `politricks review`, and the stamp is now `9525bdbf`. Only `review.at` and `review.sha256` changed. CI on `main` passed both jobs (run 39753474071), with lint at 0 findings over 3 bills.
+- **First attempt, not committed:** the walk also offered every draft after c2, and all 59 items got accepted, the summary, 3 groups and 55 clauses. It was caught by a field-by-field diff against `HEAD` and restored. Rule and evidence: `haven-ea/references/ledger/projects/devpost-basics-2026.md`. To re-accept one item, press `q` right after it.
+- **#4 merged (`38cc752`):** astro 7.3.5 to 7.4.0, @astrojs/vercel 11.0.11 to 11.0.15, zod 4.6.5 to 4.6.7. It was rebased onto `ad5ce8a`, and both jobs passed (run 39753737094) with the usual counts. `build/poc` was fast-forwarded to `main`.
+- **New, open: 29 pip alerts on `pipeline/uv.lock`**, filed 00:22Z on 10-22, the first scan of the pipeline's Python dependencies.
+  - Pillow 12.3.0 (28 alerts, 4 critical): every one is patched in 13.0.0. It comes in through `pdfplumber`, which parses the bill PDFs locally.
+  - certifi 2026.7.22: patched in 2026.10.19, through `httpx`.
+  - `uv lock --dry-run --upgrade-package pillow --upgrade-package certifi` resolves both cleanly. Not applied yet.
