@@ -778,3 +778,11 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
   - Pillow 12.3.0 (28 alerts, 4 critical): every one is patched in 13.0.0. It comes in through `pdfplumber`, which parses the bill PDFs locally.
   - certifi 2026.7.22: patched in 2026.10.19, through `httpx`.
   - `uv lock --dry-run --upgrade-package pillow --upgrade-package certifi` resolves both cleanly. Not applied yet.
+
+### Pillow 13 and certifi, 2026-10-22
+
+- **#8 merged (`c74acc2`):** pillow 12.3.0 to 13.0.0 and certifi 2026.7.22 to 2026.10.19, via `uv lock --upgrade-package`. Only `pipeline/uv.lock` changes, and only those two versions move.
+- **Extraction control:** a scratch script dumped everything extraction derives from the three real PDFs: lines, margins, the stripped log, the report and every section. It ran with `write=False`, before and after the upgrade, and touched no repo file. All three dumps are byte-identical: Finance Act 1403 lines and 55 sections, Public Participation 288 and 21, Tertiary Education 1098 and 68.
+  - `extract <bill> --check-json` passed on both versions. A copy with one word changed in c1 failed `VERBATIM FAIL c1` on both, which proves the check can fail.
+- **CI:** both jobs passed on the PR. The first run's `test` record showed `in_progress` for minutes after every step had succeeded. Closing and reopening the PR gave a clean second run, and both jobs passed there too. `main` at `c74acc2` passed `test`, `content` and `update-uv-graph`.
+- **Alerts:** the dependency graph showed 13.0.0 at about 15:15Z, and all 29 pip alerts (#8 to #36) were marked fixed between 15:16:04 and 15:16:10Z. politricks now has 1 open alert, path-to-regexp, kept by decision (2026-10-19 above).
