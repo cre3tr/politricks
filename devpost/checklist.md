@@ -755,3 +755,16 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **Verified:** `npm run build` exit 0 (0 errors, 0 warnings), and `check-build` exit 0 for `finance-act-2026`, `public-participation-bill-2025` and `tertiary-education-bill-2026`. All 9 files in `.vercel/output` hash the same before and after the bumps, from a fresh build (timestamps 20:32 against a 20:30 baseline). No bill JSON or pipeline file was touched.
 - **Done when it reaches `main`:** Dependabot reads only `main`, so alerts #2 to #4 close after this branch is merged and GitHub rescans. Until then they still show as open.
 - **2026-10-21 note:** this entry's three lockfile bumps reached `build/poc` through politricks PR #1 (`b6d83ff`, which also took vite 8.3.5). The 2026-10-19 branch's lockfile was therefore superseded, and only `.github/dependabot.yml` and this entry were carried over from it.
+
+### CI, 2026-10-22
+
+- **Added `.github/workflows/ci.yml`** (politricks PR #6), ahead of going live. This supersedes the 2026-10-19 note above that "There's no CI".
+  - **Runs on:** every PR, and pushes to `main` and `build/poc`. Offline: no secrets, no Anthropic API, no Kenya Law. `permissions: contents: read`.
+  - **Job `test`:** `uv sync --locked`, `npm ci`, the seven self-tests, `npm run build`, then `check-build` per bill. An empty bills directory exits 2.
+  - **Job `content`:** `politricks lint` on the real bills. It's a separate job, so a pending review never reads as broken code.
+- **First run (39698688075):** `test` passed with lint 36, review 43, generate 77, intake 22, export 11 and sheet 37, the same counts as the local Windows baseline. That's the control showing each test ran rather than being skipped. `content` failed, as expected, on `finance-act-2026 c2: changed since it was reviewed (reviewed 2026-10-14)`.
+  - The bill lock's POSIX `flock` branch passed its first run (review J, sheet L). Until now it had never been exercised.
+- **Open for the learner:** re-accept c2 in `politricks review`. That turns `content` green. It's the last lint finding before going live.
+- **Dependabot PRs:**
+  - **#4 (astro 7.3.5 to 7.4.0, @astrojs/vercel 11.0.11 to 11.0.15, zod 4.6.5 to 4.6.7):** builds clean locally, 0 errors, and `check-build` passes for all three bills. It targets `main`, so it gets CI once `ci.yml` is on `main` and Dependabot rebases it.
+  - **#5 (TypeScript 6 to 7):** cannot install. `npm ci` fails with ERESOLVE, because `@astrojs/check` peers `typescript ^5.0.0 || ^6.0.0`, and that's still true at its latest version (0.9.12, 2026-10-21). Leave it open, because majors are kept, not ignored (`dependabot.yml`). **Recheck when:** `@astrojs/check` widens its peer range.

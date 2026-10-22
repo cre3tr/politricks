@@ -63,6 +63,8 @@ Check counts: see the newest entry under Changes. Verify prints `unchanged` /
 
 ## Changes
 
+- 2026-10-22: CI (`.github/workflows/ci.yml`) now runs the full "Run them" list on every PR, on Ubuntu. Job `test` covers the self-tests, build and check-build. Job `content` runs real-data `lint`. First run: identical counts to the 2026-10-19 entry. The POSIX branch of the bill lock (`fcntl.flock`; review J, sheet L) passed. Until now it was "unexercised on this machine".
+
 - 2026-10-19: the bill lock, direct-call usage log and permanent banned phrases.
   - **New checks:** review scenario J, sheet section L and generate "a bill another writer holds…" (the lock); generate "every direct call's usage is logged"; lint now guards all 19 doctrine phrases. Counts are now lint 36, review 43, sheet 37, generate 77, intake 22, export 11.
   - **K2 controls, each mutation alone, all caught:**
