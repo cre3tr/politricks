@@ -26,6 +26,7 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `intake`, `fetch`, `probe`, `extract [--check-json]`, `samples`, `generate [--batch-id X] [--summary-only] [--tags-only]`, `lint [id]`, `review <id> [--from-sheet X]`, `verify`, `export <id> [--out X]`.
 - Self-tests: `lint`, `review`, `intake`, `generate`, `verify` and `export` each take `--self-test`; `review --sheet-self-test` covers `--from-sheet`. All are offline, write nothing, and assert the real bill files' SHA-256 is unchanged.
 - **Before committing:** every self-test, then `lint`, then `npm run build`, then `check-build` for each bill.
+- **CI** (`.github/workflows/ci.yml`, 2026-10-22) runs that same suite on every PR and on pushes to `main` and `build/poc`, offline with no secrets. Job `test` covers the self-tests, the build and check-build. Job `content` is `lint` on the real bills, and it stays red while any reviewed text has changed since review, until Ian accepts it again. A red `content` with a green `test` means the code is fine and the review is pending. Ubuntu runs the bill lock's POSIX `flock` branch, which Windows never exercises.
 - Test kinds and their controls: `TESTING.md` (test-kinds skill).
 
 ## Gotchas that cost time
