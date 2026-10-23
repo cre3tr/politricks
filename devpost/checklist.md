@@ -797,3 +797,25 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **Tests:** review self-test 43 → 54 (scenario K). Its first check is a control: the unfiltered walk on the same trap bill, with the same answers, accepts all three items. Planted bugs, each alone: `--flagged` ignored → 4 FAILs; `selection_errors` always empty → 3 FAILs.
   - Read-only CLI runs against the real Finance Act, stdin closed: `--only c999 c2` exited 1 naming c999; `--flagged` walked 0. The bill's SHA-256 was unchanged.
   - All self-tests pass (lint 36, review 54, sheet 37, generate 77, intake 22, export 11, verify `CHANGED`). Lint: 0 findings over 177 texts. `npm run build` exit 0. `check-build` exit 0 for all three bills (118 / 47 / 141 PASS).
+
+### Deadline and "all 12", 2026-10-23
+
+- **Deadline:** Mon 26 Oct 2026, 5:00 pm EDT, which is 21:00 UTC and **00:00 EAT on Tue 27 Oct**. Planning started Fri 23 Oct around 12:30 EAT, so about 83 hours remained.
+- **The learner's call:** build all 12 slices, not just the minimum demoable line. The `6-ship` gate needs every slice ticked, plus the hands-on checkpoints, the Final Review and the Code Tour and App Map.
+- **State at the start:** slices 1, 2a and 2b ticked. Slice 3's code is done; only its learner check is left. Slice 5's key-independent half is done. CI is green on `main` and `build/poc` (`dc65770`). The repo is private.
+- **External dependencies, probed today with a browser user agent:**
+  - Kenya Law: 403, from both `new.kenyalaw.org` and `kenyalaw.org/kenya_gazette/`. All three bills' pinned sources and the spec's Acts, Constitution and Gazette sources are on Kenya Law.
+  - parliament.go.ke: 200. Its Constitution PDF (193 pages) has a usable text layer: page 21 extracts cleanly, and the article number "264." is present.
+  - nairobiassembly.go.ke: 200. `/bills/` links 5 PDFs from 2026. `/motions/` holds a Motion Tracker and Notice of Motion section, but no PDF links were found on that page.
+  - kra.go.ke: 200. Its home page links no Acts.
+  - Vercel: the connector is signed in (Hobby plan), and no PoliTricks project exists yet.
+- **Blockers found while planning:**
+  - Slice 8's amended Acts, slice 9's Gazette index, slice 10's Constitution and slice 12's weekly `verify` all depend on Kenya Law as the spec stands.
+  - Slice 10 bumps `REVIEW_HASH_VERSION`, which turns every reviewed item into "changed since review", so demo-clause reviews done before it must be redone (`review --flagged`). `generate` also skips protected clauses, so the 55 hand-edited Finance Act clauses would get no suggested articles without an articles-only pass.
+  - Slice 7 (Vercel) and slice 12 (repo secret, "Allow GitHub Actions to create PRs") need the learner to enter the API key and change settings himself.
+- **Learner decisions (AskUserQuestion, 2026-10-23):**
+  - **Spend:** both approved. Tertiary and Public Participation explanations (est. $0.70 to $1.20), and the suggested-articles pass when slice 10 is ready (est. $1 to $2 [LOW]). The smaller bill (Public Participation, 21 clauses) runs first as the probe, and its output is checked against the 10-19 Sheng rules before Tertiary runs.
+  - **Slice 8 source:** first look for the National Assembly-approved Public Participation Bill on parliament.go.ke, a real two-version pair. If it isn't there, back to the learner (KRA Acts, or wait for Kenya Law).
+  - **Cut-off: Sun 25 Oct, 20:00 EAT.** Any slice not done by then gets a recorded cut, with the learner's OK, and Monday is shipping only: checkpoints, Final Review, app map, public repo, video, submission. The submission goes in before the learner's Monday evening shift (an assumption from his context file, not stated today).
+  - **Parallel builders:** worktree-isolated Sonnet agents take the independent pipeline pieces (Constitution loader, `intake --check`, and research spikes for slices 6, 8 and 11). The lead builds slice 4 and the site work. Every diff is reviewed before it merges, and slices are still ticked in order.
+- **Planned order:** 5 (generate) → 4 → 6 → 7 → 8 → 10 → 9 → 11 → 12. Slice 3's learner check (3 to 5 demo clauses, `review --only`) comes after slice 10, because its fingerprint bump would undo earlier reviews. Pipeline pieces for 8 to 12 are built ahead in worktrees. Reviewing all 58 Finance Act drafts is not required to ship: unreviewed items stay labelled *AI draft*.
