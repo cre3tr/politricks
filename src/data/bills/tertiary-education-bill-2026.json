@@ -159,7 +159,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "12ed4af30ec504ce6879ebb633e56755dea69acfed97b67c8cbbb0fa17d65c35"
+        "sha256": "8a14f8827257f08a4edfc55e660875a9e2162727dafb1b534f0b3af4ea3074b9"
       },
       "neutral_check": {
         "ok": true,
@@ -168,7 +168,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        43,
+        53,
+        55,
+        233
+      ],
       "sheng_swaps": []
     },
     {
@@ -189,7 +194,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "a211e0263099c8421339c34aa618139bab41e2d9ec81b376aae1fa8142fddb7a"
+        "sha256": "07171acd6bda20b6f64736d094606dc9a4cecc229d497916e93539e9061e6e2f"
       },
       "neutral_check": {
         "ok": true,
@@ -198,7 +203,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        27,
+        43,
+        53,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -219,7 +229,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "5bf888116a61697a1e069e5a19d85ba2b193df70f4e1a0b5071c8aa44b798c74"
+        "sha256": "56aec6c97c7ac985c8b3ca4da5395617fb78b10f23c0c256a215369971ea5d62"
       },
       "neutral_check": {
         "ok": true,
@@ -228,7 +238,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        27,
+        43,
+        55,
+        201
+      ],
       "sheng_swaps": []
     },
     {
@@ -249,7 +264,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "53a4b5ceb9497e73d4e81da4b0888bdf49b0356c17cf5df60ece128d748c7a96"
+        "sha256": "e69d129c7c73109503bfb19fa74bf7ef5db48822a7f940fb1e2416a74bc493d5"
       },
       "neutral_check": {
         "ok": true,
@@ -258,7 +273,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        27,
+        43,
+        53,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -279,14 +299,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "bba57544f157fec0175da508b12ea6d5ddb2dd7a62ec0d0db6428629598d5105"
+        "sha256": "00daa3c0b5b820d80f4557b4510ea1d0a5d1c179fb9d1ea77241963a4f9521af"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only sets up a body corporate, its powers and its headquarters, so it was described without opinion, advice or any view on legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        6,
+        43,
+        53,
+        253
+      ],
       "sheng_swaps": []
     },
     {
@@ -307,7 +332,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "057874a0320efc6004a8ccd74ca24749129cee5a3e360f6821b1908cdb8db5dc"
+        "sha256": "7864e25dcaa5c78ff3fedd9788037725510066c06913437abdf02d0b00cfdc9e"
       },
       "neutral_check": {
         "ok": true,
@@ -316,7 +341,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        35,
+        43,
+        53,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -338,14 +368,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "64cc9ce30010b602cd83e1a8e7f7dacbbba13c1e339a414bda573fd9c0e67251"
+        "sha256": "fa48b9ccd708df4165c4579624027d995694b0bb8cb9a2aa1e575624ac76f64f"
       },
       "neutral_check": {
         "ok": true,
         "note": "The section only lists the powers of a public body, so the explanation just describes each power without opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        201,
+        206,
+        249,
+        253
+      ],
       "sheng_swaps": []
     },
     {
@@ -366,14 +401,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "95bd7df41b40e67d9054474e851b5fd73ab94a2419e0445600dcddbe8683bbba"
+        "sha256": "031dcd8d7e117da72c1c0eb10eb26082a7bbc9b0a44899af619e71d71a393626"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only who sits on the Board, who appoints them and their terms, with no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        132,
+        155,
+        156,
+        250
+      ],
       "sheng_swaps": []
     },
     {
@@ -395,14 +435,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "e14b63b0f59a986c728ec766a912c0057386d4e3685c52b780b349bbb65c0bd8"
+        "sha256": "11ffd5580abf739635456ffa11e0fba947ede7475a5eabfe4b3c393890d02ac3"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only lists appointment qualifications for a board chairperson; described as written, with no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        27,
+        55,
+        73,
+        232
+      ],
       "sheng_swaps": []
     },
     {
@@ -423,14 +468,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "2e0ae6960afa81b8d17c0b62a274e82dc0a38f2c7372f78acd049aaf515d755f"
+        "sha256": "be29d668cdd9fbdf49c120c9ed5d21c39b2f0a6d85bca95b5541c6909c3b4c08"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes the listed qualifications only, with no opinion on them and no view on the Constitution."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        73,
+        75,
+        78,
+        232
+      ],
       "sheng_swaps": []
     },
     {
@@ -452,14 +502,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "2fa5dcfd5289b788a012d91c894b7a560cdf1933abdc4ba19ff1d9ee2f32f78b"
+        "sha256": "d8bb69f343b7a3667f246e3f645ace6edf486a13381e423b2592e9248b66a16e"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only the listed grounds for a vacancy on the Board, with no opinion, advice or legal judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        73,
+        75,
+        76,
+        250
+      ],
       "sheng_swaps": []
     },
     {
@@ -536,14 +591,18 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "f1cffc4a7c4ca5ce21900b1e29758b088797239924ee145814010ee93208f4bf"
+        "sha256": "a68c8eb097f88e183dc8446317f0081f2a7f216552c2dea576e8b370c3036525"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only describes an internal power of delegation within a government body; explained without opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        249,
+        252,
+        253
+      ],
       "sheng_swaps": []
     },
     {
@@ -564,14 +623,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "817b8d43eff9909c17bc5fdc9b5f49eece89f9a793ca2370ff93ca67c5b2f5c1"
+        "sha256": "b197a929d2c2c14367c9c23463b989d95a9bb7b25916be843379b16f3e553413"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only sets out how the CEO is appointed, the term of office and reappointment limit; described without opinion."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        227,
+        232,
+        249,
+        250
+      ],
       "sheng_swaps": []
     },
     {
@@ -592,14 +656,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "2c5b56b13a248d68eb888640ec8b72c8b525b1c2a067ecba541d2054a36f0422"
+        "sha256": "91c0cc2470074162371d3d0f4b47153422371a94142fce6153f8be2c6607ca0d"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only lists appointment qualifications for a government body's CEO; described without opinion, advice or legal judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        27,
+        73,
+        232
+      ],
       "sheng_swaps": []
     },
     {
@@ -621,14 +690,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "2922b685d9b3001156f83e2822f6c11c6e8c7f322b4e121fd1ec666b3d489f20"
+        "sha256": "5da143fd85309a6498b88cf2e80fec10d0058a86465739e0ed4ea15a19be314b"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only the conditions for a vacancy and the grounds for removal, with no opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        47,
+        73,
+        75,
+        232
+      ],
       "sheng_swaps": []
     },
     {
@@ -649,14 +723,17 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "9d88b051032bba7c1f6835ccac7ab57f1c5dc3281fc8cfc213ced8b54ed8e2c8"
+        "sha256": "579f109ef9ed4d3150cb63d1754a547264b428286eeb0bd26f8f54ea936eca49"
       },
       "neutral_check": {
         "ok": true,
         "note": "Short administrative section about the Board hiring staff; described plainly with no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        232,
+        234
+      ],
       "sheng_swaps": []
     },
     {
@@ -677,7 +754,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "0f6e2158f41df29640e6064c6bafd6ec6d332fb8dec63e29d2b481379a8a7e7e"
+        "sha256": "378c99e978589fd8dbd0fd10c900e00e0e83490e5afe362b7a422e9b9f78bf34"
       },
       "neutral_check": {
         "ok": true,
@@ -686,7 +763,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        27,
+        35,
+        43,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -707,7 +789,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "8e84dd615cf7f436b99b80ca06ea3ce5fe354690377208867970d99e19233fbe"
+        "sha256": "0b40cf9642bceface3a438dc489026335a278d91fd801d6693e51494b5e34a2c"
       },
       "neutral_check": {
         "ok": true,
@@ -716,7 +798,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        35,
+        43,
+        55,
+        201
+      ],
       "sheng_swaps": []
     },
     {
@@ -737,7 +824,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "3e2c43d3d52b7013219109a9af64190d589928e953e5a5fcafa918901a0ecf98"
+        "sha256": "b755c018a92586d9565df36c93405d16ec824488e215ddaf0e3831ef01143cdf"
       },
       "neutral_check": {
         "ok": true,
@@ -746,7 +833,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        43,
+        47,
+        53,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -767,7 +859,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "fdc274efdbe9b7441ba2d0393cb6a0a37d4f805cb20e4d905ae37c572d97a9c5"
+        "sha256": "4cf461b3fc13020cbf5dbc03c7262d8456b96843e33fd939e8205279aea4dcdf"
       },
       "neutral_check": {
         "ok": true,
@@ -776,7 +868,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        27,
+        43,
+        47,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -797,14 +894,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "43ff69f892637b5f6a1e7eded44d6b490dbdd15a44b79cc1d11a7dc67fbcfa16"
+        "sha256": "dbfd5e3958aeb3acf240dca9e6aa79fb89a1073842cc39fac8d67a72810837e9"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes a reporting duty between the Placement Service and the Cabinet Secretary, with no opinion, advice or legal judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        27,
+        35,
+        43,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -826,7 +928,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "6d4a1868cf5d1e51f6cd3851f58a9d0b4a302e34553de72d599b885cae754071"
+        "sha256": "fec729419a59d75683d3bcde06a3553eebf11cda98c86f3b4df80b1c8ab40ecd"
       },
       "neutral_check": {
         "ok": true,
@@ -835,7 +937,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        43,
+        47,
+        53,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -856,14 +963,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "96d6165a0a738cf794449ce7c04bfd63df0091c244059a246f300b2d3219656e"
+        "sha256": "97e7f1342044d1f5116cf3087b1ab3c722b7ef602a7aa68f053226ab75d57bb6"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only the duty on institutions to submit returns, the deadline and the offence, with no opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        31,
+        35,
+        43,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -884,7 +996,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "83e2b60ebfdc331349c56eb68a86c6ce52e49fb7473509485a0680e932076b5a"
+        "sha256": "6f4459d21a4c4b39712db839f396f2f74308aa38f774f94bba7dff8888387de8"
       },
       "neutral_check": {
         "ok": true,
@@ -893,7 +1005,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        35,
+        43,
+        53,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -914,14 +1031,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "57eb4993723441104f12b3304e580b0fe52ceafa66be1bb54bce3a4628d502ce"
+        "sha256": "12828bf310dc6c2ce17b05e0f26db619846d9014913555342f22d762e96b614a"
       },
       "neutral_check": {
         "ok": true,
         "note": "The section only sets up a body corporate and its legal powers and location, so it was described without opinion, advice or any judgement on legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        6,
+        43,
+        249,
+        253
+      ],
       "sheng_swaps": []
     },
     {
@@ -942,7 +1064,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "f982f4cdfa06add91254bd1cd8a9c329f9a5191b289c015d0077229640ce4149"
+        "sha256": "77dbece2dc283368f13b92549501cc5adf9dbe78cbcc923c556b49159fe66ffb"
       },
       "neutral_check": {
         "ok": true,
@@ -951,7 +1073,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        27,
+        43,
+        55,
+        201
+      ],
       "sheng_swaps": []
     },
     {
@@ -972,7 +1099,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "3824afe79112705c945a37f25a084c88918286cf1ad57167932d55a7b163cc9a"
+        "sha256": "a5bb5f045b63094d7e537844977354dc5cda8ea4bb61cf14c8b3deb62bc43d74"
       },
       "neutral_check": {
         "ok": true,
@@ -981,7 +1108,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        31,
+        43,
+        201,
+        206
+      ],
       "sheng_swaps": []
     },
     {
@@ -1003,14 +1135,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "b4182f6b27abf5d391bda8d3a42faf217eb5d0a4aad16f758c435d56f45b64fa"
+        "sha256": "730fe616f9e4dac83f6fb702bf03d3da266b3697def9d4e3f86746d8a2c62a5a"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only who sits on the Board, who appoints them and their terms, with no opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        132,
+        155,
+        156,
+        250
+      ],
       "sheng_swaps": []
     },
     {
@@ -1031,14 +1168,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "b53ca62011ed88d724052bc8833c8c6ca32b7f5a02c827f0303058e3c6772c74"
+        "sha256": "b1150d914f14b46b55d21bfc21f539716c828bbe06d6662d8c83a83fd48a6912"
       },
       "neutral_check": {
         "ok": true,
         "note": "The section only sets out appointment qualifications for a board chairperson, and the explanation describes them without opinion, advice or any view on validity."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        73,
+        78,
+        232,
+        250
+      ],
       "sheng_swaps": []
     },
     {
@@ -1060,14 +1202,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "576e7efc42e91596d22c7d739205fe445389f1de17191f2925396604040907c1"
+        "sha256": "f71df1f2cd744dbe6ce910f427e83cc82b31379b76b82c81c77fefd605d7a4cf"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only lists appointment qualifications for Board members; described as written, with no opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        73,
+        78,
+        232,
+        250
+      ],
       "sheng_swaps": []
     },
     {
@@ -1088,14 +1235,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "2103dd438d55dc011dfdd985ad01f7f794534f359fdea711bbd1f4e1c7d40fa9"
+        "sha256": "66054acb64dac5054c735519d1472f6f85be89f7a93285fd467bd0e2caf6e64f"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only lists the grounds for a Board office becoming vacant; described in plain words without opinion, advice or any view on validity."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        73,
+        75,
+        250,
+        251
+      ],
       "sheng_swaps": []
     },
     {
@@ -1201,14 +1353,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "a4680bb7f8b468affbf6d0dc09e13dc8e3cb74e92899e367b9139f8a3f8678fd"
+        "sha256": "00dc69096bd573c436a21264a35a0128034bd76355ce90b4850c61c74f174ce8"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only describes how the CEO is appointed, the term length and one allowed re-appointment; no opinion added."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        73,
+        232,
+        249,
+        250
+      ],
       "sheng_swaps": []
     },
     {
@@ -1229,14 +1386,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "76cc9b2508e5590dc42cc129f1472c15b7426bb1339981fe514809e231659adc"
+        "sha256": "034537d7cf543a70bdc60ffe54719d699d4606e0c034e137cd65529551cb005d"
       },
       "neutral_check": {
         "ok": true,
         "note": "The section only lists appointment qualifications for the CEO; the explanation describes them without opinion, advice or any judgment on legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        55,
+        73,
+        232
+      ],
       "sheng_swaps": []
     },
     {
@@ -1257,14 +1419,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "c428222b23439314c5be32e9d227a09bed567556c0d0f36bf37a6124dfb2a0d5"
+        "sha256": "a3241beab02dbb1a5832c91a4bd00f24a8464cefbf2329429c485d3379967afd"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only describes the CEO's duties and who administers the Fund; explained without opinion, advice or legal judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        206,
+        226,
+        232,
+        249
+      ],
       "sheng_swaps": []
     },
     {
@@ -1285,14 +1452,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "f9229d94a9e36243d26cd39aee7188d8c0ad71a2cd58a71007aef78374bad2bf"
+        "sha256": "693876761027dc15dd907a08a01a009f2a13e427fe2f9203b4463d86ab78a36e"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only when the CEO office becomes vacant and the listed grounds for removal, with no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        47,
+        73,
+        75,
+        236
+      ],
       "sheng_swaps": []
     },
     {
@@ -1313,14 +1485,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "ae5c3072941eafd9a35f55a9d9996884c4d8e1732a379729c2c8c84381a3f37b"
+        "sha256": "2b68e66989ed14429ce1e7fc5ac7a6823b07ff4088a1a9e5eb8ce2e8e173422f"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only describes the Board's power to appoint staff; no opinion or advice added."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        232,
+        233,
+        249,
+        250
+      ],
       "sheng_swaps": []
     },
     {
@@ -1341,14 +1518,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "9279042ff8ffe3011fae86f3fe3386cfd0a83629716f5afb146980ebcbf9b7f5"
+        "sha256": "13050744048239fda9f5291c3e87891340a96fbb43fde5cbfdb1f2edcd98f55b"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only creates a fund and names who manages it; described without opinion. No group tagged because the text itself changes nothing specific for any group."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        43,
+        55,
+        201,
+        206
+      ],
       "sheng_swaps": []
     },
     {
@@ -1369,7 +1551,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "adb6c923f8aa35a64718c93cf3fd86ec1dced03df788800571c0c5166500e0af"
+        "sha256": "265135ec90d747bc4e6603122e0f769afe75ef686c42819d1d1bcdaf3b68dea7"
       },
       "neutral_check": {
         "ok": true,
@@ -1378,7 +1560,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        43,
+        53,
+        55,
+        201
+      ],
       "sheng_swaps": []
     },
     {
@@ -1399,7 +1586,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "e6f47d3a67ac31fb7dbaed99d74abd3b6a4431edeb063f5375c9eb4e37dbade0"
+        "sha256": "508b108adcc5ed1fbe4768d102a8cda75eafe5b802237e902be1f51c48d94a4a"
       },
       "neutral_check": {
         "ok": true,
@@ -1408,7 +1595,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        43,
+        55,
+        201,
+        206
+      ],
       "sheng_swaps": []
     },
     {
@@ -1429,7 +1621,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "f626a15804edbb252b23a013200682ed799ff8b39ea0171f30ab1f2fd211fd37"
+        "sha256": "e4868e1f56ee1a7e06e8c490d85ecbf2e08119d161375acc5afce4cfaa7544c3"
       },
       "neutral_check": {
         "ok": true,
@@ -1438,7 +1630,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        12,
+        27,
+        43,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -1459,7 +1656,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "d77b675ff6d5dfef92374842d1c0f78481362e8c59c5f2f87e903720b1df9451"
+        "sha256": "a569acdb61093ff4a375e8d76227763fc887ba549a01809dccf1e233b145d625"
       },
       "neutral_check": {
         "ok": true,
@@ -1468,7 +1665,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        43,
+        53,
+        55,
+        260
+      ],
       "sheng_swaps": []
     },
     {
@@ -1489,7 +1691,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "2562d5128bd210cea54538fa271adab9eb090dc4181d07bb15ac3fc187e30e32"
+        "sha256": "36aa817c3f1e3e18ea9a16edd0678c2b50fa9c8db3b29574fa03d8bf78eab2dd"
       },
       "neutral_check": {
         "ok": true,
@@ -1498,7 +1700,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        35,
+        43,
+        47,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -1519,7 +1726,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "0809770ede2a89e00ee5165bce964675172548a98415b7f13d560e1d087cf7a7"
+        "sha256": "afaa80164e42f5a32ef8bf4ecc78cba83895796ed0bfcb4b1b5df274b0226f23"
       },
       "neutral_check": {
         "ok": true,
@@ -1530,7 +1737,12 @@
         "trader",
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        40,
+        41,
+        43,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -1551,7 +1763,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "6480abdca916a1f0bac407726784106cd0575bdf4164b93d12a39338d3ba9408"
+        "sha256": "ec3028ccc45ae5bdab53dc04b00682c649d7608bb2de3429bf460901d2145d12"
       },
       "neutral_check": {
         "ok": true,
@@ -1561,7 +1773,12 @@
         "employee",
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        40,
+        41,
+        43,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -1582,14 +1799,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "99dc9e88fe4cb5a981ae3f850c90fa7512c1074d8f6f9e9227ff493c232a531f"
+        "sha256": "fc26383f742b1b03feeca30df18860416bf72020d383c95595bbe794ea8ceb3e"
       },
       "neutral_check": {
         "ok": true,
         "note": "Described only what the section does (debts due to the Authority are recoverable as civil debts), with no opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        43,
+        47,
+        48,
+        50
+      ],
       "sheng_swaps": []
     },
     {
@@ -1611,7 +1833,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "8cea4a053dad6c02d4d7e1d407a746347e426d151e833fb906c6f80eef5a4029"
+        "sha256": "8db5dd5b00100604592263f70a8ba61ce26a48b69818db24be2ada76aa444303"
       },
       "neutral_check": {
         "ok": true,
@@ -1620,7 +1842,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        31,
+        35,
+        43,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -1641,14 +1868,18 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "bf6b9efa0b765ded173c2f67d6fad25106e59c9b062df73675e1c80d226354d5"
+        "sha256": "ec019d907683cff862e109a289834b79da4f35425ab14c4ed24a56f5cd4b783a"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only describes the Authority's power to request data and its duty to use existing databases; no opinion or verdict added."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        31,
+        35,
+        47
+      ],
       "sheng_swaps": []
     },
     {
@@ -1669,14 +1900,18 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "7dec81b34ad3e22f86cbb97acd8e2d3cf9e3027bc1ae3db1e68fc34b3037c629"
+        "sha256": "182a040c79733826fdd07ef7eff0c7894990f53c1ebff7b02b982564f9ac065a"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only who handles disputes and how, with no opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        47,
+        48,
+        159
+      ],
       "sheng_swaps": []
     },
     {
@@ -1697,14 +1932,18 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "d745d80051d6f0fd4d75aa96b69601500be54abc3c852da06be55aa6ba1bfe61"
+        "sha256": "f5a59c05180f4049da004e0d28815808b46ffdae9748831abbbbddad4ea9dc76"
       },
       "neutral_check": {
         "ok": true,
         "note": "Technical clause fixing a financial year date for two public bodies; described plainly with no opinion."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        201,
+        226,
+        249
+      ],
       "sheng_swaps": []
     },
     {
@@ -1726,7 +1965,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "4e375dcc286a71627c607e772e0fdd34287980eafc5085a2ff40c84ffea4c73d"
+        "sha256": "5e7f36ad18c417996156194d28e115bcbed63b2334aaca507b058644149e457b"
       },
       "neutral_check": {
         "ok": true,
@@ -1735,7 +1974,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        43,
+        201,
+        220,
+        226
+      ],
       "sheng_swaps": []
     },
     {
@@ -1756,14 +2000,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "e20c6864dbeba6a693b6443c6659ad2d94b55a0b1340d5998c710971eb8f5e2e"
+        "sha256": "0cb3bc13050dfdd0a1fc8105c6c83d936a53438bb72c449aec2cdab899053be6"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only sets record-keeping and audit duties for two public bodies; described in plain terms with no judgement on policy or legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        201,
+        226,
+        229,
+        254
+      ],
       "sheng_swaps": []
     },
     {
@@ -1785,14 +2034,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "c0d59a9a5b030ca1361abde964f78477d28c6a0b420dc869e98f18781ed84f5e"
+        "sha256": "02862203bba54e188b381adf996f926c4a3518dcf419ef88be669d6b76b77f6a"
       },
       "neutral_check": {
         "ok": true,
         "note": "Described only who is covered and what the protection does, with no opinion on it and no comment on its legal effect."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        47,
+        48,
+        236,
+        260
+      ],
       "sheng_swaps": []
     },
     {
@@ -1813,14 +2067,16 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "4bdbd90a011b0f7d07d74f6cc868a5b0eec8269b01ca0248a8e237a76a6cc6ee"
+        "sha256": "910c8c0a7d3f6f133e2e6a7230457114974911d15fa20b863862659b41ed6777"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes who keeps the seal and how its use is authorised and confirmed; no opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        253
+      ],
       "sheng_swaps": []
     },
     {
@@ -1841,7 +2097,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "be950417ba6adddad87512d5324fbd9a4eacbf2c5653cb35cc85626d2efa132f"
+        "sha256": "8f53ad40483883881e51950356fd6d4eee29a167a3156a52a9711d9cc3606b92"
       },
       "neutral_check": {
         "ok": true,
@@ -1850,7 +2106,11 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        40,
+        48,
+        50
+      ],
       "sheng_swaps": []
     },
     {
@@ -1871,14 +2131,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "d330ed9a0040527e7eff5bf1a5f77108ea70595da2211488270993895bffb2af"
+        "sha256": "b808e578de3d036e27ba63c181084ef2dd36c2b1f17c771a20212bc56596e4ff"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only who stays liable for compensation and for what harm; no opinion, advice or verdict on legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        22,
+        40,
+        47,
+        48
+      ],
       "sheng_swaps": []
     },
     {
@@ -1899,14 +2164,17 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "bd4197f98047ff2f2811b893e68b2a0224b03631489a4d5ebdbf74921c34bcdc"
+        "sha256": "1c3a89fb7b38148a1fb87ee724b331921ae8e5e34dafaa83aec5dddd8c7af2fe"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes the penalty range only, with no opinion on its fairness or effect."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        49,
+        50
+      ],
       "sheng_swaps": []
     },
     {
@@ -1928,7 +2196,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "33527ca8f1b532db9cbc76368bece95d3b99c33f36e4229d44d0bddb6115993c"
+        "sha256": "e77ef63832e2f7e654239cada9a5f14f1ca5ddc1db3bac6d3e716f4107b4b857"
       },
       "neutral_check": {
         "ok": true,
@@ -1937,7 +2205,12 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        43,
+        53,
+        55,
+        94
+      ],
       "sheng_swaps": []
     },
     {
@@ -1958,7 +2231,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "5f201f2a0b85a3e87203c73ddb05310971b78390f680260d4ebe1cdf319bac41"
+        "sha256": "d5c42d4374ae6d51fdc3dd3d1ce1e439bb077815380516c38c1f98e9ef5a3130"
       },
       "neutral_check": {
         "ok": true,
@@ -1967,7 +2240,10 @@
       "groups": [
         "student"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        43,
+        55
+      ],
       "sheng_swaps": []
     },
     {
@@ -1989,14 +2265,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "3bdb7c281fafdc7e9d2699558f2b9eb432df9b695096ede811acbde268a230aa"
+        "sha256": "904aae2dfe6274ac421e8735f74ae31378129ceaa9a4bd564c389cdfd5bfde86"
       },
       "neutral_check": {
         "ok": true,
         "note": "Transition clause that only names which government bodies succeed which; described without opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        43,
+        55,
+        249,
+        253
+      ],
       "sheng_swaps": []
     },
     {
@@ -2017,14 +2298,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "c1fc50129d638aeeda505a776b8685f3352eabefeff9d0e7571b94f6d21595fa"
+        "sha256": "ca109c0cefd3f88258c9562829100eea53b3ebee4f81bb5dc4cfd67297bbd07e"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only moves property, rights, liabilities and pending cases between public bodies, described without opinion."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        40,
+        253,
+        260,
+        262
+      ],
       "sheng_swaps": []
     },
     {
@@ -2045,7 +2331,7 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "ebcf00b056ff4c840a7c22cec7aa5cb61b6a8f7ee2ee4c6ac6046535a3a3434f"
+        "sha256": "6ae9a6ef19dd253096691cb370d5d0aaf71ba11f651f274c3ac6889b20bbb2be"
       },
       "neutral_check": {
         "ok": true,
@@ -2054,7 +2340,12 @@
       "groups": [
         "employee"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        41,
+        232,
+        236,
+        262
+      ],
       "sheng_swaps": []
     },
     {
@@ -2075,14 +2366,18 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "50e121315e3ffecaeb5f1ff3693a387723075a4c5be651f48fa20318d76d4973"
+        "sha256": "fda51b52dfa70d0c239cb78632018d1e4675b20a3db428167b3987b80fefe982"
       },
       "neutral_check": {
         "ok": true,
         "note": "Definitions clause only; explanation lists the four named bodies with no opinion, advice or legal judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        43,
+        55,
+        249
+      ],
       "sheng_swaps": []
     }
   ],

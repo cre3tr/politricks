@@ -116,7 +116,9 @@
         "note": "Short title and commencement dates only, described as written with no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        116
+      ],
       "sheng_swaps": []
     },
     {
@@ -145,7 +147,9 @@
         "note": "Definitions clause described factually, with no opinion, advice or judgment on legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -176,7 +180,11 @@
       "groups": [
         "employee"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        201,
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -205,7 +213,11 @@
         "note": "Describes only who pays, the final tax, the registration and payment deadline, and the exception, with no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        201,
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -261,7 +273,10 @@
         "note": "Describes only the new payment deadline in subsection (1A), with no opinion on the policy."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -291,7 +306,10 @@
       "groups": [
         "trader"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -319,7 +337,11 @@
         "note": "Describes only what the replacement section 11 does for trustees, executors, administrators and beneficiaries, with no opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        201,
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -349,7 +371,9 @@
       "groups": [
         "employee"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -377,7 +401,11 @@
         "note": "Describes the two provisos only, with no opinion on policy, legality or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        201,
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -549,7 +577,10 @@
       "groups": [
         "trader"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -570,14 +601,16 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "1eef3df94f69ab0e88769cc15970bd82f10e8c8ad5ef7dee316122c4def9f61b"
+        "sha256": "20bde0e9643529ce3b7fb675eebe75334da8f8b041d537a5700e8eecc353e616"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only the change of deadline in the text, with no opinion, advice or legal judgment. It applies to any person, so no group is tagged."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        47
+      ],
       "sheng_swaps": []
     },
     {
@@ -606,7 +639,11 @@
         "note": "Section sets filing deadlines for all taxpayers; described only what it does, with no opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        201,
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -634,7 +671,10 @@
         "note": "Describes the two list changes in plain words without opinion, advice or any view on legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -693,7 +733,10 @@
       "groups": [
         "trader"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -749,7 +792,10 @@
         "note": "Describes only what the amendments change (a cross-reference fix, a new item on non-resident share gains, and an exclusion in paragraph 8(4A)), with no opinion, advice or legal judgment."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -778,7 +824,10 @@
         "note": "Describes the rate changes for licensees, contractors and non-resident companies only, with no opinion, advice or legal judgment. The trailing 'PART III-VALUE ADDED TAX' is a heading, not part of this section, so it is not explained."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -835,7 +884,10 @@
         "note": "Describes only what the two amendments do, with no opinion on their effect. Not tagged to a group because the text applies to labour suppliers and licensed hire purchase businesses generally, not to a named group."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -863,7 +915,12 @@
         "note": "Described only what the amendments add and the conditions attached, with no opinion, advice or judgement on legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210,
+        239,
+        241
+      ],
       "sheng_swaps": []
     },
     {
@@ -892,7 +949,10 @@
         "note": "Describes the new VAT adjustment rule and who it applies to, with no opinion, advice or legal judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -948,7 +1008,10 @@
         "note": "Describes only the replacement of one subsection and what the new wording says, with no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1011,7 +1074,12 @@
       "groups": [
         "trader"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        46,
+        201,
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1041,7 +1109,10 @@
       "groups": [
         "transport"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1069,7 +1140,10 @@
         "note": "Section is a plain definition; explained only who and what the term covers, with no opinion on its effect."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1098,7 +1172,10 @@
         "note": "Describes only what the new paragraph adds and its conditions, with no opinion, advice or judgment on legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1132,7 +1209,11 @@
       "groups": [
         "transport"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        201,
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1160,7 +1241,12 @@
         "note": "Technical insertion of words; described only what the text does, with no opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        210,
+        239,
+        241,
+        242
+      ],
       "sheng_swaps": []
     },
     {
@@ -1220,7 +1306,12 @@
         "note": "Describes the filing duties, penalties and information-exchange rules as written, with no opinion, advice or comment on legality. Applies to service providers, so no group tagged."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        31,
+        35,
+        40,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1248,7 +1339,10 @@
         "note": "Describes the reinstatement process and timeline as written, with no opinion, advice or legal judgment. Applies to all taxpayers, so no group is tagged."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        47,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1276,7 +1370,10 @@
         "note": "Describes only what the new subsection does for non-residents opening accounts, with no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1307,7 +1404,12 @@
         "note": "Describes the Commissioner's new power, the information used, the time limits and the definitions without opinion, advice or any view on legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        31,
+        47,
+        201,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1336,7 +1438,12 @@
         "note": "Described the documents, retention period and Commissioner's powers as written, with no opinion, advice or view on legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        40,
+        47,
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1365,7 +1472,12 @@
         "note": "Describes the new assessment power, the listed information sources, the thirty-day written request and the right to object, with no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        31,
+        47,
+        201,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1386,14 +1498,16 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "8d1bc1a4b3b1760c3f027a686db214cc31506744418dec5d0c616010fadd5fdb"
+        "sha256": "9c4fc8c8536b0150c509f1eabb711fcb0467edb0417a693f1f795b399e126223"
       },
       "neutral_check": {
         "ok": true,
         "note": "Date-only amendment, described as written with no opinion, advice or legal judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1422,7 +1536,12 @@
         "note": "Described only what the new section does: who can recover, what is recovered, and the KSh 100,000 summary threshold. No opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        40,
+        201,
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1450,7 +1569,11 @@
         "note": "Describes only what the new subsections do. The section applies to all persons who must file returns, so no group is tagged."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        31,
+        47,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1479,7 +1602,12 @@
         "note": "Describes the notice, the three points the Commissioner considers and the penalty amounts as written, with no opinion or advice. Applies to all taxpayers equally, so no group is tagged."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        47,
+        50,
+        201,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1508,7 +1636,11 @@
         "note": "Describes only the drafting changes and the new waiver power with its two million shilling limit, with no opinion on policy or legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        47,
+        201,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1564,7 +1696,9 @@
         "note": "Small technical wording amendment described as it reads, with no opinion, advice or legal judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209
+      ],
       "sheng_swaps": []
     },
     {
@@ -1593,7 +1727,10 @@
         "note": "Describes only the two changes in each part (the replaced aircraft entry and the new LPG storage entry) and its conditions, with no opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1621,7 +1758,11 @@
         "note": "Small technical amendment, described only by what it changes, with no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        201,
+        206,
+        209
+      ],
       "sheng_swaps": []
     },
     {
@@ -1649,7 +1790,11 @@
         "note": "Describes only the added paragraph (c) and what the text says, with no opinion, advice or judgement. Does not state what the rest of section 96A does, since that text is not provided."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        40,
+        209,
+        210
+      ],
       "sheng_swaps": []
     },
     {
@@ -1679,7 +1824,12 @@
       "groups": [
         "transport"
       ],
-      "suggested_articles": [],
+      "suggested_articles": [
+        201,
+        206,
+        209,
+        210
+      ],
       "sheng_swaps": []
     }
   ],

@@ -109,7 +109,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   Learner check: Search for something the way a citizen would ("HELB", "tax", "ushuru") and see what comes up. Open the Finance Bill's challenge tab and check it reads as information, not advice.
   Commit: `Add Una'tafuta search, passed bills and intake check`
 
-- [ ] **10. Suggested constitution articles**
+- [x] **10. Suggested constitution articles**
   Becomes usable: Clause cards show "Suggested articles" chips. Tapping one opens the article's text in-app, labelled *"Suggested article — you judge"*, with the Kenya Law link and the constitution's fingerprint. Only each bill's slice of articles ships with its page.
   Why now: This is PRD build step 5, and it needs the constitution loaded before `generate` can suggest validated articles.
   PRD ref: `prd.md > Constitution Check`
@@ -922,3 +922,19 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
   - (b) **The county bill's `status: passed`** comes from the Assembly's bills table (passed and assented July 2026), though the PDF is headed "Bill for Introduction".
   - (c) **The motion's Sheng** opens "Section 1 ina-urge", the prompt's clause rule applied to a motion. Edit it at review.
   - Learner check at the integrated checkpoint.
+
+### Slice 10 ticked: suggested constitution articles, 2026-10-23
+
+- **Migration:** `politricks restamp` on the three bills re-stamped 92 untouched AI drafts under clause fingerprint v2 (Finance Act 3, Public Participation 21, Tertiary 68). A field-by-field diff showed only `review.sha256` moved, and a second run wrote nothing (the restamp commit).
+- **`generate --articles-only`**, learner-approved spend:
+  - Public Participation was the probe: 21/21, suggesting e.g. Articles 10, 118, 196, 35.
+  - Then Tertiary (68/68, 62 clauses got articles) and the Finance Act (55/55, 42 clauses got articles). No article number was dropped as unknown, and there are at most 4 per clause.
+  - The Tertiary and Finance Act batches cost about $0.20 together [MEDIUM: batch at 50%, assumed cache rates]. Output was light (2,000 to 3,000 tokens a batch), far under the $1 to $2 estimate.
+  - Protection held: the Finance Act's 51 hand-edited clauses kept their stamps and got articles. Only untouched AI drafts were re-stamped. Reviewed c2 kept its old stamp, so it reads *Changed since review* until the learner re-accepts it (`review finance-act-2026 --flagged`).
+- **Verify:**
+  - `constitution.json` holds 264 articles and a fingerprint, and every suggested number exists in it (the pass validates each one).
+  - Each built page ships exactly its own suggested articles: Finance Act 14, Tertiary 43, Public Participation 15. On each page an unsuggested article's text is absent, and the control (a suggested article's text) is present.
+  - `lint`: no new findings.
+  - Build clean; check-build passes on all 5 bills.
+  - In the browser, the Tertiary page's "Article 43" chip opens the sheet ("Article 43: Economic and social rights", labelled "Suggested article: you judge") and Close shuts it.
+- **Learner check pending** (integrated checkpoint): open a suggested article. Does it feel relevant, and is it clear you're the judge?
