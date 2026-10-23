@@ -1,0 +1,91 @@
+---
+// The three tabs on a bill page (devpost/spec.md > Bill Page): What it does,
+// What changed, Have your say (Where it can still be challenged, for a law).
+//
+// Progressive enhancement: the three panels are ordinary sections in the
+// page, all visible without JavaScript. This script turns them into tabs
+// and keeps the open one in the URL hash, so "#have-your-say" can be linked
+// from the home page.
+interface Props {
+  passed: boolean;
+}
+
+const { passed } = Astro.props;
+const tabs = [
+  { id: "what-it-does", en: "What it does", sw: "Unafanya nini", sheng: "Ina-do nini" },
+  { id: "what-changed", en: "What changed", sw: "Nini kimebadilika", sheng: "Nini imechange" },
+  passed
+    ? { id: "have-your-say", en: "Where it can still be challenged", sw: "Inaweza kupingwa wapi", sheng: "Ina-challengiwa wapi" }
+    : { id: "have-your-say", en: "Have your say", sw: "Toa maoni yako", sheng: "Sema yako" },
+];
+---
+<nav class="bill-tabs" role="tablist" aria-label="Bill sections">
+  {
+    tabs.map((tab, index) => (
+      <button type="button" role="tab" id={`tab-${tab.id}`} aria-controls={tab.id} aria-selected={index === 0 ? "true" : "false"} data-tab={tab.id}>
+        <span data-l="en" lang="en">{tab.en}</span>
+        <span data-l="sw" lang="sw">{tab.sw}</span>
+        <span data-l="sheng" lang="sw-x-sheng">{tab.sheng}</span>
+      </button>
+    ))
+  }
+</nav>
+
+<script>
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>(".bill-tabs [data-tab]"));
+  const panels = buttons.map((button) => document.getElementById(button.dataset.tab!)).filter(Boolean) as HTMLElement[];
+
+  function show(id: string, updateHash: boolean) {
+    if (!panels.some((panel) => panel.id === id)) id = panels[0]?.id ?? id;
+    buttons.forEach((button) => button.setAttribute("aria-selected", String(button.dataset.tab === id)));
+    panels.forEach((panel) => {
+      panel.hidden = panel.id !== id;
+      panel.setAttribute("role", "tabpanel");
+    });
+    if (updateHash) history.replaceState(null, "", id === panels[0]?.id ? location.pathname : `#${id}`);
+  }
+
+  buttons.forEach((button) => button.addEventListener("click", () => show(button.dataset.tab!, true)));
+  // A clause anchor (#clause-c3) lives in the first tab.
+  const hash = location.hash.slice(1);
+  show(hash.startsWith("clause-") ? "what-it-does" : hash, false);
+  window.addEventListener("hashchange", () => {
+    const next = location.hash.slice(1);
+    show(next.startsWith("clause-") ? "what-it-does" : next, false);
+  });
+</script>
+
+<style>
+  .bill-tabs {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 1.5rem;
+    border-bottom: 2px solid var(--flag-black);
+    overflow-x: auto;
+  }
+  .bill-tabs button {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.8rem;
+    border: none;
+    background: var(--paper);
+    cursor: pointer;
+    white-space: nowrap;
+    min-height: 2.75rem;
+  }
+  .bill-tabs button[aria-selected="true"] {
+    background: var(--flag-black);
+    color: var(--paper);
+  }
+  .bill-tabs :global([data-l]) {
+    display: none;
+  }
+  :global(html:not([data-lang])) .bill-tabs :global([data-l="en"]),
+  :global(html[data-lang="en"]) .bill-tabs :global([data-l="en"]),
+  :global(html[data-lang="sw"]) .bill-tabs :global([data-l="sw"]),
+  :global(html[data-lang="sheng"]) .bill-tabs :global([data-l="sheng"]) {
+    display: inline;
+  }
+</style>

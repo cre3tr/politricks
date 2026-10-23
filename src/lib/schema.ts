@@ -114,11 +114,46 @@ export const GroupEntrySchema = z
   .strict();
 export type GroupEntry = z.infer<typeof GroupEntrySchema>;
 
-// `stage_next`, `changes[]`, `participation` and `challenge` are filled by
-// later slices (compare, civic data — slices 6/8). They're typed loosely
-// here (nullable "any object" / an open array) on purpose: models.py leaves
-// them as plain `dict`/`list[dict]` for the same reason, and slice 2a has no
-// data for them yet. Tightening these is slice 6/8's job, not this one's.
+// The civic blocks (devpost/spec.md > Civic Data), written by
+// `politricks civic` (pipeline/politricks/civic.py) from the hand-checked
+// YAML in pipeline/civic/. Facts are copied from the YAML; only the Tri
+// texts are Claude's translations, reviewed like any other draft.
+// `changes[]` (slice 8) is still typed loosely.
+const ChannelSchema = z
+  .object({ type: z.enum(["email", "portal", "venue"]), value: z.string() })
+  .strict();
+
+export const ParticipationSchema = z
+  .object({
+    open: z.boolean(),
+    deadline: z.string().nullable(), // ISO date
+    deadline_time: z.string().nullable(), // "5pm"
+    channels: z.array(ChannelSchema),
+    requirements: TriSchema,
+    source_url: z.string(),
+    checked_at: z.string(), // ISO date
+    sheng_swaps: ShengSwaps,
+    review: ReviewSchema,
+  })
+  .strict();
+export type Participation = z.infer<typeof ParticipationSchema>;
+
+export const StageNextSchema = z
+  .object({ text: TriSchema, source_url: z.string(), sheng_swaps: ShengSwaps, review: ReviewSchema })
+  .strict();
+export type StageNext = z.infer<typeof StageNextSchema>;
+
+const AvenueSchema = z.object({ name: TriSchema, text: TriSchema, source_url: z.string() }).strict();
+export const ChallengeSchema = z
+  .object({
+    avenues: z.array(AvenueSchema).min(1),
+    checked_at: z.string(),
+    sheng_swaps: ShengSwaps,
+    review: ReviewSchema,
+  })
+  .strict();
+export type Challenge = z.infer<typeof ChallengeSchema>;
+
 export const BillSchema = z
   .object({
     id: z.string(),
@@ -133,10 +168,10 @@ export const BillSchema = z
     summary: SummarySchema.nullable(),
     groups: z.array(GroupEntrySchema),
     clauses: z.array(ClauseSchema),
-    stage_next: z.record(z.string(), z.unknown()).nullable(),
+    stage_next: StageNextSchema.nullable(),
     changes: z.array(z.record(z.string(), z.unknown())),
-    participation: z.record(z.string(), z.unknown()).nullable(),
-    challenge: z.record(z.string(), z.unknown()).nullable(),
+    participation: ParticipationSchema.nullable(),
+    challenge: ChallengeSchema.nullable(),
   })
   .strict();
 export type Bill = z.infer<typeof BillSchema>;

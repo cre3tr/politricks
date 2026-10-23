@@ -8,6 +8,8 @@ import { z } from "zod";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ClauseCard from "../../components/ClauseCard.astro";
 import GroupsPanel from "../../components/GroupsPanel.astro";
+import BillTabs from "../../components/BillTabs.astro";
+import ParticipationPanel from "../../components/ParticipationPanel.astro";
 import SourceFingerprint from "../../components/SourceFingerprint.astro";
 import { BillSchema, type Bill } from "../../lib/schema";
 import { badgeFor } from "../../lib/badge";
@@ -95,6 +97,9 @@ const summaryBadge = bill.summary
       )
     }
 
+    <BillTabs passed={bill.status === "passed"} />
+
+    <section id="what-it-does" class="tab-panel" aria-labelledby="tab-what-it-does">
     <h2 class="section-heading">What it does</h2>
 
     <GroupsPanel bill={bill} />
@@ -124,6 +129,26 @@ const summaryBadge = bill.summary
     <div class="clause-list" data-clause-list data-bill-id={bill.id}>
       {bill.clauses.map((clause) => <ClauseCard clause={clause} billId={bill.id} />)}
     </div>
+    </section>
+
+    {/* Slice 8 fills this from changes[]; until then, the honest empty note. */}
+    <section id="what-changed" class="tab-panel" aria-labelledby="tab-what-changed">
+      <h2 class="section-heading">What changed</h2>
+      {
+        bill.changes.length === 0 && (
+          <>
+            <p data-l="en" lang="en">Only one version so far. We'll show the changes when the next draft is published.</p>
+            <p data-l="sw" lang="sw">Kuna toleo moja tu kwa sasa. Tutaonyesha mabadiliko toleo lijalo likichapishwa.</p>
+            <p data-l="sheng" lang="sw-x-sheng">Kuna version moja tu saa hii. Tuta-show changes next draft ikitoka.</p>
+          </>
+        )
+      }
+    </section>
+
+    <section id="have-your-say" class="tab-panel" aria-labelledby="tab-have-your-say">
+      <h2 class="section-heading">{bill.status === "passed" ? "Where it can still be challenged" : "Have your say"}</h2>
+      <ParticipationPanel bill={bill} />
+    </section>
 
     <SourceFingerprint sources={bill.sources} />
   </main>

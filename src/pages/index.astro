@@ -31,6 +31,15 @@ const CHAMBER: Record<Bill["chamber"], string> = {
   county: "Nairobi County Assembly",
 };
 
+// Countdown only while participation is open (spec > Home Page): days left
+// to the deadline, counted at build; the bill page's tab has the details.
+const today = new Date().toISOString().slice(0, 10);
+const daysLeft = (bill: Bill): number | null => {
+  const p = bill.participation;
+  if (!p?.open || !p.deadline || p.deadline < today) return null;
+  return Math.round((Date.parse(p.deadline) - Date.parse(today)) / 86_400_000);
+};
+
 const checked = (iso: string) =>
   new Date(iso).toLocaleDateString("en-KE", { year: "numeric", month: "long", day: "numeric" });
 ---
@@ -54,6 +63,13 @@ const checked = (iso: string) =>
                 <span class="chamber">{CHAMBER[bill.chamber]}</span>
                 <span class="title">{bill.title}</span>
                 <span class="stage">{bill.stage}</span>
+                {daysLeft(bill) === null ? (
+                  <span class="window">Participation not open</span>
+                ) : (
+                  <span class="window window-open">
+                    {daysLeft(bill)} day(s) left to have your say (by {checked(bill.participation!.deadline!)})
+                  </span>
+                )}
                 <span class="checked">Last checked {checked(bill.stage_checked_at)}</span>
               </a>
             </li>
@@ -98,6 +114,14 @@ const checked = (iso: string) =>
   }
   .empty {
     color: var(--muted);
+  }
+  .window {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .window-open {
+    color: var(--flag-green);
   }
   .lede {
     color: var(--muted);

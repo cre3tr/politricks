@@ -851,3 +851,20 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **Not observed in the browser:** the page's quiet "couldn't personalise" fallback on a failed Match. The handler's 502 is tested offline, and the client path was read, not run.
 - **Copy drafted for the learner's check (Sheng gate):** chip labels, the welcome page text, "Who it affects" and the match notes. The spec's Explain label had an em dash; it is now "AI draft (not yet reviewed)", the card badge's own wording.
 - **Learner check pending** (fast mode, at the integrated checkpoint after slice 6): go through `/welcome` as yourself in a private window and see what floats up.
+
+### Slice 6 built (not ticked), 2026-10-23
+
+- **Civic facts:** the YAML now holds verified facts only (the learner's call). Public Participation cites the Senate's own news item, `parliament.go.ke/node/26432`, for the 28 Sep 2026 5pm deadline. Both live bills link Parliament's "Submit Comments" form for the Bill; both forms and the news item loaded (HTTP 200) on 2026-10-23.
+- **`politricks civic` ran live** for all three bills (merged from the builder at `943ba18`): 3 direct calls, all drafts. A second run wrote nothing, and lint covers the 30 new texts.
+- **Site:**
+  - `BillTabs`: three tabs, a progressive enhancement, with the open tab in the hash.
+  - `ParticipationPanel`: open, not open (stage and what usually happens next, plus when the window closed), and passed (challenge avenues). *Last checked* is always shown, and the 7-day stale note is worked out in the browser.
+  - "What changed" shows the honest one-version note until slice 8.
+  - Home shows "Participation not open", or a day count while a window is open.
+  - The Zod types for `participation`, `stage_next` and `challenge` are tightened.
+- **Verified:**
+  - Build clean; check-build 118 / 49 / 143.
+  - In the browser: Public Participation shows the closed variant with its 3 official links. The Finance Act shows 3 avenues under "Where it can still be challenged", and switches to Sheng.
+  - The stale note appears for a `checked_at` more than 7 days back. That check re-ran the same expression in the console, not the page's own script.
+- **Civic badges** show "AI draft" for drafts. Anything else shows "Changed since review" until a TypeScript twin of `civic_sha256` exists, so the site never claims a review it can't check.
+- **Why not ticked:** the slice's build step "run `review` on the civic translations" can't happen until `politricks review` walks the civic blocks (deferred until after the other slices, 2026-10-23). The learner also still has to check the civic facts.

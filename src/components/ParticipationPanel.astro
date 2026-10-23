@@ -1,0 +1,238 @@
+---
+// The "Have your say" tab (devpost/spec.md > Bill Page, Important Failure
+// Modes; prd.md > Have Your Say). Three variants, every fact linked to the
+// official page it came from:
+//   - open:     the deadline, where to submit, what a submission needs;
+//   - not open: the stage and what usually happens next (and, if there was
+//               a window, when it closed);
+//   - passed:   "Where it can still be challenged", general information only.
+// Every variant shows its "last checked" date. When that date is more than
+// 7 days old the panel says so, worked out in the browser (the page is
+// prebuilt, so a build-time check would go stale with the page).
+//
+// The facts are hand-checked YAML (pipeline/civic/); only the three-language
+// texts are Claude's translations, badged as drafts until reviewed.
+import type { Bill, Review } from "../lib/schema";
+import { badgeFor } from "../lib/badge";
+
+interface Props {
+  bill: Bill;
+}
+
+const { bill } = Astro.props;
+const { participation, stage_next: stageNext, challenge } = bill;
+const today = new Date().toISOString().slice(0, 10);
+const isOpen = Boolean(participation?.open && participation.deadline && participation.deadline >= today);
+const passed = bill.status === "passed";
+const checkedAt = passed ? challenge?.checked_at : participation?.checked_at ?? bill.stage_checked_at;
+
+const longDate = (iso: string) =>
+  new Date(`${iso.slice(0, 10)}T12:00:00Z`).toLocaleDateString("en-KE", { year: "numeric", month: "long", day: "numeric" });
+
+// There is no TypeScript twin of civic.py's fingerprint yet, so a civic block
+// can't be shown as Reviewed honestly: anything but a plain draft is shown as
+// "Changed since review" until that twin exists. Today every block is a draft.
+const civicBadge = (review: Review) => badgeFor(review.status === "draft" ? "draft" : "changed");
+---
+<section class="participation" data-checked={checkedAt ?? ""} aria-label="Have your say">
+  {
+    passed ? (
+      challenge ? (
+        <>
+          <span class={`badge ${civicBadge(challenge.review).className}`}>{civicBadge(challenge.review).label}</span>
+          <p class="lead" data-l="en" lang="en">This is now law. These are the avenues the Constitution sets out. General information, not advice.</p>
+          <p class="lead" data-l="sw" lang="sw">Hii sasa ni sheria. Hizi ndizo njia ambazo Katiba inaweka. Ni taarifa ya jumla, si ushauri.</p>
+          <p class="lead" data-l="sheng" lang="sw-x-sheng">Hii sasa ni law. Hizi ndio njia Katiba ina-set. Ni general information, si advice.</p>
+          {challenge.avenues.map((avenue) => (
+            <article class="avenue">
+              <h3>
+                <span data-l="en" lang="en">{avenue.name.en}</span>
+                <span data-l="sw" lang="sw">{avenue.name.sw}</span>
+                <span data-l="sheng" lang="sw-x-sheng">{avenue.name.sheng}</span>
+              </h3>
+              <p data-l="en" lang="en">{avenue.text.en}</p>
+              <p data-l="sw" lang="sw">{avenue.text.sw}</p>
+              <p data-l="sheng" lang="sw-x-sheng">{avenue.text.sheng}</p>
+              <a class="source" href={avenue.source_url} rel="noopener">Source: the Constitution of Kenya, 2010 (official copy)</a>
+            </article>
+          ))}
+        </>
+      ) : (
+        <p>Where it can still be challenged: not entered yet.</p>
+      )
+    ) : (
+      <>
+        {isOpen && participation ? (
+          <div class="window window-open">
+            <p class="deadline">
+              <span data-l="en" lang="en">Send your views by</span>
+              <span data-l="sw" lang="sw">Tuma maoni yako kabla ya</span>
+              <span data-l="sheng" lang="sw-x-sheng">Tuma views zako by</span>
+              {" "}
+              <strong>{longDate(participation.deadline!)}{participation.deadline_time ? `, ${participation.deadline_time}` : ""}</strong>
+            </p>
+          </div>
+        ) : participation?.deadline ? (
+          <div class="window window-closed">
+            <p class="deadline">
+              <span data-l="en" lang="en">Participation is not open. The window for written views closed on</span>
+              <span data-l="sw" lang="sw">Ushiriki haujafunguliwa. Muda wa kutuma maoni ya maandishi ulifungwa tarehe</span>
+              <span data-l="sheng" lang="sw-x-sheng">Participation haiko open. Window ya ku-send views ili-close</span>
+              {" "}
+              <strong>{longDate(participation.deadline)}{participation.deadline_time ? `, ${participation.deadline_time}` : ""}</strong>.
+            </p>
+          </div>
+        ) : (
+          <p class="deadline">
+            <span data-l="en" lang="en">Participation is not open.</span>
+            <span data-l="sw" lang="sw">Ushiriki haujafunguliwa.</span>
+            <span data-l="sheng" lang="sw-x-sheng">Participation haiko open.</span>
+          </p>
+        )}
+
+        {participation && (
+          <div class="facts">
+            <span class={`badge ${civicBadge(participation.review).className}`}>{civicBadge(participation.review).label}</span>
+            <h3>
+              <span data-l="en" lang="en">What a submission needs</span>
+              <span data-l="sw" lang="sw">Maoni yanahitaji nini</span>
+              <span data-l="sheng" lang="sw-x-sheng">Submission inahitaji nini</span>
+            </h3>
+            <p data-l="en" lang="en">{participation.requirements.en}</p>
+            <p data-l="sw" lang="sw">{participation.requirements.sw}</p>
+            <p data-l="sheng" lang="sw-x-sheng">{participation.requirements.sheng}</p>
+            {participation.channels.length > 0 && (
+              <>
+                <h3>
+                  <span data-l="en" lang="en">Where</span>
+                  <span data-l="sw" lang="sw">Wapi</span>
+                  <span data-l="sheng" lang="sw-x-sheng">Wapi</span>
+                </h3>
+                <ul class="channels">
+                  {participation.channels.map((channel) => (
+                    <li>
+                      {channel.type === "portal" ? (
+                        <a href={channel.value} rel="noopener">Parliament's comment form for this Bill</a>
+                      ) : channel.type === "email" ? (
+                        <span>Email: {channel.value}</span>
+                      ) : (
+                        <span>In person: {channel.value}</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            <a class="source" href={participation.source_url} rel="noopener">Source: the official notice</a>
+          </div>
+        )}
+
+        {stageNext && (
+          <div class="stage-next">
+            <span class={`badge ${civicBadge(stageNext.review).className}`}>{civicBadge(stageNext.review).label}</span>
+            <h3>
+              <span data-l="en" lang="en">Where it is now, and what usually happens next</span>
+              <span data-l="sw" lang="sw">Uko wapi sasa, na kinachofuata kwa kawaida</span>
+              <span data-l="sheng" lang="sw-x-sheng">Iko wapi saa hii, na nini huwa ina-follow</span>
+            </h3>
+            <p data-l="en" lang="en">{stageNext.text.en}</p>
+            <p data-l="sw" lang="sw">{stageNext.text.sw}</p>
+            <p data-l="sheng" lang="sw-x-sheng">{stageNext.text.sheng}</p>
+            <a class="source" href={stageNext.source_url} rel="noopener">Source: Parliament</a>
+          </div>
+        )}
+      </>
+    )
+  }
+
+  {
+    checkedAt && (
+      <p class="checked">
+        Last checked {longDate(checkedAt)}.{" "}
+        <span class="stale" hidden>
+          This may be out of date: check the official notice.
+        </span>
+      </p>
+    )
+  }
+</section>
+
+<script>
+  // "Last checked" more than 7 days ago, counted in the reader's browser.
+  document.querySelectorAll<HTMLElement>(".participation[data-checked]").forEach((panel) => {
+    const checked = panel.dataset.checked;
+    if (!checked) return;
+    const days = (Date.now() - Date.parse(`${checked.slice(0, 10)}T00:00:00Z`)) / 86_400_000;
+    if (days > 7) panel.querySelector<HTMLElement>(".stale")?.removeAttribute("hidden");
+  });
+</script>
+
+<style>
+  .participation {
+    margin-top: 1rem;
+  }
+  .deadline {
+    font-size: 1.05rem;
+  }
+  .deadline :global([data-l]),
+  h3 :global([data-l]) {
+    display: none;
+  }
+  :global(html:not([data-lang])) :is(.deadline, h3) :global([data-l="en"]),
+  :global(html[data-lang="en"]) :is(.deadline, h3) :global([data-l="en"]),
+  :global(html[data-lang="sw"]) :is(.deadline, h3) :global([data-l="sw"]),
+  :global(html[data-lang="sheng"]) :is(.deadline, h3) :global([data-l="sheng"]) {
+    display: inline;
+  }
+  .window {
+    border-left: 4px solid var(--flag-black);
+    padding: 0.4rem 0.8rem;
+    margin-bottom: 1rem;
+  }
+  .window-open {
+    border-color: var(--flag-green);
+  }
+  .window-closed {
+    border-color: var(--muted);
+  }
+  .facts,
+  .stage-next,
+  .avenue {
+    border: 1px solid var(--muted);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+  }
+  h3 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 1rem;
+    margin: 0.5rem 0 0.25rem;
+  }
+  .channels {
+    margin: 0 0 0.5rem;
+    padding-left: 1.2rem;
+  }
+  .source {
+    display: inline-block;
+    font-size: 0.85rem;
+    color: var(--flag-red);
+  }
+  .checked {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .stale {
+    color: var(--flag-red);
+    font-weight: 700;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 3px;
+    border: 1px solid var(--matatu-brown);
+    color: var(--matatu-brown);
+  }
+</style>
