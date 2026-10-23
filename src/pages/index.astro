@@ -52,6 +52,39 @@ const checked = (iso: string) =>
       Kenyan law, explained beside the official text, in English, Kiswahili and Sheng.
     </p>
 
+    {/* Una'tafuta? (slice 9): filters /search-index.json in the browser. The
+        index is fetched on first use, so a visit that never searches never
+        downloads it. Every query term must appear (AND), accents ignored. */}
+    <section class="search" aria-labelledby="search-heading">
+      <h2 id="search-heading">Una'tafuta?</h2>
+      <input
+        id="search"
+        type="search"
+        autocomplete="off"
+        placeholder="e.g. HELB, tax, ushuru, finance"
+        aria-describedby="search-help"
+      />
+      <p id="search-help" class="search-help">Search every bill by name or topic, in English, Kiswahili or Sheng.</p>
+      <ul class="bill-list" id="search-results" aria-live="polite"></ul>
+      {/* Cloned for each result, so results get the same scoped card styles
+          as the server-rendered lists below. */}
+      <template id="result-card">
+        <li>
+          <a class="bill-card" href="">
+            <span class="chamber"><span class="passed-label" hidden>Passed</span> <span class="chamber-name"></span></span>
+            <span class="title"></span>
+            <span class="stage"></span>
+          </a>
+        </li>
+      </template>
+      <div class="no-results" id="no-results" hidden>
+        <p data-l="en" lang="en">Hatujapata kitu: nothing found.</p>
+        <p data-l="sw" lang="sw">Hatujapata kitu.</p>
+        <p data-l="sheng" lang="sw-x-sheng">Hatujapata kitu.</p>
+        <button type="button" id="clear-search">Clear search</button>
+      </div>
+    </section>
+
     <section aria-labelledby="active-heading">
       <h2 id="active-heading">Active Bills</h2>
       {active.length === 0 && <p class="empty">No bills are open before Parliament right now.</p>}
@@ -99,7 +132,86 @@ const checked = (iso: string) =>
   </main>
 </BaseLayout>
 
+<script>
+  type Entry = { id: string; title: string; chamber: string; status: "active" | "passed"; stage: string; text: string };
+
+  // Must fold exactly like src/pages/search-index.json.ts does.
+  const fold = (text: string) =>
+    text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/\s+/g, " ").trim();
+  const CHAMBER: Record<string, string> = { national: "National Assembly", senate: "Senate", county: "Nairobi County Assembly" };
+
+  const input = document.getElementById("search") as HTMLInputElement;
+  const results = document.getElementById("search-results") as HTMLUListElement;
+  const none = document.getElementById("no-results") as HTMLElement;
+  let index: Entry[] | null = null;
+
+  async function load(): Promise<Entry[]> {
+    if (!index) {
+      try {
+        index = (await (await fetch("/search-index.json")).json()) as Entry[];
+      } catch {
+        index = [];
+      }
+    }
+    return index;
+  }
+
+  const template = document.getElementById("result-card") as HTMLTemplateElement;
+
+  function card(entry: Entry): HTMLLIElement {
+    const li = template.content.firstElementChild!.cloneNode(true) as HTMLLIElement;
+    li.querySelector<HTMLAnchorElement>(".bill-card")!.href = `/bills/${entry.id}`;
+    li.querySelector<HTMLElement>(".passed-label")!.hidden = entry.status !== "passed";
+    li.querySelector<HTMLElement>(".chamber-name")!.textContent = CHAMBER[entry.chamber] ?? entry.chamber;
+    li.querySelector<HTMLElement>(".title")!.textContent = entry.title;
+    li.querySelector<HTMLElement>(".stage")!.textContent = entry.stage;
+    return li;
+  }
+
+  async function search() {
+    const terms = fold(input.value).split(" ").filter(Boolean);
+    if (terms.length === 0) {
+      results.replaceChildren();
+      none.hidden = true;
+      return;
+    }
+    const hits = (await load()).filter((entry) => terms.every((term) => entry.text.includes(term)));
+    results.replaceChildren(...hits.map(card));
+    none.hidden = hits.length > 0;
+  }
+
+  input.addEventListener("input", search);
+  document.getElementById("clear-search")!.addEventListener("click", () => {
+    input.value = "";
+    search();
+    input.focus();
+  });
+</script>
+
 <style>
+  .search {
+    margin-bottom: 2rem;
+  }
+  .search input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.7rem;
+    font-size: 1rem;
+    border: 2px solid var(--flag-black);
+    border-radius: 6px;
+  }
+  .search-help {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0.4rem 0 0.75rem;
+  }
+  .no-results button {
+    border: 1px solid var(--flag-black);
+    background: var(--paper);
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
   .home {
     max-width: 720px;
     margin: 0 auto;

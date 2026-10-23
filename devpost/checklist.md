@@ -99,7 +99,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   Learner check: Open the Finance Bill's *What changed* tab and pick one change you remember from the 2026 debate. Does the before/after and its note match what actually happened?
   Commit: `Add What changed: drafts and current law`
 
-- [ ] **9. Una'tafuta? and passed-bill pages**
+- [x] **9. Una'tafuta? and passed-bill pages**
   Becomes usable: Search on home finds bills by name or keyword in any language. Passed bills show the **Passed** label, and their *Have your say* tab becomes *Where it can still be challenged* (from civic YAML). `intake --check` proposes new items as a `sources.yaml` diff.
   Why now: This is PRD build step 4. It needs several bills in the system, which slices 5–8 provided.
   PRD ref: `prd.md > Home: Active Bills and Una'tafuta?`, `prd.md > Have Your Say` (passed), `prd.md > Automatic Bill Intake`
@@ -876,3 +876,15 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **Left for the learner:**
   - Add `ANTHROPIC_API_KEY` in Vercel → Project → Settings → Environment Variables. A separate key with a low spend limit is suggested, because Match and Explain are public endpoints. Until it is set, both answer 502 and the page falls back quietly.
   - Merging `build/poc` into `main` makes the production deployment.
+
+### Slice 9 ticked: Una'tafuta?, passed bills, intake --check, 2026-10-23
+
+- **Search:** `src/pages/search-index.json.ts` builds `/search-index.json` with the site (26,916 bytes for 3 bills). Per bill it holds the title, stage, the summary and group notes in all three languages, every clause heading, and the multi-word proper names in the legal text with their initials. The initials are why "HELB" finds the Tertiary bill: the explanations never use the acronym, only the legal text's "Higher Education Loans Board".
+  - The home page box fetches the index on first use, requires every term (AND), and ignores case and accents (`\p{M}`).
+  - Results clone a server-rendered `<template>`, because Astro's scoped CSS doesn't reach elements created in the browser. *Hatujapata kitu* appears for no results, with "Clear search".
+- **Verify:**
+  - Against the built index: `fedha` finds the Finance Act and Tertiary, `finance` the Finance Act, `HELB` and `KUCCPS` Tertiary, `KRA` and `ushuru` the Finance Act, `zxqv` nothing.
+  - In the browser: the same results, *Hatujapata kitu* on nonsense, Clear empties the list, and the result cards are styled with *Passed* on the Finance Act only.
+  - The Finance Act page shows *Passed* and "Where it can still be challenged" with its sources (slice 6).
+  - A live `intake --check` exited 0: 3 listings read, the Gazette UNREACHABLE (403), 147 proposals, `sources.yaml` unchanged.
+- **Found on the way:** the Write tool, like a Bash heredoc, turns `\uXXXX` escapes into literal characters. Two accent regexes and the guard's zero-width and bidi range landed as invisible characters. They still worked, but every one is now written as a Unicode property class (`\p{M}`, `[\p{Cc}\p{Cf}]`), so the source has no invisible characters. `banned.ts` still holds a literal soft hyphen, exactly like its Python twin `hashing.py`.

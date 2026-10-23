@@ -17,9 +17,11 @@ export function cleanWords(input: unknown): string {
       .normalize("NFC")
       // Markup first, so "<b>trader</b>" keeps its word and loses the tags.
       .replace(/<[^>]*>/g, " ")
-      // Control characters (C0, DEL, C1) and the invisible bidi/zero-width
-      // characters that can hide text from a human reader.
-      .replace(/[\u0000-\u001F\u007F-\u009F​-‏‪-‮⁦-⁩﻿]/g, " ")
+      // Control characters (Unicode Cc: C0, DEL, C1) and format characters
+      // (Cf: zero-width, bidi overrides, BOM, soft hyphen) that can hide text
+      // from a human reader. Written as property classes, not code-point
+      // ranges, so no invisible character ever sits in this source file.
+      .replace(/[\p{Cc}\p{Cf}]/gu, " ")
       .replace(/\s+/g, " ")
       .trim()
       .slice(0, MAX_WORDS)
