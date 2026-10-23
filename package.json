@@ -10,10 +10,11 @@
     "check:build": "node scripts/check-build.mjs"
   },
   "dependencies": {
-    "astro": "^7",
+    "@anthropic-ai/sdk": "^1.1.0",
     "@astrojs/vercel": "^11",
-    "tailwindcss": "^4",
     "@tailwindcss/vite": "^4",
+    "astro": "^7",
+    "tailwindcss": "^4",
     "zod": "^4"
   },
   "devDependencies": {

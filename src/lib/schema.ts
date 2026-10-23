@@ -140,3 +140,18 @@ export const BillSchema = z
   })
   .strict();
 export type Bill = z.infer<typeof BillSchema>;
+
+// The reader's profile, kept in this browser only (localStorage `pt.profile`,
+// devpost/spec.md > Data Model). It has no Python twin: the pipeline never
+// sees it. An unparseable profile, or one with another `v`, counts as absent,
+// which sends the reader back to /welcome.
+export const ProfileSchema = z
+  .object({
+    v: z.literal(1),
+    groups: z.array(GroupIdSchema),
+    words: z.string().max(80), // already cleaned by src/lib/guard.ts; "" = none
+    skipped: z.boolean(),
+    saved_at: z.string(),
+  })
+  .strict();
+export type Profile = z.infer<typeof ProfileSchema>;
