@@ -28,7 +28,10 @@ from .reviewlock import bill_lock
 # Official domains. A host is allowed if it IS one of these or is a subdomain
 # of one (e.g. new.kenyalaw.org). The match is on a dot boundary, so
 # "kenyalaw.org.evil.com" and "notparliament.go.ke" are both refused.
-ALLOWED_DOMAINS = ("parliament.go.ke", "kenyalaw.org")
+# nairobiassembly.go.ke is the Nairobi City County Assembly's own site (its
+# bills page links PDFs under /ncca/wp-content/uploads/bill/); pinned for
+# `intake --check` and, later, the county bills of build step 6.
+ALLOWED_DOMAINS = ("parliament.go.ke", "kenyalaw.org", "nairobiassembly.go.ke")
 
 USER_AGENT = "PoliTricks/0.1 (civic research; https://github.com/cre3tr)"
 MAX_REDIRECTS = 5
@@ -76,6 +79,28 @@ def download_pdf(url: str) -> tuple[bytes, str]:
                 kind = response.headers.get("content-type", "unknown")
                 raise ValueError(f"not a PDF (content-type {kind}): {current}")
             return body, current
+    raise ValueError(f"too many redirects starting from {url}")
+
+
+def fetch_page(url: str) -> tuple[int, str, str]:
+    """Read one listing page (HTML). Returns (status_code, text, final_url).
+
+    Same promises as `download_pdf`: only allowlisted https hosts, re-checked
+    on every redirect (a hop off the allowlist raises ValueError). Unlike
+    `download_pdf` it does NOT raise on a 403 or 404: `intake --check` has to
+    be able to say "this listing answered 403" instead of crashing. A network
+    failure (timeout, DNS, TLS) still raises httpx.HTTPError.
+    """
+    current = url
+    with _client() as client:
+        for _ in range(MAX_REDIRECTS + 1):
+            if not is_allowed(current):
+                raise ValueError(f"refused: {current} is not on the official allowlist")
+            response = client.get(current)
+            if response.is_redirect:
+                current = urljoin(current, response.headers["location"])
+                continue
+            return response.status_code, response.text, current
     raise ValueError(f"too many redirects starting from {url}")
 
 
