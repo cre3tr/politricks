@@ -1248,7 +1248,14 @@ def _log_usage(log: Path | None, custom_id: str, message) -> None:
         print(f"  (usage for {custom_id} not logged: {error})")
 
 
-def _call_direct(client, custom_id: str, params: dict, tags_only: bool = False, usage_log: Path | None = None) -> Outcome:
+def _call_direct(
+    client,
+    custom_id: str,
+    params: dict,
+    tags_only: bool = False,
+    usage_log: Path | None = None,
+    model_cls: type[BaseModel] | None = None,
+) -> Outcome:
     """One direct (non-batch) request, with the server-side fallback on.
 
     Used for refused clauses and for the summary, which needs the clause tags
@@ -1257,7 +1264,9 @@ def _call_direct(client, custom_id: str, params: dict, tags_only: bool = False, 
     result the batch already paid for. Every answer that came back, used or
     not, is logged to `usage_log`, because it was paid for either way.
     """
-    model_cls = _out_model(custom_id, tags_only)
+    # `model_cls` lets another command (civic) reuse this call, its refusal
+    # fallback and its usage log, with its own answer schema.
+    model_cls = model_cls or _out_model(custom_id, tags_only)
     try:
         message = client.beta.messages.parse(output_format=model_cls, **retry_params(params))
     except Exception as error:  # a refusal, truncated JSON, a network drop...

@@ -11,6 +11,7 @@ Run from anywhere; paths are resolved from the repo root, not your current folde
     uv run --project pipeline politricks verify [--self-test]
     uv run --project pipeline politricks samples finance-act-2026
     uv run --project pipeline politricks generate finance-act-2026 [--self-test]
+    uv run --project pipeline politricks civic public-participation-bill-2025 [--dry-run] [--force] [--self-test]
     uv run --project pipeline politricks lint [finance-act-2026] [--self-test]
     uv run --project pipeline politricks review finance-act-2026 [--self-test]
     uv run --project pipeline politricks review finance-act-2026 --flagged      (or --only c2 summary)
@@ -95,6 +96,14 @@ def _dispatch() -> None:
         "--tags-only", action="store_true",
         help="re-decide only each clause's groups (explanations untouched), then redo the summary",
     )
+
+    p_civic = sub.add_parser(
+        "civic", help="validate pipeline/civic/<bill-id>.yaml and have Claude translate it into the bill (participation, stage_next, challenge)"
+    )
+    p_civic.add_argument("bill_id", nargs="?")
+    p_civic.add_argument("--self-test", action="store_true", help="offline check with a fake client in a temp folder (writes nothing real)")
+    p_civic.add_argument("--dry-run", action="store_true", help="validate and print what would be translated: no API call, no write")
+    p_civic.add_argument("--force", action="store_true", help="translate again even where the English is unchanged (never a reviewed or hand-edited block)")
 
     p_lint = sub.add_parser("lint", help="fail on banned phrases and neutrality flags in every generated text")
     p_lint.add_argument("bill_id", nargs="?", help="one bill (default: every bill in src/data/bills)")
@@ -202,6 +211,15 @@ def _dispatch() -> None:
                 summary_only=args.summary_only, tags_only=args.tags_only,
             )
         )
+
+    elif args.command == "civic":
+        from . import civic
+
+        if args.self_test:
+            sys.exit(0 if civic.self_test(REPO_ROOT) else 1)
+        if not args.bill_id:
+            parser.error("civic needs a bill id (or --self-test)")
+        sys.exit(civic.run(REPO_ROOT, args.bill_id, dry_run=args.dry_run, force=args.force))
 
     elif args.command == "lint":
         from . import lint
