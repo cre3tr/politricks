@@ -16,6 +16,7 @@ uv run --project pipeline politricks intake --self-test
 uv run --project pipeline politricks verify --self-test
 uv run --project pipeline politricks export --self-test
 uv run --project pipeline politricks review --sheet-self-test
+uv run --project pipeline politricks restamp --self-test
 uv run --project pipeline politricks lint
 npm run build
 node scripts/check-build.mjs <bill-id>        # once per bill in src/data/bills/
@@ -62,6 +63,13 @@ Check counts: see the newest entry under Changes. Verify prints `unchanged` /
 | (none) | Every catalog kind was earned in this repo. |
 
 ## Changes
+
+- 2026-10-23: slice 10, pipeline half: clause fingerprint v2 (covers `suggested_articles`), `restamp`, `generate --articles-only`.
+  - **New checks:** `restamp --self-test` (18), and generate "articles" checks (32, from 77 to 109). Review stays 54. The vectors file has a fifth vector (c9, unsorted articles `[43, 10, 9, 201]`, so a plain string sort fails it).
+  - **K2 controls, each mutation alone, all caught:** articles not validated against constitution.json → 2 FAILs (generate); the articles pass re-stamps a hand-edited draft → 2; the migration keeps a reviewed clause reviewed → 1; the migration re-stamps hand-edited and forged stamps too → 5; the TS twin sorts articles as strings → `check-build` FAIL on vector c9.
+  - **Positive control inside `restamp`:** before it runs, an untouched v1 AI draft already reads as hand-edited (the hazard is real, not assumed).
+  - **Real data, read-only:** `restamp` run on a scratch copy of the three real bills re-stamped 3 + 21 + 68 drafts and left 51 hand-edited and 1 reviewed (c2) alone; a second run wrote nothing; the real files' SHA-256 was unchanged.
+  - **Failing before this change, on the base commit `c315edb`, not fixed here:** `lint --self-test` check "1. control: scan covers all 15 texts (33)" (civic text is now counted) and `civic --self-test` (`self-test setup: 'source_url: "https://eastleighvoice' not in public-participation-bill-2025.yaml`, 4 FAILs).
 
 - 2026-10-22: `politricks review --flagged` / `--only`, closing the walk trap that accepted 59 items.
   - **New checks:** review scenario K, 11 checks. Counts are now lint 36, review 54, sheet 37, generate 77, intake 22, export 11.

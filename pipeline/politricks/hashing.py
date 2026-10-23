@@ -61,9 +61,16 @@ def sha256_text(text: str) -> str:
     return hashlib.sha256(normalise(text).encode("utf-8")).hexdigest()
 
 
-# The first part of every review fingerprint. Change it (to "-v2") only if the
-# parts below change, and change src/lib/reviewHash.ts with it.
-REVIEW_HASH_VERSION = "politricks-review-v1"
+# The first part of every review fingerprint. Change a kind's version only if
+# that kind's parts change, and change src/lib/reviewHash.ts with it.
+#
+# The version is per kind, not global, on purpose (slice 10, 2026-10-23).
+# Adding `suggested_articles` changed only a CLAUSE's parts, so only clauses
+# move to v2. Summary and group fingerprints (and civic.py's, which shares
+# REVIEW_HASH_VERSION) are byte-for-byte what they were, so their reviews and
+# AI-draft stamps stay valid and need no migration.
+REVIEW_HASH_VERSION = "politricks-review-v1"  # summary, group, civic
+CLAUSE_HASH_VERSION = "politricks-review-v2"  # clause: v1 plus sorted suggested_articles
 
 
 def review_sha256(parts: list[str]) -> str:

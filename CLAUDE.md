@@ -36,8 +36,8 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 ```
 
 **Pipeline commands:**
-- `intake [--check]`, `fetch`, `probe`, `extract [--check-json]`, `samples`, `generate [--batch-id X] [--summary-only] [--tags-only]`, `lint [id]`, `review <id> [--flagged | --only ID ...] [--from-sheet X]`, `verify`, `export <id> [--out X]`, `civic <id> [--dry-run] [--force]`, `constitution`.
-- Self-tests: `lint`, `review`, `intake`, `generate`, `verify`, `export`, `civic` and `constitution` each take `--self-test`; `review --sheet-self-test` covers `--from-sheet`. All are offline, write nothing, and assert the real bill files' SHA-256 is unchanged.
+- `intake [--check]`, `fetch`, `probe`, `extract [--check-json]`, `samples`, `generate [--batch-id X] [--summary-only | --tags-only | --articles-only [--dry-run]]`, `restamp <id> [--dry-run]`, `lint [id]`, `review <id> [--flagged | --only ID ...] [--from-sheet X]`, `verify`, `export <id> [--out X]`, `civic <id> [--dry-run] [--force]`, `constitution`.
+- Self-tests: `lint`, `review`, `intake`, `generate`, `verify`, `export`, `civic`, `constitution` and `restamp` each take `--self-test`; `review --sheet-self-test` covers `--from-sheet`. All are offline, write nothing, and assert the real bill files' SHA-256 is unchanged.
 - **Before committing:** every self-test, `node scripts/check-api.mjs`, then `lint`, then `npm run build`, then `check-build` for each bill.
 - **CI** (`.github/workflows/ci.yml`, 2026-10-22) runs that same suite on every PR and on pushes to `main` and `build/poc`, offline with no secrets. Job `test` covers the self-tests, the build and check-build. Job `content` is `lint` on the real bills, and it stays red while any reviewed text has changed since review, until Ian accepts it again. A red `content` with a green `test` means the code is fine and the review is pending. Ubuntu runs the bill lock's POSIX `flock` branch, which Windows never exercises.
 - Test kinds and their controls: `TESTING.md` (test-kinds skill).
@@ -73,9 +73,11 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - **Never edit a bill JSON while `politricks review` is running.** The walk holds the bill in memory and saves the whole file on every accept, so a hand or script edit made meanwhile is silently overwritten. Ask Ian to quit (`q`; his edits are kept as drafts), edit, then restart the walk. A tab he has typed in can't be stopped from here.
   - **The bill lock** (`reviewlock.py`, 2026-10-19): every command that saves a bill (the walk, `--from-sheet`, `generate`, `fetch`, `extract`, `samples`, `verify`) holds an OS lock on `<bill>.json.lock` from load to save, and refuses at once (exit 1, "is open in another politricks command") if another holds it. The OS frees it when the process ends however it ends, so it can't go stale. The `.lock` files are gitignored.
   - **What it doesn't cover:** a hand edit, a script that calls `save_bill` directly, and a walk started before 2026-10-19's code. A script editing a bill should take `bill_lock(path)` itself (as the stage update of 2026-10-19 did).
-- **"Reviewed" is tied to a fingerprint** (`review.sha256`, from `models.current_sha256`). It covers the three texts, plus a clause's legal text and sorted tags, or a group's section list. The site recomputes it at build time (`src/lib/reviewHash.ts`) and shows *Reviewed* only on a match, otherwise *Changed since review*. Lint flags those until Ian accepts again.
+- **"Reviewed" is tied to a fingerprint** (`review.sha256`, from `models.current_sha256`). It covers the three texts, plus a clause's legal text, sorted tags and sorted `suggested_articles`, or a group's section list. The site recomputes it at build time (`src/lib/reviewHash.ts`) and shows *Reviewed* only on a match, otherwise *Changed since review*. Lint flags those until Ian accepts again.
   - **Python and TS must agree.** Change both twins together, then regenerate the shared vectors with `uv run --project pipeline python -m politricks.hashvectors` and commit them. `check-build` checks the TS side against them and `review --self-test` the Python side, so neither can drift alone.
-  - **Covered or not:** a new field shown to readers belongs in the fingerprint; bump `REVIEW_HASH_VERSION` (`hashing.py`) when you add it. Slice 10 must do this for `suggested_articles`.
+  - **Covered or not:** a new field shown to readers belongs in the fingerprint, and the kind it belongs to moves to a new version. Slice 10 (2026-10-23) did this for `suggested_articles`: **clauses are on `CLAUSE_HASH_VERSION` v2; summaries, groups and civic blocks stay on `REVIEW_HASH_VERSION` v1**, because their parts did not change, so their reviews and stamps stay valid. `models.legacy_clause_sha256_v1` keeps the retired clause rules for the migration only.
+  - **After any fingerprint change, run the migration before anything else:** every untouched AI draft carries the old stamp and `is_hand_edited` reads that as a human's edit, so it would be protected from `generate` for good. `politricks restamp <id>` (`restamp.py`, under the bill lock) re-stamps exactly the drafts whose stamp equals their OLD fingerprint; it leaves `"hand-edited"` and mismatched stamps alone, and never touches a reviewed clause (that one reads *Changed since review* and comes back through `review --flagged`). A second run writes nothing. `generate --articles-only` refuses to run while any draft still carries a v1 stamp.
+  - **Articles pass:** `generate <id> --articles-only` writes `suggested_articles` for EVERY clause with an explanation, protected ones included (learner decision, 2026-10-23). Every number is checked against `src/data/constitution.json` (unknown ones are dropped and printed; at most 4 kept). An untouched AI draft is re-stamped; a hand-edited one keeps its stamp; a reviewed one is not re-stamped, so it reads *Changed since review*. Batch id: `<bill>.articles.batch-id`; `--dry-run` prints the request count and an estimated size and needs no key. The rules for suggesting live in the request, not in `explainer.md`, because the live Explain API loads that file and has no article list.
   - **What `generate` won't touch:** a hand-edited draft (`sha256` is `"hand-edited"`, or doesn't match). To hand one back to `generate`, set its `review.sha256` to null. **This includes an AI draft whose legal text changed** (a re-extract): the fingerprint covers the text, so the draft reads as hand-edited and `generate` leaves it out (it prints "left out N clause(s)"). Null those drafts' `sha256` to redraft them.
 - **Bill JSON is written deterministically** (`models.save_bill`). Re-running a stage must give byte-identical output, and a diff means something changed.
 
@@ -103,29 +105,32 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `run` 410 (load to save under the bill lock)
 - `check_json` 436
 
-**`pipeline/politricks/generate.py` (1436):**
-- `MODEL` / `EFFORT` 69–70 (`claude-sonnet-5-5`; effort set explicitly so a model swap can't change it)
-- output models 95–147 (`SwapOut` = a Sheng word kept in Kiswahili; `GroupOut` has no `clause_ids`: group membership comes only from clause tags; `TagsOut` = groups only)
-- `_out_model` 149 (which schema an answer must match), `_swaps` 156
-- `build_params` 184
-- `tagged_sections` 214 (each group's clause ids, from the per-clause tags)
-- `build_summary_params` 219 (full section text in `<section id>` blocks, plus the tag list)
-- `build_tag_params` 262, `build_tag_batch` 285 (tags-only pass; same system prompt, so the cache is reused)
-- `build_batch` 294 (clauses only; no summary). Both batch builders leave out protected clauses (reviewed or hand-edited), so they're never paid for again
-- `direct_params` 308
-- `retry_params` 320 (drops only `output_config.format`, keeps effort)
-- outcomes 344–376
-- `parse_batch_line` 378
-- `apply` 435 (applies the summary last; never overwrites a protected item; stamps every draft it writes with its fingerprint, AFTER setting its fields; a group's `clause_ids` come from the tags; drops repeated or untagged groups, with a note; copies `sheng_swaps`)
-- `refresh_group_sections` 520 (every group's `clause_ids` follow the tags; decides human-or-AI BEFORE changing; an AI draft is re-stamped or dropped, a reviewed group goes "changed since review")
-- `apply_tags` 552 (only `groups` changes, plus the draft's re-stamp; protected clauses keep theirs; prints each change)
-- self-test fakes: `_FakeClient` 587, `_run_offline` 621 (cuts the temp bill to the fixture's clauses; `prepare=` edits it first; `hold_lock=` holds the bill lock around the run), `mark_reviewed_with_text` 686
-- `self_test` 693
-- `BATCH_RECORDS` 1218
-- `_usage_log` 1221, `_log_usage` 1230 (direct calls' token usage, appended to `<bill>.direct.jsonl`)
-- `_call_direct` 1251 (refusal retries and the summary; never raises; logs usage for every answer that came back)
-- `_summarise` 1276 (skips a protected summary), `_report` 1287
-- `run` 1302 takes the bill lock (refuses before anything is sent), then `_run` 1337 does the work: phase 1 is the clause batch (saves the batch id and raw results under `pipeline/.cache/batches/`; `--batch-id` resumes; a missing result or one for a request this bill didn't make fails the run, except a clause reviewed or edited while the batch ran, which is left alone; no batch at all if every clause is protected). Phase 2 is the summary as a direct call from the clause tags, **skipped if any clause failed** (`--summary-only` redoes just that). `--tags-only` makes phase 1 a groups-only batch (id saved as `<bill>.tags.batch-id`). Exits 1 listing anything not applied.
+**`pipeline/politricks/generate.py` (1850):**
+- `MODEL` / `EFFORT` 71–72 (`claude-sonnet-5-5`; effort set explicitly so a model swap can't change it)
+- output models 97–157 (`SwapOut` = a Sheng word kept in Kiswahili; `GroupOut` has no `clause_ids`: group membership comes only from clause tags; `TagsOut` = groups only; `ArticlesOut` 151 = `suggested_articles` only)
+- `_out_model` 159 (which schema an answer must match), `_swaps` 168
+- `build_params` 196
+- `tagged_sections` 226 (each group's clause ids, from the per-clause tags)
+- `build_summary_params` 231 (full section text in `<section id>` blocks, plus the tag list)
+- `build_tag_params` 274, `build_tag_batch` 297 (tags-only pass; same system prompt, so the cache is reused)
+- articles pass 309–385: `MAX_ARTICLES` 309, `load_article_titles` 316 (number to title from constitution.json), `articles_system_block` 329 (the 264 "number. title" lines as a second, cached system block), `build_article_params` 342, `build_article_batch` 375 (every clause with an explanation, protected ones too)
+- `build_batch` 387 (clauses only; no summary). Both batch builders leave out protected clauses (reviewed or hand-edited), so they're never paid for again
+- `direct_params` 401
+- `retry_params` 413 (drops only `output_config.format`, keeps effort)
+- outcomes 438–468
+- `parse_batch_line` 471
+- `apply` 529 (applies the summary last; never overwrites a protected item; stamps every draft it writes with its fingerprint, AFTER setting its fields; a group's `clause_ids` come from the tags; drops repeated or untagged groups, with a note; copies `sheng_swaps`)
+- `refresh_group_sections` 615 (every group's `clause_ids` follow the tags; decides human-or-AI BEFORE changing; an AI draft is re-stamped or dropped, a reviewed group goes "changed since review")
+- `apply_tags` 647 (only `groups` changes, plus the draft's re-stamp; protected clauses keep theirs; prints each change)
+- `apply_articles` 673 (only `suggested_articles` changes; validates against constitution.json; decides AI-draft / hand-edited / reviewed / sample BEFORE writing; re-stamps only an untouched AI draft; prints each change)
+- self-test fakes: `_FakeClient` 731, `_run_offline` 765 (cuts the temp bill to the fixture's clauses; `prepare=` edits it first; `hold_lock=` holds the bill lock around the run; `articles_only=`, `dry_run=`, `with_constitution=`), `mark_reviewed_with_text` 841
+- `_articles_self_test` 848 (called from `self_test` 1032)
+- `BATCH_RECORDS` 1559
+- `_usage_log` 1562, `_log_usage` 1571 (direct calls' token usage, appended to `<bill>.direct.jsonl`)
+- `_call_direct` 1592 (refusal retries and the summary; never raises; logs usage for every answer that came back)
+- `_summarise` 1626 (skips a protected summary), `_report` 1637
+- `_stale_stamps` 1695 (drafts still on a v1 stamp), `_dry_run_articles` 1707 (size estimate from character counts: no key, no lock, no write)
+- `run` 1652 takes the bill lock (refuses before anything is sent), then `_run` 1727 does the work: phase 1 is the clause batch (saves the batch id and raw results under `pipeline/.cache/batches/`; `--batch-id` resumes; a missing result or one for a request this bill didn't make fails the run, except a clause reviewed or edited while the batch ran, which is left alone; no batch at all if every clause is protected). Phase 2 is the summary as a direct call from the clause tags, **skipped if any clause failed** (`--summary-only` redoes just that). `--tags-only` makes phase 1 a groups-only batch (id saved as `<bill>.tags.batch-id`). `--articles-only` makes it an articles batch over every clause with an explanation (nothing is "left out"; id saved as `<bill>.articles.batch-id`; refuses first if constitution.json is missing or a draft has a v1 stamp) and skips the summary. Exits 1 listing anything not applied.
 
 **`pipeline/politricks/intake.py` (454):**
 - `_clause_count` 51
@@ -176,6 +181,8 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 
 **`pipeline/civic/*.yaml`:** civic facts for slice 6, DRAFTED by Claude on 2026-10-19 and not yet checked by Ian. Each fact carries its source and an `[OFFICIAL]`/`[NEWS]`/`[UNKNOWN]` note. `deadline_time` is an addition to the spec's schema; `civic.py` (slice 6) doesn't exist yet.
 
-**`pipeline/politricks/models.py` (248), review fingerprints:** `current_sha256` 155, `is_reviewed` 181, `changed_since_review` 187, `HAND_EDITED` 194, `is_hand_edited` 197, `is_protected` 207, `draft_review` 213.
+**`pipeline/politricks/models.py` (275), review fingerprints:** `current_sha256` 161, `legacy_clause_sha256_v1` 187 (migration only), `is_v1_stamped` 199, `is_reviewed` 208, `changed_since_review` 214, `HAND_EDITED` 221, `is_hand_edited` 224, `is_protected` 234, `draft_review` 240.
+
+**`pipeline/politricks/restamp.py` (268):** `plan` 80 (sorts every clause into a bucket; pure), `apply_plan` 110, `report` 123, `run` 139 (bill lock; writes nothing when there is nothing to do), `self_test` 171.
 
 The shared test support lives in `pipeline/politricks/selftest.py`: `Checker`, `mark_reviewed` (in-memory copies only), `reset_bill` and `fixture_bill`.

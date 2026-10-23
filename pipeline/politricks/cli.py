@@ -11,6 +11,8 @@ Run from anywhere; paths are resolved from the repo root, not your current folde
     uv run --project pipeline politricks verify [--self-test]
     uv run --project pipeline politricks samples finance-act-2026
     uv run --project pipeline politricks generate finance-act-2026 [--self-test]
+    uv run --project pipeline politricks generate finance-act-2026 --articles-only [--dry-run | --batch-id X]
+    uv run --project pipeline politricks restamp finance-act-2026 [--dry-run] [--self-test]
     uv run --project pipeline politricks civic public-participation-bill-2025 [--dry-run] [--force] [--self-test]
     uv run --project pipeline politricks lint [finance-act-2026] [--self-test]
     uv run --project pipeline politricks review finance-act-2026 [--self-test]
@@ -96,6 +98,24 @@ def _dispatch() -> None:
         "--tags-only", action="store_true",
         help="re-decide only each clause's groups (explanations untouched), then redo the summary",
     )
+    p_generate.add_argument(
+        "--articles-only", action="store_true",
+        help="suggest Constitution articles for EVERY clause with an explanation (reviewed and hand-edited too); "
+        "explanations and the summary are untouched",
+    )
+    p_generate.add_argument(
+        "--dry-run", action="store_true",
+        help="with --articles-only: build the batch, print its size and estimated tokens, send nothing (no key needed)",
+    )
+
+    p_restamp = sub.add_parser(
+        "restamp",
+        help="one-time migration after the clause fingerprint moved to v2: re-stamp untouched AI drafts "
+        "(hand-edited and reviewed clauses are left alone)",
+    )
+    p_restamp.add_argument("bill_id", nargs="?")
+    p_restamp.add_argument("--dry-run", action="store_true", help="report what would be re-stamped; write nothing")
+    p_restamp.add_argument("--self-test", action="store_true", help="offline check in a temp folder (writes nothing real)")
 
     p_civic = sub.add_parser(
         "civic", help="validate pipeline/civic/<bill-id>.yaml and have Claude translate it into the bill (participation, stage_next, challenge)"
@@ -204,13 +224,28 @@ def _dispatch() -> None:
             sys.exit(0 if generate.self_test(REPO_ROOT) else 1)
         if not args.bill_id:
             parser.error("generate needs a bill id (or --self-test)")
+        modes = [args.summary_only, args.tags_only, args.articles_only]
+        if sum(modes) > 1:
+            parser.error("--summary-only, --tags-only and --articles-only are separate passes: pick one")
+        if args.dry_run and not args.articles_only:
+            parser.error("--dry-run is for --articles-only")
         # Exit 1 if any request wasn't applied; run() lists each one and why.
         sys.exit(
             generate.run(
                 REPO_ROOT, args.bill_id, batch_id=args.batch_id,
                 summary_only=args.summary_only, tags_only=args.tags_only,
+                articles_only=args.articles_only, dry_run=args.dry_run,
             )
         )
+
+    elif args.command == "restamp":
+        from . import restamp
+
+        if args.self_test:
+            sys.exit(0 if restamp.self_test(REPO_ROOT) else 1)
+        if not args.bill_id:
+            parser.error("restamp needs a bill id (or --self-test)")
+        sys.exit(restamp.run(REPO_ROOT, args.bill_id, dry_run=args.dry_run))
 
     elif args.command == "civic":
         from . import civic

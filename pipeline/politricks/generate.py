@@ -54,6 +54,8 @@ from .models import (
     is_hand_edited,
     is_protected,
     is_reviewed,
+    is_v1_stamped,
+    legacy_clause_sha256_v1,
     load_bill,
     save_bill,
 )
@@ -146,10 +148,20 @@ class TagsOut(BaseModel):
     groups: list[GroupId]
 
 
-def _out_model(custom_id: str, tags_only: bool = False) -> type[BaseModel]:
+class ArticlesOut(BaseModel):
+    # The articles-only pass: suggest Constitution articles for a clause
+    # without paying to rewrite its explanation (`generate <bill> --articles-only`).
+    # Numbers are checked against src/data/constitution.json in apply_articles.
+    model_config = _STRICT
+    suggested_articles: list[int]
+
+
+def _out_model(custom_id: str, tags_only: bool = False, articles_only: bool = False) -> type[BaseModel]:
     """Which schema a request's answer must match."""
     if custom_id == "summary":
         return SummaryOut
+    if articles_only:
+        return ArticlesOut
     return TagsOut if tags_only else ClauseOut
 
 
@@ -291,6 +303,87 @@ def build_tag_batch(repo_root: Path, bill: Bill) -> list[dict]:
     ]
 
 
+# At most this many suggestions per clause. The request asks for no more; a
+# longer answer is cut to its first MAX_ARTICLES (the model lists the most
+# relevant first), and apply_articles says so.
+MAX_ARTICLES = 4
+
+
+def constitution_path(repo_root: Path) -> Path:
+    return repo_root / "src" / "data" / "constitution.json"
+
+
+def load_article_titles(repo_root: Path) -> dict[int, str]:
+    """{article number: title} from src/data/constitution.json. Raises
+    FileNotFoundError / a validation error if the file is missing or malformed:
+    the articles pass must never run without its list of valid numbers."""
+    from .constitution import load_constitution  # imported here: it pulls in pdfplumber
+
+    data = load_constitution(constitution_path(repo_root))
+    titles = {article.number: article.title for article in data.articles}
+    if len(titles) != len(data.articles) or not titles:
+        raise ValueError("constitution.json has no articles, or repeats an article number")
+    return titles
+
+
+def articles_system_block(titles: dict[int, str]) -> dict:
+    """The second system block of an articles request: every valid article as
+    "number. title" (no article text, to keep tokens down). Identical for every
+    request in a batch, and cached, so it is paid for in full about once."""
+    lines = "\n".join(f"{number}. {title}" for number, title in sorted(titles.items()))
+    return {
+        "type": "text",
+        "text": "Articles of the Constitution of Kenya, 2010 (number, then title). "
+        "These are the only numbers you may suggest:\n\n" + lines,
+        "cache_control": {"type": "ephemeral"},
+    }
+
+
+def build_article_params(repo_root: Path, bill: Bill, clause: Clause, titles: dict[int, str]) -> dict:
+    """The params for suggesting articles for one clause, and nothing else.
+
+    Same first system block as the explainer (so the cache is reused), then
+    the article list as a second block. The rules for suggesting live in the
+    user message, not in explainer.md: that file is also the live Explain
+    API's prompt, which has no article list to choose from.
+    """
+    params = build_params(repo_root, bill, clause)
+    schema = ArticlesOut.model_json_schema()
+    assert _all_objects_forbid_additional(schema), "ArticlesOut schema must forbid extra properties everywhere"
+    params["system"] = [*params["system"], articles_system_block(titles)]
+    params["messages"] = [
+        {
+            "role": "user",
+            "content": (
+                "This is a suggested-articles request: return only `suggested_articles` for this section. "
+                "Don't explain it.\n\n"
+                "Suggest the articles of the Constitution of Kenya, 2010 that a reader may want to read "
+                "alongside this section: articles whose subject the section's own text touches, such as a right "
+                "it affects, a power it gives or limits, or a body it creates or changes. Use only numbers from "
+                f"the list you were given, at most {MAX_ARTICLES}, the most relevant first. An empty list is a "
+                "normal answer: a rate, a definition or a small technical amendment often touches no article, "
+                "and a short list is better than a long one. This is a pointer for the reader, not a judgement: "
+                "never say or imply that the section is allowed by, or breaks, any article.\n\n"
+                + params["messages"][0]["content"]
+            ),
+        }
+    ]
+    params["output_config"] = {"format": {"type": "json_schema", "schema": schema}, "effort": EFFORT}
+    return params
+
+
+def build_article_batch(repo_root: Path, bill: Bill, titles: dict[int, str]) -> list[dict]:
+    """One articles request per clause that has an explanation, INCLUDING
+    reviewed and hand-edited ones: articles are a separate field, generated for
+    every clause (learner decision, 2026-10-23), and `apply_articles` never
+    touches a human's text or review state."""
+    return [
+        {"custom_id": clause.id, "params": build_article_params(repo_root, bill, clause, titles)}
+        for clause in bill.clauses
+        if clause.explanation is not None
+    ]
+
+
 def build_batch(repo_root: Path, bill: Bill) -> list[dict]:
     """One batch request per clause. The summary is NOT in the batch: it
     needs the clause tags this batch produces, so run() asks for it after.
@@ -346,7 +439,7 @@ class Applied:
     """The model answered, and its JSON validated against our schema."""
 
     custom_id: str
-    parsed: Union[ClauseOut, SummaryOut]
+    parsed: Union[ClauseOut, SummaryOut, TagsOut, ArticlesOut]
 
 
 @dataclass
@@ -375,10 +468,11 @@ class Invalid:
 Outcome = Union[Applied, NeedsDirect, Errored, Invalid]
 
 
-def parse_batch_line(obj: dict, tags_only: bool = False) -> Outcome:
+def parse_batch_line(obj: dict, tags_only: bool = False, articles_only: bool = False) -> Outcome:
     """Turn one decoded line of a batch results `.jsonl` file into an Outcome.
 
-    `tags_only` says the line answers a tags-only request (`TagsOut`).
+    `tags_only` says the line answers a tags-only request (`TagsOut`);
+    `articles_only` an articles-only request (`ArticlesOut`).
 
     `obj` is a plain dict (e.g. from `json.loads` on one line, or from
     `response.model_dump(mode="json")` for a line the SDK already parsed for
@@ -424,7 +518,7 @@ def parse_batch_line(obj: dict, tags_only: bool = False) -> Outcome:
     if text is None:
         return Invalid(custom_id, "no text content block in the response")
 
-    model_cls = _out_model(custom_id, tags_only)
+    model_cls = _out_model(custom_id, tags_only, articles_only)
     try:
         parsed = model_cls.model_validate_json(text)
     except ValidationError as error:
@@ -443,8 +537,9 @@ def apply(bill: Bill, outcomes: list[Outcome]) -> int:
     point of slice 2a's placeholders, they exist to be replaced. Every draft
     written here is stamped with its fingerprint (`draft_review`), AFTER all
     its fields are set, so a later hand-edit can be told apart from it.
-    `suggested_articles` is always forced to `[]` here; validating suggested
-    article numbers against the constitution is slice 10's job, not this one's.
+    `suggested_articles` is always forced to `[]` here: article suggestions
+    come from their own pass (`generate --articles-only`, `apply_articles`),
+    which validates every number against the constitution.
     """
     clauses_by_id = {clause.id: clause for clause in bill.clauses}
     applied = 0
@@ -575,6 +670,55 @@ def apply_tags(bill: Bill, outcomes: list[Outcome]) -> int:
     return applied
 
 
+def apply_articles(bill: Bill, outcomes: list[Outcome], valid: set[int]) -> int:
+    """Write the suggested articles from an articles-only pass onto `bill`.
+    Returns how many clauses were written.
+
+    Only `suggested_articles` changes. Every number not in `valid` (the loaded
+    constitution) is dropped and printed, never stored. Numbers are stored
+    ascending with no repeats. It writes to EVERY clause that has an
+    explanation, protected or not, and what that does to the review state is
+    decided BEFORE the field changes (the change itself would make an
+    untouched draft look edited):
+    - an untouched AI draft is re-stamped (`draft_review`), as `apply_tags` does;
+    - a hand-edited draft keeps its stamp, so it stays hand-edited;
+    - a reviewed clause is NOT re-stamped and NOT touched otherwise, so it now
+      reads "changed since review" and comes back through `review --flagged`;
+    - a sample keeps its status (a placeholder must never turn into an AI draft).
+    Every change is printed.
+    """
+    clauses_by_id = {clause.id: clause for clause in bill.clauses}
+    applied = 0
+    for outcome in outcomes:
+        if not isinstance(outcome, Applied) or outcome.custom_id == "summary":
+            continue
+        clause = clauses_by_id.get(outcome.custom_id)
+        if clause is None or clause.explanation is None:
+            continue
+        asked = list(dict.fromkeys(outcome.parsed.suggested_articles))  # no repeats, model's order
+        unknown = [number for number in asked if number not in valid]
+        if unknown:
+            print(f"  articles {clause.id}: dropped {unknown}: not in constitution.json")
+        known = [number for number in asked if number in valid]
+        if len(known) > MAX_ARTICLES:
+            print(f"  articles {clause.id}: asked for at most {MAX_ARTICLES}; kept the first {MAX_ARTICLES} of {known}")
+            known = known[:MAX_ARTICLES]
+        new = sorted(known)
+        untouched_draft = clause.review.status == "draft" and not is_hand_edited(clause)
+        if new != clause.suggested_articles:
+            state = (
+                "" if untouched_draft or clause.review.status == "sample"
+                else " (reviewed: now changed since review)" if clause.review.status == "reviewed"
+                else " (hand-edited text kept)"
+            )
+            print(f"  articles {clause.id}: {clause.suggested_articles or '[]'} -> {new or '[]'}{state}")
+        clause.suggested_articles = new
+        if untouched_draft:
+            clause.review = draft_review(clause)  # still Claude's draft, now with these articles
+        applied += 1
+    return applied
+
+
 # --------------------------------------------------------------------------
 # Self-test: proves the above offline, against a recorded fixture. No network,
 # no Anthropic client is ever constructed.
@@ -628,6 +772,9 @@ def _run_offline(
     tags_only: bool = False,
     prepare=None,
     hold_lock: bool = False,
+    articles_only: bool = False,
+    dry_run: bool = False,
+    with_constitution: bool = True,
 ) -> SimpleNamespace:
     """Run run() in a temp copy of the repo against a fake client.
 
@@ -639,6 +786,8 @@ def _run_offline(
     instead of the test. `prepare(bill)`, if given, changes the test bill
     before the run (e.g. marks a clause reviewed). `hold_lock` holds the
     bill's lock around the run, as a review walk in another terminal would.
+    The articles pass also reads src/data/constitution.json, so the temp repo
+    gets a copy of the real one (`with_constitution=False` leaves it out).
     """
     keep = clause_ids if clause_ids is not None else [line["custom_id"] for line in lines]
     with tempfile.TemporaryDirectory() as tmp:
@@ -646,6 +795,9 @@ def _run_offline(
         prompts = root / "pipeline" / "prompts"
         prompts.mkdir(parents=True)
         shutil.copy(repo_root / "pipeline" / "prompts" / "explainer.md", prompts)
+        if with_constitution:
+            (root / "src" / "data").mkdir(parents=True)
+            shutil.copy(constitution_path(repo_root), constitution_path(root))
         test_bill = reset_bill(repo_root)
         test_bill.clauses = [clause for clause in test_bill.clauses if clause.id in keep]
         if prepare is not None:
@@ -658,7 +810,8 @@ def _run_offline(
         with held, contextlib.redirect_stdout(out):
             try:
                 code = run(root, FIXTURE_BILL_ID, batch_id=batch_id, client=client, poll_seconds=0,
-                           summary_only=summary_only, tags_only=tags_only)
+                           summary_only=summary_only, tags_only=tags_only, articles_only=articles_only,
+                           dry_run=dry_run)
             except Exception as error:
                 code = f"raised {type(error).__name__}: {error}"
 
@@ -670,6 +823,7 @@ def _run_offline(
         )
         id_file = records / f"{FIXTURE_BILL_ID}.batch-id"
         tags_id_file = records / f"{FIXTURE_BILL_ID}.tags.batch-id"
+        articles_id_file = records / f"{FIXTURE_BILL_ID}.articles.batch-id"
         raw_file = records / f"{_FAKE_BATCH_ID}.jsonl"
         return SimpleNamespace(
             code=code,
@@ -678,6 +832,7 @@ def _run_offline(
             created=client.created,
             id_saved=id_file.read_text(encoding="utf-8").strip() if id_file.exists() else None,
             tags_id_saved=tags_id_file.read_text(encoding="utf-8").strip() if tags_id_file.exists() else None,
+            articles_id_saved=articles_id_file.read_text(encoding="utf-8").strip() if articles_id_file.exists() else None,
             raw_lines=len(raw_file.read_text(encoding="utf-8").splitlines()) if raw_file.exists() else 0,
             usage_lines=usage_lines,
         )
@@ -688,6 +843,190 @@ def mark_reviewed_with_text(bill: Bill, clause_id: str) -> None:
     clause = next(clause for clause in bill.clauses if clause.id == clause_id)
     clause.explanation = Tri(en="reviewed words", sw="reviewed words", sheng="reviewed words")
     mark_reviewed(clause)
+
+
+def _articles_self_test(repo_root: Path, check: Checker, lines: list[dict], parse_ok, parse_calls: list[dict]) -> None:
+    """The articles-only pass, offline: request building, validation, what it
+    does to each review state, a whole fake run, and the old-stamp guard."""
+    titles = load_article_titles(repo_root)
+    valid = set(titles)
+    check("articles: constitution.json gives 264 articles, numbered 1..264", valid == set(range(1, 265)), f"{len(valid)}")
+
+    # Each clause is in a different state: c3 untouched AI draft, c4
+    # hand-edited, c5 reviewed, c6 + c7 AI drafts the model will answer
+    # badly, c8 no explanation at all.
+    def prepare(b: Bill) -> None:
+        by_id = {clause.id: clause for clause in b.clauses}
+        # (a run may cut the bill down to fewer clauses, so only prepare those present)
+        for clause_id in ("c3", "c4", "c6", "c7"):
+            if clause_id not in by_id:
+                continue
+            by_id[clause_id].explanation = Tri(en=f"{clause_id} words", sw=f"{clause_id} maneno", sheng=f"{clause_id} words")
+            by_id[clause_id].groups = ["trader"]
+            by_id[clause_id].review = draft_review(by_id[clause_id])
+        if "c4" in by_id:
+            by_id["c4"].review = Review(status="draft", sha256=HAND_EDITED)
+        if "c5" in by_id:
+            mark_reviewed_with_text(b, "c5")
+
+    def articles_line(custom_id: str, numbers: list[int]) -> dict:
+        line = json.loads(json.dumps(lines[0]))  # a real succeeded line, re-pointed
+        line["custom_id"] = custom_id
+        line["result"]["message"]["content"] = [{"type": "text", "text": json.dumps({"suggested_articles": numbers})}]
+        return line
+
+    ids = ["c3", "c4", "c5", "c6", "c7", "c8"]
+    answers = [
+        articles_line("c3", [47, 35]),
+        articles_line("c4", [10]),
+        articles_line("c5", [201, 210]),
+        articles_line("c6", [9999, 20, 0]),  # 9999 and 0 are not articles
+        articles_line("c7", [43, 10, 43, 9]),  # unsorted, with a repeat
+    ]
+
+    # --- request building ------------------------------------------------------
+    built = reset_bill(repo_root)
+    prepare(built)
+    requests = build_article_batch(repo_root, built, titles)
+    asked = [request["custom_id"] for request in requests]
+    check("articles batch: one request per clause WITH an explanation, reviewed and hand-edited ones included",
+          asked == ["c1", "c3", "c4", "c5", "c6", "c7"], str(asked))
+    first = requests[1]["params"]
+    schema = first["output_config"]["format"]["schema"]
+    check("articles batch: the schema allows only `suggested_articles`, and the request says it is articles-only",
+          set(schema.get("properties", {})) == {"suggested_articles"} and _all_objects_forbid_additional(schema)
+          and "suggested-articles request" in first["messages"][0]["content"])
+    check("articles batch: the first system block is the explainer's, unchanged (so it reuses the cache)",
+          first["system"][0] == build_params(repo_root, built, built.clauses[0])["system"][0])
+    block = first["system"][1]
+    check("articles batch: the second system block lists every article as 'number. title', cached, with no article text",
+          block["cache_control"] == {"type": "ephemeral"} and "1. Sovereignty of the people." in block["text"]
+          and "\n264. " in block["text"] and len(block["text"]) < 20000,
+          f"{len(block['text'])} chars")
+    check("articles batch: the wording is neutral (a pointer, never a verdict) and has no em dash",
+          "never say or imply that the section is allowed by, or breaks, any article" in first["messages"][0]["content"]
+          and "\u2014" not in first["messages"][0]["content"] and "\u2014" not in block["text"])
+    check("articles batch: every request in a batch carries the same system blocks (one cache entry)",
+          all(request["params"]["system"] == first["system"] for request in requests))
+    bad_shape = parse_batch_line(articles_line("c3", [1]), articles_only=True)
+    wrong = json.loads(json.dumps(articles_line("c3", [1])))
+    wrong["result"]["message"]["content"] = [{"type": "text", "text": json.dumps({"suggested_articles": [1], "groups": []})}]
+    check("parse_batch_line: an articles answer is read as ArticlesOut, and an extra field is Invalid",
+          isinstance(bad_shape, Applied) and isinstance(bad_shape.parsed, ArticlesOut)
+          and isinstance(parse_batch_line(wrong, articles_only=True), Invalid))
+
+    # --- apply_articles, in memory ----------------------------------------------
+    work = reset_bill(repo_root)
+    prepare(work)
+    by_id = {clause.id: clause for clause in work.clauses}
+    c3_before = by_id["c3"].model_copy(deep=True)
+    c4_stamp = by_id["c4"].review.model_copy()
+    c5_stamp = by_id["c5"].review.model_copy()
+    c5_words = by_id["c5"].explanation.model_copy()
+    outcomes = [Applied(cid, ArticlesOut(suggested_articles=nums)) for cid, nums in (
+        ("c3", [47, 35]), ("c4", [10]), ("c5", [201, 210]), ("c6", [9999, 20, 0]), ("c7", [43, 10, 43, 9]))]
+    with contextlib.redirect_stdout(io.StringIO()) as said:
+        written = apply_articles(work, outcomes, valid)
+    check("apply_articles: control: before the pass, c3 is an untouched AI draft with no articles",
+          not is_protected(c3_before) and c3_before.suggested_articles == [])
+    check("apply_articles: a number that is not an article is dropped and said so; the valid one is kept",
+          by_id["c6"].suggested_articles == [20] and "dropped [9999, 0]" in said.getvalue(), said.getvalue())
+    check("apply_articles: numbers are stored ascending with no repeats",
+          by_id["c7"].suggested_articles == [9, 10, 43] and by_id["c3"].suggested_articles == [35, 47])
+    check("apply_articles: it writes to every clause with an explanation, protected ones included (5 of 5)",
+          written == 5 and by_id["c4"].suggested_articles == [10] and by_id["c5"].suggested_articles == [201, 210], str(written))
+    check("apply_articles: an untouched AI draft is re-stamped (a draft, matching its new fingerprint, still replaceable)",
+          by_id["c3"].review.status == "draft" and by_id["c3"].review.sha256 == current_sha256(by_id["c3"])
+          and not is_protected(by_id["c3"]) and by_id["c3"].review.sha256 != c3_before.review.sha256)
+    check("apply_articles: a hand-edited draft keeps its stamp and stays hand-edited",
+          by_id["c4"].review == c4_stamp and is_hand_edited(by_id["c4"]))
+    check("apply_articles: a reviewed clause is not re-stamped, is not touched otherwise, and now reads changed since review",
+          by_id["c5"].review == c5_stamp and by_id["c5"].explanation == c5_words
+          and changed_since_review(by_id["c5"]) and not is_reviewed(by_id["c5"])
+          and "c5: [] -> [201, 210] (reviewed: now changed since review)" in said.getvalue(), said.getvalue())
+    check("apply_articles: nothing but suggested_articles (and an AI draft's stamp) changed",
+          by_id["c3"].model_copy(update={"suggested_articles": [], "review": c3_before.review}) == c3_before)
+    check("apply_articles: nothing became reviewed",
+          [c.id for c in work.clauses if c.review.status == "reviewed"] == ["c5"])
+    check("apply_articles: each change is printed", "articles c3: [] -> [35, 47]" in said.getvalue(), said.getvalue())
+    sample = next(c for c in work.clauses if c.id == "c1")
+    with contextlib.redirect_stdout(io.StringIO()):
+        apply_articles(work, [Applied("c1", ArticlesOut(suggested_articles=[27]))], valid)
+    check("apply_articles: a sample keeps its status (a placeholder never turns into an AI draft)",
+          sample.review.status == "sample" and sample.suggested_articles == [27])
+    capped = reset_bill(repo_root)
+    prepare(capped)
+    with contextlib.redirect_stdout(io.StringIO()) as cap_said:
+        apply_articles(capped, [Applied("c3", ArticlesOut(suggested_articles=[50, 40, 30, 20, 10]))], valid)
+    cap_c3 = next(c for c in capped.clauses if c.id == "c3")
+    check("apply_articles: more than 4 is cut to the first 4 (the most relevant), and said so",
+          cap_c3.suggested_articles == [20, 30, 40, 50] and "kept the first 4" in cap_said.getvalue(), cap_said.getvalue())
+
+    # --- a whole run, offline ----------------------------------------------------
+    parse_calls.clear()
+    ran = _run_offline(repo_root, answers, parse_ok, clause_ids=ids, prepare=prepare, articles_only=True)
+    ran_by_id = {clause.id: clause for clause in ran.bill.clauses}
+    check("run --articles-only: exit 0, and ONE batch holding the 5 clauses with explanations, none left out",
+          ran.code == 0 and ran.created == [5] and "left out" not in ran.out, f"{ran.code} / {ran.created} / {ran.out}")
+    check("run --articles-only: its batch id is saved under its own name",
+          ran.articles_id_saved == _FAKE_BATCH_ID and ran.id_saved is None and ran.tags_id_saved is None,
+          f"{ran.articles_id_saved} / {ran.id_saved} / {ran.tags_id_saved}")
+    check("run --articles-only: articles land on the AI draft, the hand-edited draft and the reviewed clause alike",
+          [ran_by_id[c].suggested_articles for c in ("c3", "c4", "c5")] == [[35, 47], [10], [201, 210]],
+          str([ran_by_id[c].suggested_articles for c in ("c3", "c4", "c5")]))
+    check("run --articles-only: a planted invalid number is dropped, reported, and never saved",
+          ran_by_id["c6"].suggested_articles == [20] and "dropped [9999, 0]" in ran.out
+          and all(number in valid for clause in ran.bill.clauses for number in clause.suggested_articles), ran.out)
+    check("run --articles-only: AI draft re-stamped, hand-edited stays hand-edited, reviewed reads changed since review",
+          ran_by_id["c3"].review.sha256 == current_sha256(ran_by_id["c3"]) and not is_protected(ran_by_id["c3"])
+          and is_hand_edited(ran_by_id["c4"]) and changed_since_review(ran_by_id["c5"]), "")
+    check("run --articles-only: a clause with no explanation gets nothing; no explanation is rewritten; no summary is asked for",
+          ran_by_id["c8"].explanation is None and ran_by_id["c8"].suggested_articles == []
+          and ran_by_id["c3"].explanation.en == "c3 words" and ran_by_id["c5"].explanation.en == "reviewed words"
+          and parse_calls == [], str(parse_calls))
+
+    rerun = _run_offline(repo_root, answers, parse_ok, clause_ids=ids, prepare=prepare, articles_only=True, batch_id=_FAKE_BATCH_ID)
+    check("run --articles-only --batch-id: resumes without submitting anything new, and gives the same bill",
+          rerun.code == 0 and rerun.created == [] and rerun.bill == ran.bill, f"{rerun.code} / {rerun.created}")
+
+    # A batch refused for one clause is retried directly, with the articles schema.
+    refused_line = json.loads(json.dumps(answers[0]))
+    refused_line["result"]["message"]["stop_reason"] = "refusal"
+    def parse_articles(**kwargs):
+        parse_calls.append(kwargs)
+        usage = SimpleNamespace(model_dump=lambda **_: {"input_tokens": 100, "output_tokens": 20})
+        return SimpleNamespace(parsed_output=ArticlesOut(suggested_articles=[35]), stop_reason="end_turn",
+                               model="claude-opus-5-5", usage=usage)
+
+    retried = _run_offline(repo_root, [refused_line], parse_articles, clause_ids=["c3"], prepare=prepare, articles_only=True)
+    retried_c3 = next(c for c in retried.bill.clauses if c.id == "c3")
+    check("run --articles-only: a refused clause is retried directly, asked for ArticlesOut, and its answer applied",
+          retried.code == 0 and len(parse_calls) == 1 and parse_calls[0].get("output_format") is ArticlesOut
+          and retried_c3.suggested_articles == [35], f"{retried.code} / {retried.out}")
+    parse_calls.clear()
+
+    # --- guards: nothing is sent when it would go wrong ---------------------------
+    def stale_stamp(b: Bill) -> None:
+        prepare(b)
+        c3 = next(c for c in b.clauses if c.id == "c3")
+        c3.review = Review(status="draft", sha256=legacy_clause_sha256_v1(c3))
+
+    stale = _run_offline(repo_root, answers, parse_ok, clause_ids=ids, prepare=stale_stamp, articles_only=True)
+    check("run --articles-only: a draft still on the old fingerprint stops the run before anything is sent, naming restamp",
+          stale.code == 1 and stale.created == [] and "restamp" in stale.out and "c3" in stale.out
+          and next(c for c in stale.bill.clauses if c.id == "c3").suggested_articles == [], f"{stale.code} / {stale.out}")
+    no_list = _run_offline(repo_root, answers, parse_ok, clause_ids=ids, prepare=prepare, articles_only=True,
+                           with_constitution=False)
+    check("run --articles-only: without constitution.json nothing is sent",
+          str(no_list.code).startswith("raised FileNotFoundError") and no_list.created == [], str(no_list.code))
+    held = _run_offline(repo_root, answers, parse_ok, clause_ids=ids, prepare=prepare, articles_only=True, hold_lock=True)
+    check("run --articles-only: a bill another command holds is refused before anything is sent",
+          held.code == 1 and held.created == [] and "is open in another" in held.out, f"{held.code} / {held.out}")
+
+    dry = _run_offline(repo_root, [], parse_ok, clause_ids=ids, prepare=prepare, articles_only=True, dry_run=True)
+    check("--dry-run: prints the request count and an estimated size, sends and writes nothing",
+          dry.code == 0 and dry.created == [] and dry.articles_id_saved is None and "5 articles request(s)" in dry.out
+          and "estimated from character counts" in dry.out, dry.out)
 
 
 def self_test(repo_root: Path) -> bool:
@@ -1198,6 +1537,8 @@ def self_test(repo_root: Path) -> bool:
           since.code == 0 and "left alone" in since.out and is_reviewed(since_c4) and since_c4.explanation.en == "reviewed words",
           f"{since.code} / {since.out}")
 
+    _articles_self_test(repo_root, check, lines, parse_ok, parse_calls)
+
     # --- nothing written -----------------------------------------------------
     check("the real bill file's SHA-256 is unchanged", sha256_file(real_path) == sha_before)
 
@@ -1316,6 +1657,8 @@ def run(
     poll_seconds: float = 10,
     summary_only: bool = False,
     tags_only: bool = False,
+    articles_only: bool = False,
+    dry_run: bool = False,
 ) -> int:
     """Explain every clause in one batch, then write the summary from their tags.
 
@@ -1325,6 +1668,10 @@ def run(
     skips phase 1 and redoes just the summary from the tags already saved.
     `tags_only` makes phase 1 re-decide only each clause's groups (cheap,
     explanations untouched); phase 2 then rewrites the summary from them.
+    `articles_only` asks for each clause's suggested constitution articles
+    and nothing else (no summary afterwards), for EVERY clause with an
+    explanation, protected ones included; see `apply_articles`. `dry_run`
+    (articles pass only) builds the batch, prints its size and sends nothing.
 
     Returns the exit code: 0 only if every request was applied, 1 if any was
     not. Each one that wasn't is listed with its reason. `client` and
@@ -1335,49 +1682,102 @@ def run(
     the whole file, so a review walk accepting meanwhile would be overwritten.
     """
     path = bill_path(repo_root, bill_id)
+    if dry_run:
+        return _dry_run_articles(repo_root, path)
     try:
         with bill_lock(path):
-            return _run(repo_root, bill_id, path, batch_id, client, poll_seconds, summary_only, tags_only)
+            return _run(repo_root, bill_id, path, batch_id, client, poll_seconds, summary_only, tags_only, articles_only)
     except BillLocked as error:
         print(f"FAILED: {error} Nothing was sent.")
         return 1
 
 
+def _stale_stamps(bill: Bill) -> list[str]:
+    """Ids of AI drafts still stamped under the retired v1 fingerprint: they
+    read as hand-edited until `politricks restamp` runs."""
+    return [clause.id for clause in bill.clauses if clause.review.status == "draft" and is_v1_stamped(clause)]
+
+
+def _estimate_tokens(text: str) -> int:
+    """About 4 characters per token for English prose. A rough guess, not a
+    count: `messages.count_tokens` needs an API key and this must not."""
+    return -(-len(text) // 4)
+
+
+def _dry_run_articles(repo_root: Path, path: Path) -> int:
+    """Build the articles batch for a bill and print its size. Sends nothing,
+    writes nothing, needs no key and takes no lock."""
+    bill = load_bill(path)
+    titles = load_article_titles(repo_root)
+    requests = build_article_batch(repo_root, bill, titles)
+    system = [_estimate_tokens(block["text"]) for block in requests[0]["params"]["system"]] if requests else [0, 0]
+    users = [_estimate_tokens(request["params"]["messages"][0]["content"]) for request in requests]
+    print(f"{bill.id}: {len(requests)} articles request(s) of {len(bill.clauses)} clause(s) (every clause with an explanation)")
+    print(f"  system blocks: explainer ~{system[0]} tokens + article list ~{system[1]} tokens (both cached after the first request)")
+    print(f"  user messages: ~{sum(users)} tokens in all (~{(sum(users) // len(users)) if users else 0} each)")
+    print(f"  input total ~{sum(users) + len(requests) * sum(system)} tokens. If the cache holds, only the first "
+          f"request pays full price for its ~{sum(system)} system tokens; the other {max(len(requests) - 1, 0)} read them from cache")
+    print("  estimated from character counts (about 4 per token): no key, no call, nothing sent")
+    stale = _stale_stamps(bill)
+    if stale:
+        print(f"  NOTE: {len(stale)} draft(s) still carry a v1 fingerprint; run `politricks restamp {bill.id}` before the real run")
+    return 0
+
+
 def _run(repo_root: Path, bill_id: str, path: Path, batch_id, client, poll_seconds: float,
-         summary_only: bool, tags_only: bool) -> int:
+         summary_only: bool, tags_only: bool, articles_only: bool = False) -> int:
     """run()'s body, with the bill's lock already held."""
+    bill = load_bill(path)
+    valid: set[int] = set()
+    if articles_only:
+        # Before a client exists, so a missing list or a stale stamp costs nothing.
+        titles = load_article_titles(repo_root)
+        valid = set(titles)
+        stale = _stale_stamps(bill)
+        if stale:
+            print(
+                f"FAILED: {len(stale)} draft(s) are still stamped under the old fingerprint ({', '.join(stale[:8])}"
+                f"{' ...' if len(stale) > 8 else ''}) and would read as hand-edited. Run "
+                f"`politricks restamp {bill_id}` first. Nothing was sent."
+            )
+            return 1
     if client is None:
         import anthropic
 
         client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
-    bill = load_bill(path)
 
     if summary_only:
         outcomes = _summarise(repo_root, bill, client)
         save_bill(bill, path)
         return _report(sum(isinstance(outcome, Applied) for outcome in outcomes), outcomes, None)
 
-    requests = build_tag_batch(repo_root, bill) if tags_only else build_batch(repo_root, bill)
-    protected_ids = {clause.id for clause in bill.clauses if is_protected(clause)}
+    if articles_only:
+        requests = build_article_batch(repo_root, bill, titles)
+    else:
+        requests = build_tag_batch(repo_root, bill) if tags_only else build_batch(repo_root, bill)
+    # The articles pass leaves nobody out, so nothing counts as "protected" there.
+    protected_ids = set() if articles_only else {clause.id for clause in bill.clauses if is_protected(clause)}
     if protected_ids:
         print(f"left out {len(protected_ids)} clause(s) a human reviewed or edited: {', '.join(sorted(protected_ids))}")
     if not requests and batch_id is None:
         print("no clause needs a draft: nothing sent")
-        if tags_only:
+        if tags_only or articles_only:
             return 0
         summary = _summarise(repo_root, bill, client)
         save_bill(bill, path)
         return _report(sum(isinstance(outcome, Applied) for outcome in summary), summary, None)
     records = repo_root.joinpath(*BATCH_RECORDS)
     records.mkdir(parents=True, exist_ok=True)
-    mode_flag = " --tags-only" if tags_only else ""
+    mode_flag = " --articles-only" if articles_only else " --tags-only" if tags_only else ""
+    mode_name = "articles-only " if articles_only else "tags-only " if tags_only else ""
 
     if batch_id is None:
         batch = client.messages.batches.create(requests=requests)
         batch_id = batch.id
-        id_name = f"{bill_id}.tags.batch-id" if tags_only else f"{bill_id}.batch-id"
+        id_name = (f"{bill_id}.articles.batch-id" if articles_only
+                   else f"{bill_id}.tags.batch-id" if tags_only else f"{bill_id}.batch-id")
         (records / id_name).write_text(batch_id + "\n", encoding="utf-8")
-        print(f"submitted {'tags-only ' if tags_only else ''}batch {batch_id} ({len(requests)} requests)")
+        print(f"submitted {mode_name}batch {batch_id} ({len(requests)} requests)")
         print(f"  if this stops, resume without paying again: politricks generate {bill_id}{mode_flag} --batch-id {batch_id}")
     else:
         print(f"resuming batch {batch_id} (nothing new is submitted)")
@@ -1394,7 +1794,7 @@ def _run(repo_root: Path, bill_id: str, path: Path, batch_id, client, poll_secon
     raw = [response.model_dump(mode="json") for response in client.messages.batches.results(batch_id)]
     raw_path = records / f"{batch_id}.jsonl"
     raw_path.write_text("".join(json.dumps(line, ensure_ascii=False) + "\n" for line in raw), encoding="utf-8")
-    outcomes = [parse_batch_line(line, tags_only) for line in raw]
+    outcomes = [parse_batch_line(line, tags_only, articles_only) for line in raw]
 
     # Check what came back against what was asked for. A missing line, or a
     # line for a request this bill never made (a wrong --batch-id), must fail
@@ -1425,11 +1825,16 @@ def _run(repo_root: Path, bill_id: str, path: Path, batch_id, client, poll_secon
         if isinstance(outcome, NeedsDirect):
             params = by_custom_id.get(outcome.custom_id)
             outcomes[i] = (
-                _call_direct(client, outcome.custom_id, params, tags_only, _usage_log(repo_root, bill_id))
+                _call_direct(client, outcome.custom_id, params, tags_only, _usage_log(repo_root, bill_id),
+                             model_cls=ArticlesOut if articles_only else None)
                 if params is not None
                 else Errored(outcome.custom_id, "refused, and no longer in the bill to retry")
             )
 
+    if articles_only:
+        applied = apply_articles(bill, outcomes, valid)
+        save_bill(bill, path)
+        return _report(applied, outcomes, raw_path)  # no summary: articles don't feed it
     applied = apply_tags(bill, outcomes) if tags_only else apply(bill, outcomes)
     save_bill(bill, path)  # the clause results are safe on disk before phase 2
 

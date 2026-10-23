@@ -30,7 +30,7 @@
         "suggested_articles": [],
         "sheng_swaps": []
       },
-      "sha256": "3a2815f0114d29d85756d8fa929ca15f5b458eb179a099c2cc010a737bae874f"
+      "sha256": "45cf8d52bcd4bf0f305e264ec8c885732da9329c67a556257e33a3cbd1eb03d1"
     },
     {
       "kind": "clause",
@@ -58,7 +58,43 @@
         "suggested_articles": [],
         "sheng_swaps": []
       },
-      "sha256": "e9d5167e8ba6e3fa874802f1e3ce26a461903b46125fb34ed10d8a65751bd5b1"
+      "sha256": "7b9b5b3e69a503020ae40d843b92e10d08a0901679f69d704893634653f85c66"
+    },
+    {
+      "kind": "clause",
+      "item": {
+        "id": "c9",
+        "number": "12",
+        "heading": "Amendment of section 6",
+        "text": "Section 6 is amended— (a) by deleting \"and\"; (b) KSh 1,000:",
+        "text_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "pages": [
+          3
+        ],
+        "explanation": {
+          "en": "Line one.\nLine two: 12:34 — a dash, \"quotes\", back\\slash, tab\there.",
+          "sw": "Mswada unabadilisha élève na ü (NFD é stays as written).",
+          "sheng": "Ina-add 1.5% kwa scrap metal 🚚 na winnings   sep."
+        },
+        "review": {
+          "status": "draft",
+          "at": null,
+          "sha256": null
+        },
+        "neutral_check": null,
+        "groups": [
+          "transport",
+          "trader"
+        ],
+        "suggested_articles": [
+          43,
+          10,
+          9,
+          201
+        ],
+        "sheng_swaps": []
+      },
+      "sha256": "83c1b45ae628b2932171dcaca8826eca408b314e3cedb98c255849efe1e35b4d"
     },
     {
       "kind": "summary",

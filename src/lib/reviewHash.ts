@@ -15,7 +15,11 @@
 // `node` can load this file directly (check-build).
 import type { Clause, GroupEntry, Review, Summary } from "./schema";
 
-const VERSION = "politricks-review-v1";
+// Per kind, as in the pipeline (hashing.py): adding `suggested_articles`
+// changed only a clause's parts, so only clauses are on v2. Summaries and
+// groups are unchanged, so their reviews and stamps stay valid.
+const VERSION = "politricks-review-v1"; // summary, group
+const CLAUSE_VERSION = "politricks-review-v2"; // clause: v1 plus sorted suggested_articles
 
 // Each part is UTF-8 encoded and prefixed with its byte length and a colon,
 // then all are hashed together. No JSON: its escaping differs by language.
@@ -39,8 +43,11 @@ export async function reviewSha256(parts: string[]): Promise<string> {
 export async function clauseSha256(clause: Clause): Promise<string | null> {
   const text = clause.explanation;
   if (!text) return null;
+  // Articles sort numerically (a plain .sort() would put 10 before 9).
+  const articles = [...clause.suggested_articles].sort((a, b) => a - b).join(",");
   return reviewSha256([
-    VERSION, "clause", clause.id, clause.text, text.en, text.sw, text.sheng, [...clause.groups].sort().join(","),
+    CLAUSE_VERSION, "clause", clause.id, clause.text, text.en, text.sw, text.sheng,
+    [...clause.groups].sort().join(","), articles,
   ]);
 }
 
