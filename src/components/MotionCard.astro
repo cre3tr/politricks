@@ -1,13 +1,18 @@
 ---
 // The Motion Card (devpost/spec.md > Motion Card): a county motion is a
 // resolution, not a bill. It has no clauses, drafts, groups or tabs, so its
-// page is just this card: the resolution text word for word from the
-// fingerprinted official record, beside its three-language note.
+// page is just this card: a short three-language note on what the motion
+// asks for, then the resolution text word for word from the fingerprinted
+// official record, beside its explanation.
 //
 // A motion's JSON holds exactly one clause whose text is the resolution, so
 // the card reuses ClauseCard for that part: the same legal-text-beside-
-// explanation layout, review badge and per-card language flip.
+// explanation layout, review badge and per-card language flip. The note is
+// the bill's `summary`, rendered with the same `summary-card` markup as a
+// bill page, so scripts/check-build.mjs checks it the same way.
 import type { Bill } from "../lib/schema";
+import { badgeFor } from "../lib/badge";
+import { displayStatus, summarySha256 } from "../lib/reviewHash";
 import ClauseCard from "./ClauseCard.astro";
 
 interface Props {
@@ -16,6 +21,7 @@ interface Props {
 
 const { bill } = Astro.props;
 const resolution = bill.clauses[0];
+const summaryBadge = bill.summary ? badgeFor(displayStatus(bill.summary.review, await summarySha256(bill.summary))) : null;
 ---
 <section class="motion-card" aria-label="Motion">
   <p class="motion-label">
@@ -23,6 +29,16 @@ const resolution = bill.clauses[0];
     <span data-l="sw" lang="sw">Hoja ya kaunti: azimio la Bunge la Kaunti, si sheria</span>
     <span data-l="sheng" lang="sw-x-sheng">County motion: resolution ya Assembly, si law</span>
   </p>
+  {
+    bill.summary && (
+      <section class="summary-card" aria-label="Summary">
+        {summaryBadge && <span class={`badge ${summaryBadge.className}`}>{summaryBadge.label}</span>}
+        <p data-l="en" lang="en">{bill.summary.text.en}</p>
+        <p data-l="sw" lang="sw">{bill.summary.text.sw}</p>
+        <p data-l="sheng" lang="sw-x-sheng">{bill.summary.text.sheng}</p>
+      </section>
+    )
+  }
   {resolution ? <ClauseCard clause={resolution} billId={bill.id} /> : <p>The motion text is not loaded yet.</p>}
 </section>
 
@@ -42,5 +58,20 @@ const resolution = bill.clauses[0];
   :global(html[data-lang="sw"]) .motion-label :global([data-l="sw"]),
   :global(html[data-lang="sheng"]) .motion-label :global([data-l="sheng"]) {
     display: inline;
+  }
+  .summary-card {
+    border: 1px solid var(--flag-black);
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    border: 1px solid var(--matatu-brown);
+    color: var(--matatu-brown);
+    margin-bottom: 0.5rem;
   }
 </style>

@@ -12,8 +12,9 @@
 //
 // The facts are hand-checked YAML (pipeline/civic/); only the three-language
 // texts are Claude's translations, badged as drafts until reviewed.
-import type { Bill, Review } from "../lib/schema";
+import type { Bill } from "../lib/schema";
 import { badgeFor } from "../lib/badge";
+import { civicSha256, displayStatus } from "../lib/reviewHash";
 
 interface Props {
   bill: Bill;
@@ -29,17 +30,19 @@ const checkedAt = passed ? challenge?.checked_at : participation?.checked_at ?? 
 const longDate = (iso: string) =>
   new Date(`${iso.slice(0, 10)}T12:00:00Z`).toLocaleDateString("en-KE", { year: "numeric", month: "long", day: "numeric" });
 
-// There is no TypeScript twin of civic.py's fingerprint yet, so a civic block
-// can't be shown as Reviewed honestly: anything but a plain draft is shown as
-// "Changed since review" until that twin exists. Today every block is a draft.
-const civicBadge = (review: Review) => badgeFor(review.status === "draft" ? "draft" : "changed");
+// Badges come from the same rule as the clause cards: "Reviewed" only while
+// the block's fingerprint (civicSha256, twin of civic.civic_sha256) still
+// matches what was accepted, else "Changed since review".
+const partBadge = participation ? badgeFor(displayStatus(participation.review, await civicSha256("participation", participation))) : null;
+const stageBadge = stageNext ? badgeFor(displayStatus(stageNext.review, await civicSha256("stage_next", stageNext))) : null;
+const challengeBadge = challenge ? badgeFor(displayStatus(challenge.review, await civicSha256("challenge", challenge))) : null;
 ---
 <section class="participation" data-checked={checkedAt ?? ""} aria-label="Have your say">
   {
     passed ? (
       challenge ? (
         <>
-          <span class={`badge ${civicBadge(challenge.review).className}`}>{civicBadge(challenge.review).label}</span>
+          {challengeBadge && <span class={`badge ${challengeBadge.className}`}>{challengeBadge.label}</span>}
           <p class="lead" data-l="en" lang="en">This is now law. These are the avenues the Constitution sets out. General information, not advice.</p>
           <p class="lead" data-l="sw" lang="sw">Hii sasa ni sheria. Hizi ndizo njia ambazo Katiba inaweka. Ni taarifa ya jumla, si ushauri.</p>
           <p class="lead" data-l="sheng" lang="sw-x-sheng">Hii sasa ni law. Hizi ndio njia Katiba ina-set. Ni general information, si advice.</p>
@@ -92,7 +95,7 @@ const civicBadge = (review: Review) => badgeFor(review.status === "draft" ? "dra
 
         {participation && (
           <div class="facts">
-            <span class={`badge ${civicBadge(participation.review).className}`}>{civicBadge(participation.review).label}</span>
+            {partBadge && <span class={`badge ${partBadge.className}`}>{partBadge.label}</span>}
             <h3>
               <span data-l="en" lang="en">What a submission needs</span>
               <span data-l="sw" lang="sw">Maoni yanahitaji nini</span>
@@ -129,7 +132,7 @@ const civicBadge = (review: Review) => badgeFor(review.status === "draft" ? "dra
 
         {stageNext && (
           <div class="stage-next">
-            <span class={`badge ${civicBadge(stageNext.review).className}`}>{civicBadge(stageNext.review).label}</span>
+            {stageBadge && <span class={`badge ${stageBadge.className}`}>{stageBadge.label}</span>}
             <h3>
               <span data-l="en" lang="en">Where it is now, and what usually happens next</span>
               <span data-l="sw" lang="sw">Uko wapi sasa, na kinachofuata kwa kawaida</span>

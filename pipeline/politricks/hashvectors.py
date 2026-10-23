@@ -44,12 +44,36 @@ group = {"group": "trader", "text": {"en": "Traders.", "sw": "Wafanyabiashara.",
 
 
 
+# Civic blocks (civic.civic_sha256; twin `civicSha256` in reviewHash.ts).
+# Facts are in the fingerprint too, so the vectors carry awkward ones: a null
+# deadline_time, two channels, a colon and quotes in a value, accents.
+draft = {"status": "draft", "at": None, "sha256": None}
+participation = {
+    "open": True, "deadline": "2026-11-02", "deadline_time": None,
+    "channels": [{"type": "email", "value": "clerk@parliament.go.ke (copy: \"committee\")"},
+                 {"type": "portal", "value": "https://www.parliament.go.ke/contact/x?bill=A%20B"}],
+    "requirements": {"en": "Written memoranda: 2 copies.", "sw": "Maoni ya maandishi: nakala 2.", "sheng": "Memoranda za maandishi, copies 2."},
+    "source_url": "https://www.parliament.go.ke/node/1", "checked_at": "2026-10-23", "sheng_swaps": [], "review": draft,
+}
+stage_next = {"text": {"en": "Second Reading next.", "sw": "Kusomwa kwa mara ya pili kunafuata.", "sheng": "Second Reading ndio inafuata."},
+              "source_url": "https://www.parliament.go.ke/tracker.pdf", "sheng_swaps": [], "review": draft}
+challenge = {"checked_at": "2026-10-19", "sheng_swaps": [], "review": draft, "avenues": [
+    {"name": {"en": "A petition", "sw": "Ombi", "sheng": "Petition"}, "text": {"en": "Article 119.", "sw": "Ibara ya 119.", "sheng": "Article 119."}, "source_url": "https://example.org/a"},
+    {"name": {"en": "Court", "sw": "Mahakama", "sheng": "Kort"}, "text": {"en": "Article 22.", "sw": "Ibara ya 22.", "sheng": "Article 22."}, "source_url": "https://example.org/b"},
+]}
+
+
 def build() -> list[dict]:
     """Every vector, with the fingerprint this side computes NOW."""
+    from . import civic  # imported here: civic imports generate, which is heavy
+
     vectors = []
     for kind, data, model in (("clause", clause, Clause), ("clause", untagged, Clause),
                               ("clause", with_articles, Clause), ("summary", summary, Summary), ("group", group, GroupEntry)):
         vectors.append({"kind": kind, "item": data, "sha256": current_sha256(model.model_validate(data))})
+    for kind, data in (("participation", participation), ("stage_next", stage_next), ("challenge", challenge)):
+        block = civic.BLOCK_MODELS[kind].model_validate(data)
+        vectors.append({"kind": f"civic-{kind}", "item": data, "sha256": civic.civic_sha256(kind, block)})
     return vectors
 
 

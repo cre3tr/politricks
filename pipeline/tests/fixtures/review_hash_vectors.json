@@ -134,6 +134,97 @@
         "sheng_swaps": []
       },
       "sha256": "7e5e37c48489a27d4de96ffc12a0deb4191db85a6ec767ed770ce4daa73eed1e"
+    },
+    {
+      "kind": "civic-participation",
+      "item": {
+        "open": true,
+        "deadline": "2026-11-02",
+        "deadline_time": null,
+        "channels": [
+          {
+            "type": "email",
+            "value": "clerk@parliament.go.ke (copy: \"committee\")"
+          },
+          {
+            "type": "portal",
+            "value": "https://www.parliament.go.ke/contact/x?bill=A%20B"
+          }
+        ],
+        "requirements": {
+          "en": "Written memoranda: 2 copies.",
+          "sw": "Maoni ya maandishi: nakala 2.",
+          "sheng": "Memoranda za maandishi, copies 2."
+        },
+        "source_url": "https://www.parliament.go.ke/node/1",
+        "checked_at": "2026-10-23",
+        "sheng_swaps": [],
+        "review": {
+          "status": "draft",
+          "at": null,
+          "sha256": null
+        }
+      },
+      "sha256": "d818329f231d062dcb6b6b9a5388249d095eaa895f8cf1c6aa117c0e3afe5a7e"
+    },
+    {
+      "kind": "civic-stage_next",
+      "item": {
+        "text": {
+          "en": "Second Reading next.",
+          "sw": "Kusomwa kwa mara ya pili kunafuata.",
+          "sheng": "Second Reading ndio inafuata."
+        },
+        "source_url": "https://www.parliament.go.ke/tracker.pdf",
+        "sheng_swaps": [],
+        "review": {
+          "status": "draft",
+          "at": null,
+          "sha256": null
+        }
+      },
+      "sha256": "8e91d351c6b77b1b8c331c4dadc41f8bdc9352df32309227494e462bb729bc10"
+    },
+    {
+      "kind": "civic-challenge",
+      "item": {
+        "checked_at": "2026-10-19",
+        "sheng_swaps": [],
+        "review": {
+          "status": "draft",
+          "at": null,
+          "sha256": null
+        },
+        "avenues": [
+          {
+            "name": {
+              "en": "A petition",
+              "sw": "Ombi",
+              "sheng": "Petition"
+            },
+            "text": {
+              "en": "Article 119.",
+              "sw": "Ibara ya 119.",
+              "sheng": "Article 119."
+            },
+            "source_url": "https://example.org/a"
+          },
+          {
+            "name": {
+              "en": "Court",
+              "sw": "Mahakama",
+              "sheng": "Kort"
+            },
+            "text": {
+              "en": "Article 22.",
+              "sw": "Ibara ya 22.",
+              "sheng": "Article 22."
+            },
+            "source_url": "https://example.org/b"
+          }
+        ]
+      },
+      "sha256": "12f2c28775f1f9d81335fd308f5476a9f9b598749886f5953809fe2efd1309b1"
     }
   ]
 }

@@ -13,7 +13,7 @@
 // Uses Web Crypto (`crypto.subtle`), built into Node and browsers alike, so
 // it needs no dependency; that makes it async. Imports are type-only, so
 // `node` can load this file directly (check-build).
-import type { Clause, GroupEntry, Review, Summary } from "./schema";
+import type { Challenge, Clause, GroupEntry, Participation, Review, StageNext, Summary } from "./schema";
 
 // Per kind, as in the pipeline (hashing.py): adding `suggested_articles`
 // changed only a clause's parts, so only clauses are on v2. Summaries and
@@ -59,6 +59,35 @@ export async function summarySha256(summary: Summary): Promise<string> {
 export async function groupSha256(entry: GroupEntry): Promise<string> {
   const text = entry.text;
   return reviewSha256([VERSION, "group", entry.group, text.en, text.sw, text.sheng, entry.clause_ids.join(",")]);
+}
+
+// A civic block (participation, stage_next, challenge): twin of
+// `civic.civic_sha256` in the pipeline. It covers every reader-visible field,
+// facts included, namespaced "civic-<kind>" so it can never equal another
+// fingerprint. Checked against the same shared vectors as the others.
+export type CivicKind = "participation" | "stage_next" | "challenge";
+
+export async function civicSha256(kind: "participation", block: Participation): Promise<string>;
+export async function civicSha256(kind: "stage_next", block: StageNext): Promise<string>;
+export async function civicSha256(kind: "challenge", block: Challenge): Promise<string>;
+export async function civicSha256(kind: CivicKind, block: Participation | StageNext | Challenge): Promise<string> {
+  const parts = [VERSION, `civic-${kind}`];
+  if (kind === "participation") {
+    const p = block as Participation;
+    parts.push(p.open ? "true" : "false", p.deadline ?? "", p.deadline_time ?? "", String(p.channels.length));
+    for (const channel of p.channels) parts.push(channel.type, channel.value);
+    parts.push(p.requirements.en, p.requirements.sw, p.requirements.sheng, p.source_url, p.checked_at);
+  } else if (kind === "stage_next") {
+    const s = block as StageNext;
+    parts.push(s.text.en, s.text.sw, s.text.sheng, s.source_url);
+  } else {
+    const c = block as Challenge;
+    parts.push(c.checked_at, String(c.avenues.length));
+    for (const avenue of c.avenues) {
+      parts.push(avenue.name.en, avenue.name.sw, avenue.name.sheng, avenue.text.en, avenue.text.sw, avenue.text.sheng, avenue.source_url);
+    }
+  }
+  return reviewSha256(parts);
 }
 
 // What the badge shows. "changed" = it was reviewed, but the content is no

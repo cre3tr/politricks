@@ -89,11 +89,18 @@ function check(label, condition, detail = "") {
 // Node 24 loads the .ts file directly (its imports are type-only).
 // ---------------------------------------------------------------------------
 const reviewHash = await import(new URL("../src/lib/reviewHash.ts", import.meta.url).href);
-const { clauseSha256, summarySha256, groupSha256, displayStatus } = reviewHash;
+const { clauseSha256, summarySha256, groupSha256, civicSha256, displayStatus } = reviewHash;
 const { vectors } = JSON.parse(
   readFileSync(fileURLToPath(new URL("../pipeline/tests/fixtures/review_hash_vectors.json", import.meta.url)), "utf-8")
 );
-const twin = { clause: clauseSha256, summary: summarySha256, group: groupSha256 };
+const twin = {
+  clause: clauseSha256,
+  summary: summarySha256,
+  group: groupSha256,
+  "civic-participation": (item) => civicSha256("participation", item),
+  "civic-stage_next": (item) => civicSha256("stage_next", item),
+  "civic-challenge": (item) => civicSha256("challenge", item),
+};
 const got = await Promise.all(vectors.map((vector) => twin[vector.kind](vector.item)));
 const mismatched = vectors.filter((vector, i) => got[i] !== vector.sha256);
 check(
