@@ -304,6 +304,9 @@ def self_test(repo_root: Path) -> bool:
 
     def comparable(data: dict) -> dict:
         view = copy.deepcopy(data)
+        # A source marked `ocr: true` is recorded by `politricks ocr`, a later
+        # layer: a first load (fetch) never makes it (slice 8).
+        view["sources"] = [source for source in view["sources"] if not source.get("ocr")]
         for source in view["sources"]:
             source.pop("fetched_at", None)
         view.update(copy.deepcopy(_BILL_LATER_LAYERS))

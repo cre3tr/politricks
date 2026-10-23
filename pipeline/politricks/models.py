@@ -14,7 +14,7 @@ import re
 from pathlib import Path
 from typing import Literal, Optional
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, model_serializer, model_validator
 
 from .hashing import CLAUSE_HASH_VERSION, REVIEW_HASH_VERSION, review_sha256
 
@@ -74,6 +74,20 @@ class Source(BaseModel):
     # can contain small typing glitches). Set per source in sources.yaml; the
     # site shows a note only for these.
     scanned: bool = False
+    # True when the file is a scan with NO text layer, so its text can only come
+    # from OCR (`politricks ocr`, slice 8). Such a source is never the text the
+    # clauses were cut from: it is the "after" of a comparison, and the site
+    # labels every line read from it. Left out of the JSON while False, so
+    # saving a bill that has no OCR source writes the same bytes as before the
+    # field existed.
+    ocr: bool = False
+
+    @model_serializer(mode="wrap")
+    def _leave_out_ocr_when_false(self, handler):
+        data = handler(self)
+        if not data.get("ocr"):
+            data.pop("ocr", None)
+        return data
 
 
 class ShengSwap(BaseModel):
@@ -125,6 +139,45 @@ class GroupEntry(BaseModel):
     sheng_swaps: list[ShengSwap] = []
 
 
+class Change(BaseModel):
+    """One difference between two versions of a bill (devpost/spec.md > Data
+    Model, `changes[]`), found by `politricks compare` (slice 8).
+
+    `before` is the legal text of the earlier version, word for word (the
+    bill's own clause text, so it is fingerprinted). `after` is the later
+    version's text; when `ocr` is true it was READ BY OCR from a scan, so it is
+    not verbatim and the site says so on every row. A clause added in the later
+    version has `before: null`; one dropped has `after: null`. The `note` is
+    Claude's plain-words description, a draft until a human reviews it. Neither
+    `before` nor `after` is ever linted: they are law, and a law may say "vote".
+    """
+
+    model_config = _STRICT
+    kind: Literal["draft", "current_law", "act"]
+    # The earlier version's clause id ("c7") when there is one; "added:<number>"
+    # for a clause that only the later version has.
+    clause_id: str
+    heading: str = ""  # the earlier clause's heading; "" for an added clause
+    before_number: Optional[str] = None
+    after_number: Optional[str] = None
+    before: Optional[str]
+    after: Optional[str]
+    note: Tri
+    review: Review = Review(status="draft")
+    source_label: str
+    ocr: bool = False  # `after` was read by OCR from a scan
+    after_pages: list[int] = []  # PDF pages of `after`, for the "check the PDF" link
+    sheng_swaps: list[ShengSwap] = []
+
+    @model_validator(mode="after")
+    def _has_a_side(self) -> "Change":
+        if self.before is None and self.after is None:
+            raise ValueError("a change needs a before or an after text")
+        if self.ocr and self.after is None:
+            raise ValueError("ocr: true needs an after text")
+        return self
+
+
 class Bill(BaseModel):
     """Everything the website needs to show one bill."""
 
@@ -143,7 +196,7 @@ class Bill(BaseModel):
     clauses: list[Clause] = []
     # The fields below are filled by later slices (compare, civic data).
     stage_next: Optional[dict] = None
-    changes: list[dict] = []
+    changes: list[Change] = []
     participation: Optional[dict] = None
     challenge: Optional[dict] = None
 
@@ -158,7 +211,7 @@ def _clause_parts(clause: Clause, text: Tri) -> list[str]:
     return ["clause", clause.id, clause.text, text.en, text.sw, text.sheng, ",".join(sorted(clause.groups))]
 
 
-def current_sha256(owner: Clause | Summary | GroupEntry) -> Optional[str]:
+def current_sha256(owner: Clause | Summary | GroupEntry | Change) -> Optional[str]:
     """The fingerprint of what a reviewer accepts for this item, as it is now.
 
     It covers the three texts a reader sees, plus what decides WHO sees the
@@ -178,6 +231,15 @@ def current_sha256(owner: Clause | Summary | GroupEntry) -> Optional[str]:
     elif isinstance(owner, Summary):
         text = owner.text
         parts = ["summary", text.en, text.sw, text.sheng]
+    elif isinstance(owner, Change):
+        # A change note is stamped with the two legal texts it describes as well
+        # as its own words, so a re-compare that finds different texts un-reviews
+        # the note. A missing side is "" (a real text is never empty). The kind
+        # and clause id are in too, so two changes can never share a stamp.
+        # `ocr`, `after_pages`, `heading` and the labels are left out: they are
+        # signposts, not what a reviewer reads and accepts.
+        text = owner.note
+        parts = ["change", owner.kind, owner.clause_id, owner.before or "", owner.after or "", text.en, text.sw, text.sheng]
     else:
         text = owner.text
         parts = ["group", owner.group, text.en, text.sw, text.sheng, ",".join(owner.clause_ids)]
@@ -205,13 +267,13 @@ def is_v1_stamped(clause: Clause) -> bool:
     return stored is not None and stored == legacy_clause_sha256_v1(clause) and stored != current_sha256(clause)
 
 
-def is_reviewed(owner: Clause | Summary | GroupEntry) -> bool:
+def is_reviewed(owner: Clause | Summary | GroupEntry | Change) -> bool:
     """Reviewed AND unchanged since. The only state that earns "Reviewed"."""
     review = owner.review
     return review.status == "reviewed" and review.sha256 is not None and review.sha256 == current_sha256(owner)
 
 
-def changed_since_review(owner: Clause | Summary | GroupEntry) -> bool:
+def changed_since_review(owner: Clause | Summary | GroupEntry | Change) -> bool:
     return owner.review.status == "reviewed" and not is_reviewed(owner)
 
 
@@ -221,7 +283,7 @@ def changed_since_review(owner: Clause | Summary | GroupEntry) -> bool:
 HAND_EDITED = "hand-edited"
 
 
-def is_hand_edited(owner: Clause | Summary | GroupEntry) -> bool:
+def is_hand_edited(owner: Clause | Summary | GroupEntry | Change) -> bool:
     """A draft that is no longer exactly what `generate` wrote: edited in
     `politricks review` (fingerprint HAND_EDITED) or in the JSON (fingerprint
     no longer matches). A draft with no fingerprint is treated as untouched:
@@ -231,13 +293,13 @@ def is_hand_edited(owner: Clause | Summary | GroupEntry) -> bool:
     return review.status == "draft" and review.sha256 is not None and review.sha256 != current_sha256(owner)
 
 
-def is_protected(owner: Clause | Summary | GroupEntry) -> bool:
+def is_protected(owner: Clause | Summary | GroupEntry | Change) -> bool:
     """Human work `generate` must never overwrite: anything reviewed (changed
     since or not) and any hand-edited draft."""
     return owner.review.status == "reviewed" or is_hand_edited(owner)
 
 
-def draft_review(owner: Clause | Summary | GroupEntry) -> Review:
+def draft_review(owner: Clause | Summary | GroupEntry | Change) -> Review:
     """The review record `generate` gives an item it has just written."""
     return Review(status="draft", sha256=current_sha256(owner))
 

@@ -14,6 +14,8 @@ Run from anywhere; paths are resolved from the repo root, not your current folde
     uv run --project pipeline politricks generate finance-act-2026 --articles-only [--dry-run | --batch-id X]
     uv run --project pipeline politricks restamp finance-act-2026 [--dry-run] [--self-test]
     uv run --project pipeline politricks civic public-participation-bill-2025 [--dry-run] [--force] [--self-test]
+    uv run --project pipeline politricks ocr public-participation-bill-2025 [--force] [--self-test]
+    uv run --project pipeline politricks compare public-participation-bill-2025 [--dry-run] [--force] [--include c7 ...] [--self-test]
     uv run --project pipeline politricks lint [finance-act-2026] [--self-test]
     uv run --project pipeline politricks review finance-act-2026 [--self-test]
     uv run --project pipeline politricks review finance-act-2026 --flagged      (or --only c2 summary)
@@ -127,6 +129,28 @@ def _dispatch() -> None:
     p_civic.add_argument("--self-test", action="store_true", help="offline check with a fake client in a temp folder (writes nothing real)")
     p_civic.add_argument("--dry-run", action="store_true", help="validate and print what would be translated: no API call, no write")
     p_civic.add_argument("--force", action="store_true", help="translate again even where the English is unchanged (never a reviewed or hand-edited block)")
+
+    p_ocr = sub.add_parser(
+        "ocr",
+        help="read the bill's scanned `ocr: true` source with Tesseract (needs it installed) and save the text, so `compare` can use it",
+    )
+    p_ocr.add_argument("bill_id", nargs="?")
+    p_ocr.add_argument("--force", action="store_true", help="read the PDF again even if its OCR text is already up to date")
+    p_ocr.add_argument("--psm", type=int, default=4, help="Tesseract page segmentation mode (default 4: one column of variable-size text)")
+    p_ocr.add_argument("--self-test", action="store_true", help="offline check with a fake Tesseract in a temp folder (writes nothing real)")
+
+    p_compare = sub.add_parser(
+        "compare",
+        help="match the bill's clauses against the OCR'd later version and have Claude write a note per difference (changes[])",
+    )
+    p_compare.add_argument("bill_id", nargs="?")
+    p_compare.add_argument("--dry-run", action="store_true", help="print the matched pairs, scores and what would be sent: no API call, no write")
+    p_compare.add_argument("--force", action="store_true", help="write the notes again for untouched drafts (never a reviewed or hand-edited one)")
+    p_compare.add_argument(
+        "--include", nargs="+", metavar="ID", default=[],
+        help="treat these BORDERLINE pairs (by clause id, e.g. c7) as real changes after checking the PDF",
+    )
+    p_compare.add_argument("--self-test", action="store_true", help="offline check with a fake client in a temp folder (writes nothing real)")
 
     p_lint = sub.add_parser("lint", help="fail on banned phrases and neutrality flags in every generated text")
     p_lint.add_argument("bill_id", nargs="?", help="one bill (default: every bill in src/data/bills)")
@@ -264,6 +288,24 @@ def _dispatch() -> None:
         if not args.bill_id:
             parser.error("civic needs a bill id (or --self-test)")
         sys.exit(civic.run(REPO_ROOT, args.bill_id, dry_run=args.dry_run, force=args.force))
+
+    elif args.command == "ocr":
+        from . import ocr
+
+        if args.self_test:
+            sys.exit(0 if ocr.self_test(REPO_ROOT) else 1)
+        if not args.bill_id:
+            parser.error("ocr needs a bill id (or --self-test)")
+        sys.exit(ocr.run(REPO_ROOT, args.bill_id, force=args.force, psm=args.psm))
+
+    elif args.command == "compare":
+        from . import compare
+
+        if args.self_test:
+            sys.exit(0 if compare.self_test(REPO_ROOT) else 1)
+        if not args.bill_id:
+            parser.error("compare needs a bill id (or --self-test)")
+        sys.exit(compare.run(REPO_ROOT, args.bill_id, dry_run=args.dry_run, force=args.force, include=args.include))
 
     elif args.command == "lint":
         from . import lint

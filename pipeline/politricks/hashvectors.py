@@ -62,10 +62,30 @@ challenge = {"checked_at": "2026-10-19", "sheng_swaps": [], "review": draft, "av
     {"name": {"en": "Court", "sw": "Mahakama", "sheng": "Kort"}, "text": {"en": "Article 22.", "sw": "Ibara ya 22.", "sheng": "Article 22."}, "source_url": "https://example.org/b"},
 ]}
 
+# Change notes (models.current_sha256 for a Change; twin `changeSha256` in
+# reviewHash.ts, slice 8). The two legal texts are in the fingerprint, so the
+# vectors carry awkward ones: a dash, quotes, a colon, a newline, U+2028, NFD
+# accents; and a missing side (null before for an added clause, null after for
+# a dropped one), which both twins read as "".
+change_note = {"en": "Section 6: \"thirty\" became \"fourteen\".\nSee 12:34.", "sw": "Siku “thelathini” zimekuwa élève 14.",
+               "sheng": "30 days sasa ni 14   days \U0001F69A."}
+change_changed = {
+    "kind": "draft", "clause_id": "c12", "heading": "Short title.", "before_number": "12", "after_number": "13",
+    "before": "12. Section 6 is amended— (a) by deleting \"and\"; (b) KSh 1,000:\nwithin thirty days.",
+    "after": "13. Section 6 is amended— (a) by deleting \"and\"; (b) KSh 1,000: within fourteen days é.",
+    "note": change_note, "review": draft, "source_label": "First published compared with approved (read by OCR)",
+    "ocr": True, "after_pages": [4, 5], "sheng_swaps": [],
+}
+change_added = {**change_changed, "clause_id": "added:5", "before_number": None, "after_number": "5", "heading": "",
+                "before": None, "after": "5. A new clause: it says \"report\" yearly."}
+change_dropped = {**change_changed, "clause_id": "c4", "after_number": None, "after": None, "ocr": False, "after_pages": [],
+                  "before": "4. A dropped clause."}
+
 
 def build() -> list[dict]:
     """Every vector, with the fingerprint this side computes NOW."""
     from . import civic  # imported here: civic imports generate, which is heavy
+    from .models import Change
 
     vectors = []
     for kind, data, model in (("clause", clause, Clause), ("clause", untagged, Clause),
@@ -74,6 +94,8 @@ def build() -> list[dict]:
     for kind, data in (("participation", participation), ("stage_next", stage_next), ("challenge", challenge)):
         block = civic.BLOCK_MODELS[kind].model_validate(data)
         vectors.append({"kind": f"civic-{kind}", "item": data, "sha256": civic.civic_sha256(kind, block)})
+    for data in (change_changed, change_added, change_dropped):
+        vectors.append({"kind": "change", "item": data, "sha256": current_sha256(Change.model_validate(data))})
     return vectors
 
 

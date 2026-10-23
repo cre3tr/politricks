@@ -70,6 +70,17 @@ public-participation-bill-2025:
       official: true
       file: bill.pdf
       scanned: true   # scanned paper: variable type sizes, specks read as characters
+    # Slice 8 (learner's call, 2026-10-23): the National Assembly-approved text
+    # is a 10-page scan with NO text layer (page 10 blank), so it can't be a
+    # source of clauses. `politricks ocr` reads it with Tesseract and
+    # `politricks compare` sets it beside the first-published text above. Every
+    # line read from it is labelled on the site as read by OCR.
+    # The label is shown to readers: no dash, say plainly it is OCR.
+    - label: "Public Participation Bill, 2025 (as approved by the National Assembly, 12 Aug 2026: text read by OCR)"
+      url: "https://www.parliament.go.ke/sites/default/files/2026-09/The%20Public%20Participation%20Bill%2C%202025%20%28National%20Assembly%20Bills%20No.%2044%20of%202025%29-%20as%20approved%20by%20NA%20.pdf"
+      official: true
+      file: approved.pdf
+      ocr: true
 
 nairobi-appropriation-bill-2026:
   # Nairobi City County Assembly, bills page https://nairobiassembly.go.ke/bills/

@@ -13,7 +13,7 @@
 // Uses Web Crypto (`crypto.subtle`), built into Node and browsers alike, so
 // it needs no dependency; that makes it async. Imports are type-only, so
 // `node` can load this file directly (check-build).
-import type { Challenge, Clause, GroupEntry, Participation, Review, StageNext, Summary } from "./schema";
+import type { Challenge, Change, Clause, GroupEntry, Participation, Review, StageNext, Summary } from "./schema";
 
 // Per kind, as in the pipeline (hashing.py): adding `suggested_articles`
 // changed only a clause's parts, so only clauses are on v2. Summaries and
@@ -59,6 +59,18 @@ export async function summarySha256(summary: Summary): Promise<string> {
 export async function groupSha256(entry: GroupEntry): Promise<string> {
   const text = entry.text;
   return reviewSha256([VERSION, "group", entry.group, text.en, text.sw, text.sheng, entry.clause_ids.join(",")]);
+}
+
+// A change note (slice 8): twin of `models.current_sha256` for a `Change`. It
+// covers the two legal texts the note describes as well as its own words, so a
+// re-compare that finds different texts un-reviews the note; a missing side is
+// "". `ocr`, `after_pages`, `heading` and the labels are left out.
+export async function changeSha256(change: Change): Promise<string> {
+  const note = change.note;
+  return reviewSha256([
+    VERSION, "change", change.kind, change.clause_id, change.before ?? "", change.after ?? "",
+    note.en, note.sw, note.sheng,
+  ]);
 }
 
 // A civic block (participation, stage_next, challenge): twin of

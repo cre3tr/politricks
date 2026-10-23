@@ -163,6 +163,11 @@ def _fetch_bill(repo_root: Path, bill_id: str) -> Bill:
     for item in entry["sources"]:
         if item.get("official") and not is_allowed(item["url"]):
             raise SystemExit(f"refused: {item['url']} is marked official but not allowlisted")
+        if item.get("ocr"):
+            # A scan with no text layer (slice 8): `politricks ocr` fetches,
+            # fingerprints and records it, together with the text it reads.
+            # Fetching it here would leave a PDF with no OCR text beside it.
+            continue
         body, final_url = download_pdf(item["url"])
         target = folder / item["file"]
         target.write_bytes(body)
@@ -184,6 +189,8 @@ def _fetch_bill(repo_root: Path, bill_id: str) -> Bill:
                 sha256=digest,
                 file=target.relative_to(repo_root).as_posix(),
                 scanned=bool(item.get("scanned", False)),
+                # A scan with no text layer, read by `politricks ocr` (slice 8).
+                ocr=bool(item.get("ocr", False)),
             )
         )
 
@@ -201,6 +208,18 @@ def _fetch_bill(repo_root: Path, bill_id: str) -> Bill:
         if previous and previous.sha256 == source.sha256:
             source = source.model_copy(update={"fetched_at": previous.fetched_at})
         merged.append(source)
+    # An `ocr: true` source was skipped above, so it is kept as `politricks ocr`
+    # recorded it (its fingerprint and date), with the label and URL refreshed
+    # from the registry like every other source. One the registry no longer
+    # lists disappears, as any source does.
+    for item in entry["sources"]:
+        if item.get("ocr"):
+            kept = previous_by_file.get(f"sources/{bill_id}/{item['file']}")
+            if kept is not None:
+                merged.append(kept.model_copy(update={
+                    "label": item["label"], "url": item["url"], "official": bool(item.get("official")),
+                    "scanned": bool(item.get("scanned", False)),
+                }))
     bill.sources = merged
     save_bill(bill, json_path)
     return bill

@@ -1,0 +1,49 @@
+# Layout rules for READING the National Assembly-approved Public Participation
+# Bill, 2025 by OCR (`politricks ocr`, then `politricks compare`). Not for
+# `politricks extract`: that reads the first-published text-layer copy and has
+# its own file, public-participation-bill-2025.yaml.
+#
+# Written 2026-10-23 from looking at pages 1 to 4 of the PDF (a 10-page scan,
+# 595 x 842 pt pages, page 10 blank) BEFORE Tesseract was installed, so every
+# number here is a first guess to confirm against the audit file after the
+# first real run. May only move boundaries, strip running headers or set aside
+# marginal notes: it never supplies or edits any text.
+
+# The cover sheet (page 1) and the Arrangement of Clauses (page 2) come before
+# "ENACTED ...", which start_after already cuts, so only the cover is skipped.
+skip_pages: [1]
+
+# "ENACTED by the Parliament of Kenya, as follows" starts the legal body. These
+# two are also the defaults in ocr.py; written out so the file reads on its own.
+start_after: '(?i)ENACTED\s+by\s+the\s+Parliament'
+end_before: '(?i)^MEMORANDUM\s+OF\s+OBJECTS'
+
+# The approved Arrangement of Clauses (PDF page 2) lists 21 clauses, ending
+# "20-Court may void exercise." and "21-Transitional provision.". A different
+# count from the OCR text means a clause number was misread or a heading was
+# cut wrong, and the log above the error says which.
+expected_clause_count: 21
+
+# Marginal notes ("Short title", "Interpretation") are small type to the right of
+# the body column. Measured by eye on pages 3 and 4: the body ends near x = 410 pt
+# and the notes begin near x = 418 pt, a gutter of roughly 8 to 10 pt. The search
+# window (points, not pixels) covers the shift between scans; each page's gutter
+# is the widest empty strip inside it. If the first run's audit file shows body
+# words in the margin list, or notes in the body, move this window; if a page
+# is refused as "looks like body text", look at that page before loosening it.
+margin_mode: gutter
+gutter_search: [395, 440]
+gutter_min: 5
+
+# The running head "The Public Participation Bill, 2025" on every page, with
+# the page rule around it that OCR may read as dashes. Only the first and last
+# three lines of a page are tested, and no more than 4 may go (ocr.py).
+strip_patterns:
+  - '^\d{1,4}$'
+  - '(?i)Public\s*Participation\s*B\w{1,3}\W{0,3}\s*20\d\d\W*$'
+
+# For the rest of OCR's mistakes, the same keys as the other override files work
+# here (extract.segment reads them):
+#   start_noise: [13]       clause numbers whose line starts with 1-2 junk characters
+#   ignore_starts: ["..."]  a whole line that looks like a clause start and isn't
+#   part_heading: '<regex>' if "PART IV" is read as something the default misses

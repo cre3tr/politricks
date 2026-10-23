@@ -225,6 +225,93 @@
         ]
       },
       "sha256": "12f2c28775f1f9d81335fd308f5476a9f9b598749886f5953809fe2efd1309b1"
+    },
+    {
+      "kind": "change",
+      "item": {
+        "kind": "draft",
+        "clause_id": "c12",
+        "heading": "Short title.",
+        "before_number": "12",
+        "after_number": "13",
+        "before": "12. Section 6 is amended— (a) by deleting \"and\"; (b) KSh 1,000:\nwithin thirty days.",
+        "after": "13. Section 6 is amended— (a) by deleting \"and\"; (b) KSh 1,000: within fourteen days é.",
+        "note": {
+          "en": "Section 6: \"thirty\" became \"fourteen\".\nSee 12:34.",
+          "sw": "Siku “thelathini” zimekuwa élève 14.",
+          "sheng": "30 days sasa ni 14   days 🚚."
+        },
+        "review": {
+          "status": "draft",
+          "at": null,
+          "sha256": null
+        },
+        "source_label": "First published compared with approved (read by OCR)",
+        "ocr": true,
+        "after_pages": [
+          4,
+          5
+        ],
+        "sheng_swaps": []
+      },
+      "sha256": "ba1d2720f178c0af5d4e84ea0c2aa0e68515058360cc8a7dfc1c8e1100b7d209"
+    },
+    {
+      "kind": "change",
+      "item": {
+        "kind": "draft",
+        "clause_id": "added:5",
+        "heading": "",
+        "before_number": null,
+        "after_number": "5",
+        "before": null,
+        "after": "5. A new clause: it says \"report\" yearly.",
+        "note": {
+          "en": "Section 6: \"thirty\" became \"fourteen\".\nSee 12:34.",
+          "sw": "Siku “thelathini” zimekuwa élève 14.",
+          "sheng": "30 days sasa ni 14   days 🚚."
+        },
+        "review": {
+          "status": "draft",
+          "at": null,
+          "sha256": null
+        },
+        "source_label": "First published compared with approved (read by OCR)",
+        "ocr": true,
+        "after_pages": [
+          4,
+          5
+        ],
+        "sheng_swaps": []
+      },
+      "sha256": "164ff9f9957414acf6f84717d5dbfa8c9713f16d2e5c920dc0dc856b4848c32d"
+    },
+    {
+      "kind": "change",
+      "item": {
+        "kind": "draft",
+        "clause_id": "c4",
+        "heading": "Short title.",
+        "before_number": "12",
+        "after_number": null,
+        "before": "4. A dropped clause.",
+        "after": null,
+        "note": {
+          "en": "Section 6: \"thirty\" became \"fourteen\".\nSee 12:34.",
+          "sw": "Siku “thelathini” zimekuwa élève 14.",
+          "sheng": "30 days sasa ni 14   days 🚚."
+        },
+        "review": {
+          "status": "draft",
+          "at": null,
+          "sha256": null
+        },
+        "source_label": "First published compared with approved (read by OCR)",
+        "ocr": false,
+        "after_pages": [],
+        "sheng_swaps": []
+      },
+      "sha256": "c53d4ab99869154feffbcc0bf151c212c59bc35c54a8f81f1aeed95c65ac83fb"
     }
   ]
 }

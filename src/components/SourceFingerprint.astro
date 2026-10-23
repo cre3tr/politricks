@@ -24,6 +24,18 @@ const { sources } = Astro.props;
       </p>
     )
   }
+  {/* A source with no text layer at all (slice 8): its words were READ BY OCR for the
+      What changed tab, so they can contain misreadings. Said here as well as on
+      every row that uses them. */}
+  {
+    sources.some((source) => source.ocr) && (
+      <p class="scan-note">
+        An official file below is a scan with no text layer. Its words were read by a
+        program (OCR) for the What changed tab, so they can contain misreadings; every
+        line read that way is labelled, with a link to the PDF to check it against.
+      </p>
+    )
+  }
   {
     sources.map((source) => {
       const fetchedDate = new Date(source.fetched_at).toLocaleDateString("en-KE", {

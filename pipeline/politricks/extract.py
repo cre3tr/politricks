@@ -287,6 +287,10 @@ def segment(region: list[Line], overrides: dict) -> tuple[list[Segment], list[st
     # "heading" segment of their own, so a heading never becomes the tail of the
     # clause above it. Only a boundary moves; no text is supplied.
     heading_before = {str(k): int(v) for k, v in (overrides.get("heading_before") or {}).items()}
+    # `part_heading: '<regex>'` swaps the Part-heading pattern. Only OCR text
+    # needs it ("PART HI" for "PART III"; see ocr.py); text-layer bills keep
+    # PART_HEADING.
+    part_heading = re.compile(overrides["part_heading"]) if overrides.get("part_heading") else PART_HEADING
     expected = 1
     current = Segment(kind="other")
     for line in region:
@@ -301,7 +305,7 @@ def segment(region: list[Line], overrides: dict) -> tuple[list[Segment], list[st
             kind = "section"
         elif match:
             log.append(f"ignored start on p{line.page} (expected {expected}): {text[:60]}")
-        elif PART_HEADING.match(text):
+        elif part_heading.match(text):
             kind = "part"
         elif SCHEDULE_HEADING.match(text):
             kind = "schedule"

@@ -1,0 +1,304 @@
+---
+// One difference between two versions of a bill (devpost/spec.md > Bill Page,
+// "What changed"; Data Model, `changes[]`). The earlier text sits BESIDE the
+// later one on a wide screen and directly above it on a phone (the same trick
+// as ClauseCard: two DOM blocks in a grid that is one column until 768px), and
+// Claude's plain-words note sits under both with its review badge.
+//
+// A clause the later version added shows "Not in the first version" where the
+// earlier text would be; a dropped clause shows "Not in the later version"
+// where the later text would be. Nothing is hidden: the reader sees exactly
+// what is and isn't there.
+//
+// HONESTY ABOUT OCR. When `change.ocr` is true the "after" text was READ BY OCR
+// from a scanned official copy, so it is not word for word the official text.
+// Every such row carries the label "Read by OCR from a scanned official copy:
+// check the PDF", linked to the PDF (at the page when the pipeline knows it).
+// A row that says it is OCR but whose bill lists no OCR source is a build
+// error, not a row quietly shown without its link.
+//
+// `before` and `after` are legal text and render as plain text: never
+// highlighted, never reworded. Only the note is Claude's, and it is badged as a
+// draft until a human reviews it (the badge's fingerprint is changeSha256, the
+// twin of models.current_sha256).
+import type { Change, Source } from "../lib/schema";
+import { badgeFor } from "../lib/badge";
+import { changeSha256, displayStatus } from "../lib/reviewHash";
+
+interface Props {
+  change: Change;
+  ocrSource: Source | null;
+}
+
+const { change, ocrSource } = Astro.props;
+
+if (change.ocr && !ocrSource) {
+  throw new Error(`change ${change.clause_id}: marked as read by OCR, but the bill lists no source with ocr: true`);
+}
+
+const kind = change.before === null ? "added" : change.after === null ? "dropped" : "changed";
+const badge = badgeFor(displayStatus(change.review, await changeSha256(change)));
+const number = change.after_number ?? change.before_number;
+const renumbered = change.before_number !== null && change.after_number !== null && change.before_number !== change.after_number;
+// A PDF "page" fragment opens the viewer at the first page the text is on.
+const pdfHref = ocrSource ? `${ocrSource.url}${change.after_pages.length > 0 ? `#page=${change.after_pages[0]}` : ""}` : null;
+const pagesText = change.after_pages.join(", ");
+
+const kindLabel = {
+  changed: { en: "Changed", sw: "Imebadilishwa", sheng: "Imechange" },
+  added: { en: "New clause", sw: "Kifungu kipya", sheng: "New clause" },
+  dropped: { en: "Dropped", sw: "Kimeondolewa", sheng: "Ime-drop" },
+}[kind];
+---
+<article
+  class="change-row"
+  data-change-id={change.clause_id}
+  data-change-kind={kind}
+  data-ocr={change.ocr ? "true" : "false"}
+  id={`change-${change.clause_id.replace(":", "-")}`}
+>
+  <header class="change-header">
+    <h3>
+      <span class="clause-number">Clause {number}</span>
+      {change.heading && <span class="clause-heading">{change.heading}</span>}
+    </h3>
+    <div class="change-meta">
+      <span class={`change-kind kind-${kind}`}>
+        <span data-l="en" lang="en">{kindLabel.en}</span>
+        <span data-l="sw" lang="sw">{kindLabel.sw}</span>
+        <span data-l="sheng" lang="sw-x-sheng">{kindLabel.sheng}</span>
+      </span>
+      <span class={`badge ${badge.className}`}>{badge.label}</span>
+      {
+        renumbered && (
+          <span class="renumbered">
+            <span data-l="en" lang="en">was clause {change.before_number} in the first version</span>
+            <span data-l="sw" lang="sw">ilikuwa kifungu cha {change.before_number} katika toleo la kwanza</span>
+            <span data-l="sheng" lang="sw-x-sheng">ilikuwa clause {change.before_number} kwa first version</span>
+          </span>
+        )
+      }
+    </div>
+  </header>
+
+  <div class="versions">
+    <section class="version version-before" aria-label="Before">
+      <h4>
+        <span data-l="en" lang="en">Before</span>
+        <span data-l="sw" lang="sw">Kabla</span>
+        <span data-l="sheng" lang="sw-x-sheng">Before</span>
+      </h4>
+      {
+        change.before !== null ? (
+          <blockquote lang="en" class="legal-text">{change.before}</blockquote>
+        ) : (
+          <p class="absent">
+            <span data-l="en" lang="en">Not in the first version.</span>
+            <span data-l="sw" lang="sw">Haipo katika toleo la kwanza.</span>
+            <span data-l="sheng" lang="sw-x-sheng">Haiko kwa first version.</span>
+          </p>
+        )
+      }
+    </section>
+
+    <section class="version version-after" aria-label="After">
+      <h4>
+        <span data-l="en" lang="en">After</span>
+        <span data-l="sw" lang="sw">Baada</span>
+        <span data-l="sheng" lang="sw-x-sheng">After</span>
+      </h4>
+      {
+        change.after !== null ? (
+          <>
+            <blockquote lang="en" class="legal-text">{change.after}</blockquote>
+            {change.ocr && pdfHref && (
+              <p class="ocr-label">
+                <span class="ocr-tag">OCR</span>
+                <a href={pdfHref} rel="noopener" data-ocr-link>
+                  <span data-l="en" lang="en">Read by OCR from a scanned official copy: check the PDF</span>
+                  <span data-l="sw" lang="sw">Imesomwa na OCR kutoka nakala rasmi iliyoskaniwa: angalia PDF</span>
+                  <span data-l="sheng" lang="sw-x-sheng">Ime-read na OCR kutoka scanned official copy: check PDF</span>
+                </a>
+                {pagesText && (
+                  <span class="ocr-pages">
+                    <span data-l="en" lang="en">(PDF page {pagesText})</span>
+                    <span data-l="sw" lang="sw">(ukurasa wa PDF {pagesText})</span>
+                    <span data-l="sheng" lang="sw-x-sheng">(PDF page {pagesText})</span>
+                  </span>
+                )}
+              </p>
+            )}
+          </>
+        ) : (
+          <p class="absent">
+            <span data-l="en" lang="en">Not in the later version.</span>
+            <span data-l="sw" lang="sw">Haipo katika toleo la baadaye.</span>
+            <span data-l="sheng" lang="sw-x-sheng">Haiko kwa later version.</span>
+          </p>
+        )
+      }
+    </section>
+  </div>
+
+  <div class="change-note">
+    <h4>
+      <span data-l="en" lang="en">What changed, in plain words</span>
+      <span data-l="sw" lang="sw">Kilichobadilika, kwa maneno rahisi</span>
+      <span data-l="sheng" lang="sw-x-sheng">Nini ime-change, kwa simple words</span>
+    </h4>
+    <p data-l="en" lang="en">{change.note.en}</p>
+    <p data-l="sw" lang="sw">{change.note.sw}</p>
+    <p data-l="sheng" lang="sw-x-sheng">{change.note.sheng}</p>
+  </div>
+</article>
+
+<style>
+  .change-row {
+    border: 1px solid var(--muted);
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .change-header h3 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 1.1rem;
+    margin: 0 0 0.4rem;
+  }
+  .clause-number {
+    color: var(--flag-red);
+    margin-right: 0.5rem;
+  }
+  .change-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+  }
+  /* Inline copies of the language spans: the page-wide rule shows them as
+     blocks, which would stack the three words of one label. */
+  .change-meta :global([data-l]),
+  .ocr-label :global([data-l]) {
+    display: none;
+  }
+  :global(html:not([data-lang])) .change-meta :global([data-l="en"]),
+  :global(html[data-lang="en"]) .change-meta :global([data-l="en"]),
+  :global(html[data-lang="sw"]) .change-meta :global([data-l="sw"]),
+  :global(html[data-lang="sheng"]) .change-meta :global([data-l="sheng"]),
+  :global(html:not([data-lang])) .ocr-label :global([data-l="en"]),
+  :global(html[data-lang="en"]) .ocr-label :global([data-l="en"]),
+  :global(html[data-lang="sw"]) .ocr-label :global([data-l="sw"]),
+  :global(html[data-lang="sheng"]) .ocr-label :global([data-l="sheng"]) {
+    display: inline;
+  }
+  .change-kind {
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    border: 1px solid currentColor;
+  }
+  .kind-changed {
+    color: var(--matatu-brown);
+  }
+  .kind-added {
+    color: var(--flag-green);
+  }
+  .kind-dropped {
+    color: var(--flag-red);
+  }
+  .renumbered {
+    color: var(--muted);
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+  }
+  .badge-draft {
+    border-color: var(--matatu-brown);
+    color: var(--matatu-brown);
+  }
+  .badge-reviewed {
+    border-color: var(--flag-green);
+    color: var(--flag-green);
+  }
+  .badge-sample {
+    border-style: dashed;
+  }
+  /* One column on a phone, with "Before" directly above "After"; two columns
+     from 768px, as in ClauseCard. */
+  .versions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 768px) {
+    .versions {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .version h4,
+  .change-note h4 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    margin: 0 0 0.35rem;
+  }
+  .legal-text {
+    max-height: 24rem;
+    overflow: auto;
+    margin: 0;
+    padding: 0.5rem;
+    background: color-mix(in srgb, var(--paper) 92%, var(--flag-black));
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+  }
+  .version-after .legal-text {
+    border-left: 3px solid var(--matatu-brown);
+  }
+  .absent {
+    margin: 0;
+    padding: 0.5rem;
+    border: 1px dashed var(--muted);
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .ocr-label {
+    margin: 0.4rem 0 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--flag-red);
+  }
+  .ocr-label a {
+    color: inherit;
+    text-decoration: underline;
+  }
+  .ocr-tag {
+    display: inline-block;
+    margin-right: 0.4rem;
+    padding: 0 0.35rem;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+    font-size: 0.7rem;
+  }
+  .ocr-pages {
+    font-weight: 400;
+    color: var(--muted);
+    margin-left: 0.3rem;
+  }
+  .change-note {
+    margin-top: 1rem;
+    border-top: 1px solid color-mix(in srgb, var(--muted) 40%, var(--paper));
+    padding-top: 0.75rem;
+  }
+  .change-note p {
+    margin: 0 0 0.5rem;
+  }
+</style>
