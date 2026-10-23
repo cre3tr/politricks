@@ -94,7 +94,7 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
   - **Measuring the welcome page right after navigation races its module script.** Wait, or re-read, before calling a prefill broken.
 - **`intake --check`** proposes every PDF on the listings that the registry doesn't know: 147 entries on 2026-10-23 (98 from Nairobi back to 2013). It needs a filter before the weekly workflow runs unattended.
 - **`verify` states** are `unchanged`, `CHANGED`, `UNREACHABLE` (HTTP error or network) and `ERROR`. UNREACHABLE exits 0 but is printed last as "N source(s) UNREACHABLE, not checked".
-- **`politricks review` can't walk the civic blocks yet** (`participation`, `stage_next`, `challenge`). `civic.py` stamps them with its own `civic_sha256`, namespaced so it can't equal a clause fingerprint.
+- **`politricks review` walks the civic blocks** (2026-10-23) by their kind: `--only participation`, `stage_next`, `challenge`. A block with several texts (a challenge's avenue names and texts) shows them numbered, and an edit asks which. Accept stores `civic.civic_sha256`; the site's twin is `civicSha256` in `src/lib/reviewHash.ts`, held to the shared vectors like the others. Lint flags a reviewed civic block whose content changed (finding item = the kind). Not covered: the Excel sheet (`export` / `--from-sheet`) has no civic rows and no articles column, so review those in the walk.
 
 ## Line maps (files over 300 lines)
 

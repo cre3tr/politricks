@@ -69,7 +69,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   Learner check: Open `http://localhost:4321/`, tap each live bill, and check that its clauses and explanations make sense, especially the Tertiary Education bill from a student's point of view.
   Commit: `Ingest both live bills and list them on home`
 
-- [ ] **6. Have your say: how, where and by when, with every fact sourced**
+- [x] **6. Have your say: how, where and by when, with every fact sourced**
   Becomes usable: Each bill's *Have your say* tab shows the deadline, channels and requirements from your hand-entered civic YAML, each linked to the official notice with a *last checked* date. When participation isn't open, it shows the stage and what usually happens next, plus a stale warning after 7 days. **This is the minimum demoable line.**
   Why now: It completes PRD build steps 1–2. After this there's a coherent, demoable product even if nothing else lands.
   PRD ref: `prd.md > Have Your Say`, `prd.md > States and Boundaries`
@@ -899,3 +899,9 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **Reviewer view:** `politricks review` now shows `SUGGESTED ARTICLES:` beside `GROUPS:`, since accepting accepts them.
 - **Not done:** the Excel review sheet (`export` / `--from-sheet`) has no articles column, so an Accept row there accepts articles its reader did not see. Add a column before using the sheet on a bill that has articles.
 - **Run order for the lead (after review of this diff):** `restamp` each bill, then `generate <id> --articles-only --dry-run`, then the real pass on Public Participation first as the probe, then the other two, then `lint` and `review --flagged` for the changed reviewed clause.
+
+### Slice 6 ticked: review walks the civic blocks, 2026-10-23
+
+- **`politricks review` walks civic blocks** (`review.py`): one item per block, named by its kind (`participation`, `stage_next`, `challenge`). A block's texts are numbered units, and an edit asks which one. Accept stores `civic_sha256` and writes the block back into the bill. An edit makes it a hand-edited draft. `lint` flags a reviewed block whose content changed, so `--flagged` finds it. Self-test scenario M: 7 checks, review 54 → 61. Planted bug (no write-back after accept): 3 FAILs.
+- **The site's civic badges are now real:** `civicSha256` in `src/lib/reviewHash.ts` is the twin of `civic.civic_sha256`, and the shared vectors carry one case per kind (8 in all). A planted twin bug (no `checked_at`) failed `check-build`. A block the learner accepts shows *Reviewed* while it still matches.
+- **Ticked on the mechanical verify**, as slice 4 was. The learner's two parts wait for the integrated checkpoint: check every civic fact against its source, then `politricks review <bill> --only participation stage_next` (and `challenge` for the Finance Act) to accept or edit the translations.

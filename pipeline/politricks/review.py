@@ -64,7 +64,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
-from typing import Callable, Optional, Union
+from typing import Any, Callable, Optional, Union
 
 from .hashing import sha256_file
 from .lint import (
@@ -126,16 +126,75 @@ class QuitReview(Exception):
 
 @dataclass
 class Item:
-    """One thing a human can review: the summary, a group entry or a clause."""
+    """One thing a human can review: the summary, a group entry, a clause, or
+    a civic block (participation, stage_next, challenge; 2026-10-23).
+
+    A civic block can hold several texts (a challenge has a name and a text
+    per avenue), so it lists them as `units`; its one review covers them all,
+    like a clause's review covers its three languages. Its `owner` is the
+    block parsed with civic.BLOCK_MODELS, and `sync` writes it back into the
+    bill, because the bill stores civic blocks as plain dicts.
+    """
 
     id: str
-    owner: Union[Summary, GroupEntry, Clause]
-    heading: Optional[str] = None  # clauses only
+    owner: Union[Summary, GroupEntry, Clause, Any]
+    heading: Optional[str] = None  # clauses and civic blocks
     legal_text: Optional[str] = None  # clauses only: shown for context, never edited
+    civic_kind: Optional[str] = None  # civic blocks only
+    units: Optional[list[tuple[str, Tri]]] = None  # civic blocks only: (label, text)
 
     @property
     def tri(self) -> Optional[Tri]:
+        if self.units is not None:
+            return self.units[0][1] if self.units else None
         return self.owner.explanation if isinstance(self.owner, Clause) else self.owner.text
+
+    def fingerprint(self) -> Optional[str]:
+        """What an accept stores: models.current_sha256, or civic_sha256 for a block."""
+        if self.civic_kind is not None:
+            from . import civic
+
+            return civic.civic_sha256(self.civic_kind, self.owner)
+        return current_sha256(self.owner)
+
+    def changed(self) -> bool:
+        """Reviewed, but no longer what was accepted."""
+        if self.civic_kind is not None:
+            review = self.owner.review
+            return review.status == "reviewed" and review.sha256 != self.fingerprint()
+        return changed_since_review(self.owner)
+
+    def owns(self, finding_item: str) -> bool:
+        """Is this lint finding about this item? Lint names a civic text by its
+        path ("participation.requirements", "challenge.avenues[0].name")."""
+        if self.civic_kind is not None:
+            return finding_item == self.id or finding_item.startswith((self.civic_kind + ".", self.civic_kind + "["))
+        return finding_item == self.id
+
+    def sync(self, bill: Bill) -> None:
+        """Write a civic block back into the bill (a no-op for everything else,
+        which the walk edits in place)."""
+        if self.civic_kind is not None:
+            setattr(bill, self.civic_kind, self.owner.model_dump(mode="json"))
+
+
+CIVIC_HEADINGS = {
+    "participation": "Have your say: participation",
+    "stage_next": "Have your say: where it is now and what happens next",
+    "challenge": "Where it can still be challenged",
+}
+
+
+def _civic_units(kind: str, block: Any) -> list[tuple[str, Tri]]:
+    """A civic block's reader-facing texts, in page order, with a label each."""
+    if kind == "participation":
+        return [("requirements", block.requirements)]
+    if kind == "stage_next":
+        return [("text", block.text)]
+    units: list[tuple[str, Tri]] = []
+    for number, avenue in enumerate(block.avenues, start=1):
+        units += [(f"avenue {number} name", avenue.name), (f"avenue {number} text", avenue.text)]
+    return units
 
 
 @dataclass
@@ -171,6 +230,16 @@ def _candidates(bill: Bill) -> list[Item]:
         candidates.append(Item(SUMMARY_ID, bill.summary))
     for entry in bill.groups:
         candidates.append(Item(group_item_id(entry.group), entry))
+    from . import civic  # imported here: civic imports lint and generate
+
+    for kind in civic.KINDS:
+        raw = getattr(bill, kind)
+        if raw is None:
+            continue
+        block = civic.BLOCK_MODELS[kind].model_validate(raw)
+        candidates.append(
+            Item(kind, block, heading=CIVIC_HEADINGS[kind], civic_kind=kind, units=_civic_units(kind, block))
+        )
     return candidates
 
 
@@ -183,7 +252,9 @@ def selection_errors(bill: Bill, only: list[str]) -> list[str]:
     errors = []
     for item_id in only:
         if item_id not in texts:
-            errors.append(f"{item_id}: no such item in this bill (ids look like c12, summary, group:trader)")
+            errors.append(
+                f"{item_id}: no such item in this bill (ids look like c12, summary, group:trader, participation)"
+            )
         elif texts[item_id] is None:
             errors.append(f"{item_id}: has no explanation yet, so there is nothing to review")
     return errors
@@ -202,7 +273,8 @@ def _collect(
     ones (whatever their status). Whatever the full walk would have offered
     but the filter kept back is counted as "left out", so the walk can say so.
     """
-    flagged = {finding.item for finding in lint_bill(bill, phrases)}
+    findings = {finding.item for finding in lint_bill(bill, phrases)}
+    is_flagged = {}
     to_walk: list[Item] = []
     not_walked = {"sample": 0, "reviewed": 0, "no explanation": 0, "left out": 0}
     for item in _candidates(bill):
@@ -210,11 +282,12 @@ def _collect(
         if item.tri is None:
             not_walked["no explanation"] += 1
             continue
-        offered = status == "draft" or item.id in flagged  # what the full walk offers
+        flagged = is_flagged[item.id] = any(item.owns(name) for name in findings)
+        offered = status == "draft" or flagged  # what the full walk offers
         if only is not None:
             chosen = item.id in only
         elif flagged_only:
-            chosen = item.id in flagged
+            chosen = flagged
         else:
             chosen = offered
         if chosen:
@@ -225,7 +298,7 @@ def _collect(
             not_walked["sample"] += 1
         else:
             not_walked["reviewed"] += 1
-    to_walk.sort(key=lambda item: item.id not in flagged)
+    to_walk.sort(key=lambda item: not is_flagged[item.id])
     return to_walk, not_walked
 
 
@@ -236,10 +309,25 @@ def _describe(item: Item, findings: list[Finding]) -> str:
         if len(text) > LEGAL_PREVIEW_CHARS:
             text = text[:LEGAL_PREVIEW_CHARS].rstrip() + " [...]"
         lines += ["", "LEGAL TEXT (first 300 characters):", text]
-    tri = item.tri
-    lines += ["", f"EN:    {tri.en}", f"SW:    {tri.sw}", f"SHENG: {tri.sheng}"]
+    if item.units is not None:
+        # A civic block: every text it holds, numbered (an edit asks which).
+        for number, (label, tri) in enumerate(item.units, start=1):
+            lines += ["", f"[{number}] {label}", f"EN:    {tri.en}", f"SW:    {tri.sw}", f"SHENG: {tri.sheng}"]
+    else:
+        tri = item.tri
+        lines += ["", f"EN:    {tri.en}", f"SW:    {tri.sw}", f"SHENG: {tri.sheng}"]
     # Accepting also accepts these (they're in the fingerprint), so show them.
-    if isinstance(item.owner, Clause):
+    if item.civic_kind == "participation":
+        block = item.owner
+        channels = "; ".join(f"{c.type}: {c.value}" for c in block.channels) or "none"
+        lines += ["", f"FACTS: open={block.open}, deadline={block.deadline} {block.deadline_time or ''}".rstrip(),
+                  f"CHANNELS: {channels}", f"SOURCE: {block.source_url} (checked {block.checked_at})"]
+    elif item.civic_kind == "stage_next":
+        lines += ["", f"SOURCE: {item.owner.source_url}"]
+    elif item.civic_kind == "challenge":
+        lines += ["", f"CHECKED: {item.owner.checked_at}"]
+        lines += [f"SOURCE {n}: {avenue.source_url}" for n, avenue in enumerate(item.owner.avenues, start=1)]
+    elif isinstance(item.owner, Clause):
         lines.append(f"GROUPS: {', '.join(item.owner.groups) or 'none'}")
         # Slice 10: the articles are in the fingerprint too (clause v2), and
         # they appear as chips beside the explanation, so accepting accepts them.
@@ -247,7 +335,7 @@ def _describe(item: Item, findings: list[Finding]) -> str:
     elif isinstance(item.owner, GroupEntry):
         lines.append(f"SECTIONS: {', '.join(item.owner.clause_ids) or 'none'}")
     status = item.owner.review.status
-    if changed_since_review(item.owner):
+    if item.changed():
         lines += ["", "status: reviewed, but changed since"]
     elif status != "draft":
         lines += ["", f"status: {status}"]
@@ -336,7 +424,7 @@ def walk(
     start_findings = lint_bill(bill, phrases)
     flagged = {finding.item for finding in start_findings}
     had_banned = {finding.item for finding in start_findings if finding.kind == "banned"}
-    n_flagged = sum(1 for item in to_walk if item.id in flagged)
+    n_flagged = sum(1 for item in to_walk if any(item.owns(name) for name in flagged))
     left_out = not_walked["left out"]
     show(
         f"{len(to_walk)} text(s) to review ({n_flagged} flagged by lint, shown first). "
@@ -348,7 +436,7 @@ def walk(
         show(f"{left_out} other draft(s) left out by --flagged / --only: run without it to see them.")
 
     def findings_for(item: Item) -> list[Finding]:
-        return [finding for finding in lint_bill(bill, phrases) if finding.item == item.id]
+        return [finding for finding in lint_bill(bill, phrases) if item.owns(finding.item)]
 
     dirty = False  # edits made since the last save
     try:
@@ -369,30 +457,39 @@ def walk(
                         if item.owner.review.status == "sample":
                             # A sample is replaced by `generate`, never promoted by a human.
                             note = "samples stay placeholders until generate replaces them"
-                            if item.id in had_banned:
+                            if any(item.owns(name) for name in had_banned):
                                 note += "; banned phrase removed"
                             show(note)
                         else:
                             for finding in findings:  # neutral flags: allowed, but say so first
                                 show(f"accepting clears this flag — {finding.describe()}")
                             item.owner.review = Review(
-                                status="reviewed", at=date.today().isoformat(), sha256=current_sha256(item.owner)
+                                status="reviewed", at=date.today().isoformat(), sha256=item.fingerprint()
                             )
+                            item.sync(bill)
                         result.accepted.append(item.id)
                         save(bill)  # right now, so quitting later loses nothing
                         dirty = False
                         break
 
                     if choice == "e":
+                        target = item.tri
+                        if item.units is not None and len(item.units) > 1:
+                            # A civic block with several texts: say which one first.
+                            pick = ask(f"Which text? [1-{len(item.units)}] > ").strip()
+                            if not pick.isdigit() or not 1 <= int(pick) <= len(item.units):
+                                show(f"choose a number from 1 to {len(item.units)}")
+                                continue
+                            target = item.units[int(pick) - 1][1]
                         lang = ask("Which language? [en/sw/sheng] > ").strip().lower()
                         if lang not in LANGS:
                             show(f"unknown language {lang!r}")
                             continue
-                        new_text = _edit_text(getattr(item.tri, lang), lang, ask, show, editor)
-                        if not new_text or new_text == getattr(item.tri, lang):
+                        new_text = _edit_text(getattr(target, lang), lang, ask, show, editor)
+                        if not new_text or new_text == getattr(target, lang):
                             show("no change")
                             continue
-                        setattr(item.tri, lang, new_text)
+                        setattr(target, lang, new_text)
                         if item.owner.review.status != "sample":
                             if item.owner.review.status == "reviewed":
                                 # These are no longer the words a human accepted.
@@ -400,6 +497,7 @@ def walk(
                             # A human's draft now: generate never overwrites it,
                             # even if a later edit types the old words back.
                             item.owner.review = Review(status="draft", sha256=HAND_EDITED)
+                        item.sync(bill)
                         if item.id not in result.edited:
                             result.edited.append(item.id)
                         dirty = True
@@ -1050,6 +1148,81 @@ def self_test(repo_root: Path) -> bool:
               code == 1 and "c999: no such item" in said.getvalue() and "text(s) to review" not in said.getvalue()
               and sha256_file(path) == before,
               said.getvalue())
+
+    # === Scenario M: civic blocks (2026-10-23) =================================
+    # A participation block (one text) and a challenge block (two avenues, four
+    # texts), both untouched drafts stamped the way civic.py stamps them.
+    from . import civic as civic_mod
+
+    def civic_bill() -> Bill:
+        bill = fixture_bill(repo_root)
+        part = civic_mod.ParticipationBlock(
+            open=False, deadline="2026-09-28", deadline_time="5pm", channels=[],
+            requirements=Tri(en="Written memoranda.", sw="Maoni ya maandishi.", sheng="Memoranda za maandishi."),
+            source_url="https://example.org/notice", checked_at="2026-10-23", review=Review(status="draft"),
+        )
+        part.review = Review(status="draft", sha256=civic_mod.civic_sha256("participation", part))
+        bill.participation = part.model_dump(mode="json")
+        challenge = civic_mod.ChallengeBlock(
+            checked_at="2026-10-19", review=Review(status="draft"),
+            avenues=[
+                civic_mod.AvenueBlock(name=Tri(en="Court", sw="Mahakama", sheng="Kort"),
+                                      text=Tri(en="Article 22.", sw="Ibara ya 22.", sheng="Article 22."),
+                                      source_url="https://example.org/a"),
+                civic_mod.AvenueBlock(name=Tri(en="Petition", sw="Ombi", sheng="Petition"),
+                                      text=Tri(en="Article 119.", sw="Ibara ya 119.", sheng="Article 119."),
+                                      source_url="https://example.org/b"),
+            ],
+        )
+        challenge.review = Review(status="draft", sha256=civic_mod.civic_sha256("challenge", challenge))
+        bill.challenge = challenge.model_dump(mode="json")
+        return bill
+
+    def block_of(bill: Bill, kind: str):
+        return civic_mod.BLOCK_MODELS[kind].model_validate(getattr(bill, kind))
+
+    bill = civic_bill()
+    run_m1 = drive(bill, ["a"], only=["participation"])
+    saved_part = block_of(run_m1.saves[0], "participation") if run_m1.saves else None
+    check("M. a civic block is walked by its kind (--only participation) and accepting it is saved",
+          run_m1.result.visited == ["participation"] and saved_part is not None and saved_part.review.status == "reviewed",
+          f"visited {run_m1.result.visited}, saves {len(run_m1.saves)}")
+    check("M. the accept stores the block's civic fingerprint, written back into the bill",
+          saved_part is not None and saved_part.review.sha256 == civic_mod.civic_sha256("participation", saved_part)
+          and saved_part.review.at == today,
+          str(saved_part.review if saved_part else None))
+
+    bill = civic_bill()
+    run_m2 = drive(bill, ["e", "2", "sw", "Ibara ya 22 ya Katiba.", "q"], only=["challenge"])
+    saved_ch = block_of(run_m2.saves[-1], "challenge") if run_m2.saves else None
+    check("M. editing a block with several texts asks which one: text 2 is avenue 1's text, and only it changes",
+          saved_ch is not None and saved_ch.avenues[0].text.sw == "Ibara ya 22 ya Katiba."
+          and saved_ch.avenues[0].name.sw == "Mahakama" and saved_ch.avenues[1].text.sw == "Ibara ya 119.",
+          str(saved_ch.avenues[0] if saved_ch else None))
+    check("M. the edited block is a hand-edited draft (civic generate will never overwrite it)",
+          saved_ch is not None and saved_ch.review.status == "draft" and saved_ch.review.sha256 == HAND_EDITED,
+          str(saved_ch.review if saved_ch else None))
+
+    bill = civic_bill()
+    bill.participation["requirements"]["en"] += " You must apply."
+    run_m3 = drive(bill, ["a", "q"])
+    check("M. a banned phrase in a civic text: the block is walked first and accepting it is refused",
+          run_m3.result.visited[:1] == ["participation"] and run_m3.result.refused == ["participation"],
+          f"visited {run_m3.result.visited}, refused {run_m3.result.refused}")
+
+    bill = civic_bill()
+    drive(bill, ["a"], only=["participation"])
+    bill.participation["deadline"] = "2026-09-29"  # a fact edited after the review
+    changed = [f for f in lint_bill(bill, phrases) if f.item == "participation" and f.kind == "changed"]
+    run_m4 = drive(bill, ["s"], flagged_only=True)
+    check("M. a reviewed civic block changed since: lint flags it and --flagged walks it, shown as changed",
+          len(changed) == 1 and "participation" in run_m4.result.visited and "reviewed, but changed since" in run_m4.shown,
+          f"{changed}, visited {run_m4.result.visited}")
+
+    bill = civic_bill()
+    errors = selection_errors(bill, ["participation", "stage_next"])
+    check("M. --only names a civic block the bill has, and refuses one it doesn't",
+          [error.partition(": ")[0] for error in errors] == ["stage_next"], str(errors))
 
     # === Nothing written ========================================================
     check("the real bill file's SHA-256 is unchanged", sha256_file(real_path) == sha_before)

@@ -237,6 +237,26 @@ def lint_bill(bill: Bill, phrases: list[str]) -> list[Finding]:
             what = "no fingerprint" if holder.review.sha256 is None else f"reviewed {holder.review.at}"
             findings.append(Finding(bill.id, item, None, "changed", what))
 
+    # (e) the same for the civic blocks (2026-10-23, once `review` could walk
+    # them). Their fingerprint is civic.civic_sha256; imported here because
+    # civic imports this module.
+    from pydantic import ValidationError
+
+    from . import civic
+
+    for kind in civic.KINDS:
+        raw = getattr(bill, kind)
+        if raw is None:
+            continue
+        try:
+            block = civic.BLOCK_MODELS[kind].model_validate(raw)
+        except ValidationError:
+            # Not a block civic.py wrote (lint's own self-test feeds loose
+            # dicts to prove the banned scan reaches them): no review to check.
+            continue
+        if block.review.status == "reviewed" and block.review.sha256 != civic.civic_sha256(kind, block):
+            findings.append(Finding(bill.id, kind, None, "changed", f"reviewed {block.review.at}"))
+
     return findings
 
 
