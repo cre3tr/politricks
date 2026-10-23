@@ -30,14 +30,15 @@ npm run dev                                             # http://localhost:4321 
 npm run check                                           # astro check (types)
 npm run build                                           # astro check && astro build — NOT bare `astro build`, which skips types
 node scripts/check-build.mjs <bill-id>                  # per-card assertions on the built HTML
+node scripts/check-api.mjs                              # Match/Explain handlers with stubbed Claude, plus the banned-phrase vectors (offline)
 uv run --project pipeline politricks <cmd>              # pipeline CLI (pipeline/politricks/cli.py)
 uv run --env-file .env --project pipeline politricks generate <id>   # the pipeline does NOT read .env itself
 ```
 
 **Pipeline commands:**
-- `intake`, `fetch`, `probe`, `extract [--check-json]`, `samples`, `generate [--batch-id X] [--summary-only] [--tags-only]`, `lint [id]`, `review <id> [--flagged | --only ID ...] [--from-sheet X]`, `verify`, `export <id> [--out X]`.
-- Self-tests: `lint`, `review`, `intake`, `generate`, `verify` and `export` each take `--self-test`; `review --sheet-self-test` covers `--from-sheet`. All are offline, write nothing, and assert the real bill files' SHA-256 is unchanged.
-- **Before committing:** every self-test, then `lint`, then `npm run build`, then `check-build` for each bill.
+- `intake [--check]`, `fetch`, `probe`, `extract [--check-json]`, `samples`, `generate [--batch-id X] [--summary-only] [--tags-only]`, `lint [id]`, `review <id> [--flagged | --only ID ...] [--from-sheet X]`, `verify`, `export <id> [--out X]`, `civic <id> [--dry-run] [--force]`, `constitution`.
+- Self-tests: `lint`, `review`, `intake`, `generate`, `verify`, `export`, `civic` and `constitution` each take `--self-test`; `review --sheet-self-test` covers `--from-sheet`. All are offline, write nothing, and assert the real bill files' SHA-256 is unchanged.
+- **Before committing:** every self-test, `node scripts/check-api.mjs`, then `lint`, then `npm run build`, then `check-build` for each bill.
 - **CI** (`.github/workflows/ci.yml`, 2026-10-22) runs that same suite on every PR and on pushes to `main` and `build/poc`, offline with no secrets. Job `test` covers the self-tests, the build and check-build. Job `content` is `lint` on the real bills, and it stays red while any reviewed text has changed since review, until Ian accepts it again. A red `content` with a green `test` means the code is fine and the review is pending. Ubuntu runs the bill lock's POSIX `flock` branch, which Windows never exercises.
 - Test kinds and their controls: `TESTING.md` (test-kinds skill).
 
@@ -77,6 +78,17 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
   - **Covered or not:** a new field shown to readers belongs in the fingerprint; bump `REVIEW_HASH_VERSION` (`hashing.py`) when you add it. Slice 10 must do this for `suggested_articles`.
   - **What `generate` won't touch:** a hand-edited draft (`sha256` is `"hand-edited"`, or doesn't match). To hand one back to `generate`, set its `review.sha256` to null. **This includes an AI draft whose legal text changed** (a re-extract): the fingerprint covers the text, so the draft reads as hand-edited and `generate` leaves it out (it prints "left out N clause(s)"). Null those drafts' `sha256` to redraft them.
 - **Bill JSON is written deterministically** (`models.save_bill`). Re-running a stage must give byte-identical output, and a diff means something changed.
+
+- **Slice 4, the live site (2026-10-23):**
+  - **Prompts and banned list are bundled into the API function with `?raw`** (`src/lib/claude.ts`), so site and pipeline read the same files. The key is read at run time with `getSecret` from `astro:env/server`, never `import.meta.env` (which can inline it into `.vercel/output`). A local build's output held 0 `sk-ant-` matches over 921 files on 2026-10-23.
+  - **`src/lib/banned.ts` is the TS twin of lint's matcher.** Python's `\w` is Unicode; JS needs `[\p{L}\p{N}_]` with the `u` flag. Both sides are checked against `pipeline/tests/fixtures/banned_vectors.json` (lint `--self-test` 5b and `check-api.mjs`). Add a case there when the list changes.
+  - **The API handlers are pure functions** (`src/lib/api.ts`, deps passed in) so `check-api.mjs` can test every status code offline. Node 24 loads `.ts` directly, which is why runtime imports between lib files carry `.ts` extensions.
+  - **`check-build.mjs` matches `<article class="clause-card" data-clause-id=...` literally**: keep `data-clause-id` straight after `class` in `ClauseCard.astro`.
+  - **HeadScript only redirects to `/welcome` when storage works** (it test-writes `pt.t`), so a blocked browser can't loop. `next=` is checked to be a same-site path.
+  - **Measuring the welcome page right after navigation races its module script.** Wait, or re-read, before calling a prefill broken.
+- **`intake --check`** proposes every PDF on the listings that the registry doesn't know: 147 entries on 2026-10-23 (98 from Nairobi back to 2013). It needs a filter before the weekly workflow runs unattended.
+- **`verify` states** are `unchanged`, `CHANGED`, `UNREACHABLE` (HTTP error or network) and `ERROR`. UNREACHABLE exits 0 but is printed last as "N source(s) UNREACHABLE, not checked".
+- **`politricks review` can't walk the civic blocks yet** (`participation`, `stage_next`, `challenge`). `civic.py` stamps them with its own `civic_sha256`, namespaced so it can't equal a clause fingerprint.
 
 ## Line maps (files over 300 lines)
 
@@ -153,6 +165,12 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - `review_from_sheet` 361 (prints the plan, asks for `yes`, refuses if the bill file changed meanwhile)
 - `run` 414 (refuses a non-terminal stdin; holds the bill lock from read to save, across the `yes` prompt)
 - `self_test` 445 (section L: the lock)
+
+**`pipeline/politricks/civic.py` (1131):** YAML models 130-175, `parse_civic` 202, block models 240-275, `civic_sha256` 292, `is_protected` 332, `assemble` 404, `build_params` 458, `translation_problems` 485, `plan_block` 576, `run` 635, `_run` 671, `_FakeClient` 776, `self_test` 839.
+
+**`pipeline/politricks/constitution.py` (707):** `read_lines` 135, `legal_body` 174, `split_articles` 189, `check_numbering` 305, `verify_verbatim` 327, `check_coverage` 338, `extract` 362, `run` 399, `_run` 413, `_fixture_pdf` 510, `self_test` 549. Source is Parliament's copy (Kenya Law 403); output `src/data/constitution.json`, 264 articles.
+
+**`pipeline/politricks/intake_check.py` (714):** `LISTINGS` 61, `find_pdf_links` 141, `looks_like_a_bill` 176, `read_listing` 225, `entry_block` 259, `assign_ids` 289, `proposed_diff` 321, `run` 344, self-test from 434.
 
 **`pipeline/politricks/reviewlock.py`:** `bill_lock(path)` (context manager; raises `BillLocked`). `cli.main` turns a `BillLocked` from fetch/extract/samples/verify into "FAILED", exit 1.
 

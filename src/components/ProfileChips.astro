@@ -1,0 +1,75 @@
+---
+// The "I am..." chips (devpost/spec.md > Welcome Page, Bill Page; prd.md >
+// First-Visit Profile). One component, two uses:
+//   - mode "welcome": checkboxes inside the welcome form, saved to pt.profile.
+//   - mode "bill": toggle buttons that change which groups lead on THIS bill
+//     page only (the bill page's own script wires them; pt.profile is never
+//     changed from here).
+// The labels come from src/lib/groups.ts, so they match everywhere.
+import { GROUPS } from "../lib/groups";
+
+interface Props {
+  mode: "welcome" | "bill";
+}
+
+const { mode } = Astro.props;
+---
+<div class={`chips chips-${mode}`} role="group" aria-label="I am">
+  {
+    GROUPS.map((group) =>
+      mode === "welcome" ? (
+        <label class="chip">
+          <input type="checkbox" name="group" value={group.id} />
+          <span data-l="en" lang="en">{group.label.en}</span>
+          <span data-l="sw" lang="sw">{group.label.sw}</span>
+          <span data-l="sheng" lang="sw-x-sheng">{group.label.sheng}</span>
+        </label>
+      ) : (
+        <button type="button" class="chip" data-chip={group.id} aria-pressed="false">
+          <span data-l="en" lang="en">{group.label.en}</span>
+          <span data-l="sw" lang="sw">{group.label.sw}</span>
+          <span data-l="sheng" lang="sw-x-sheng">{group.label.sheng}</span>
+        </button>
+      ),
+    )
+  }
+</div>
+
+<style>
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--flag-black);
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    background: var(--paper);
+    font-size: 0.9rem;
+    cursor: pointer;
+    /* Big enough to hit with a thumb on a small phone. */
+    min-height: 2.5rem;
+  }
+  /* The language spans inside a chip sit inline, not as blocks. */
+  .chip :global([data-l]) {
+    display: none;
+  }
+  :global(html:not([data-lang])) .chip :global([data-l="en"]),
+  :global(html[data-lang="en"]) .chip :global([data-l="en"]),
+  :global(html[data-lang="sw"]) .chip :global([data-l="sw"]),
+  :global(html[data-lang="sheng"]) .chip :global([data-l="sheng"]) {
+    display: inline;
+  }
+  .chip:has(input:checked),
+  .chip[aria-pressed="true"] {
+    background: var(--flag-black);
+    color: var(--paper);
+  }
+  .chip input {
+    accent-color: var(--flag-green);
+  }
+</style>

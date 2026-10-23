@@ -1,0 +1,224 @@
+---
+// "Who it affects": the reader's groups first, then "See everyone"
+// (devpost/spec.md > Bill Page; prd.md > What It Does, "See everyone shows
+// all groups").
+//
+// Every group note is in the HTML, always. Which ones show, and in what
+// order, is CSS reading two attributes (global.css):
+//   - <html data-groups="trader student">, set by HeadScript before the first
+//     paint from the saved profile: no visible re-shuffle;
+//   - this panel's own data-chips, set by the per-bill chips, which wins on
+//     this page only and never changes the saved profile.
+// "See everyone" (data-expanded) shows all four. A skipped or group-less
+// profile shows all four from the start. Nothing is ever hidden for good:
+// the clause cards below are always complete.
+import type { Bill } from "../lib/schema";
+import { GROUPS } from "../lib/groups";
+import { badgeFor } from "../lib/badge";
+import { displayStatus, groupSha256 } from "../lib/reviewHash";
+import ProfileChips from "./ProfileChips.astro";
+
+interface Props {
+  bill: Bill;
+}
+
+const { bill } = Astro.props;
+const number = new Map(bill.clauses.map((clause) => [clause.id, clause.number]));
+const blocks = await Promise.all(
+  GROUPS.flatMap((group) => {
+    const entry = bill.groups.find((candidate) => candidate.group === group.id);
+    return entry ? [{ group, entry }] : [];
+  }).map(async ({ group, entry }) => ({
+    group,
+    entry,
+    badge: badgeFor(displayStatus(entry.review, await groupSha256(entry))),
+  })),
+);
+---
+<section class="groups-panel" data-groups-panel aria-labelledby="groups-heading">
+  <h2 id="groups-heading" class="section-heading">
+    <span data-l="en" lang="en">Who it affects</span>
+    <span data-l="sw" lang="sw">Unaohusika</span>
+    <span data-l="sheng" lang="sw-x-sheng">Ina-affect nani</span>
+  </h2>
+
+  {
+    blocks.length === 0 ? (
+      <>
+        <p data-l="en" lang="en">This bill doesn't single out employees, traders, transport workers or students. Every section is explained below.</p>
+        <p data-l="sw" lang="sw">Mswada huu haulengi hasa wafanyakazi, wafanyabiashara, wahudumu wa usafiri wala wanafunzi. Kila kifungu kimeelezwa hapa chini.</p>
+        <p data-l="sheng" lang="sw-x-sheng">Hii bill hai-target specially employees, traders, boda/mat ama students. Kila section imeelezwa chini.</p>
+      </>
+    ) : (
+      <>
+        <div class="chips-row">
+          <span class="chips-label">
+            <span data-l="en" lang="en">I am (this bill only):</span>
+            <span data-l="sw" lang="sw">Mimi ni (kwa mswada huu tu):</span>
+            <span data-l="sheng" lang="sw-x-sheng">Mimi ni (kwa hii bill tu):</span>
+          </span>
+          <ProfileChips mode="bill" />
+        </div>
+
+        <div class="group-list">
+          {blocks.map(({ group, entry, badge }) => (
+            <article class="group-block" data-group={group.id}>
+              <h3>
+                <span data-l="en" lang="en">{group.label.en}</span>
+                <span data-l="sw" lang="sw">{group.label.sw}</span>
+                <span data-l="sheng" lang="sw-x-sheng">{group.label.sheng}</span>
+              </h3>
+              <span class={`badge ${badge.className}`}>{badge.label}</span>
+              <p data-l="en" lang="en">{entry.text.en}</p>
+              <p data-l="sw" lang="sw">{entry.text.sw}</p>
+              <p data-l="sheng" lang="sw-x-sheng">{entry.text.sheng}</p>
+              {entry.clause_ids.length > 0 && (
+                <p class="sections">
+                  {entry.clause_ids.map((id) => (
+                    <a href={`#clause-${id}`}>Section {number.get(id) ?? id}</a>
+                  ))}
+                </p>
+              )}
+            </article>
+          ))}
+        </div>
+
+        <p class="none-mine" hidden>
+          <span data-l="en" lang="en">None of your groups is named in this bill.</span>
+          <span data-l="sw" lang="sw">Hakuna kundi lako lililotajwa katika mswada huu.</span>
+          <span data-l="sheng" lang="sw-x-sheng">Hakuna group yako imetajwa kwa hii bill.</span>
+        </p>
+        <button type="button" class="see-everyone" data-see-everyone aria-expanded="false">
+          <span data-l="en" lang="en">See everyone</span>
+          <span data-l="sw" lang="sw">Ona kila mtu</span>
+          <span data-l="sheng" lang="sw-x-sheng">Ona kila mtu</span>
+        </button>
+      </>
+    )
+  }
+</section>
+
+<script>
+  import { getProfile } from "../lib/storage";
+
+  const panel = document.querySelector<HTMLElement>("[data-groups-panel]");
+  const list = panel?.querySelector<HTMLElement>(".group-list");
+  if (panel && list) {
+    const chips = Array.from(panel.querySelectorAll<HTMLButtonElement>("[data-chip]"));
+    const none = panel.querySelector<HTMLElement>(".none-mine")!;
+    const button = panel.querySelector<HTMLButtonElement>("[data-see-everyone]")!;
+    const blocks = Array.from(list.querySelectorAll<HTMLElement>(".group-block"));
+
+    // Which groups lead right now: this page's chips if touched, else the profile.
+    const fromProfile = getProfile()?.groups ?? [];
+    let chosen: string[] = [...fromProfile];
+
+    function refresh() {
+      chips.forEach((chip) => chip.setAttribute("aria-pressed", String(chosen.includes(chip.dataset.chip!))));
+      // Visible = CSS decided; mirror it to say so when none of theirs is here.
+      const visible = blocks.filter((block) => getComputedStyle(block).display !== "none");
+      none.hidden = chosen.length === 0 || panel!.hasAttribute("data-expanded") || visible.length > 0;
+    }
+
+    chips.forEach((chip) =>
+      chip.addEventListener("click", () => {
+        const id = chip.dataset.chip!;
+        chosen = chosen.includes(id) ? chosen.filter((one) => one !== id) : [...chosen, id];
+        // data-chips="" still counts as "set": no groups chosen = show all.
+        panel.setAttribute("data-chips", chosen.join(" "));
+        refresh();
+      }),
+    );
+    button.addEventListener("click", () => {
+      const open = !panel.hasAttribute("data-expanded");
+      panel.toggleAttribute("data-expanded", open);
+      button.setAttribute("aria-expanded", String(open));
+      refresh();
+    });
+    refresh();
+  }
+</script>
+
+<style>
+  .groups-panel {
+    margin-top: 1.5rem;
+  }
+  .chips-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+  }
+  .chips-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .group-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .group-block {
+    border-left: 4px solid var(--matatu-brown);
+    padding: 0.5rem 0.75rem;
+    background: color-mix(in srgb, var(--matatu-brown) 6%, var(--paper));
+  }
+  .group-block h3 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 1rem;
+    margin: 0 0 0.25rem;
+  }
+  .sections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+  }
+  .sections a {
+    color: var(--flag-red);
+  }
+  .see-everyone {
+    margin-top: 0.75rem;
+    border: 1px solid var(--flag-black);
+    background: var(--paper);
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    min-height: 2.5rem;
+  }
+  .none-mine {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 3px;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+  }
+  .badge-draft {
+    border-color: var(--matatu-brown);
+    color: var(--matatu-brown);
+  }
+  .badge-reviewed {
+    border-color: var(--flag-green);
+    color: var(--flag-green);
+  }
+  .badge-sample {
+    border-style: dashed;
+  }
+  /* Inline language spans in headings, labels and buttons. */
+  :is(h2, h3, .chips-label, .none-mine, .see-everyone) :global([data-l]) {
+    display: none;
+  }
+  :global(html:not([data-lang])) :is(h2, h3, .chips-label, .none-mine, .see-everyone) :global([data-l="en"]),
+  :global(html[data-lang="en"]) :is(h2, h3, .chips-label, .none-mine, .see-everyone) :global([data-l="en"]),
+  :global(html[data-lang="sw"]) :is(h2, h3, .chips-label, .none-mine, .see-everyone) :global([data-l="sw"]),
+  :global(html[data-lang="sheng"]) :is(h2, h3, .chips-label, .none-mine, .see-everyone) :global([data-l="sheng"]) {
+    display: inline;
+  }
+</style>

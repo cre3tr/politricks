@@ -7,6 +7,7 @@
 import { z } from "zod";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ClauseCard from "../../components/ClauseCard.astro";
+import GroupsPanel from "../../components/GroupsPanel.astro";
 import SourceFingerprint from "../../components/SourceFingerprint.astro";
 import { BillSchema, type Bill } from "../../lib/schema";
 import { badgeFor } from "../../lib/badge";
@@ -96,6 +97,8 @@ const summaryBadge = bill.summary
 
     <h2 class="section-heading">What it does</h2>
 
+    <GroupsPanel bill={bill} />
+
     {
       bill.summary && (
         <section class="summary-card" aria-label="Summary">
@@ -115,13 +118,106 @@ const summaryBadge = bill.summary
       )
     }
 
-    {bill.clauses.map((clause) => <ClauseCard clause={clause} />)}
+    {/* The Match script below fills this note and floats matching cards to the
+        top of the list; with no words, or if the call fails, nothing moves. */}
+    <p class="match-status" data-match-status hidden></p>
+    <div class="clause-list" data-clause-list data-bill-id={bill.id}>
+      {bill.clauses.map((clause) => <ClauseCard clause={clause} billId={bill.id} />)}
+    </div>
 
     <SourceFingerprint sources={bill.sources} />
   </main>
 </BaseLayout>
 
+<script>
+  // Match (devpost/spec.md > Match API): the reader's own words from their
+  // profile float the clauses that fit them to the top of the list. The
+  // answer is cached per bill and per words (first 16 hex characters of the
+  // SHA-256 of the cleaned words), so a return visit makes no call. Any
+  // failure, or 15 s with no answer, leaves the fixed order and says so quietly.
+  import { getCached, getProfile, setCached } from "../../lib/storage";
+
+  const list = document.querySelector<HTMLElement>("[data-clause-list]");
+  const status = document.querySelector<HTMLElement>("[data-match-status]");
+  const words = getProfile()?.words ?? "";
+
+  function say(texts: { en: string; sw: string; sheng: string }) {
+    if (!status) return;
+    status.replaceChildren(
+      ...(["en", "sw", "sheng"] as const).map((lang) => {
+        const span = document.createElement("span");
+        span.dataset.l = lang;
+        span.lang = lang === "sheng" ? "sw-x-sheng" : lang;
+        span.textContent = texts[lang];
+        return span;
+      }),
+    );
+    status.hidden = false;
+  }
+
+  async function wordsKey(billId: string, cleaned: string): Promise<string> {
+    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(cleaned));
+    const hex = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+    return `pt.match.${billId}.${hex.slice(0, 16)}`;
+  }
+
+  async function match() {
+    if (!list || !words) return;
+    const billId = list.dataset.billId!;
+    const key = await wordsKey(billId, words);
+    let ids = getCached<string[]>(key);
+    if (!ids) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 15_000);
+      try {
+        const response = await fetch("/api/match", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ bill_id: billId, words }),
+          signal: controller.signal,
+        });
+        if (response.ok) {
+          ids = ((await response.json()) as { clause_ids: string[] }).clause_ids;
+          setCached(key, ids);
+        }
+      } catch {
+        // Network error or timeout: fall through to the quiet note.
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+    if (!ids) {
+      say({
+        en: "Couldn't personalise right now.",
+        sw: "Haikuwezekana kupanga kulingana nawe kwa sasa.",
+        sheng: "Hatungeweza ku-personalise saa hii.",
+      });
+      return;
+    }
+    if (ids.length === 0) return;
+    // Reverse so the strongest match ends up first.
+    [...ids].reverse().forEach((id) => {
+      const card = list.querySelector<HTMLElement>(`[data-clause-id="${CSS.escape(id)}"]`);
+      if (!card) return;
+      card.classList.add("matched");
+      card.querySelector<HTMLElement>(".match-note")?.removeAttribute("hidden");
+      list.prepend(card);
+    });
+    say({
+      en: `Sections matching "${words}" come first.`,
+      sw: `Vifungu vinavyolingana na "${words}" vimewekwa kwanza.`,
+      sheng: `Sections zinazo-match "${words}" ziko first.`,
+    });
+  }
+
+  match();
+</script>
+
 <style>
+  .match-status {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
   .bill-page {
     max-width: 720px;
     margin: 0 auto;

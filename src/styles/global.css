@@ -139,3 +139,37 @@ html:not([data-lang]) [data-lang-btn="en"] {
   color: var(--paper);
   border-color: var(--flag-black);
 }
+
+/* --- Your groups first (devpost/spec.md > Head Script, Bill Page) --------
+   The groups panel (src/components/GroupsPanel.astro) holds every group
+   note in the HTML. HeadScript sets <html data-groups="trader student">
+   before the first paint, and the per-bill chips set the panel's own
+   data-chips, which takes over on that page. While neither list is empty
+   and "See everyone" isn't open, only the chosen groups show, and they
+   always lead (order: -1), expanded or not. An empty list shows everyone.
+   The show rules come AFTER the hide rules on purpose: their specificity
+   ties, and the later rule wins. */
+html[data-groups]:not([data-groups=""]) .groups-panel:not([data-chips]):not([data-expanded]) .group-block,
+.groups-panel[data-chips]:not([data-chips=""]):not([data-expanded]) .group-block {
+  display: none;
+}
+html[data-groups~="employee"] .groups-panel:not([data-chips]):not([data-expanded]) .group-block[data-group="employee"],
+html[data-groups~="trader"] .groups-panel:not([data-chips]):not([data-expanded]) .group-block[data-group="trader"],
+html[data-groups~="transport"] .groups-panel:not([data-chips]):not([data-expanded]) .group-block[data-group="transport"],
+html[data-groups~="student"] .groups-panel:not([data-chips]):not([data-expanded]) .group-block[data-group="student"],
+.groups-panel[data-chips~="employee"]:not([data-expanded]) .group-block[data-group="employee"],
+.groups-panel[data-chips~="trader"]:not([data-expanded]) .group-block[data-group="trader"],
+.groups-panel[data-chips~="transport"]:not([data-expanded]) .group-block[data-group="transport"],
+.groups-panel[data-chips~="student"]:not([data-expanded]) .group-block[data-group="student"] {
+  display: block;
+}
+html[data-groups~="employee"] .groups-panel:not([data-chips]) .group-block[data-group="employee"],
+html[data-groups~="trader"] .groups-panel:not([data-chips]) .group-block[data-group="trader"],
+html[data-groups~="transport"] .groups-panel:not([data-chips]) .group-block[data-group="transport"],
+html[data-groups~="student"] .groups-panel:not([data-chips]) .group-block[data-group="student"],
+.groups-panel[data-chips~="employee"] .group-block[data-group="employee"],
+.groups-panel[data-chips~="trader"] .group-block[data-group="trader"],
+.groups-panel[data-chips~="transport"] .group-block[data-group="transport"],
+.groups-panel[data-chips~="student"] .group-block[data-group="student"] {
+  order: -1;
+}

@@ -13,7 +13,10 @@ import vercel from "@astrojs/vercel";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  adapter: vercel(),
+  // maxDuration 60: Explain runs Claude at high effort and can take most of
+  // a minute; src/lib/claude.ts gives up at 55 s so the function answers
+  // 502 itself instead of being killed mid-call.
+  adapter: vercel({ maxDuration: 60 }),
   vite: {
     plugins: [tailwindcss()],
   },

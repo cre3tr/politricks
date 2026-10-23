@@ -7,27 +7,62 @@
 // <script> tags (they run after parsing, as modules), so this one is marked
 // `is:inline` to force it to run synchronously, inline, exactly where it sits
 // in <head> — before the rest of the page is even parsed.
+//
+// It does three things:
+//   1. `<html data-lang>` from `pt.lang` (default English).
+//   2. `<html data-groups>` from `pt.profile`, which CSS uses to put the
+//      reader's groups first (global.css), again before the first paint.
+//   3. No usable profile, and this isn't /welcome: go to /welcome, with the
+//      page they asked for as `next` so they land back on it afterwards.
 ---
 <script is:inline>
   (function () {
-    // NOTE: the localStorage key "pt.lang" is duplicated here rather than
-    // imported from src/lib/storage.ts on purpose. An `is:inline` script
-    // can't use ES module imports (that would make Astro treat it as a
-    // module and defer it, defeating the whole point of this file) — so this
-    // one small piece of shared knowledge (the key name, and the three valid
-    // languages) has to be copied by hand. If you rename the key or add a
-    // language, change it in BOTH places: here and storage.ts.
-    var KEY = "pt.lang";
+    // NOTE: the localStorage keys ("pt.lang", "pt.profile"), the three
+    // languages and the four group ids are duplicated here rather than
+    // imported from src/lib on purpose. An `is:inline` script can't use ES
+    // module imports (that would make Astro treat it as a module and defer
+    // it, defeating the whole point of this file), so this small piece of
+    // shared knowledge has to be copied by hand. Change it in BOTH places:
+    // here and src/lib/storage.ts / src/lib/schema.ts.
+    var root = document.documentElement;
     var lang = "en";
+    var profile = null;
+    var storageWorks = false;
     try {
-      var saved = window.localStorage.getItem(KEY);
+      var ls = window.localStorage;
+      var saved = ls.getItem("pt.lang");
       if (saved === "en" || saved === "sw" || saved === "sheng") {
         lang = saved;
       }
+      var raw = ls.getItem("pt.profile");
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        // The same rule as ProfileSchema: wrong version or shape = absent.
+        if (parsed && parsed.v === 1 && Object.prototype.toString.call(parsed.groups) === "[object Array]") {
+          profile = parsed;
+        }
+      }
+      // Can this browser keep a profile at all? If not, never send the reader
+      // to /welcome: they could never get past it.
+      ls.setItem("pt.t", "1");
+      ls.removeItem("pt.t");
+      storageWorks = true;
     } catch (err) {
-      // Storage blocked (private mode, locked-down browser, etc.) — fall
-      // back to English rather than letting the page break.
+      // Storage blocked (private mode, locked-down browser, etc.) or a
+      // corrupted value: fall back to defaults rather than breaking the page.
     }
-    document.documentElement.setAttribute("data-lang", lang);
+    root.setAttribute("data-lang", lang);
+
+    if (profile) {
+      var known = { employee: 1, trader: 1, transport: 1, student: 1 };
+      var groups = [];
+      for (var i = 0; i < profile.groups.length; i++) {
+        if (known[profile.groups[i]] === 1) groups.push(profile.groups[i]);
+      }
+      // Empty means "show every group" (a skipped or group-less profile).
+      root.setAttribute("data-groups", groups.join(" "));
+    } else if (storageWorks && location.pathname.replace(/\/+$/, "") !== "/welcome") {
+      location.replace("/welcome?next=" + encodeURIComponent(location.pathname + location.hash));
+    }
   })();
 </script>

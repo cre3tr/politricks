@@ -1,0 +1,194 @@
+---
+// The first-visit "who are you?" page (devpost/spec.md > Welcome Page,
+// prd.md > First-Visit Profile). HeadScript sends a reader here when this
+// browser has no usable profile; coming back later shows the saved choices,
+// so it doubles as the place to change them.
+//
+// Saving writes `pt.profile` and returns the reader to the page they asked
+// for (`?next=`, checked to be a path on this site), or to home.
+//
+// The Kiswahili and Sheng copy on this page is short UI text drafted
+// 2026-10-23 for the learner's check (he is the Sheng gate).
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProfileChips from "../components/ProfileChips.astro";
+import { MAX_WORDS } from "../lib/guard";
+---
+<BaseLayout title="Who are you? | PoliTricks">
+  <main class="welcome">
+    <h1>
+      <span data-l="en" lang="en">Who are you?</span>
+      <span data-l="sw" lang="sw">Wewe ni nani?</span>
+      <span data-l="sheng" lang="sw-x-sheng">Wewe ni nani?</span>
+    </h1>
+    <p data-l="en" lang="en">
+      Pick what fits you, so every bill shows what affects people like you first. Pick more
+      than one if you like. You can change this any time.
+    </p>
+    <p data-l="sw" lang="sw">
+      Chagua kinachokufaa, ili kila mswada ukuonyeshe kwanza kinachowahusu watu kama wewe.
+      Unaweza kuchagua zaidi ya kimoja, na kubadilisha wakati wowote.
+    </p>
+    <p data-l="sheng" lang="sw-x-sheng">
+      Chagua kile ina-fit, ili kila bill ikuonyeshe first kile ina-affect watu kama wewe.
+      Unaweza chagua zaidi ya moja, na ku-change any time.
+    </p>
+
+    <form id="welcome-form" novalidate>
+      <ProfileChips mode="welcome" />
+
+      <label class="words-label" for="words">
+        <span data-l="en" lang="en">In your own words (optional)</span>
+        <span data-l="sw" lang="sw">Kwa maneno yako (si lazima)</span>
+        <span data-l="sheng" lang="sw-x-sheng">Kwa maneno yako (optional)</span>
+      </label>
+      <input
+        id="words"
+        name="words"
+        type="text"
+        maxlength={MAX_WORDS}
+        autocomplete="off"
+        placeholder="e.g. I sell mitumba at Gikomba"
+      />
+      <p class="counter" aria-live="polite"><span id="count">0</span>/{MAX_WORDS}</p>
+
+      <p class="notice">
+        <span data-l="en" lang="en">Your words are sent to an AI service to find matching clauses. They stay on this phone otherwise.</span>
+        <span data-l="sw" lang="sw">Maneno yako yanatumwa kwa huduma ya AI kutafuta vifungu vinavyolingana. Vinginevyo yanabaki kwenye simu hii.</span>
+        <span data-l="sheng" lang="sw-x-sheng">Words zako zinatumwa kwa AI service ku-find sections zinazo-match. Venye zinabaki ni kwa hii simu tu.</span>
+      </p>
+
+      <div class="actions">
+        <button type="submit" class="save">
+          <span data-l="en" lang="en">Save</span>
+          <span data-l="sw" lang="sw">Hifadhi</span>
+          <span data-l="sheng" lang="sw-x-sheng">Save</span>
+        </button>
+        <button type="button" id="skip" class="skip">
+          <span data-l="en" lang="en">Skip</span>
+          <span data-l="sw" lang="sw">Ruka</span>
+          <span data-l="sheng" lang="sw-x-sheng">Skip</span>
+        </button>
+      </div>
+    </form>
+  </main>
+</BaseLayout>
+
+<script>
+  import { cleanWords } from "../lib/guard";
+  import { getProfile, setProfile } from "../lib/storage";
+  import { GroupIdSchema, type GroupId } from "../lib/schema";
+
+  const form = document.getElementById("welcome-form") as HTMLFormElement;
+  const words = document.getElementById("words") as HTMLInputElement;
+  const count = document.getElementById("count") as HTMLElement;
+  const boxes = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="group"]'));
+
+  // A returning reader sees what they saved before.
+  const saved = getProfile();
+  if (saved) {
+    boxes.forEach((box) => (box.checked = saved.groups.includes(box.value as GroupId)));
+    words.value = saved.words;
+  }
+  const updateCount = () => (count.textContent = String(words.value.length));
+  words.addEventListener("input", updateCount);
+  updateCount();
+
+  // Only a path on this site, never another origin ("//evil.example") and
+  // never back to /welcome itself.
+  function nextPage(): string {
+    const next = new URLSearchParams(location.search).get("next") ?? "/";
+    return next.startsWith("/") && !next.startsWith("//") && !next.startsWith("/welcome") ? next : "/";
+  }
+
+  function finish(groups: GroupId[], cleaned: string, skipped: boolean) {
+    // If storage is blocked this returns false; the head script then never
+    // sends the reader back here, so going on is still right.
+    setProfile({ v: 1, groups, words: cleaned, skipped, saved_at: new Date().toISOString() });
+    location.assign(nextPage());
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const groups = boxes
+      .filter((box) => box.checked)
+      .map((box) => GroupIdSchema.parse(box.value));
+    const cleaned = cleanWords(words.value);
+    // Nothing chosen and nothing usable typed counts as a skip (spec).
+    finish(groups, cleaned, groups.length === 0 && cleaned === "");
+  });
+  document.getElementById("skip")!.addEventListener("click", () => finish([], "", true));
+</script>
+
+<style>
+  .welcome {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  h1 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 2rem;
+    margin: 0.5rem 0;
+  }
+  h1 :global([data-l]),
+  .words-label :global([data-l]),
+  .notice :global([data-l]),
+  .actions :global([data-l]) {
+    display: none;
+  }
+  :global(html:not([data-lang])) :is(h1, .words-label, .notice, .actions) :global([data-l="en"]),
+  :global(html[data-lang="en"]) :is(h1, .words-label, .notice, .actions) :global([data-l="en"]),
+  :global(html[data-lang="sw"]) :is(h1, .words-label, .notice, .actions) :global([data-l="sw"]),
+  :global(html[data-lang="sheng"]) :is(h1, .words-label, .notice, .actions) :global([data-l="sheng"]) {
+    display: inline;
+  }
+  form {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .words-label {
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+  input[type="text"] {
+    border: 1px solid var(--muted);
+    border-radius: 4px;
+    padding: 0.6rem;
+    font-size: 1rem;
+  }
+  .counter {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: right;
+  }
+  .notice {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 0;
+  }
+  .actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+  .actions button {
+    padding: 0.6rem 1.4rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    min-height: 2.75rem;
+  }
+  .save {
+    background: var(--flag-black);
+    color: var(--paper);
+    border: 1px solid var(--flag-black);
+  }
+  .skip {
+    background: var(--paper);
+    border: 1px solid var(--muted);
+  }
+</style>

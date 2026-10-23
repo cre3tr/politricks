@@ -49,7 +49,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   Learner check: Run `politricks review finance-act-2026` and review the Sheng for 3–5 clauses you'd put in the demo, editing anything that sounds off. Reload the page and see those cards say *Reviewed*.
   Commit: `Add lint and review gate for all generated text`
 
-- [ ] **4. PoliTricks knows who you are, and puts what hits you first**
+- [x] **4. PoliTricks knows who you are, and puts what hits you first**
   Becomes usable: A first visit goes to `/welcome` (chips, 80-character words, data notice, Skip). Bill pages then show your groups first on the first paint, with "See everyone" and per-bill chips. Your own words call **Match** and float up matching clauses. A clause with no explanation calls **Explain** and shows a labelled draft. Both APIs fall back quietly on failure.
   Why now: This completes "what it means for you" on the kernel page, and it brings in the two live helpers and their failure paths while there's still only one bill to test against.
   PRD ref: `prd.md > First-Visit Profile`, `prd.md > What It Does`, `prd.md > States and Boundaries`
@@ -828,3 +828,26 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
   - On branch `wip/slice-4` (pushed, unfinished): guard, banned matcher, profile schema/storage, matcher prompt, Match/Explain handlers and routes, head script. Still to do: welcome page, chips, groups panel, bill-page wiring, explain call, CSS, `scripts/check-api.mjs`, banned vectors, build.
   - Not merged yet: branch `worktree-agent-a55d637c2408567bf` (`7b03e85`): `verify` reports UNREACHABLE (live run: 3 UNREACHABLE, exit 0), and `.github/workflows/update.yml`. Review the diff before merging. Its findings: `intake --check` proposes 147 entries (needs a filter before running weekly), and `generate` redrafts every unprotected clause.
   - Still running when stopped: the `civic.py` builder (slice 6 pipeline) in its own worktree. Nothing from it is merged.
+
+### Slice 4 ticked: profile, groups first, Match and Explain, 2026-10-23
+
+- **Built:**
+  - `src/lib/guard.ts` (word cleaning), `banned.ts` (TS twin of lint's matcher), `api.ts` (pure Match/Explain handlers), `claude.ts` (real calls, prompts bundled with `?raw`, key via `getSecret`), `groups.ts` (chip labels).
+  - `ProfileSchema` and profile storage.
+  - The head script: groups before first paint, and the welcome redirect only when storage works.
+  - `/welcome`, `ProfileChips`, `GroupsPanel`, the Match float-up on bill pages, and Explain for an unexplained clause.
+  - `pipeline/prompts/matcher.md` and `@anthropic-ai/sdk` ^1.1.0. Vercel `maxDuration: 60`.
+- **Mechanical verify (browser on the dev server, 2026-10-23):**
+  - With no profile, `/bills/finance-act-2026` redirected to `/welcome?next=%2Fbills%2Ffinance-act-2026`.
+  - Saving "trader" with words `I sell mitumba at <b>Gikomba</b>` stored the words with the tags stripped and returned to the bill.
+  - The trader note was the only one shown, at `order: -1`. "See everyone" showed all three of the bill's groups, and the per-bill chips changed the order while the saved profile stayed "trader".
+  - A live Match call returned 8 clause ids (Tax Procedures and VAT sections), floated them to the top and cached them under `pt.match.finance-act-2026.<hex>`.
+  - Error paths: empty words gave 400 `empty`, an unknown bill gave 400 `unknown_bill`, and an explained clause gave Explain 409.
+  - At 375 px there was no horizontal scroll, and the welcome page shows the saved choices on a return visit.
+  - `scripts/check-api.mjs`, 19 checks, all offline with stubbed calls: Explain 200 for a blank clause, a banned phrase in any language discarded (502), the model's own neutral flag discarded, Match ids filtered and capped at 8.
+  - `banned_vectors.json`: 16 hand-written cases, matched by both Python (lint `--self-test` 5b) and TS. Planted bugs, each alone: the matcher without its left boundary failed 1 check ("devote", "kupiga kura"), and Explain without the banned check failed 1.
+  - The build is clean, and `check-build` passes 118 / 49 / 143.
+  - The local build output held 0 `sk-ant-` matches over 921 files. Control: the key NAME was found.
+- **Not observed in the browser:** the page's quiet "couldn't personalise" fallback on a failed Match. The handler's 502 is tested offline, and the client path was read, not run.
+- **Copy drafted for the learner's check (Sheng gate):** chip labels, the welcome page text, "Who it affects" and the match notes. The spec's Explain label had an em dash; it is now "AI draft (not yet reviewed)", the card badge's own wording.
+- **Learner check pending** (fast mode, at the integrated checkpoint after slice 6): go through `/welcome` as yourself in a private window and see what floats up.

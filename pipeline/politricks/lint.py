@@ -509,6 +509,26 @@ def self_test(repo_root: Path) -> bool:
     ]
     check("5. changes[].before/after (legal text) are never scanned", lint_bill(bill, phrases) == [])
 
+    # --- 5b. the shared vectors: the live Explain API (src/lib/banned.ts) is
+    # checked against the same file by scripts/check-api.mjs, so the two
+    # matchers can't drift apart while each passes its own tests.
+    import json
+
+    vectors = json.loads(
+        (repo_root / "pipeline" / "tests" / "fixtures" / "banned_vectors.json").read_text(encoding="utf-8")
+    )["vectors"]
+    wrong = []
+    for vector in vectors:
+        clean = normalise(vector["text"])
+        hits = [phrase for phrase in phrases if _pattern(phrase).search(clean)]
+        if hits != vector["hits"]:
+            wrong.append(f"{vector['text']!r}: got {hits}, want {vector['hits']}")
+    check(
+        f"5b. all {len(vectors)} shared banned-phrase vectors match (banned_vectors.json)",
+        len(vectors) > 0 and not wrong,
+        "; ".join(wrong),
+    )
+
     # --- 6. nothing written ----------------------------------------------------
     check("6. the real bill file's SHA-256 is unchanged", sha256_file(real_path) == sha_before)
 

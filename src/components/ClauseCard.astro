@@ -11,9 +11,10 @@ import { clauseSha256, displayStatus } from "../lib/reviewHash";
 
 interface Props {
   clause: Clause;
+  billId: string;
 }
 
-const { clause } = Astro.props;
+const { clause, billId } = Astro.props;
 const segments = splitHighlights(clause.text);
 
 // No explanation yet: no badge at all (there is nothing to badge), just the
@@ -22,7 +23,20 @@ const segments = splitHighlights(clause.text);
 // content still matches what was accepted (src/lib/reviewHash.ts).
 const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await clauseSha256(clause))) : null;
 ---
-<article class="clause-card" data-clause-id={clause.id} data-text-sha256={clause.text_sha256}>
+<article
+  class="clause-card"
+  data-clause-id={clause.id}
+  id={`clause-${clause.id}`}
+  data-bill-id={billId}
+  data-text-sha256={clause.text_sha256}
+  data-needs-explain={clause.explanation ? undefined : ""}
+>
+  {/* Shown by the bill page's Match script on cards that match the reader's own words. */}
+  <p class="match-note" hidden>
+    <span data-l="en" lang="en">Matches what you wrote</span>
+    <span data-l="sw" lang="sw">Inalingana na ulichoandika</span>
+    <span data-l="sheng" lang="sw-x-sheng">Ina-match ulichoandika</span>
+  </p>
   <header class="clause-header">
     <h3>
       <span class="clause-number">Section {clause.number}</span>
@@ -71,6 +85,8 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
           </>
         ) : (
           <>
+            {/* Filled by the Explain call below when it answers 200. */}
+            <span class="badge badge-draft live-draft-label" hidden></span>
             <p data-l="en" lang="en">
               Explanation not ready yet.
             </p>
@@ -101,6 +117,47 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
         card.dataset.lang = button.dataset.cardLangBtn;
       });
     });
+  });
+
+  // A clause with no explanation asks the Explain API for a labelled draft
+  // in the reader's language (devpost/spec.md > Explain API). A 200 is cached
+  // per clause and language; anything else (or 60 s with no answer) leaves
+  // the trilingual "not ready" text in place. Every clause on today's bills
+  // has an explanation, so this only runs for a newly added bill.
+  import { getCached, getLang, setCached } from "../lib/storage";
+
+  document.querySelectorAll<HTMLElement>(".clause-card[data-needs-explain]").forEach(async (card) => {
+    const lang = getLang() ?? "en";
+    const key = `pt.draft.${card.dataset.clauseId}.${lang}`;
+    let draft = getCached<{ text: string; label: string }>(key);
+    if (!draft) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 60_000);
+      try {
+        const response = await fetch("/api/explain", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ bill_id: card.dataset.billId, clause_id: card.dataset.clauseId, lang }),
+          signal: controller.signal,
+        });
+        if (response.ok) {
+          draft = await response.json();
+          setCached(key, draft);
+        }
+      } catch {
+        // Network error or timeout: keep "not ready".
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+    if (!draft) return;
+    const paragraph = card.querySelector<HTMLElement>(`.explanation [data-l="${lang}"]`);
+    const label = card.querySelector<HTMLElement>(".live-draft-label");
+    if (paragraph && label) {
+      paragraph.textContent = draft.text;
+      label.textContent = draft.label;
+      label.hidden = false;
+    }
   });
 </script>
 
@@ -197,5 +254,24 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
   }
   .explanation p {
     margin: 0 0 0.5rem;
+  }
+  .match-note {
+    margin: 0 0 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--flag-green);
+  }
+  .match-note :global([data-l]) {
+    display: none;
+  }
+  :global(html:not([data-lang])) .match-note :global([data-l="en"]),
+  :global(html[data-lang="en"]) .match-note :global([data-l="en"]),
+  :global(html[data-lang="sw"]) .match-note :global([data-l="sw"]),
+  :global(html[data-lang="sheng"]) .match-note :global([data-l="sheng"]) {
+    display: inline;
+  }
+  .clause-card.matched {
+    border-color: var(--flag-green);
+    border-width: 2px;
   }
 </style>
