@@ -34,6 +34,9 @@ clause = {
     "neutral_check": None, "groups": ["transport", "trader"], "suggested_articles": [], "sheng_swaps": [],
 }
 untagged = {**clause, "id": "c1", "groups": [], "explanation": {"en": "", "sw": "", "sheng": ""}}
+# Articles given out of order, with a two-digit number among one-digit ones: a
+# plain string sort would put 10 before 9, a numeric sort does not.
+with_articles = {**clause, "id": "c9", "suggested_articles": [43, 10, 9, 201]}
 summary = {"text": {"en": "Summary: 3 changes.", "sw": "Muhtasari.", "sheng": "Summary ya bill."},
            "review": {"status": "draft", "at": None, "sha256": None}, "sheng_swaps": []}
 group = {"group": "trader", "text": {"en": "Traders.", "sw": "Wafanyabiashara.", "sheng": "Ma-trader."},
@@ -45,7 +48,7 @@ def build() -> list[dict]:
     """Every vector, with the fingerprint this side computes NOW."""
     vectors = []
     for kind, data, model in (("clause", clause, Clause), ("clause", untagged, Clause),
-                              ("summary", summary, Summary), ("group", group, GroupEntry)):
+                              ("clause", with_articles, Clause), ("summary", summary, Summary), ("group", group, GroupEntry)):
         vectors.append({"kind": kind, "item": data, "sha256": current_sha256(model.model_validate(data))})
     return vectors
 

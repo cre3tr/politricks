@@ -16,7 +16,7 @@ from typing import Literal, Optional
 
 from pydantic import BaseModel, ConfigDict
 
-from .hashing import REVIEW_HASH_VERSION, review_sha256
+from .hashing import CLAUSE_HASH_VERSION, REVIEW_HASH_VERSION, review_sha256
 
 # "forbid" means an unexpected field is an error, not silently ignored.
 _STRICT = ConfigDict(extra="forbid")
@@ -152,23 +152,29 @@ class Bill(BaseModel):
 # Review fingerprints: what "Reviewed" is tied to
 # --------------------------------------------------------------------------
 
+def _clause_parts(clause: Clause, text: Tri) -> list[str]:
+    """A clause's fingerprint parts up to and including its sorted group tags
+    (the whole of the v1 layout, after the version)."""
+    return ["clause", clause.id, clause.text, text.en, text.sw, text.sheng, ",".join(sorted(clause.groups))]
+
+
 def current_sha256(owner: Clause | Summary | GroupEntry) -> Optional[str]:
     """The fingerprint of what a reviewer accepts for this item, as it is now.
 
     It covers the three texts a reader sees, plus what decides WHO sees the
     item: a clause's group tags (sorted, so order alone changes nothing) and a
     group entry's section list. A clause also includes its legal text itself,
-    so a changed law un-reviews its explanation. Left out: review aids
-    (`sheng_swaps`, `neutral_check`), the heading (a signpost, not legal
-    text) and `suggested_articles` (always [] until slice 10, which must add
-    them and move REVIEW_HASH_VERSION to v2). None when there is no text.
-    Twin: `src/lib/reviewHash.ts`.
+    so a changed law un-reviews its explanation, and (since slice 10, clause
+    fingerprint v2) its `suggested_articles`, sorted numerically, because the
+    chips are shown to readers beside the explanation. Left out: review aids
+    (`sheng_swaps`, `neutral_check`) and the heading (a signpost, not legal
+    text). None when there is no text. Twin: `src/lib/reviewHash.ts`.
     """
     if isinstance(owner, Clause):
         if owner.explanation is None:
             return None
-        text = owner.explanation
-        parts = ["clause", owner.id, owner.text, text.en, text.sw, text.sheng, ",".join(sorted(owner.groups))]
+        articles = ",".join(str(number) for number in sorted(owner.suggested_articles))
+        return review_sha256([CLAUSE_HASH_VERSION, *_clause_parts(owner, owner.explanation), articles])
     elif isinstance(owner, Summary):
         text = owner.text
         parts = ["summary", text.en, text.sw, text.sheng]
@@ -176,6 +182,27 @@ def current_sha256(owner: Clause | Summary | GroupEntry) -> Optional[str]:
         text = owner.text
         parts = ["group", owner.group, text.en, text.sw, text.sheng, ",".join(owner.clause_ids)]
     return review_sha256([REVIEW_HASH_VERSION, *parts])
+
+
+def legacy_clause_sha256_v1(clause: Clause) -> Optional[str]:
+    """A clause's fingerprint under the RETIRED v1 rules (no `suggested_articles`).
+
+    Exists only for `politricks restamp`, the one-time migration: a draft whose
+    stored fingerprint equals this was written by `generate` under v1 and never
+    touched since, so it may be re-stamped under v2. Nothing else may call it.
+    """
+    if clause.explanation is None:
+        return None
+    return review_sha256([REVIEW_HASH_VERSION, *_clause_parts(clause, clause.explanation)])
+
+
+def is_v1_stamped(clause: Clause) -> bool:
+    """A clause whose stored fingerprint is exactly its v1 fingerprint (and not
+    its current one): written under the retired rules and not touched since.
+    Whatever its status, it needs `politricks restamp` (a draft) or a human
+    re-accept (a reviewed one) before it can read as anything but changed."""
+    stored = clause.review.sha256
+    return stored is not None and stored == legacy_clause_sha256_v1(clause) and stored != current_sha256(clause)
 
 
 def is_reviewed(owner: Clause | Summary | GroupEntry) -> bool:

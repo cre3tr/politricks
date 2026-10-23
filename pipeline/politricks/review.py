@@ -241,6 +241,9 @@ def _describe(item: Item, findings: list[Finding]) -> str:
     # Accepting also accepts these (they're in the fingerprint), so show them.
     if isinstance(item.owner, Clause):
         lines.append(f"GROUPS: {', '.join(item.owner.groups) or 'none'}")
+        # Slice 10: the articles are in the fingerprint too (clause v2), and
+        # they appear as chips beside the explanation, so accepting accepts them.
+        lines.append(f"SUGGESTED ARTICLES: {', '.join(str(n) for n in sorted(item.owner.suggested_articles)) or 'none'}")
     elif isinstance(item.owner, GroupEntry):
         lines.append(f"SECTIONS: {', '.join(item.owner.clause_ids) or 'none'}")
     status = item.owner.review.status
