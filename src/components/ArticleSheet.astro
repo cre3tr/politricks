@@ -1,0 +1,130 @@
+---
+// The Article Sheet (devpost/spec.md > Article Sheet; prd.md > Constitution
+// Check): tapping a "Suggested articles" chip on a clause card opens the
+// article's full official text here, labelled as a suggestion the reader
+// judges. PoliTricks never says a clause is or isn't constitutional.
+//
+// Payload: the page ships only the articles its own clauses suggest, as a
+// small JSON block below; the full constitution (264 articles) never goes
+// to a phone. A native <dialog> gives focus handling and Escape for free.
+import type { Article, Constitution } from "../lib/schema";
+
+interface Props {
+  articles: Article[];
+  constitution: Pick<Constitution, "sha256" | "source_url">;
+}
+
+const { articles, constitution } = Astro.props;
+---
+{
+  articles.length > 0 && (
+    <>
+      <script type="application/json" id="articles-data" set:html={JSON.stringify(articles)} />
+      <dialog class="article-sheet" id="article-sheet" aria-labelledby="article-title">
+        <p class="label">
+          <span data-l="en" lang="en">Suggested article: you judge</span>
+          <span data-l="sw" lang="sw">Ibara inayopendekezwa: wewe ndiye mwamuzi</span>
+          <span data-l="sheng" lang="sw-x-sheng">Article inayo-suggestiwa: wewe ndio judge</span>
+        </p>
+        <h2 id="article-title"></h2>
+        <p class="chapter"></p>
+        <p class="article-text" lang="en"></p>
+        <p class="fineprint">
+          The official text of the Constitution of Kenya, 2010.{" "}
+          <a href={constitution.source_url} rel="noopener">Official copy (Parliament)</a>, SHA-256{" "}
+          <code title={constitution.sha256}>{constitution.sha256.slice(0, 12)}…</code>
+        </p>
+        <form method="dialog">
+          <button type="submit" class="close">Close</button>
+        </form>
+      </dialog>
+    </>
+  )
+}
+
+<script>
+  const sheet = document.getElementById("article-sheet") as HTMLDialogElement | null;
+  const data = document.getElementById("articles-data");
+  if (sheet && data) {
+    const articles = new Map<number, { number: number; chapter: string; title: string; text: string }>(
+      (JSON.parse(data.textContent ?? "[]") as { number: number; chapter: string; title: string; text: string }[]).map(
+        (article) => [article.number, article],
+      ),
+    );
+    document.querySelectorAll<HTMLButtonElement>("[data-article]").forEach((chip) =>
+      chip.addEventListener("click", () => {
+        const article = articles.get(Number(chip.dataset.article));
+        if (!article) return;
+        sheet.querySelector("#article-title")!.textContent = `Article ${article.number}: ${article.title}`;
+        sheet.querySelector(".chapter")!.textContent = article.chapter;
+        sheet.querySelector(".article-text")!.textContent = article.text;
+        sheet.showModal();
+      }),
+    );
+    // A tap on the backdrop closes the sheet too.
+    sheet.addEventListener("click", (event) => {
+      if (event.target === sheet) sheet.close();
+    });
+  }
+</script>
+
+<style>
+  .article-sheet {
+    width: min(720px, 100%);
+    max-height: 85vh;
+    margin: auto auto 0;
+    border: none;
+    border-top: 6px solid var(--matatu-brown);
+    border-radius: 10px 10px 0 0;
+    padding: 1rem 1.25rem 1.5rem;
+    box-sizing: border-box;
+  }
+  .article-sheet::backdrop {
+    background: rgb(0 0 0 / 0.45);
+  }
+  .label {
+    font-weight: 700;
+    color: var(--matatu-brown);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 0.8rem;
+    margin: 0;
+  }
+  .label :global([data-l]) {
+    display: none;
+  }
+  :global(html:not([data-lang])) .label :global([data-l="en"]),
+  :global(html[data-lang="en"]) .label :global([data-l="en"]),
+  :global(html[data-lang="sw"]) .label :global([data-l="sw"]),
+  :global(html[data-lang="sheng"]) .label :global([data-l="sheng"]) {
+    display: inline;
+  }
+  h2 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 1.2rem;
+    margin: 0.4rem 0;
+  }
+  .chapter {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0 0 0.75rem;
+  }
+  .article-text {
+    white-space: pre-wrap;
+    font-size: 0.95rem;
+  }
+  .fineprint {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .close {
+    border: 1px solid var(--flag-black);
+    background: var(--paper);
+    padding: 0.5rem 1.2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    min-height: 2.5rem;
+  }
+</style>

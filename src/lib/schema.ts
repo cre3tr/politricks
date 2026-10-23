@@ -190,3 +190,22 @@ export const ProfileSchema = z
   })
   .strict();
 export type Profile = z.infer<typeof ProfileSchema>;
+
+// The Constitution of Kenya, 2010, split into its 264 articles by
+// `politricks constitution` (pipeline/politricks/constitution.py, whose
+// Pydantic models are this file's twin). A bill page ships only the articles
+// its clauses suggest (devpost/spec.md > Bill Page, Payload).
+export const ArticleSchema = z
+  .object({ number: z.number().int(), chapter: z.string(), title: z.string(), text: z.string() })
+  .strict();
+export type Article = z.infer<typeof ArticleSchema>;
+
+export const ConstitutionSchema = z
+  .object({
+    sha256: z.string(),
+    source_url: z.string(),
+    fetched_at: z.string(),
+    articles: z.array(ArticleSchema).length(264),
+  })
+  .strict();
+export type Constitution = z.infer<typeof ConstitutionSchema>;

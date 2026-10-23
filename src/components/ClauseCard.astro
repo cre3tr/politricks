@@ -101,6 +101,21 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
       }
     </div>
   </div>
+
+  {/* Suggested articles (slice 10): each chip opens the Article Sheet. They
+      are suggestions for the reader to judge, never a ruling. */}
+  {
+    clause.suggested_articles.length > 0 && (
+      <div class="article-chips">
+        <span class="article-chips-label">Suggested articles:</span>
+        {clause.suggested_articles.map((number) => (
+          <button type="button" class="article-chip" data-article={number}>
+            Article {number}
+          </button>
+        ))}
+      </div>
+    )
+  }
 </article>
 
 <script>
@@ -269,6 +284,26 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
   :global(html[data-lang="sw"]) .match-note :global([data-l="sw"]),
   :global(html[data-lang="sheng"]) .match-note :global([data-l="sheng"]) {
     display: inline;
+  }
+  .article-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+  }
+  .article-chips-label {
+    color: var(--muted);
+  }
+  .article-chip {
+    border: 1px solid var(--matatu-brown);
+    color: var(--matatu-brown);
+    background: var(--paper);
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+    cursor: pointer;
+    min-height: 2rem;
   }
   .clause-card.matched {
     border-color: var(--flag-green);

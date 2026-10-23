@@ -93,7 +93,11 @@ const checked = (iso: string) =>
           active.map((bill) => (
             <li>
               <a class="bill-card" href={`/bills/${bill.id}`}>
-                <span class="chamber">{CHAMBER[bill.chamber]}</span>
+                <span class="chamber">
+                  {CHAMBER[bill.chamber]}
+                  {bill.chamber === "county" && <span class="tag">County</span>}
+                  {bill.kind === "motion" && <span class="tag">Motion</span>}
+                </span>
                 <span class="title">{bill.title}</span>
                 <span class="stage">{bill.stage}</span>
                 {daysLeft(bill) === null ? (
@@ -119,7 +123,9 @@ const checked = (iso: string) =>
             <li>
               <a class="bill-card" href={`/bills/${bill.id}`}>
                 <span class="chamber">
-                  <span class="passed-label">Passed</span> {CHAMBER[bill.chamber]}
+                  <span class="passed-label">{bill.kind === "motion" ? "Approved" : "Passed"}</span> {CHAMBER[bill.chamber]}
+                  {bill.chamber === "county" && <span class="tag">County</span>}
+                  {bill.kind === "motion" && <span class="tag">Motion</span>}
                 </span>
                 <span class="title">{bill.title}</span>
                 <span class="stage">{bill.stage}</span>
@@ -191,6 +197,15 @@ const checked = (iso: string) =>
 <style>
   .search {
     margin-bottom: 2rem;
+  }
+  .tag {
+    display: inline-block;
+    margin-left: 0.35rem;
+    padding: 0 0.4rem;
+    border: 1px solid var(--matatu-brown);
+    border-radius: 3px;
+    color: var(--matatu-brown);
+    font-size: 0.75rem;
   }
   .search input {
     width: 100%;

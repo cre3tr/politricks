@@ -10,8 +10,11 @@ import ClauseCard from "../../components/ClauseCard.astro";
 import GroupsPanel from "../../components/GroupsPanel.astro";
 import BillTabs from "../../components/BillTabs.astro";
 import ParticipationPanel from "../../components/ParticipationPanel.astro";
+import ArticleSheet from "../../components/ArticleSheet.astro";
+import MotionCard from "../../components/MotionCard.astro";
+import constitutionJson from "../../data/constitution.json";
 import SourceFingerprint from "../../components/SourceFingerprint.astro";
-import { BillSchema, type Bill } from "../../lib/schema";
+import { BillSchema, ConstitutionSchema, type Bill } from "../../lib/schema";
 import { badgeFor } from "../../lib/badge";
 import { displayStatus, summarySha256 } from "../../lib/reviewHash";
 
@@ -58,6 +61,17 @@ const hasSample =
   bill.summary?.review.status === "sample" ||
   bill.clauses.some((clause) => clause.review.status === "sample");
 
+// Only the articles this bill's clauses suggest go into the page (spec >
+// Bill Page, Payload). An unknown number fails the build: generate validates
+// against the same file, so it would mean the two have drifted.
+const constitution = ConstitutionSchema.parse(constitutionJson);
+const suggested = [...new Set(bill.clauses.flatMap((clause) => clause.suggested_articles))].sort((a, b) => a - b);
+const pageArticles = suggested.map((number) => {
+  const article = constitution.articles.find((candidate) => candidate.number === number);
+  if (!article) throw new Error(`${bill.id}: suggested article ${number} is not in constitution.json`);
+  return article;
+});
+
 const summaryBadge = bill.summary
   ? badgeFor(displayStatus(bill.summary.review, await summarySha256(bill.summary)))
   : null;
@@ -97,6 +111,11 @@ const summaryBadge = bill.summary
       )
     }
 
+    {/* A county motion has no clauses, drafts or tabs: just the Motion Card. */}
+    {bill.kind === "motion" ? (
+      <MotionCard bill={bill} />
+    ) : (
+    <>
     <BillTabs passed={bill.status === "passed"} />
 
     <section id="what-it-does" class="tab-panel" aria-labelledby="tab-what-it-does">
@@ -149,7 +168,10 @@ const summaryBadge = bill.summary
       <h2 class="section-heading">{bill.status === "passed" ? "Where it can still be challenged" : "Have your say"}</h2>
       <ParticipationPanel bill={bill} />
     </section>
+    </>
+    )}
 
+    <ArticleSheet articles={pageArticles} constitution={constitution} />
     <SourceFingerprint sources={bill.sources} />
   </main>
 </BaseLayout>

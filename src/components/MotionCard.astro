@@ -1,0 +1,46 @@
+---
+// The Motion Card (devpost/spec.md > Motion Card): a county motion is a
+// resolution, not a bill. It has no clauses, drafts, groups or tabs, so its
+// page is just this card: the resolution text word for word from the
+// fingerprinted official record, beside its three-language note.
+//
+// A motion's JSON holds exactly one clause whose text is the resolution, so
+// the card reuses ClauseCard for that part: the same legal-text-beside-
+// explanation layout, review badge and per-card language flip.
+import type { Bill } from "../lib/schema";
+import ClauseCard from "./ClauseCard.astro";
+
+interface Props {
+  bill: Bill;
+}
+
+const { bill } = Astro.props;
+const resolution = bill.clauses[0];
+---
+<section class="motion-card" aria-label="Motion">
+  <p class="motion-label">
+    <span data-l="en" lang="en">County motion: a resolution of the Assembly, not a law</span>
+    <span data-l="sw" lang="sw">Hoja ya kaunti: azimio la Bunge la Kaunti, si sheria</span>
+    <span data-l="sheng" lang="sw-x-sheng">County motion: resolution ya Assembly, si law</span>
+  </p>
+  {resolution ? <ClauseCard clause={resolution} billId={bill.id} /> : <p>The motion text is not loaded yet.</p>}
+</section>
+
+<style>
+  .motion-card {
+    margin-top: 1.5rem;
+  }
+  .motion-label {
+    font-weight: 700;
+    color: var(--matatu-brown);
+  }
+  .motion-label :global([data-l]) {
+    display: none;
+  }
+  :global(html:not([data-lang])) .motion-label :global([data-l="en"]),
+  :global(html[data-lang="en"]) .motion-label :global([data-l="en"]),
+  :global(html[data-lang="sw"]) .motion-label :global([data-l="sw"]),
+  :global(html[data-lang="sheng"]) .motion-label :global([data-l="sheng"]) {
+    display: inline;
+  }
+</style>
