@@ -1,0 +1,27 @@
+# Where the motion's resolution text sits in the Hansard of 3 July 2025.
+# A motion has no clauses: its JSON holds ONE clause (c1) whose text is cut
+# from the PDF's text layer between the markers below. extract.py checks the
+# cut text is word for word in the PDF; nothing here supplies any of it.
+
+motion:
+  # The motion text begins on page 9 under "MOTION" and ends on page 10.
+  pages: [9, 10]
+  # Same line as the speaker label ("Hon. Anthony Maragu: THAT, aware that..."),
+  # so the label is left out by starting the cut AT this match.
+  start: 'THAT, aware that paragraph 5'
+  # The resolution's last words. The mover's speech follows on the next line.
+  # Lines are joined with newlines before matching, so words use \s+.
+  end: 'in\s+the\s+course\s+of\s+any\s+public\s+or\s+private\s+construction\s+works\.'
+  # A signpost for the card; typed here, never fingerprinted text.
+  heading: "The motion"
+
+# Not the Hansard's own page text: "Page 9 of 12 NAIROBI CITY COUNTY ASSEMBLY
+# Wednesday 3rd July 2025" heads every page, and a two-line disclaimer ends
+# every page. Whole-line matches, edge lines only (3 a page, cap is 4).
+strip_patterns:
+  - '^Page \d{1,2} of \d{1,2} NAIROBI CITY COUNTY ASSEMBLY .+$'
+  - '^Disclaimer: The electronic version of the Official Hansard Report is for information$'
+  - '^purposes only\. A certified version of this Report can be obtained from the Hansard Editor\.$'
+
+# No marginal notes in a Hansard.
+margin_x: 10000

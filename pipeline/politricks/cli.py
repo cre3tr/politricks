@@ -7,7 +7,7 @@ Run from anywhere; paths are resolved from the repo root, not your current folde
     uv run --project pipeline politricks fetch finance-bill-2026
     uv run --project pipeline politricks fetch --check-url <url>
     uv run --project pipeline politricks probe finance-act-2026
-    uv run --project pipeline politricks extract finance-act-2026 [--check-json <path>]
+    uv run --project pipeline politricks extract finance-act-2026 [--check-json <path>] [--self-test]
     uv run --project pipeline politricks verify [--self-test]
     uv run --project pipeline politricks samples finance-act-2026
     uv run --project pipeline politricks generate finance-act-2026 [--self-test]
@@ -74,8 +74,11 @@ def _dispatch() -> None:
     p_probe.add_argument("--pages", help="comma-separated page numbers, e.g. 2,3,20")
 
     p_extract = sub.add_parser("extract", help="pull sections out word for word, with checks")
-    p_extract.add_argument("bill_id")
+    p_extract.add_argument("bill_id", nargs="?")
     p_extract.add_argument("--check-json", help="only check an existing bill JSON against the PDF")
+    p_extract.add_argument(
+        "--self-test", action="store_true", help="offline check of the county paths (a motion's one clause, headings above clauses; writes nothing real)"
+    )
 
     p_verify = sub.add_parser("verify", help="re-download sources and compare fingerprints")
     p_verify.add_argument("--self-test", action="store_true", help="offline: one-byte control plus stubbed 403/timeout/changed runs (writes nothing real)")
@@ -181,6 +184,12 @@ def _dispatch() -> None:
         # The PDF whose sections we read is the bill's first official source.
         from .models import bill_path, load_bill
 
+        if args.command == "extract" and args.self_test:
+            from . import extract
+
+            sys.exit(0 if extract.self_test(REPO_ROOT) else 1)
+        if not args.bill_id:
+            parser.error(f"{args.command} needs a bill id" + (" (or extract --self-test)" if args.command == "extract" else ""))
         bill = load_bill(bill_path(REPO_ROOT, args.bill_id))
         pdf_file = Path(bill.sources[0].file).name
         if args.command == "probe":

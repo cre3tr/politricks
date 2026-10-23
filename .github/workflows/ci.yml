@@ -61,6 +61,7 @@ jobs:
           uv run --project pipeline politricks review --sheet-self-test
           uv run --project pipeline politricks civic --self-test
           uv run --project pipeline politricks constitution --self-test
+          uv run --project pipeline politricks extract --self-test
 
       # The live helpers' handlers with stubbed Claude calls, and the banned-
       # phrase matcher against the vectors lint --self-test also checks.

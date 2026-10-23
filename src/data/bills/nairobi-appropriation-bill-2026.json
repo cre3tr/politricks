@@ -1,0 +1,92 @@
+{
+  "id": "nairobi-appropriation-bill-2026",
+  "title": "The Nairobi City County Appropriation Bill, 2026",
+  "chamber": "county",
+  "kind": "bill",
+  "status": "passed",
+  "stage": "Passed by the Nairobi City County Assembly on 28 July 2026 (all three readings the same day); assent recorded 31 July 2026",
+  "stage_checked_at": "2026-10-23",
+  "source_changed": false,
+  "sources": [
+    {
+      "label": "The Nairobi City County Appropriation Bill 2026 (Assembly Bill No. 7 of 2026)",
+      "url": "https://nairobiassembly.go.ke/ncca/wp-content/uploads/bill/2026/PREVIEWED-FORMATTED-NAIROBI-APPROPRIATION-BILL-2026-1.pdf",
+      "official": true,
+      "fetched_at": "2026-10-23T14:40:27+00:00",
+      "sha256": "16871b4e7adbea2ebb40c9e0424345c072fd81c7b5233ea46ab05887fe3a5f66",
+      "file": "sources/nairobi-appropriation-bill-2026/bill.pdf",
+      "scanned": false
+    }
+  ],
+  "summary": null,
+  "groups": [],
+  "clauses": [
+    {
+      "id": "c1",
+      "number": "1",
+      "heading": "Short title",
+      "heading_source": "margin",
+      "text": "1. This Act may be cited as the Nairobi City County Appropriation Act, 2026.",
+      "text_sha256": "513208e4a748eb07c73dc9cd985c48dd384baa3a6ba9d4eae5675f5508d4c159",
+      "pages": [
+        2
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null,
+        "sha256": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": [],
+      "sheng_swaps": []
+    },
+    {
+      "id": "c2",
+      "number": "2",
+      "heading": "Issue of KSh. 49,271,943,291 out of the County Revenue Fund for public services and purposes of the year ending 30th June, 2027 and appropriation of the money granted",
+      "heading_source": "margin",
+      "text": "2. (1) The County Treasury may issue out of the County Revenue Fund and apply towards the supply granted for the service of the year ending on the 30th June, 2027, the sum of Kenya Shillings Forty-Nine Billion, Two Hundred and Seventy-One Million, Nine Hundred and Forty-Three Thousand, Two Hundred and Ninety One and that sum shall be deemed to have been appropriated as from 1st July, 2026, for the services and purposes specified in the Schedule annexed hereto. (2) The sum granted out of the County Revenue Fund by subsection (3) as authorized by the Nairobi City County Assembly on the 28th July, 2026, in accordance with Article 224 of the Constitution.",
+      "text_sha256": "0a603007ac6cff62405be91347ca28d3833d8ae9a21ec60d576e689709b78648",
+      "pages": [
+        2
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null,
+        "sha256": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": [],
+      "sheng_swaps": []
+    },
+    {
+      "id": "c3",
+      "number": "3",
+      "heading": "Appropriations in Aid",
+      "heading_source": "margin",
+      "text": "3. In addition to the sum granted by section 4, there may be applied, for the services and purposes specified in the Schedule, the sums specified out of any money directed to be applied as Appropriations in Aid under Article 206(1)(b) of the Constitution.",
+      "text_sha256": "310f8f5cd2ee9223da0c64563a043f6d855e556af7bb6a8182c04a519dc2af81",
+      "pages": [
+        2
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null,
+        "sha256": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": [],
+      "sheng_swaps": []
+    }
+  ],
+  "stage_next": null,
+  "changes": [],
+  "participation": null,
+  "challenge": null
+}

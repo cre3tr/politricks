@@ -70,3 +70,49 @@ public-participation-bill-2025:
       official: true
       file: bill.pdf
       scanned: true   # scanned paper: variable type sizes, specks read as characters
+
+nairobi-appropriation-bill-2026:
+  # Nairobi City County Assembly, bills page https://nairobiassembly.go.ke/bills/
+  # (2026 table, row 5, read 2026-10-23). PDF text layer 14/14 pages; the only
+  # 2026 county bill with a text layer (the other four are scans). The row
+  # reads: Bill No. 7 of 2026; Gazette No. 10 of 2026; 1st, 2nd and 3rd Read
+  # all 28th July, 2026; Passed 28th July, 2026; Assent 31st July, 2026;
+  # Remarks "Published".
+  title: "The Nairobi City County Appropriation Bill, 2026"
+  chamber: county
+  kind: bill
+  status: passed
+  stage: "Passed by the Nairobi City County Assembly on 28 July 2026 (all three readings the same day); assent recorded 31 July 2026"
+  stage_checked_at: "2026-10-23"
+  sources:
+    - label: "The Nairobi City County Appropriation Bill 2026 (Assembly Bill No. 7 of 2026)"
+      url: "https://nairobiassembly.go.ke/ncca/wp-content/uploads/bill/2026/PREVIEWED-FORMATTED-NAIROBI-APPROPRIATION-BILL-2026-1.pdf"
+      official: true
+      file: bill.pdf
+
+nairobi-motion-public-infrastructure-2025:
+  # A county MOTION has no clauses: its JSON holds ONE clause, the resolution
+  # text, copied from the Assembly's Hansard of 3 July 2025 (pages 9-10; see
+  # pipeline/overrides/nairobi-motion-public-infrastructure-2025.yaml).
+  # Stage: the Assembly's motion page (Motions tracker entry, read 2026-10-23)
+  # gives mover Hon. Anthony Maragu, MCA; seconder Hon. Erick Kiogora, MCA;
+  # "Dates Debated and/or Concluded" 3rd July, 2025; Remarks "Approved".
+  # https://nairobiassembly.go.ke/motion/restoration-of-public-infrastructure-damaged-by-public-and-private-construction-works/
+  # BUT the fingerprinted Hansard of 3 July 2025 (page 12) records
+  # "(Motion deferred)": the mover postponed the debate under Standing Order
+  # 104 after moving it. So "approved on 3 July" is not what the Hansard says.
+  # The Hansard of 24 Sept 2025 (p. 2) lists the motion as business for
+  # 25 Sept 2025; no sitting from 15 Jul to 4 Dec 2025 that was searched
+  # (text layers only) records the vote. Stage below states what each
+  # official source says and no more. Needs the learner's decision.
+  title: "Restoration of Public Infrastructure Damaged by Public and Private Construction Works"
+  chamber: county
+  kind: motion
+  status: passed
+  stage: "Listed as Approved on the Assembly's motions tracker. The Hansard of 3 July 2025 shows it was moved that day and then deferred, so the date it was approved is not confirmed"
+  stage_checked_at: "2026-10-23"
+  sources:
+    - label: "Nairobi City County Assembly Hansard, 3 July 2025 (motion on pages 9-10)"
+      url: "https://nairobiassembly.go.ke/ncca/wp-content/uploads/hansard/2025/3rd-July-2025.pdf"
+      official: true
+      file: hansard.pdf

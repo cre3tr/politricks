@@ -23,6 +23,11 @@ How it works, in plain terms:
    b. fingerprint — each section's text_sha256 matches its text;
    c. coverage — the segments rebuild the whole legal body, nothing lost.
 
+5. COUNTY MOTIONS. A motion has no numbered sections. Its overrides carry a
+   `motion:` block (pages, start and end markers) and the resolution text,
+   cut from the Hansard's text layer between those markers, becomes the one
+   clause "c1". It gets the same verbatim and fingerprint checks.
+
 Overrides (pipeline/overrides/<bill-id>.yaml) can only move boundaries or add
 header patterns. They can never supply or edit legal text.
 """
@@ -275,6 +280,13 @@ def segment(region: list[Line], overrides: dict) -> tuple[list[Segment], list[st
     segments: list[Segment] = []
     log: list[str] = []
     noisy_numbers = set(overrides.get("start_noise", []))
+    # For bills whose headings are printed ABOVE the clause, in the body column
+    # (no marginal notes), like the Nairobi County Appropriation Bill:
+    # `heading_before: {c2: 3}` means the 3 lines just above section 2's number
+    # line are its heading. They move out of the previous segment into a
+    # "heading" segment of their own, so a heading never becomes the tail of the
+    # clause above it. Only a boundary moves; no text is supplied.
+    heading_before = {str(k): int(v) for k, v in (overrides.get("heading_before") or {}).items()}
     expected = 1
     current = Segment(kind="other")
     for line in region:
@@ -294,8 +306,20 @@ def segment(region: list[Line], overrides: dict) -> tuple[list[Segment], list[st
         elif SCHEDULE_HEADING.match(text):
             kind = "schedule"
         if kind:
+            heading_lines: list[Line] = []
+            count = heading_before.get(f"c{expected}", 0) if kind == "section" else 0
+            if count:
+                if len(current.lines) < count:
+                    raise ExtractError(
+                        f"heading_before c{expected}: wants {count} line(s) above it, "
+                        f"but only {len(current.lines)} precede it in their segment"
+                    )
+                heading_lines = current.lines[-count:]
+                current.lines = current.lines[:-count]
             if current.lines:
                 segments.append(current)
+            if heading_lines:
+                segments.append(Segment(kind="heading", lines=heading_lines))
             current = Segment(kind=kind, number=int(match.group(1)) if kind == "section" else None)
             if kind == "section":
                 expected += 1
@@ -327,6 +351,16 @@ def extract(repo_root: Path, bill_id: str, pdf_file: str, write: bool = True) ->
     margin_audit: list[str] = []
     lines, margin_lines, stripped_log = read_pdf(pdf_path, overrides, margin_audit)
     source_text = normalise("\n".join(line.text for line in lines))
+    _check_kind(repo_root, bill_id, is_motion="motion" in overrides)
+
+    if "motion" in overrides:
+        # A county motion has no clauses: one clause holds its resolution text.
+        clauses, report = extract_motion(lines, overrides)
+        report["stripped"] = len(stripped_log)
+        verify_motion(clauses, source_text)
+        if write:
+            _write_audit(repo_root, bill_id, pdf_file, lines, stripped_log, margin_audit)
+        return clauses, report
 
     region = _region(lines, overrides)
     segments, seg_log = segment(region, overrides)
@@ -344,6 +378,17 @@ def extract(repo_root: Path, bill_id: str, pdf_file: str, write: bool = True) ->
     if unknown:
         raise ExtractError(f"heading_transcriptions name sections that don't exist: {sorted(unknown)}")
 
+    # Headings printed above a clause (`heading_before`): each heading segment
+    # belongs to the section right after it. An id that got none is a typo or a
+    # section that doesn't exist, and would otherwise silently do nothing.
+    inline_headings: dict[int, str] = {}
+    for position, seg in enumerate(segments):
+        if seg.kind == "heading" and position + 1 < len(segments) and segments[position + 1].kind == "section":
+            inline_headings[segments[position + 1].number] = seg.text
+    unplaced = set((overrides.get("heading_before") or {})) - {f"c{n}" for n in inline_headings}
+    if unplaced:
+        raise ExtractError(f"heading_before names sections that don't exist: {sorted(unplaced)}")
+
     clauses: list[Clause] = []
     for index, section in enumerate(sections):
         text = section.text
@@ -352,9 +397,12 @@ def extract(repo_root: Path, bill_id: str, pdf_file: str, write: bool = True) ->
             Clause(
                 id=f"c{section.number}",
                 number=str(section.number),
-                # A hand-transcribed heading (overrides) wins over the scan's
-                # marginal note. Headings are signposts, never legal text.
-                heading=transcriptions.get(f"c{section.number}") or _heading_for(section, following, margin_lines),
+                # A hand-transcribed heading (overrides) wins, then a heading
+                # printed above the clause, then the scan's marginal note.
+                # Headings are signposts, never legal text.
+                heading=transcriptions.get(f"c{section.number}")
+                or inline_headings.get(section.number)
+                or _heading_for(section, following, margin_lines),
                 heading_source="transcribed" if f"c{section.number}" in transcriptions else "margin",
                 text=text,
                 text_sha256=sha256_text(text),
@@ -372,21 +420,112 @@ def extract(repo_root: Path, bill_id: str, pdf_file: str, write: bool = True) ->
     verify_clauses(clauses, source_text, segments, region)
 
     if write:
-        audit = repo_root / "sources" / bill_id
-        stem = Path(pdf_file).stem
-        (audit / f"{stem}.body.txt").write_text(
-            "\n".join(f"p{l.page}: {l.text}" for l in lines) + "\n", encoding="utf-8", newline="\n"
-        )
-        (audit / f"{stem}.stripped.txt").write_text(
-            "\n".join(stripped_log) + "\n", encoding="utf-8", newline="\n"
-        )
-        if margin_audit:
-            # Gutter mode only: every word each page moved to the margin, so a
-            # human can confirm no legal text went with the marginal notes.
-            (audit / f"{stem}.margin.txt").write_text(
-                "\n".join(margin_audit) + "\n", encoding="utf-8", newline="\n"
-            )
+        _write_audit(repo_root, bill_id, pdf_file, lines, stripped_log, margin_audit)
     return clauses, report
+
+
+def _write_audit(
+    repo_root: Path, bill_id: str, pdf_file: str, lines: list[Line], stripped_log: list[str], margin_audit: list[str]
+) -> None:
+    """The audit trail next to the PDF: every body line read, every line stripped."""
+    audit = repo_root / "sources" / bill_id
+    stem = Path(pdf_file).stem
+    (audit / f"{stem}.body.txt").write_text(
+        "\n".join(f"p{l.page}: {l.text}" for l in lines) + "\n", encoding="utf-8", newline="\n"
+    )
+    (audit / f"{stem}.stripped.txt").write_text("\n".join(stripped_log) + "\n", encoding="utf-8", newline="\n")
+    if margin_audit:
+        # Gutter mode only: every word each page moved to the margin, so a
+        # human can confirm no legal text went with the marginal notes.
+        (audit / f"{stem}.margin.txt").write_text("\n".join(margin_audit) + "\n", encoding="utf-8", newline="\n")
+
+
+def _check_kind(repo_root: Path, bill_id: str, is_motion: bool) -> None:
+    """A `motion:` override belongs to a `kind: motion` bill and no other.
+
+    Only checked once the bill JSON exists (fetch makes it from sources.yaml).
+    """
+    path = bill_path(repo_root, bill_id)
+    if not path.exists():
+        return
+    kind = load_bill(path).kind
+    if is_motion and kind != "motion":
+        raise ExtractError(f"overrides have a 'motion' block but {bill_id} is kind '{kind}'")
+    if kind == "motion" and not is_motion:
+        raise ExtractError(f"{bill_id} is a motion but its overrides have no 'motion' block (pages, start, end)")
+
+
+def extract_motion(lines: list[Line], overrides: dict) -> tuple[list[Clause], dict]:
+    """A county motion's resolution text as the bill's single clause.
+
+    The overrides' `motion:` block says where it sits in the Hansard:
+
+        motion:
+          pages: [9, 10]          # PDF pages it is on
+          start: 'THAT, aware'    # regex: the text begins at this match
+          end: 'works\\.'         # regex: it ends right after the first match following start
+          heading: "The motion"   # optional signpost (never fingerprinted text)
+
+    The speaker label ("Hon. Anthony Maragu:") sits on the same line before
+    "THAT,", so the cut is made inside the line, at the start match. Like the
+    marker overrides for bills, this only chooses where to cut: every word
+    comes from the PDF's text layer, and `verify_motion` re-checks that.
+    """
+    spec = overrides["motion"]
+    for key in ("pages", "start", "end"):
+        if key not in spec:
+            raise ExtractError(f"motion override needs '{key}'")
+    pages = [int(p) for p in spec["pages"]]
+    start_re, end_re = re.compile(spec["start"]), re.compile(spec["end"])
+
+    in_pages = [line for line in lines if line.page in pages]
+    if not in_pages:
+        raise ExtractError(f"motion: no text on pages {pages}")
+    joined = "\n".join(line.text for line in in_pages)
+
+    starts = list(start_re.finditer(joined))
+    if len(starts) != 1:
+        raise ExtractError(f"motion start marker {spec['start']!r} matched {len(starts)} time(s) on pages {pages}, expected exactly 1")
+    begin = starts[0].start()
+    end_match = end_re.search(joined, begin)
+    if not end_match:
+        raise ExtractError(f"motion end marker {spec['end']!r} not found after the start on pages {pages}")
+    finish = end_match.end()
+
+    # Which pages the cut text really touches (lines overlapping begin..finish).
+    touched: set[int] = set()
+    offset = 0
+    for line in in_pages:
+        line_end = offset + len(line.text)
+        if offset < finish and line_end > begin:
+            touched.add(line.page)
+        offset = line_end + 1
+
+    text = normalise(joined[begin:finish])
+    clause = Clause(
+        id="c1",
+        number="1",
+        heading=spec.get("heading", "The motion"),
+        heading_source="transcribed",  # typed in the overrides, not read from a margin
+        text=text,
+        text_sha256=sha256_text(text),
+        pages=sorted(touched),
+    )
+    return [clause], {"sections": 1, "parts": 0, "schedules": 0, "stripped": 0, "ignored_starts": []}
+
+
+def verify_motion(clauses: list[Clause], source_text: str) -> None:
+    """The motion's checks: one clause, verbatim in the PDF body stream, and
+    its fingerprint matches its (normalised) text. Raises ExtractError."""
+    if len(clauses) != 1:
+        raise ExtractError(f"a motion holds exactly one clause, found {len(clauses)}")
+    clause = clauses[0]
+    if normalise(clause.text) not in source_text:
+        raise ExtractError(f"VERBATIM FAIL {clause.id}: text not found in the PDF body stream")
+    if clause.text != normalise(clause.text):
+        raise ExtractError(f"NOT NORMALISED {clause.id}")
+    if clause.text_sha256 != sha256_text(clause.text):
+        raise ExtractError(f"FINGERPRINT MISMATCH {clause.id}")
 
 
 def verify_clauses(clauses: list[Clause], source_text: str, segments: list[Segment], region: list[Line]) -> None:
@@ -451,4 +590,280 @@ def check_json(repo_root: Path, bill_id: str, pdf_file: str, json_path: Path) ->
             raise ExtractError(f"VERBATIM FAIL {clause.id}: stored text not found in the PDF")
         if clause.text_sha256 != sha256_text(clause.text):
             raise ExtractError(f"FINGERPRINT MISMATCH {clause.id}")
+    if "motion" in overrides:
+        # A motion's one clause is defined by its start/end markers, so the
+        # stored text must be exactly what the markers cut now, not merely
+        # some other stretch of the same PDF.
+        for clause, new in zip(stored, fresh):
+            if clause.text != new.text:
+                raise ExtractError(f"TEXT MISMATCH {clause.id}: the stored text is not what the PDF's motion markers cut")
     print(f"ok: {len(stored)} sections match the PDF word for word")
+
+
+# --- self-test -------------------------------------------------------------
+
+
+def self_test(repo_root: Path) -> bool:
+    """Offline check of the two county paths: a motion's one clause, and a bill
+    whose headings are printed above each clause. Builds tiny real PDFs by hand
+    in a temp folder; writes nothing to the repo."""
+    import contextlib
+    import io
+    import tempfile
+
+    from .constitution import _tiny_pdf
+    from .hashing import sha256_file
+    from .selftest import Checker
+
+    check = Checker()
+
+    def snapshot() -> dict[str, str]:
+        roots = [repo_root / "src" / "data" / "bills", repo_root / "sources", repo_root / "pipeline" / "overrides"]
+        files = [p for root in roots for p in sorted(root.rglob("*")) if p.is_file() and p.suffix != ".lock"]
+        return {p.relative_to(repo_root).as_posix(): sha256_file(p) for p in files}
+
+    real_before = snapshot()
+    check("control: the repo has bill JSONs, sources and overrides to protect", len(real_before) > 6, str(len(real_before)))
+
+    def page(*texts: str) -> list[tuple[float, float, float, bool, str]]:
+        return [(40, 40 + 16 * i, 10, False, text) for i, text in enumerate(texts)]
+
+    def attempt(call) -> str:
+        """The ExtractError message from a call that should fail, or ''."""
+        try:
+            call()
+        except ExtractError as error:
+            return str(error)
+        return ""
+
+    # ---- fixture 1: a Hansard with one motion across a page break ----
+    head = "Page {} of 3 TEST ASSEMBLY Monday 1st January 2024"
+    foot = "Disclaimer: for information only."
+    hansard = _tiny_pdf(
+        [
+            page(
+                head.format(1),
+                "Hon. Speaker: Order. The first item is below.",
+                "Hon. Ann Other: THAT, aware that this is a speech, not the motion",
+                foot,
+            ),
+            page(
+                head.format(2),
+                "MOTION",
+                "SAMPLE ROADS MOTION TITLE",
+                "Hon. Jane Doe: THAT, aware that roads matter; further noted that the",
+                "assembly urges the Executive to repair damaged roads in the course of",
+                foot,
+            ),
+            page(
+                head.format(3),
+                "any public or private works.",
+                "Hon. Jane Doe: Hon. Speaker, my speech follows here.",
+                foot,
+            ),
+        ]
+    )
+    motion_overrides = {
+        "motion": {
+            "pages": [2, 3],
+            "start": "THAT, aware that",
+            "end": r"in\s+the\s+course\s+of\s+any\s+public\s+or\s+private\s+works\.",
+            "heading": "The motion",
+        },
+        "strip_patterns": [r"^Page \d+ of \d+ TEST ASSEMBLY .+$", r"^Disclaimer: for information only\.$"],
+        "margin_x": 10000,
+    }
+
+    # ---- fixture 2: a bill with headings printed above its clauses ----
+    bill_pdf = _tiny_pdf(
+        [
+            page("THE TEST APPROPRIATION BILL, 2026"),
+            page(
+                "9 The Test Appropriation Bill, 2026",
+                "ENACTED by the Test Assembly, as follows",
+                "Short title",
+                "1. This Act may be cited as the Test Act, 2026.",
+                "Issue of money out of the fund and",
+                "appropriation of the money granted",
+                "2. (1) The Treasury may issue money from the fund for the",
+                "service of the year.",
+                "Appropriations in Aid",
+                "3. In addition there may be applied the sums in the Schedule.",
+                "FIRST SCHEDULE",
+                "R1 Vote 100",
+            ),
+        ]
+    )
+    bill_overrides = {
+        "start_after": "ENACTED by the Test Assembly",
+        "margin_x": 10000,
+        "strip_patterns": [r"^\d{1,3} The Test Appropriation Bill, 2026$"],
+        "heading_before": {"c1": 1, "c2": 2, "c3": 1},
+        "expected_clause_count": 3,
+    }
+
+    def build(root: Path, bill_id: str, kind: str, pdf: bytes, overrides: dict, pdf_file: str) -> None:
+        """A temp repo holding one bill: its JSON skeleton, its PDF and its overrides."""
+        (root / "pipeline" / "overrides").mkdir(parents=True, exist_ok=True)
+        (root / "sources" / bill_id).mkdir(parents=True, exist_ok=True)
+        (root / "sources" / bill_id / pdf_file).write_bytes(pdf)
+        (root / "pipeline" / "overrides" / f"{bill_id}.yaml").write_text(
+            yaml.safe_dump(overrides, allow_unicode=True), encoding="utf-8", newline="\n"
+        )
+        save_bill(
+            Bill(
+                id=bill_id, title="Self-test", chamber="county", kind=kind, status="passed",
+                stage="Self-test fixture", stage_checked_at="2026-01-01",
+            ),
+            bill_path(root, bill_id),
+        )
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        mid = "test-motion"
+        build(root, mid, "motion", hansard, motion_overrides, "hansard.pdf")
+
+        clauses, report = extract(root, mid, "hansard.pdf", write=False)
+        text = clauses[0].text
+        check("a motion extracts to exactly one clause, c1", [c.id for c in clauses] == ["c1"], str([c.id for c in clauses]))
+        check(
+            "the text starts at 'THAT,' and ends at the last words of the resolution",
+            text.startswith("THAT, aware that roads matter") and text.endswith("in the course of any public or private works."),
+            text,
+        )
+        check(
+            "the resolution runs across the page break as one text",
+            "in the course of any public or private works." in text and clauses[0].pages == [2, 3],
+            f"pages {clauses[0].pages}",
+        )
+        check("the speaker label is left out", "Jane Doe" not in text and "Hon." not in text, text)
+        check(
+            "page headers and footers are not in the text",
+            "TEST ASSEMBLY" not in text and "Disclaimer" not in text and "MOTION" not in text,
+            text,
+        )
+        check("the earlier 'THAT, aware that' on page 1 was not used (pages restrict the cut)", "this is a speech" not in text)
+        check("the fingerprint is the SHA-256 of the normalised text", clauses[0].text_sha256 == sha256_text(text))
+        check("a motion's report counts one section", report["sections"] == 1)
+
+        # Positive control: the header/footer WERE in the PDF, so stripping did something.
+        lines_kept, _, stripped = read_pdf(root / "sources" / mid / "hansard.pdf", motion_overrides)
+        lines_all, _, _ = read_pdf(root / "sources" / mid / "hansard.pdf", {**motion_overrides, "strip_patterns": []})
+        check(
+            "positive control: with stripping off the page header IS in the body stream",
+            any("TEST ASSEMBLY" in line.text for line in lines_all) and not any("TEST ASSEMBLY" in l.text for l in lines_kept),
+            f"{len(stripped)} lines stripped",
+        )
+
+        # The verbatim check must be able to fail: one word changed, with a matching hash.
+        source_text = normalise("\n".join(line.text for line in lines_kept))
+        verify_motion(clauses, source_text)  # the intact clause passes
+        check("the verbatim check passes the intact motion", True)
+        changed_text = text.replace("repair", "mend")
+        changed = clauses[0].model_copy(update={"text": changed_text, "text_sha256": sha256_text(changed_text)})
+        error = attempt(lambda: verify_motion([changed], source_text))
+        check("a one-word change fails the verbatim check and names c1", "VERBATIM FAIL c1" in error, error)
+        wrong_hash = clauses[0].model_copy(update={"text_sha256": "0" * 64})
+        error = attempt(lambda: verify_motion([wrong_hash], source_text))
+        check("a wrong fingerprint fails", "FINGERPRINT MISMATCH c1" in error, error)
+        error = attempt(lambda: verify_motion([clauses[0], clauses[0]], source_text))
+        check("two clauses fail: a motion holds exactly one", "exactly one clause" in error, error)
+
+        # The markers must be able to fail too.
+        def with_motion(**changes) -> tuple[list[Clause], dict]:
+            return extract_motion(lines_kept, {"motion": {**motion_overrides["motion"], **changes}})
+
+        error = attempt(lambda: with_motion(pages=[1, 2, 3]))
+        check("a start marker that matches twice is refused", "matched 2 time(s)" in error, error)
+        error = attempt(lambda: with_motion(start="THAT, noted that"))
+        check("a start marker that matches nothing is refused", "matched 0 time(s)" in error, error)
+        error = attempt(lambda: with_motion(end="never printed anywhere"))
+        check("an end marker that is never found is refused", "end marker" in error and "not found" in error, error)
+        error = attempt(lambda: with_motion(pages=[9]))
+        check("pages with no text are refused", "no text on pages [9]" in error, error)
+
+        # Kind and override must agree.
+        build(root, "test-kind-a", "bill", hansard, motion_overrides, "hansard.pdf")
+        error = attempt(lambda: extract(root, "test-kind-a", "hansard.pdf", write=False))
+        check("a 'motion' override on a bill (kind 'bill') is refused", "is kind 'bill'" in error, error)
+        build(root, "test-kind-b", "motion", hansard, {"margin_x": 10000}, "hansard.pdf")
+        error = attempt(lambda: extract(root, "test-kind-b", "hansard.pdf", write=False))
+        check("a motion with no 'motion' override is refused", "no 'motion' block" in error, error)
+
+        # The whole run: load to save, then read back with --check-json.
+        with contextlib.redirect_stdout(io.StringIO()):
+            run(root, mid, "hansard.pdf")
+        json_path = bill_path(root, mid)
+        stored = load_bill(json_path)
+        check("run saves one clause into the motion's JSON", [c.id for c in stored.clauses] == ["c1"] and stored.kind == "motion")
+        check("a motion's participation stays null", stored.participation is None and stored.changes == [])
+        first_bytes = json_path.read_bytes()
+        with contextlib.redirect_stdout(io.StringIO()):
+            run(root, mid, "hansard.pdf")
+        check("running again gives byte-identical JSON", json_path.read_bytes() == first_bytes)
+        with contextlib.redirect_stdout(io.StringIO()) as said:
+            check_json(root, mid, "hansard.pdf", json_path)
+        check("--check-json passes on the saved motion", "ok: 1 sections" in said.getvalue(), said.getvalue())
+
+        tampered = stored.model_copy(deep=True)
+        tampered.clauses[0].text = tampered.clauses[0].text.replace("repair", "mend")
+        tampered.clauses[0].text_sha256 = sha256_text(tampered.clauses[0].text)
+        tamper_path = root / "tampered.json"
+        save_bill(tampered, tamper_path)
+        error = attempt(lambda: check_json(root, mid, "hansard.pdf", tamper_path))
+        check("--check-json fails a motion with one word changed", "VERBATIM FAIL c1" in error, error)
+
+        # A DIFFERENT stretch of the same PDF is verbatim but not what the markers cut.
+        other = stored.model_copy(deep=True)
+        other.clauses[0].text = "Hon. Speaker, my speech follows here."
+        other.clauses[0].text_sha256 = sha256_text(other.clauses[0].text)
+        other_path = root / "other.json"
+        save_bill(other, other_path)
+        error = attempt(lambda: check_json(root, mid, "hansard.pdf", other_path))
+        check("--check-json fails another stretch of the PDF (verbatim, but not the cut)", "TEXT MISMATCH c1" in error, error)
+
+        # ---- the bill with headings above its clauses ----
+        bid = "test-bill"
+        build(root, bid, "bill", bill_pdf, bill_overrides, "bill.pdf")
+        clauses, report = extract(root, bid, "bill.pdf", write=False)
+        by_id = {c.id: c for c in clauses}
+        check("the bill splits into 3 clauses and 1 schedule", len(clauses) == 3 and report["schedules"] == 1, str(report))
+        check(
+            "each heading is the printed line(s) above its clause (two lines joined)",
+            [c.heading for c in clauses]
+            == ["Short title", "Issue of money out of the fund and appropriation of the money granted", "Appropriations in Aid"],
+            str([c.heading for c in clauses]),
+        )
+        check(
+            "no heading is left on the tail of the clause above",
+            by_id["c1"].text.endswith("Test Act, 2026.") and by_id["c2"].text.endswith("service of the year."),
+            f"{by_id['c1'].text!r} / {by_id['c2'].text!r}",
+        )
+        check("the running header is stripped", all("Appropriation Bill, 2026" not in c.text for c in clauses))
+
+        # Control: without heading_before the heading DOES land on the clause above.
+        no_headings = {k: v for k, v in bill_overrides.items() if k != "heading_before"}
+        build(root, "test-bill-plain", "bill", bill_pdf, no_headings, "bill.pdf")
+        plain, _ = extract(root, "test-bill-plain", "bill.pdf", write=False)
+        check(
+            "positive control: without heading_before, c2's heading ends c1's text",
+            plain[0].text.endswith("appropriation of the money granted"),
+            plain[0].text,
+        )
+
+        error = attempt(lambda: segment(read_pdf_region(root, bid), {**bill_overrides, "heading_before": {"c1": 5}}))
+        check("heading_before wanting more lines than precede the clause is refused", "wants 5 line(s)" in error, error)
+        typo = {**bill_overrides, "heading_before": {"c1": 1, "c2": 2, "c3": 1, "c9": 1}}
+        build(root, "test-bill-typo", "bill", bill_pdf, typo, "bill.pdf")
+        error = attempt(lambda: extract(root, "test-bill-typo", "bill.pdf", write=False))
+        check("heading_before naming a section that doesn't exist is refused", "c9" in error, error)
+
+    check("the repo's real bills, sources and overrides were not touched", snapshot() == real_before)
+    return check.finish()
+
+
+def read_pdf_region(root: Path, bill_id: str) -> list[Line]:
+    """Self-test helper: the legal-body lines of a temp bill."""
+    overrides = load_overrides(root, bill_id)
+    lines, _, _ = read_pdf(root / "sources" / bill_id / "bill.pdf", overrides)
+    return _region(lines, overrides)

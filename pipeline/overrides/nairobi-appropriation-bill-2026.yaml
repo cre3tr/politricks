@@ -1,0 +1,33 @@
+# Layout rules for the Nairobi City County Appropriation Bill, 2026
+# (Kenya Gazette Supplement No. 10, 28 July 2026; Assembly page 2 onward).
+# They may only move boundaries or remove running headers: they never add or
+# change legal text.
+
+# Page 1 is the Gazette cover and holds no bill text; the bill starts on page 2
+# after the enacting words. The start marker finds that line, so no skip_pages.
+start_after: 'ENACTED by the County Assembly of Nairobi City'
+
+# This PDF has NO marginal notes: headings are printed above each clause in the
+# body column. A margin line of 10000 can never be reached, so no character is
+# ever taken for a note (the default 395 would catch small type in the tables).
+margin_x: 10000
+
+# Running headers, alternating by page side: "14 The Nairobi City County
+# Appropriation Bill, 2026" and "The Nairobi City County Appropriation Bill,
+# 2026 15". Whole-line matches, edge lines only (extract.py caps it at 4 a page).
+strip_patterns:
+  - '^\d{1,3} The Nairobi City County Appropriation Bill, 2026$'
+  - '^The Nairobi City County Appropriation Bill, 2026 \d{1,3}$'
+
+# The heading of each clause is the printed line(s) just above its number:
+# c1 "Short title" (1 line), c2 "Issue of KSh. ... granted" (3 lines),
+# c3 "Appropriations in Aid" (1 line). Counted from sources/<id>/bill.body.txt.
+heading_before:
+  c1: 1
+  c2: 3
+  c3: 1
+
+# The bill is three sections, then the First Schedule (pages 3-7) and Second
+# Schedule (pages 8-14), which are tables of money and stay schedules, not
+# clauses (as for the Finance Act). Pinning the count makes a mis-split fail.
+expected_clause_count: 3
