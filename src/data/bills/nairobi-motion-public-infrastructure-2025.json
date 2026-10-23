@@ -1,0 +1,51 @@
+{
+  "id": "nairobi-motion-public-infrastructure-2025",
+  "title": "Restoration of Public Infrastructure Damaged by Public and Private Construction Works",
+  "chamber": "county",
+  "kind": "motion",
+  "status": "passed",
+  "stage": "Listed as Approved on the Assembly's motions tracker. The Hansard of 3 July 2025 shows it was moved that day and then deferred, so the date it was approved is not confirmed",
+  "stage_checked_at": "2026-10-23",
+  "source_changed": false,
+  "sources": [
+    {
+      "label": "Nairobi City County Assembly Hansard, 3 July 2025 (motion on pages 9-10)",
+      "url": "https://nairobiassembly.go.ke/ncca/wp-content/uploads/hansard/2025/3rd-July-2025.pdf",
+      "official": true,
+      "fetched_at": "2026-10-23T14:40:37+00:00",
+      "sha256": "1f5fe4954cbdac77a171f5ad25381f87b11af120e2f73cddb31486981f786d58",
+      "file": "sources/nairobi-motion-public-infrastructure-2025/hansard.pdf",
+      "scanned": false
+    }
+  ],
+  "summary": null,
+  "groups": [],
+  "clauses": [
+    {
+      "id": "c1",
+      "number": "1",
+      "heading": "The motion",
+      "heading_source": "transcribed",
+      "text": "THAT, aware that paragraph 5 (a) of Part II of the Constitution of Kenya provides for County Roads as a function of County Governments and that Paragraph 18 of Part II provides for National roads as a function of National Government; Further aware that Section 50 of the Kenya Roads Act, 2007 provides that the owner of a vehicle is liable for damages on a road by reason of vehicle passing over it in contravention of rules made by the relevant authority under the Act; Noting that Section 41 (8) of the Nairobi City County Transport Act, 2020 requires that utility companies that have been granted permission to carry out works shall ensure that the road and its facilities are reinstated to appropriate standards; cognizant that construction companies carrying out projects on real estate, roads and other sites are bound to use heavy equipment and machinery that use public roads and other public facilities; further cognizant that in executive their works, the mobility of these heavy equipment and machinery cause damage to public roads near the sites since their tonnage may be higher than the roads may tolerate; deeply concerned that the resulting poor condition of the road riddled with deep potholes and stagnant water cause profound inconvenience to other road users and accelerated wear and tear to vehicles of reasonable sizes, further, the ambition to reduce time spent on the road during movement of goods and services becomes greatly hampered; further concerned that should this trend be left to persist and National and County regulations unenforced in light of many construction works that are ongoing in the County, many roads that the County and National Governments have spent resources to construct will be left impassible forcing the allocation of fresh resources for their repair and maintenance. Now therefore, in order to curb reckless damage to public infrastructure, especially roads, the Assembly urges the County Executive Committee Member to urgently formulate and submit Regulations to Nairobi City County Transport Act, 2020 to provide for procedures, rules, offenses and sanctions on damage to public infrastructure in the course of any public or private construction works.",
+      "text_sha256": "0e553d9df8fcdb3f2a4c7d0177761f40199b78ef1b1ef15863f70f688f96a7a1",
+      "pages": [
+        9,
+        10
+      ],
+      "explanation": null,
+      "review": {
+        "status": "draft",
+        "at": null,
+        "sha256": null
+      },
+      "neutral_check": null,
+      "groups": [],
+      "suggested_articles": [],
+      "sheng_swaps": []
+    }
+  ],
+  "stage_next": null,
+  "changes": [],
+  "participation": null,
+  "challenge": null
+}

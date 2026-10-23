@@ -16,6 +16,7 @@ uv run --project pipeline politricks intake --self-test
 uv run --project pipeline politricks verify --self-test
 uv run --project pipeline politricks export --self-test
 uv run --project pipeline politricks review --sheet-self-test
+uv run --project pipeline politricks extract --self-test     # county motion + headings-above-clauses paths (2026-10-23)
 uv run --project pipeline politricks lint
 npm run build
 node scripts/check-build.mjs <bill-id>        # once per bill in src/data/bills/
