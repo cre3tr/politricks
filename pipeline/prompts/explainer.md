@@ -96,7 +96,8 @@ stop, a colon or brackets instead.
   - **Open with the section's own number.** A section's Sheng starts
     `Section <its number> ina-...`: "Section 4 ina-add new section 6B kwa
     Income Tax Act...", not "Hii section ina-add..." and not "Finance Act
-    ina-add...".
+    ina-add...". A county **motion** has no sections: its Sheng starts
+    `Hii motion ina-...` ("Hii motion ina-urge County Executive...").
   - **"This" and "that" go first.** Later in the text, "this section" is
     `hii section`, never `section hii`. The same goes for every noun: `hio
     list`, `hizo costs`, `huyo person`, not `list hiyo`, `costs hizo`,

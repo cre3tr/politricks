@@ -920,7 +920,7 @@ def self_test(repo_root: Path) -> bool:
     check("answer schema has no `en` (English is never taken from the model)", '"en"' not in str(params["output_config"]["format"]["schema"]["$defs"]["ItemOut"]["properties"]))
     prompt = _translator_prompt(repo_root)
     check("translator.md has no em dash", "—" not in prompt)
-    check("translator.md forbids advice and verdict phrases", all(word in normalise(prompt) for word in ("unapaswa", "kinyume na Katiba", "you should", "inakinzana na Katiba")))
+    check("translator.md forbids advice and verdict phrases", all(word in normalise(prompt) for word in ("unapaswa", "kinyume na Katiba", "you should", "haiendani na Katiba", "hai-skizani na constitution")))
 
     # --- the fingerprint -----------------------------------------------------
     vector = ParticipationBlock(

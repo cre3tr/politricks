@@ -12,11 +12,11 @@ interface Props {
 
 const { passed } = Astro.props;
 const tabs = [
-  { id: "what-it-does", en: "What it does", sw: "Unafanya nini", sheng: "Ina-do nini" },
+  { id: "what-it-does", en: "What it does", sw: "Unafanya nini", sheng: "Inafanya nini" },
   { id: "what-changed", en: "What changed", sw: "Nini kimebadilika", sheng: "Nini imechange" },
   passed
-    ? { id: "have-your-say", en: "Where it can still be challenged", sw: "Inaweza kupingwa wapi", sheng: "Ina-challengiwa wapi" }
-    : { id: "have-your-say", en: "Have your say", sw: "Toa maoni yako", sheng: "Sema yako" },
+    ? { id: "have-your-say", en: "Where it can still be challenged", sw: "Inaweza kupingwa wapi", sheng: "Inaweza ku-challengiwa wapi" }
+    : { id: "have-your-say", en: "Have your say", sw: "Toa maoni yako", sheng: "Sema view yako" },
 ];
 ---
 <nav class="bill-tabs" role="tablist" aria-label="Bill sections">

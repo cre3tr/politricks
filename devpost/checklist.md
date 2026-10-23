@@ -938,3 +938,21 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
   - Build clean; check-build passes on all 5 bills.
   - In the browser, the Tertiary page's "Article 43" chip opens the sheet ("Article 43: Economic and social rights", labelled "Suggested article: you judge") and Close shuts it.
 - **Learner check pending** (integrated checkpoint): open a suggested article. Does it feel relevant, and is it clear you're the judge?
+
+### Motion stage grounded, and the learner's copy corrections, 2026-10-23
+
+- **The motion is not approved: corrected to `status: active`.** A search of all 414 PDFs on the Assembly's Hansard, Votes and Proceedings and Order Paper listings for 2025-2026 (every one with a text layer) found the motion never put to a vote:
+  - The Votes and Proceedings of 3 Jul 2025, p. 2, read "Under Standing Order 104, requested to postpone to a future date the debate on this Motion. Motion Deferred."
+  - It was listed again for 25 Sep 2025, 2 Oct 2025 and 6 Aug 2026; each sitting lapsed for lack of quorum before reaching it.
+  - The Order Paper of 15 Oct 2026, p. 3, lists it under "Tentative business for Tuesday, 3rd November, 2026".
+  - The lead re-downloaded and read both decisive documents. The tracker's "Approved" is contradicted by the Assembly's own records.
+  - New stage: "Moved and debated on 3 July 2025, then deferred; not yet put to a vote. Listed as tentative business for Tuesday 3 November 2026 (Order Paper, 15 October 2026)". `fetch` copied it into the JSON with the PDF unchanged (same SHA-256). The motion now sits under Active Bills.
+- **Copy, the learner's corrections (AskUserQuestion, played back and confirmed):**
+  - Groups heading: SW "Wanaohusika", Sheng "Inawahusu nani".
+  - Welcome notice, Sheng: "Zingine zitabaki kwa hii simu tu".
+  - Article sheet, Sheng: "Tuna-suggest article: wewe ndio judge".
+  - Tabs, Sheng: "Inafanya nini", "Sema view yako", "Inaweza ku-challengiwa wapi".
+  - Employee chip: SW "Mfanyikazi", Sheng "Msee wa Mboka". Trader chip, Sheng: "Hustler / Sonko / Boss".
+  - Closed panel, SW: "Ushiriki haupo wazi kwa sasa". Match failed, Sheng: "Hatukuweza ku-personalise saa hii".
+- **Glossary:** "inconsistent with the Constitution" is now SW `haiendani na Katiba` (or `haipelekani`) and Sheng `hai-skizani na constitution` (or `hai-mesh`), in `translator.md`. The Finance Act's challenge block was re-translated under it (`civic --force`, one direct call) and now uses both terms. The civic self-test checks the new wording.
+- **`explainer.md`:** a county motion's Sheng now opens `Hii motion ina-...`. The existing motion draft still says "Section 1 ina-urge", for the learner to fix at review.

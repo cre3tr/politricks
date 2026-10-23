@@ -79,7 +79,7 @@ const challengeBadge = challenge ? badgeFor(displayStatus(challenge.review, awai
           <div class="window window-closed">
             <p class="deadline">
               <span data-l="en" lang="en">Participation is not open. The window for written views closed on</span>
-              <span data-l="sw" lang="sw">Ushiriki haujafunguliwa. Muda wa kutuma maoni ya maandishi ulifungwa tarehe</span>
+              <span data-l="sw" lang="sw">Ushiriki haupo wazi kwa sasa. Muda wa kutuma maoni ya maandishi ulifungwa tarehe</span>
               <span data-l="sheng" lang="sw-x-sheng">Participation haiko open. Window ya ku-send views ili-close</span>
               {" "}
               <strong>{longDate(participation.deadline)}{participation.deadline_time ? `, ${participation.deadline_time}` : ""}</strong>.
@@ -88,7 +88,7 @@ const challengeBadge = challenge ? badgeFor(displayStatus(challenge.review, awai
         ) : (
           <p class="deadline">
             <span data-l="en" lang="en">Participation is not open.</span>
-            <span data-l="sw" lang="sw">Ushiriki haujafunguliwa.</span>
+            <span data-l="sw" lang="sw">Ushiriki haupo wazi kwa sasa.</span>
             <span data-l="sheng" lang="sw-x-sheng">Participation haiko open.</span>
           </p>
         )}

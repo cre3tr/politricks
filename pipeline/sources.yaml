@@ -94,22 +94,26 @@ nairobi-motion-public-infrastructure-2025:
   # A county MOTION has no clauses: its JSON holds ONE clause, the resolution
   # text, copied from the Assembly's Hansard of 3 July 2025 (pages 9-10; see
   # pipeline/overrides/nairobi-motion-public-infrastructure-2025.yaml).
-  # Stage: the Assembly's motion page (Motions tracker entry, read 2026-10-23)
-  # gives mover Hon. Anthony Maragu, MCA; seconder Hon. Erick Kiogora, MCA;
-  # "Dates Debated and/or Concluded" 3rd July, 2025; Remarks "Approved".
-  # https://nairobiassembly.go.ke/motion/restoration-of-public-infrastructure-damaged-by-public-and-private-construction-works/
-  # BUT the fingerprinted Hansard of 3 July 2025 (page 12) records
-  # "(Motion deferred)": the mover postponed the debate under Standing Order
-  # 104 after moving it. So "approved on 3 July" is not what the Hansard says.
-  # The Hansard of 24 Sept 2025 (p. 2) lists the motion as business for
-  # 25 Sept 2025; no sitting from 15 Jul to 4 Dec 2025 that was searched
-  # (text layers only) records the vote. Stage below states what each
-  # official source says and no more. Needs the learner's decision.
+  # Stage, re-checked 2026-10-23 against every Hansard, Votes and Proceedings
+  # and Order Paper the Assembly lists for 1 Jul 2025 to today (414 PDFs, all
+  # with a text layer). The motion was NEVER put to a vote:
+  #   - Votes and Proceedings, 3 Jul 2025, p. 2 (the official record of
+  #     decisions): "Motion made and question proposed ... Debate ensued;
+  #     Mover replied; Under Standing Order 104, requested to postpone to a
+  #     future date the debate on this Motion. Motion Deferred."
+  #     https://nairobiassembly.go.ke/ncca/wp-content/uploads/votes/2025/VOTES-PROCEEDINGS-3RD-JULY-2025.pdf
+  #   - Listed again on 25 Sep 2025, 2 Oct 2025 and 6 Aug 2026; each of those
+  #     sittings adjourned for lack of quorum before reaching it.
+  #   - Order Paper, Thu 15 Oct 2026, p. 3: "Tentative business for Tuesday,
+  #     3rd November, 2026", item 3, this motion.
+  #     https://nairobiassembly.go.ke/ncca/wp-content/uploads/orderpaper/2026/Order-Paper-Thursday-15th-October-2026.pdf
+  # The Assembly's motions tracker says "Approved" (3rd July, 2025); its own
+  # Votes and Proceedings and Hansard contradict that, so they win.
   title: "Restoration of Public Infrastructure Damaged by Public and Private Construction Works"
   chamber: county
   kind: motion
-  status: passed
-  stage: "Listed as Approved on the Assembly's motions tracker. The Hansard of 3 July 2025 shows it was moved that day and then deferred, so the date it was approved is not confirmed"
+  status: active
+  stage: "Moved and debated on 3 July 2025, then deferred; not yet put to a vote. Listed as tentative business for Tuesday 3 November 2026 (Order Paper, 15 October 2026)"
   stage_checked_at: "2026-10-23"
   sources:
     - label: "Nairobi City County Assembly Hansard, 3 July 2025 (motion on pages 9-10)"
