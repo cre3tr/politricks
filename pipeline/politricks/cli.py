@@ -75,7 +75,7 @@ def _dispatch() -> None:
     p_extract.add_argument("--check-json", help="only check an existing bill JSON against the PDF")
 
     p_verify = sub.add_parser("verify", help="re-download sources and compare fingerprints")
-    p_verify.add_argument("--self-test", action="store_true", help="offline one-byte positive control")
+    p_verify.add_argument("--self-test", action="store_true", help="offline: one-byte control plus stubbed 403/timeout/changed runs (writes nothing real)")
 
     p_samples = sub.add_parser("samples", help="apply hand-written sample explanations (slice 2a)")
     p_samples.add_argument("bill_id")
@@ -176,7 +176,8 @@ def _dispatch() -> None:
 
         if args.self_test:
             sys.exit(0 if verify.self_test(REPO_ROOT) else 1)
-        verify.verify_all(REPO_ROOT)
+        # 1 on a CHANGED source or a real error; 0 otherwise, even with UNREACHABLE ones.
+        sys.exit(verify.verify_all(REPO_ROOT))
 
     elif args.command == "samples":
         from . import samples
