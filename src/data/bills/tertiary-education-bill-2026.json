@@ -18,8 +18,98 @@
       "scanned": false
     }
   ],
-  "summary": null,
-  "groups": [],
+  "summary": {
+    "text": {
+      "en": "The Bill creates two bodies: the Kenya Universities and Colleges Central Placement Service, which places students and trainees in public tertiary institutions and runs career guidance, and the Tertiary Education Funding Authority, which raises money and gives education loans and scholarships. It sets up the Tertiary Education Fund to pay for the loans, says who can apply, and requires a loanee to start repaying within one year after finishing studies. Employers must deduct repayments from a loanee's pay and send them to the Authority within nine days after the month ends, and deductions are capped at 25% of the loanee's pay. An employer who is late in sending the money is charged 5% for each month or part of a month. The Bill repeals the Higher Education Loans Board Act and parts of the Universities Act and the Technical and Vocational Education and Training Act, and moves the property, liabilities and staff of the old boards to the two new bodies. It also changes the Limitation of Actions Act for civil cases to recover these loans.",
+      "sw": "Mswada huu unaanzisha taasisi mbili: Huduma Kuu ya Kuwapanga Wanafunzi Vyuoni (Kenya Universities and Colleges Central Placement Service), inayowapanga wanafunzi na wanagenzi katika taasisi za umma za elimu ya juu na kutoa mwongozo wa taaluma, na Mamlaka ya Ufadhili wa Elimu ya Juu (Tertiary Education Funding Authority), inayokusanya fedha na kutoa mikopo na ufadhili wa masomo. Mswada unaanzisha Hazina ya Elimu ya Juu ya kulipia mikopo hiyo, unaeleza nani anaweza kuomba, na unamtaka mkopaji aanze kulipa ndani ya mwaka mmoja baada ya kumaliza masomo. Waajiri wanatakiwa kukata marejesho kutoka kwa malipo ya mkopaji na kuyawasilisha kwa Mamlaka ndani ya siku tisa baada ya mwezi kuisha, na makato hayawezi kuzidi 25% ya malipo ya mkopaji. Mwajiri anayechelewa kuwasilisha anatozwa 5% kwa kila mwezi au sehemu ya mwezi. Mswada unafuta Sheria ya Bodi ya Mikopo ya Elimu ya Juu (Higher Education Loans Board Act) na sehemu za Sheria ya Vyuo Vikuu na Sheria ya Elimu na Mafunzo ya Ufundi, na kuhamishia mali, madeni na wafanyakazi wa bodi za zamani kwa taasisi hizo mbili. Pia unabadilisha Sheria ya Ukomo wa Muda wa Kufungua Kesi (Limitation of Actions Act) kuhusu kesi za madai za kurejesha mikopo hii.",
+      "sheng": "Bill hii ina-create two bodies: Kenya Universities and Colleges Central Placement Service, ambayo ina-place students na trainees kwa public tertiary institutions na ku-run career guidance, na Tertiary Education Funding Authority, ambayo ina-raise money na ku-give education loans na scholarships. Pia ina-set up Tertiary Education Fund ya ku-pay loans, ina-say who can apply, na loanee ana-start ku-repay loan within one year after ku-finish studies. Employers wana-deduct repayments from pay ya loanee na ku-remit kwa Authority within nine days after month ina-end, na deductions haziwezi ku-exceed 25% ya pay ya loanee. Employer akiwa late ku-remit, Authority ina-charge 5% kwa kila month ama part ya month. Bill ina-repeal Higher Education Loans Board Act na parts za Universities Act na TVET Act, na property, liabilities na staff wa old boards wana-move kwa two new bodies. Ina-also change Limitation of Actions Act kwa civil cases za loan recovery."
+    },
+    "review": {
+      "status": "draft",
+      "at": null,
+      "sha256": "f7a993f4c9ffd004029996de8f05949fbf0f24ea0be2ee5794df5e584e992801"
+    },
+    "sheng_swaps": []
+  },
+  "groups": [
+    {
+      "group": "employee",
+      "text": {
+        "en": "A loanee in formal employment must tell the employer about the loan when starting the job, and the employer must inform the Authority about the employment. The employer deducts the monthly repayment from the loanee's pay and sends it to the Authority within nine days after each month ends, and deductions are capped at 25% of the loanee's pay. Staff of the old boards are treated as staff of the Placement Service and the Authority.",
+        "sw": "Mkopaji aliye katika ajira rasmi anatakiwa kumjulisha mwajiri kuhusu mkopo anapoanza kazi, na mwajiri anatakiwa kuijulisha Mamlaka kuhusu ajira hiyo. Mwajiri anakata marejesho ya kila mwezi kutoka kwa malipo ya mkopaji na kuyawasilisha kwa Mamlaka ndani ya siku tisa baada ya mwezi kuisha, na makato hayawezi kuzidi 25% ya malipo ya mkopaji. Wafanyakazi wa bodi za zamani wanachukuliwa kuwa wafanyakazi wa Huduma ya Kuwapanga Wanafunzi na wa Mamlaka.",
+        "sheng": "Loanee kwa formal employment ana-disclose loan status kwa employer at the start ya job, na employer ana-inform Authority. Employer ana-deduct repayments from pay ya loanee na ku-remit within nine days after each month, na deductions haziwezi ku-exceed 25% ya pay ya loanee. Staff wa former institutions wanakuwa staff wa Placement Service na Authority."
+      },
+      "clause_ids": [
+        "c49",
+        "c50",
+        "c67"
+      ],
+      "review": {
+        "status": "draft",
+        "at": null,
+        "sha256": "0cc32d4cd9547815cc071311f1e752d1f8eff5a23c3bd3123f142d5127ffdeaf"
+      },
+      "sheng_swaps": []
+    },
+    {
+      "group": "trader",
+      "text": {
+        "en": "A loanee in informal employment enters a payment plan with the Authority on how and how often they will pay. Repayment starts within one year after finishing studies, together with interest and any other charges. Deductions are capped at 25% of the loanee's pay.",
+        "sw": "Mkopaji aliye katika ajira isiyo rasmi anaingia mpango wa malipo na Mamlaka kuhusu njia na mara ngapi atalipa. Ulipaji unaanza ndani ya mwaka mmoja baada ya kumaliza masomo, pamoja na riba na gharama nyingine zozote. Makato hayawezi kuzidi 25% ya malipo ya mkopaji.",
+        "sheng": "Loanee kwa informal employment ana-enter payment plan na Authority on mode na frequency ya payment. Repayment ina-start within one year after ku-finish studies, together na interest na other charges. Deductions haziwezi ku-exceed 25% ya pay ya loanee."
+      },
+      "clause_ids": [
+        "c49"
+      ],
+      "review": {
+        "status": "draft",
+        "at": null,
+        "sha256": "1897b33a868409a2abb6ebe7fc5aa09b4d84a7e9e2444567b582ff9e0ccf3d76"
+      },
+      "sheng_swaps": []
+    },
+    {
+      "group": "student",
+      "text": {
+        "en": "The Placement Service places students who apply and qualify in public tertiary institutions, with set timelines for applications, a free chance to revise an unsuccessful application, and a second chance (with a fee) for those who did not apply. Kenyan students and trainees admitted to public or private tertiary institutions can apply to the Authority for education loans (an eligible person can apply for a minor), and funding under the Act is for students placed by the Placement Service. The Authority sets the interest rate for loans with the Cabinet Secretary and administers scholarships, and the Bill repeals the Higher Education Loans Board Act.",
+        "sw": "Huduma ya Kuwapanga Wanafunzi inawapanga wanafunzi wanaoomba na kukidhi vigezo katika taasisi za umma za elimu ya juu, kukiwa na muda uliowekwa wa maombi, nafasi ya bure ya kurekebisha ombi lisilofaulu, na nafasi ya pili (kwa ada) kwa wasioomba mwanzoni. Wanafunzi na wanagenzi Wakenya waliokubaliwa katika taasisi za umma au za kibinafsi wanaweza kuomba mikopo ya elimu kwa Mamlaka (mtu anayestahili anaweza kuomba kwa niaba ya mtoto mdogo), na ufadhili chini ya Sheria hii ni wa wanafunzi waliopangwa na Huduma hiyo. Mamlaka inapanga kiwango cha riba ya mikopo pamoja na Waziri, inasimamia ufadhili wa masomo, na Mswada unafuta Sheria ya Bodi ya Mikopo ya Elimu ya Juu (Higher Education Loans Board Act).",
+        "sheng": "Placement Service ina-place students ambao wana-apply na ku-qualify kwa public tertiary institutions, na iko na timelines za applications, free chance ya ku-revise application ikiwa unsuccessful, na second chance (kwa fee) kwa persons ambao hawakufanya application mwanzoni. Kenyan students na trainees admitted kwa public ama private tertiary institution wanaweza ku-apply kwa Authority for education loan, na eligible person anaweza ku-apply kwa minor, na funding under hii Act ni ya students ambao Placement Service ime-place. Authority ina-set interest rate for loans na Cabinet Secretary, ina-administer scholarships, na Bill ina-repeal Higher Education Loans Board Act."
+      },
+      "clause_ids": [
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c7",
+        "c20",
+        "c21",
+        "c22",
+        "c23",
+        "c25",
+        "c27",
+        "c29",
+        "c30",
+        "c44",
+        "c45",
+        "c46",
+        "c47",
+        "c48",
+        "c49",
+        "c50",
+        "c52",
+        "c56",
+        "c60",
+        "c63",
+        "c64"
+      ],
+      "review": {
+        "status": "draft",
+        "at": null,
+        "sha256": "e7ab95f759f8d4d5165d9322507536f5b67fa99184a383f38a71889ef14f7509"
+      },
+      "sheng_swaps": []
+    }
+  ],
   "clauses": [
     {
       "id": "c1",
@@ -31,13 +121,20 @@
       "pages": [
         7
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 1 gives the law its official short name: the Tertiary Education Placement and Funding Act, 2026. It is a naming clause only, so it does not change anything for anyone.",
+        "sw": "Kifungu cha 1 kinapa sheria hii jina lake rasmi fupi: Tertiary Education Placement and Funding Act, 2026. Kifungu hiki ni cha jina tu, kwa hivyo hakibadilishi chochote kwa mtu yeyote.",
+        "sheng": "Section 1 ina-give hii Act official short title yake: Tertiary Education Placement and Funding Act, 2026. Ni clause ya title tu, haina-change kitu kwa any person."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "1f4b6568f8e4d862e908ca484ce4a6010a08eda45ca1d7ca9d844a42f27ffe67"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Short title clause only; the explanation states the name and that nothing else changes, with no opinion or advice."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -54,14 +151,23 @@
         8,
         9
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section is a definitions clause. It explains what key words mean in the rest of the Act. It covers the bodies and offices (the Authority, the Commission, the Placement Service, the Fund, the regulatory bodies, the Cabinet Secretary and the Chief Executive Officer) and the people involved: a student (in a university), a trainee (in a college), an eligible person (a Kenyan citizen admitted to a recognised tertiary institution, or a Kenyan citizen willing to take a loan for an admitted student), a loanee and an accepting institution. It also defines money and education terms: loan, scholarship (aid based on need), saving scheme, emolument (any pay or benefit for work, in cash or in kind), admission, placement, enrolment, tertiary education and tertiary institution (a university, college or technical and vocational training institution recognised by the regulators).",
+        "sw": "Kifungu hiki ni cha tafsiri. Kinaeleza maana ya maneno muhimu yanayotumika katika Sheria hii. Kinafafanua taasisi na ofisi (Mamlaka, Tume, Huduma ya Upangaji, Hazina, mashirika ya udhibiti, Waziri na Afisa Mkuu Mtendaji) na watu wanaohusika: mwanafunzi (wa chuo kikuu), mwanagenzi (wa chuo cha kati), mtu anayestahiki (raia wa Kenya aliyekubaliwa katika taasisi ya elimu ya juu inayotambuliwa, au raia wa Kenya aliye tayari kuchukua mkopo kwa niaba ya mwanafunzi aliyekubaliwa), mkopaji na taasisi inayokubali. Pia kinatoa maana ya istilahi za fedha na elimu: mkopo, udhamini wa masomo (msaada kulingana na mahitaji), mpango wa akiba, marupurupu (malipo au manufaa yoyote ya kazi, kwa pesa taslimu au kwa bidhaa), uandikishaji, upangaji, idadi ya waliosajiliwa, elimu ya juu na taasisi ya elimu ya juu (chuo kikuu, chuo, au taasisi ya mafunzo ya ufundi inayotambuliwa na mashirika ya udhibiti).",
+        "sheng": "Section 2 ina-define meaning ya key words ambazo zinatumika kwa hii Act. Ina-cover bodies kama Authority, Commission, Placement Service, Fund na regulatory bodies, na Cabinet Secretary na Chief Executive Officer. Pia ina-define people kama student (university), trainee (college), eligible person (Kenyan citizen admitted kwa recognised tertiary institution ama Kenyan citizen ambaye anataka loan ya student), loanee na accepting institution, na money na education terms kama loan, scholarship (support based on need), saving scheme, emolument (pay yoyote ama benefit ya work, cash ama in-kind), admission, placement, enrolment, tertiary education na tertiary institution."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "916fc762636710b90fd31093310aca2bf63f7e1f46dcf2663d3fc45b0f768462"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Definitions clause, described as written with no opinion, advice or judgement on legality."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -75,14 +181,23 @@
       "pages": [
         9
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 3 states the purpose of the Act. It says the Act is meant to provide a framework for three things: placing students and trainees in tertiary institutions (colleges and universities), financing students and trainees who are doing tertiary education, and offering career guidance that is coordinated. This section does not itself set any rule, amount or deadline.",
+        "sw": "Kifungu cha 3 kinaeleza lengo la Sheria hii. Kinasema Sheria hii inalenga kutoa mfumo wa kuwapanga wanafunzi na wanagenzi katika taasisi za elimu ya juu, kufadhili wanafunzi na wanagenzi wanaosoma elimu ya juu, na kutoa ushauri wa kazi ulioratibiwa. Kifungu hiki chenyewe hakiweki kanuni, kiasi cha pesa wala tarehe ya mwisho.",
+        "sheng": "Section 3 ina-say purpose ya hii Act ni ku-set up framework ya placement ya students na trainees kwa tertiary institutions, financing ya students na trainees wanaofanya tertiary education, na coordinated career guidance kwa students na trainees. Hii section yenyewe haiweki rule, amount ama deadline."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "6b485eae22dafcccdf6372faa23cc05b7cceaebafe9091f12bbe817c37e138cb"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the stated purposes of the Act, with no opinion, advice or judgement on legality."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -96,14 +211,23 @@
       "pages": [
         9
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 4 lists five principles that are to guide how this Act is carried out. They are: access to tertiary education (college and university) for everyone, equal access to government funding, enough money made available by drawing on different sources of funding, a funding source that lasts over time, and careful use of the funds.",
+        "sw": "Kifungu cha 4 kinaweka kanuni tano zitakazoongoza utekelezaji wa Sheria hii. Kanuni hizo ni: upatikanaji wa elimu ya juu (vyuo na vyuo vikuu) kwa wote, ufikiaji sawa wa ufadhili wa serikali, upatikanaji wa fedha za kutosha kupitia vyanzo mbalimbali vya ufadhili, chanzo cha ufadhili kinachodumu, na matumizi makini ya fedha.",
+        "sheng": "Section 4 ina-set five principles za ku-guide how hii Act ina-work. First ni access kwa tertiary education (college na university) kwa everyone, na second ni equal access kwa government funding. Zingine ni enough funds kutoka different sources, funding ambayo ina-last, na careful use ya funds."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "f21a520e997a18c09c3f6bb542c8b5467d6b79fe5a84281e76e37b68738073cc"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the five listed principles in plain words, with no opinion on them and no advice."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -117,14 +241,23 @@
       "pages": [
         9
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section says who the Act covers. It applies to people seeking a place in a tertiary institution, to students and trainees who are seeking funding or have been granted it, and to Kenyan students and trainees studying in Kenya or abroad. It also applies to accredited tertiary institutions in Kenya, and to any person or institution interested in funding tertiary education.",
+        "sw": "Kifungu hiki kinaeleza Sheria hii inawahusu nani. Inawahusu watu wanaotafuta nafasi katika taasisi za elimu ya juu, wanafunzi na wanagenzi wanaotafuta ufadhili au waliopewa ufadhili, na wanafunzi na wanagenzi Wakenya wanaosoma ndani au nje ya Kenya. Pia inahusu taasisi za elimu ya juu zilizoidhinishwa nchini Kenya, na mtu au taasisi yoyote inayopenda kufadhili elimu ya juu.",
+        "sheng": "Section 5 ina-say hii Act ina-apply kwa nani. Ina-cover persons wanaotafuta placement kwa tertiary institutions, students na trainees wanaotafuta funding ama ambao wamepewa funding, na Kenyan students na trainees wanaosoma inside ama outside Kenya. Pia ina-cover accredited tertiary institutions za Kenya, na any person ama institution ambayo ina-want ku-fund tertiary education."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "29b14ad4732c1d244f77c393c63df744074b8fb7d56f672f6d1479caa20614b5"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only lists who the Act applies to, so it was described without opinion, advice or any view on legality."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -138,13 +271,20 @@
       "pages": [
         10
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section creates a new body called the Kenya Universities and Colleges Central Placement Service. It is a body corporate, meaning it is a legal entity in its own name that continues to exist whoever runs it. In that name it can sue and be sued, own, lease or sell property, and borrow and lend money. Its headquarters are in Nairobi, and it must make its services accessible in all parts of Kenya.",
+        "sw": "Kifungu hiki kinaanzisha chombo kipya kinachoitwa Kenya Universities and Colleges Central Placement Service. Huduma hii ni shirika lenye hadhi ya kisheria kwa jina lake, yaani inaweza kushtaki na kushtakiwa, kumiliki, kukodisha au kuuza mali, na kukopa na kukopesha pesa. Makao makuu yake yatakuwa Nairobi, lakini huduma zake lazima zipatikane kila pembe ya Kenya.",
+        "sheng": "Section 6 ina-establish new body ambayo itaitwa Kenya Universities and Colleges Central Placement Service. Hii body ni body corporate, ambayo inamaanisha iko na own legal identity: inaweza ku-sue na ku-be sued, ku-own, lease ama sell property, na ku-borrow na ku-lend money. Headquarters ziko Nairobi, lakini Service lazima i-ensure services zake ziko accessible kote Kenya."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "7f94039d8be100a619c64884082cd222018eafc280c205ba4c1d47ebb3574d69"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only sets up a body corporate, its powers and its headquarters, so it was described without opinion, advice or any view on legality."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -159,14 +299,23 @@
       "pages": [
         10
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section lists what the Placement Service does. It sets a framework for placing students and trainees in tertiary education institutions, and it places students and trainees in public accredited tertiary institutions. It also offers coordinated career guidance to people who plan to go into tertiary education, and sets up and keeps a data system on the placement of students. It advises the Cabinet Secretary on placement matters, and carries out any other function given to it by this Act or another written law.",
+        "sw": "Kifungu hiki kinaorodhesha kazi za Huduma ya Upangaji (Placement Service). Huduma hii inaweka mfumo wa kupanga wanafunzi na wafunzwa katika taasisi za elimu ya juu, na inawapanga katika taasisi za umma za elimu ya juu zilizoidhinishwa. Pia inatoa ushauri ulioratibiwa wa taaluma kwa watu wanaokusudia kujiunga na elimu ya juu, na inaanzisha na kudumisha mfumo wa kusimamia data ya upangaji wa wanafunzi. Aidha, inamshauri Waziri (Cabinet Secretary) kuhusu masuala ya upangaji, na inatekeleza kazi nyingine yoyote iliyotolewa na Sheria hii au sheria nyingine iliyoandikwa.",
+        "sheng": "Section 7 ina-list functions za Placement Service. Placement Service ina-set framework ya placement ya students na trainees kwenye tertiary education institutions, na ina-place students na trainees kwa public accredited tertiary institutions. Pia ina-offer coordinated career guidance kwa persons ambao wanataka ku-pursue tertiary education, ina-set up na ku-maintain system ya data management ya placement ya students, na ina-advise Cabinet Secretary on matters za placement. Pia ina-perform any other function ambayo hii Act ama any other written law ina-give."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "289d05127b5d43aaef83c3e0c7cc5fc48dc460081214bd039e32f5943bedaded"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only lists the Placement Service's functions; explained item by item with no opinion, advice or legal judgement."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -181,13 +330,20 @@
         10,
         11
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section lists four powers the Placement Service has so it can carry out its functions under section 7. It can look after its own assets, open and run bank accounts as the relevant laws allow, and receive gifts, grants, donations, endowments and other money it receives lawfully. It can also form associations, collaborations and linkages with other persons, bodies or organizations, inside or outside Kenya, when it considers that appropriate.",
+        "sw": "Kifungu hiki kinaorodhesha mamlaka manne ambayo Huduma ya Upangaji (Placement Service) inayo katika kutekeleza majukumu yake chini ya kifungu cha 7. Inaweza kusimamia mali zake, kufungua na kuendesha akaunti za benki kwa mujibu wa sheria husika, na kupokea zawadi, ruzuku, michango, hazina za msaada na fedha nyingine zilizopokelewa kisheria. Pia inaweza kuingia katika ushirikiano na uhusiano na watu, taasisi au mashirika ndani au nje ya Kenya, inapoona inafaa.",
+        "sheng": "Section 8 ina-list four powers za Placement Service ili iweze kufanya functions zake under section 7. Inaweza ku-administer assets zake, ku-open na ku-operate bank accounts kwa kufuata relevant laws, na ku-receive gifts, grants, donations, endowments na money nyingine ambayo ime-receivewa lawfully. Pia inaweza ku-enter into associations, collaborations na linkages na persons, bodies ama organizations inside ama outside Kenya, kama Placement Service ina-consider ni appropriate."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "7ceb0ba151b1350a8bcb66a6ecce4877152d75d9a916ad87be00e21076c300b4"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "The section only lists the powers of a public body, so the explanation just describes each power without opinion or advice."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -202,13 +358,20 @@
       "pages": [
         11
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 9 sets up a Board to run the Placement Service. The Board has a Chairperson appointed by the President, the Principal Secretaries for university education, technical and vocational education and training, and finance, the Attorney-General (each of whom may send a designated representative), and four independent persons. The Chief Executive Officer sits on the Board but has no vote. The Cabinet Secretary appoints the four independent persons by notice in the Gazette, and the Chairperson and the independent persons serve three years, with one possible further term if their performance is satisfactory.",
+        "sw": "Kifungu cha 9 kinaunda Bodi ya Huduma ya Upangaji (Placement Service). Bodi hiyo ina Mwenyekiti anayeteuliwa na Rais, Makatibu Wakuu wa elimu ya chuo kikuu, mafunzo ya ufundi na kitaaluma (TVET) na fedha, pamoja na Mwanasheria Mkuu (kila mmoja anaweza kutuma mwakilishi aliyeteuliwa), na watu wanne huru. Afisa Mkuu Mtendaji ni mwanachama wa Bodi lakini hana haki ya kupiga kura. Waziri huteua wanachama hao wanne huru kwa notisi katika Gazeti la Serikali, na Mwenyekiti na wanachama huru hukaa madarakani kwa miaka mitatu, wakiweza kuteuliwa tena mara moja kama utendaji wao unaridhisha.",
+        "sheng": "Section 9 ina-create Board ya Placement Service. Board iko na Chairperson ambaye President ana-appoint, Principal Secretaries wa university education, TVET na finance, Attorney-General, na four independent persons. Kila Principal Secretary na Attorney-General wanaweza kutuma designated representative. Chief Executive Officer ni member wa Board lakini hana vote. Cabinet Secretary ana-appoint hao four independent persons kwa notice kwenye Gazette, na Chairperson na hao independent persons wana-serve three years, na wanaweza kupewa one more term kama performance yao ni satisfactory."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "c5c731225d2fccdb398cfb879c448fb95cd6ff3b9ae0ee702f330c47796f79bc"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only who sits on the Board, who appoints them and their terms, with no opinion or advice."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -224,13 +387,20 @@
         11,
         12
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 10 lists who can be appointed Chairperson of the Board of the Placement Service under section 9 (1) (a). The person must be a Kenyan citizen, hold a degree from a university recognized in Kenya, and have at least ten years' experience in law, education, public administration, business management, financial management, governance or other relevant professional work. The person must also meet the requirements of Chapter Six of the Constitution (leadership and integrity).",
+        "sw": "Kifungu cha 10 kinaeleza sifa za mtu anayeweza kuteuliwa kuwa Mwenyekiti wa Bodi ya Placement Service chini ya kifungu cha 9 (1) (a). Mtu huyo lazima awe raia wa Kenya, awe na shahada kutoka chuo kikuu kinachotambuliwa nchini Kenya, na awe na uzoefu wa angalau miaka kumi katika sheria, elimu, utawala wa umma, usimamizi wa biashara, usimamizi wa fedha, uongozi au taaluma nyingine husika. Pia anapaswa kukidhi masharti ya Sura ya Sita ya Katiba (uongozi na uadilifu).",
+        "sheng": "Section 10 ina-set qualifications za person ambaye ana-qualify ku-be appointed kama Chairperson wa Board ya Placement Service chini ya section 9 (1) (a). Person huyo ni citizen wa Kenya, ana degree kutoka university recognized in Kenya, na ana at least ten years experience kwa law, education, public administration, business management, financial management, governance ama other relevant professional work. Pia anapaswa a-meet requirements za Chapter Six ya Constitution, ambayo ni ya leadership na integrity."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "c0248f7b65adbfe50897c4c8e8d7f710b1fee2af6c20a475026a4c7013b56681"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only lists appointment qualifications for a board chairperson; described as written, with no opinion or advice."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -245,13 +415,20 @@
       "pages": [
         12
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 11 sets out who can be appointed to the Board of the Placement Service under section 9(1)(f). The person must be a Kenyan citizen with a degree from a university recognized in Kenya. They must also have at least six years' experience in business, financial management, governance or other relevant professional work, and meet the requirements of Chapter Six of the Constitution (on leadership and integrity).",
+        "sw": "Kifungu cha 11 kinaeleza ni nani anaweza kuteuliwa kuwa mjumbe wa Bodi ya Huduma ya Upangaji chini ya kifungu cha 9(1)(f). Mtu huyo lazima awe raia wa Kenya na awe na shahada kutoka chuo kikuu kinachotambuliwa nchini Kenya. Pia lazima awe na uzoefu wa angalau miaka sita katika biashara, usimamizi wa fedha, uongozi au kazi nyingine ya kitaaluma inayohusika, na atimize masharti ya Sura ya Sita ya Katiba (kuhusu uongozi na uadilifu).",
+        "sheng": "Section 11 ina-set requirements za ku-be appointed member wa Board ya Placement Service under section 9(1)(f). Person must be citizen wa Kenya na awe na degree from university recognized in Kenya. Pia must awe na at least six years experience kwa business, financial management, governance ama other relevant professional work, na ku-meet requirements za Chapter Six ya Constitution (leadership na integrity)."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "09e52d9d4e62a93634da5fd5fc8ddd8bdc9512307a026893b3359b4a2ed69daf"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the listed qualifications only, with no opinion on them and no view on the Constitution."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -267,13 +444,20 @@
         12,
         13
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section lists when the office of the Chairperson or a member of the Board becomes vacant. It happens if they resign in writing to the appointing authority, miss three meetings in a row without permission, or cannot do the job because of physical or mental illness. It also happens if a court declares them bankrupt or they make an arrangement with their creditors, if they breach the Chapter Six requirements of the Constitution, or if they are convicted and sentenced to six months or more in prison. Permission to miss a meeting comes from the Chairperson, and for the Chairperson it comes from the Cabinet Secretary.",
+        "sw": "Kifungu hiki kinaorodhesha hali ambazo nafasi ya Mwenyekiti au mjumbe wa Bodi inakuwa wazi. Nafasi inakuwa wazi akijiuzulu kwa notisi ya maandishi kwa mamlaka ya uteuzi, akikosa mikutano mitatu mfululizo ya Bodi bila ruhusa, au akishindwa kutekeleza majukumu kwa sababu ya ugonjwa wa mwili au akili. Pia inakuwa wazi mahakama ikimtangaza kuwa mfilisi au akiingia makubaliano na wadai wake, akikiuka masharti ya Sura ya Sita ya Katiba, au akihukumiwa kifungo cha miezi sita au zaidi kwa kosa. Ruhusa ya kukosa mkutano hutolewa na Mwenyekiti, na kwa Mwenyekiti hutolewa na Waziri (Cabinet Secretary).",
+        "sheng": "Section 12 ina-list when office ya Chairperson ama member wa Board inakuwa vacant. Office inakuwa vacant kama person ana-resign kwa written notice kwa appointing authority, ana-miss three meetings in a row without permission, ama ana-fail ku-do job ya office because ya physical ama mental illness. Pia inakuwa vacant kama court inam-declare bankrupt ama anafanya arrangement na creditors, ana-breach requirements za Chapter Six ya Constitution, ama ni convicted na sentenced to six months ama more in prison. Permission ya ku-miss meeting inatoka kwa Chairperson, na kwa Chairperson inatoka kwa Cabinet Secretary."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "d613824229dc95e1b8c7021667617b4e54fe966d808328d52f1a18e5cf996db0"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the listed grounds for a vacancy on the Board, with no opinion, advice or legal judgement."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -288,13 +472,20 @@
       "pages": [
         13
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 13 says that the rules in the Schedule to the Bill apply to how the Board of the Placement Service runs its business and affairs. It does not set out those rules itself. It only points to the Schedule for them.",
+        "sw": "Kifungu cha 13 kinasema kwamba masharti ya Jedwali la Mswada yanatumika katika uendeshaji wa shughuli na masuala ya Bodi ya Placement Service. Kifungu hiki hakiweki masharti hayo chenyewe, kinaelekeza tu kwenye Jedwali.",
+        "sheng": "Section 13 ina-say kwamba provisions za Schedule zina-apply kwa jinsi Board ya Placement Service ina-run business na affairs zake. Hii section haina-add rules zingine, ina-point tu kwa Schedule."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "f2d357324a4cec60e22cf76d2ab6b51a39aacf5f13b112dddb2e2da090b4b40f"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "The section only points to the Schedule for how the Board runs its business, so the explanation just says that without any opinion."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -309,13 +500,20 @@
       "pages": [
         13
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section lets the Board set up committees whenever it considers them appropriate. The Board itself decides what functions and responsibilities each committee will have.",
+        "sw": "Kifungu hiki kinaruhusu Bodi kuanzisha kamati inazoona zinafaa. Bodi yenyewe ndiyo huamua kazi na majukumu ambayo kila kamati itakuwa nayo.",
+        "sheng": "Section 14 ina-allow Board ku-set up committees zozote ambazo ni appropriate. Board yenyewe ndio ina-decide functions na responsibilities za kila committee."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "a46def2da4a5cd9036083def27f4de593298bcd87e13b9632e35f045b1000f04"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "The section only concerns how the Board organises itself, so a plain description of its power to create committees kept the explanation neutral."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -330,13 +528,20 @@
       "pages": [
         13
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 15 lets the Board hand over some of its work to others. The Board may delegate any power, function or duty of the Authority under this Act or any other written law. It can delegate to one of its committees, or to a member, staff member or agent of the Placement Service. To delegate means to authorise someone else to act on the Board's behalf.",
+        "sw": "Kifungu cha 15 kinaruhusu Bodi kukabidhi baadhi ya kazi zake kwa wengine. Bodi inaweza kukabidhi mamlaka yoyote, kazi yoyote au wajibu wowote wa Mamlaka chini ya Sheria hii au sheria nyingine yoyote iliyoandikwa. Inaweza kukabidhi kwa kamati yoyote ya Bodi, au kwa mwanachama, mfanyakazi au wakala wa Huduma ya Upangaji (Placement Service). Kukabidhi kunamaanisha kumruhusu mwingine kutenda kwa niaba ya Bodi.",
+        "sheng": "Section 15 ina-allow Board ku-delegate powers, functions na duties za Authority under hii Act ama any other written law. Board inaweza ku-delegate kwa any committee ya Board, ama kwa member, staff ama agent wa Placement Service. Ku-delegate ina-mean ku-authorise someone else ku-act on behalf ya Board."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "9868bc9af26d363fda7e02df5ea3a870b01ee3f8005ff55287f5ff1dd7769c0f"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only describes an internal power of delegation within a government body; explained without opinion or advice."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -351,13 +556,20 @@
       "pages": [
         13
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section creates the post of Chief Executive Officer (CEO). The Board appoints the CEO through an open, transparent and competitive process. The CEO serves for four years on terms and conditions of service that the Board decides, and can be reappointed for one more term only.",
+        "sw": "Kifungu cha 16 kinaweka nafasi ya Afisa Mkuu Mtendaji (CEO). Bodi inamteua Afisa Mkuu Mtendaji kupitia mchakato wa wazi, wenye uwazi na ushindani. Anahudumu kwa muda wa miaka minne kwa masharti ya huduma ambayo Bodi inaamua, na anaweza kuteuliwa tena kwa muhula mmoja zaidi tu.",
+        "sheng": "Section 16 ina-provide kwa Chief Executive Officer (CEO), ambaye Board ina-appoint kupitia open, transparent na competitive process. CEO anakaa office for four years, kwa terms and conditions ambazo Board ina-decide, na anaweza ku-be reappointed kwa one more term tu."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "6ff1a293bde7fb874b45920f927ad36ba0c0831fc94e1bc3e45c7c9961fd1b36"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only sets out how the CEO is appointed, the term of office and reappointment limit; described without opinion."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -372,13 +584,20 @@
       "pages": [
         13
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 17 sets out who can be appointed Chief Executive Officer of the Placement Service. The person needs a bachelor's degree and a master's degree (in finance, education, social science or another relevant field), both from universities recognised in Kenya. They also need at least ten years of management experience in a public or private institution, and must meet the requirements of Chapter Six of the Constitution (the chapter on leadership and integrity).",
+        "sw": "Kifungu cha 17 kinaeleza sifa za mtu kuteuliwa kuwa Afisa Mkuu Mtendaji wa Huduma ya Upangaji (Placement Service). Mtu huyo anahitaji shahada ya kwanza na shahada ya uzamili katika fedha, elimu, sayansi ya jamii au fani nyingine husika, zote kutoka chuo kikuu kinachotambuliwa nchini Kenya. Pia anahitaji uzoefu wa angalau miaka kumi katika usimamizi wa taasisi ya umma au ya binafsi, na kutimiza masharti ya Sura ya Sita ya Katiba (kuhusu uongozi na uadilifu).",
+        "sheng": "Section 17 ina-list qualifications za kuwa appointed Chief Executive Officer (CEO) wa Placement Service. Person ana-need bachelor's degree na master's degree in finance, education, social science ama other relevant field, both from university recognized in Kenya. Ana-need pia at least ten years' experience ya management kwa public ama private institution, na ku-meet requirements za Chapter Six ya Constitution (leadership na integrity)."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "b1543b211a278bdd35c141485903e151908441bfe32b70b327f8b4118b3d5bae"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only lists appointment qualifications for a government body's CEO; described without opinion, advice or legal judgement."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -394,13 +613,20 @@
         13,
         14
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 18 says when the office of the Chief Executive Officer (CEO) becomes vacant. This can happen if the CEO resigns or is removed from office. The CEO can be removed on four grounds: breaching chapter six of the Constitution (the chapter on leadership and integrity), being declared bankrupt or making an arrangement with creditors, being unable to work because of physical or mental illness, or being convicted of a crime and sentenced to prison for more than six months.",
+        "sw": "Kifungu cha 18 kinaeleza wakati ambapo nafasi ya Afisa Mkuu Mtendaji inakuwa wazi. Hali hii inaweza kutokea akijiuzulu au akiondolewa ofisini. Anaweza kuondolewa kwa sababu nne: kukiuka Sura ya Sita ya Katiba (kuhusu uongozi na uadilifu), kutangazwa kufilisika au kufanya mapatano na wadai wake, kushindwa kufanya kazi kwa sababu ya ugonjwa wa mwili au akili, au kuhukumiwa kifungo cha zaidi ya miezi sita kwa kosa la jinai.",
+        "sheng": "Section 18 ina-explain lini office ya Chief Executive Officer (CEO) inakuwa vacant. Hii inaweza ku-happen kama CEO ana-resign ama ana-get removed from office. CEO anaweza ku-get removed kwa four reasons: ku-breach chapter six ya Constitution (ile ya leadership na integrity), ku-declared bankrupt ama ku-make arrangement na creditors wake, ku-fail kufanya kazi kwa sababu ya physical ama mental illness, ama ku-convicted ya crime na kupewa prison term ya zaidi ya six months."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "cc1f362fb1f5954cbbfbfa733236e794f85d1502a995ee95e02a1650de47b8b7"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the conditions for a vacancy and the grounds for removal, with no opinion, advice or legal verdict."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -415,13 +641,20 @@
       "pages": [
         14
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section lets the Board appoint staff for the Placement Service. The Board can appoint the staff it needs for the Service to carry out its functions properly. The section does not say how many staff there will be or what jobs they will do.",
+        "sw": "Kifungu cha 19 kinaruhusu Bodi kuteua wafanyakazi wa Huduma ya Upangaji (Placement Service). Bodi inaweza kuteua wafanyakazi wanaohitajika ili Huduma itekeleze majukumu yake ipasavyo. Kifungu hiki hakisemi idadi ya wafanyakazi wala kazi watakazofanya.",
+        "sheng": "Section 19 ina-let Board ku-hire staff wa Placement Service kama wanahitajika kwa work ya Service. Hii section haisemi staff watakuwa wangapi wala jobs watakazofanya."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "588814a65d265fe5f3ed97a71a2b0b36eb87ce4489a7c3415ab1700c27e9344c"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Short administrative section about the Board hiring staff; described plainly with no opinion or advice."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -436,14 +669,23 @@
       "pages": [
         14
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 20 sets out what the Placement Service must do. It places all eligible students who apply for tertiary education in public tertiary institutions, and it keeps, updates and publishes a list of accredited public institutions sent to it by regulators. It may place an eligible student in a private institution only if the student asks and there is no vacancy in a public institution for that course or programme. It must also develop a placement framework, and funding under this Act is only for students the Placement Service has placed.",
+        "sw": "Kifungu cha 20 kinaeleza majukumu ya Huduma ya Upangaji (Placement Service). Huduma hiyo inapanga wanafunzi wote wanaostahili na walioomba elimu ya juu katika taasisi za umma, na inatunza, kusasisha na kutangaza orodha ya taasisi za umma zilizoidhinishwa zinazowasilishwa na mashirika ya udhibiti. Inaweza kumpanga mwanafunzi anayestahili katika taasisi ya kibinafsi ikiwa mwanafunzi ameomba na hakuna nafasi katika taasisi ya umma kwa kozi au programu hiyo. Pia inaandaa mfumo wa upangaji, na ufadhili chini ya Sheria hii ni kwa wanafunzi waliopangwa na Huduma hiyo.",
+        "sheng": "Section 20 ina-set out obligations za Placement Service. Placement Service ina-place all students ambao wana-apply na ni eligible kwa tertiary education kwa public tertiary institution, na ina-keep, ina-update na ku-publish list ya accredited public tertiary institutions kutoka kwa regulatory bodies. Ina-place eligible student kwa private tertiary institution tu kama student ame-request na hakuna vacancy kwa public institution kwa hio course ama programme. Pia ina-develop placement framework, na funding under hii Act ni ya students ambao Placement Service ime-place."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "230dcd22816e997ace45003302f7c91b245b18da32d299225df5611bb0ba1a27"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the Placement Service duties and the link between placement and funding without opinion, advice or any judgement on legality."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -457,14 +699,23 @@
       "pages": [
         14
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 21 requires every public tertiary institution to send the Placement Service three things: the programmes it will offer, how many students each programme can take, and the approved cost of each programme. This must be done at least two months before the national assessment results are released. The Placement Service then checks the information together with the regulatory bodies. Once the checking is complete, it publishes the programmes, their capacity and their costs on its portal.",
+        "sw": "Kifungu cha 21 kinazitaka taasisi zote za umma za elimu ya juu kuwasilisha kwa Placement Service programu zitakazotolewa, uwezo wa kila programu na gharama iliyoidhinishwa ya kila programu. Taarifa hizi zinawasilishwa angalau miezi miwili kabla ya matokeo ya tathmini ya kitaifa kutolewa. Placement Service inahakiki taarifa hizo pamoja na mashirika ya udhibiti. Baada ya kukamilisha uhakiki, inachapisha programu, uwezo wa kila programu na gharama kwenye tovuti yake.",
+        "sheng": "Section 21 ina-require kila public tertiary institution ku-submit kwa Placement Service: programmes ambazo zitakuwa offered, capacity ya kila programme, na approved cost ya kila programme. Hii ina-happen at least two months kabla ya national assessment results ku-be released. Placement Service ina-validate hio info na regulatory bodies, na ikimaliza validation ina-publish programmes, capacity na costs kwa portal yake."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "f263beee1390aa195e6794a17140a4abc81b63d6197cab5e85d5195787c364b1"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Described only the submission, validation and publishing steps and the timing, with no opinion on the process."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -478,14 +729,23 @@
       "pages": [
         15
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section sets time limits for placing students in tertiary institutions (colleges and universities). The Placement Service has thirty days after the national assessment results are released to invite applications. After it receives an application, it has thirty days to process it and tell both the applicants and the tertiary institutions its decision. Subsection (3) says the Authority is guided by the placement framework when processing the applications.",
+        "sw": "Kifungu hiki kinaweka muda wa kuwapangia wanafunzi nafasi katika taasisi za elimu ya juu. Huduma ya Upangaji (Placement Service) ina siku 30 baada ya matokeo ya tathmini ya kitaifa kutolewa kualika maombi. Baada ya kupokea ombi, ina siku 30 kulishughulikia na kuwajulisha waombaji na taasisi za elimu ya juu uamuzi wake. Kifungu kidogo cha (3) kinasema Mamlaka (Authority) huongozwa na mfumo wa upangaji (placement framework) wakati wa kushughulikia maombi.",
+        "sheng": "Section 22 ina-set timelines za placement ya students kwa tertiary institutions. Placement Service iko na within thirty days baada ya national assessment results kuwa released ku-invite applications. Baada ya ku-receive application, iko na within thirty days ku-process hio application na ku-communicate decision kwa applicants na tertiary institutions. Kwa ku-process applications, Authority ina-follow placement framework."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "c8bd9cca4bf66caeb2f3b21d295b24baceefc5517c16ba9f6400a3e4af6019ef"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the timelines and who is informed. Subsection (3) names the Authority while subsections (1) and (2) name the Placement Service, and the explanation follows the text as written."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -499,14 +759,23 @@
       "pages": [
         15
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section gives an applicant whose placement application under section 22 was unsuccessful a chance to revise it, free of charge. A person who did not apply under section 22 gets a second chance to apply, and must pay the required fees. The Placement Service invites both groups, who then have fifteen days from the date of invitation to revise or make their application. After that, the Placement Service has fifteen days to process the applications and tell the applicants and the tertiary institutions its decision.",
+        "sw": "Kifungu hiki kinawapa waombaji ambao maombi yao ya upangaji (placement) chini ya Kifungu cha 22 hayakufanikiwa nafasi ya kurekebisha maombi hayo bila malipo. Mtu ambaye hakuwasilisha ombi chini ya Kifungu cha 22 anapewa nafasi ya pili ya kuomba, kwa kulipa ada zinazohitajika. Placement Service huwaalika makundi yote mawili, nao wana siku kumi na tano kuanzia tarehe ya mwaliko kurekebisha ama kuwasilisha maombi yao. Kisha Placement Service ina siku kumi na tano kushughulikia maombi na kuwajulisha waombaji na taasisi za elimu ya juu uamuzi wake.",
+        "sheng": "Section 23 ina-give applicants ambao application yao ya placement haikuwa successful chance ya ku-revise application bila charge. Person ambaye hakufanya application under section 22 anapata second chance ya ku-apply, lakini ana-pay required fees. Placement Service ina-invite hao applicants, nao wana fifteen days from date ya invitation ku-revise ama ku-apply. Baada ya hapo, Placement Service ina-process applications within fifteen days na ku-tell applicants na tertiary institutions decision yake."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "c837b61770b67d815a0f23de1c7cdfe04daf1bd3c2ce9dd2b6620e359f68ab57"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the revision and second application process, the fees and the fifteen-day periods, with no opinion, advice or legal verdict."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -520,13 +789,20 @@
       "pages": [
         15
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 24 requires the Placement Service to send the placement report to the Cabinet Secretary once the placement process is complete. The report must give information on how students were placed in tertiary institutions. Where section 20(3) applies, the report must also give the number of students placed in private tertiary institutions, the courses the eligible students will take, and how the requirements of section 20(3) were met.",
+        "sw": "Kifungu cha 24 kinaitaka Placement Service (Huduma ya Upangaji wa Wanafunzi) kuwasilisha ripoti ya upangaji kwa Waziri (Cabinet Secretary) baada ya mchakato wa upangaji kukamilika. Ripoti hiyo lazima iwe na taarifa kuhusu upangaji wa wanafunzi katika taasisi za elimu ya juu. Pale kifungu kidogo cha 20(3) kinapotumika, ripoti pia lazima ionyeshe idadi ya wanafunzi waliopangiwa taasisi za kibinafsi, kozi watakazosoma wanafunzi wanaostahili, na jinsi masharti ya kifungu kidogo cha 20(3) yalivyotimizwa.",
+        "sheng": "Section 24 ina-require Placement Service ku-submit placement report kwa Cabinet Secretary baada ya placement process ku-complete. Report iko na information ya placement ya students kwa tertiary institutions. Kama section 20(3) ina-apply, report pia ina-include number ya students placed kwa private tertiary institutions, courses ambazo eligible students wata-take, na how requirements za section 20(3) zili-met."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "2027c3c559dd68a44eb17fbbc03a064a22a0b627e70a00dd96da72890e7405b1"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes a reporting duty between the Placement Service and the Cabinet Secretary, with no opinion, advice or legal judgement."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -542,14 +818,23 @@
         15,
         16
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "A student or trainee who has already been placed in a programme can apply to the institution to change to another programme or another institution. The section also requires every tertiary institution to report each transfer between institutions or between faculties to the Placement Service within fifteen days of the transfer.",
+        "sw": "Kifungu hiki kinamruhusu mwanafunzi au mwanagenzi aliyepangiwa programu kuomba kwa taasisi kubadilisha programu au taasisi. Pia, kila taasisi ya elimu ya juu inatakiwa kuwasilisha kwa Placement Service uhamisho wowote kati ya taasisi au kati ya vitivo ndani ya siku kumi na tano baada ya uhamisho.",
+        "sheng": "Section 25 ina-allow student ama trainee ambaye ali-placed kwa programme ku-apply kwa institution ili ku-change programme ama institution. Pia kila tertiary institution inatakiwa ku-submit kwa Placement Service kila inter institutional na inter faculty transfer ndani ya fifteen days baada ya transfer."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "e391be569acc0c05d12cdd9933d47b07c1f624b3775619c14af5eb34c9e49740"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the right to apply for a transfer and the institution's reporting duty without opinion, advice or any judgement on legality."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -563,13 +848,20 @@
       "pages": [
         16
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Every tertiary institution (a college or university) must send the Placement Service a return listing the students enrolled in each of its programmes. The return is due within thirty days after the institution's academic year begins. A person who breaks this section commits an offence.",
+        "sw": "Kifungu hiki cha 26 kinataka taasisi zote za elimu ya juu ziwasilishe marejesho kwa Placement Service yenye maelezo ya wanafunzi waliosajiliwa katika kila programu. Marejesho hayo yawasilishwe ndani ya siku thelathini baada ya mwaka wa masomo wa taasisi kuanza. Mtu anayekiuka kifungu hiki anatenda kosa.",
+        "sheng": "Section 26 ina-require tertiary institutions zote ku-submit returns kwa Placement Service na details za students wana-enroll kwa kila programme. Hizo returns ni due within thirty days baada ya academic year ya institution ku-start. Kama person ana-break hii section, anafanya offence."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "8188f4f17d0735686eb88120e05334a0b797afeb2825ab8ee3b251d057d2bfc6"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the duty on institutions to submit returns, the deadline and the offence, with no opinion, advice or legal verdict."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -584,14 +876,23 @@
       "pages": [
         16
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 27 requires the Placement Service to develop and run career guidance programmes for people who plan to join tertiary institutions (colleges and universities). While designing them, it may do market surveys on job and skill demand, collect data on career choices, work with other government agencies and stakeholders, and learn from international practice. It may run the programmes itself, through accredited institutions or persons, or together with others. It may also hold career fairs and forums, train career mentors, produce guides, documentaries and social media content, and share research on career guidance.",
+        "sw": "Kifungu cha 27 kinaitaka Huduma ya Upangaji (Placement Service) kuandaa na kutekeleza programu za ushauri wa taaluma kwa watu wanaokusudia kujiunga na taasisi za elimu ya juu (vyuo na vyuo vikuu). Katika kuziandaa, inaweza kufanya tafiti za soko la ajira, kukusanya data kuhusu uchaguzi wa taaluma, kushirikiana na mashirika mengine ya serikali na wadau, na kujifunza kutoka kwa mbinu bora za kimataifa. Inaweza kuzitekeleza yenyewe, kupitia taasisi au watu walioidhinishwa, au kwa ushirikiano na wengine. Pia inaweza kuandaa maonyesho na kongamano za ushauri wa taaluma, kuwafunza washauri wa taaluma, kutayarisha miongozo, makala za video na maudhui ya mitandao ya kijamii, na kusambaza matokeo ya utafiti.",
+        "sheng": "Section 27 ina-require Placement Service ku-develop na ku-run career guidance programmes kwa persons ambao wanapanga ku-join tertiary institutions (colleges na universities). Wakati wa ku-design, inaweza ku-do market surveys kuhusu job demand na skills, ku-collect data ya career choices, ku-work na other government agencies na stakeholders, na ku-learn from international best practices. Placement Service inaweza ku-implement programmes yenyewe, through accredited institutions ama persons, ama together na other stakeholders. Pia inaweza ku-hold career fairs na forums, ku-train career mentors, ku-make guides, documentaries na social media content, na ku-share research on career guidance."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "94b60d0ec8a416c539de7b5731c8e6800896d248eac8d1afe7eae9502bf82252"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Described only what the Placement Service must or may do, with no opinion, advice or legal judgment."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -605,13 +906,20 @@
       "pages": [
         17
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section creates a new body called the Tertiary Education Funding Authority. It is a legal entity in its own right (a body corporate): it carries on even if its members change, has an official seal, and can sue and be sued in its own name. It can own, buy, lease, charge or sell property, borrow and lend money, and do other lawful acts needed for its work under the Act. Its headquarters are in Nairobi, and it must make its services available in all parts of Kenya.",
+        "sw": "Kifungu hiki kinaanzisha Mamlaka itakayoitwa Tertiary Education Funding Authority. Mamlaka ni shirika lenye hadhi ya kisheria, linaloendelea kuwepo daima na lenye muhuri wake, na linaweza kushtaki na kushtakiwa kwa jina lake. Linaweza kumiliki, kununua, kukodisha, kuweka rehani au kuuza mali, kukopa na kukopesha pesa, na kufanya mambo mengine halali yanayohitajika kwa kazi zake chini ya Sheria hii. Makao makuu yake yatakuwa Nairobi, na Mamlaka inatakiwa kuhakikisha huduma zake zinapatikana katika sehemu zote za Kenya.",
+        "sheng": "Section 28 ina-establish Tertiary Education Funding Authority. Authority ni body corporate, yaani iko na perpetual succession (inaendelea kuwepo hata kama members wanabadilika) na common seal, kwa hio inaweza ku-sue ama ku-be sued kwa name yake. Pia inaweza ku-buy, ku-own, ku-lease ama ku-sell property, na ku-borrow na ku-lend money. Headquarters ziko Nairobi, na Authority inatakiwa ku-ensure services zake zinapatikana in all parts of Kenya."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "f1b14523c89542deab7fe2c3ead86f72a3ef752e6760b2da0c170a415a5a2ac4"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "The section only sets up a body corporate and its legal powers and location, so it was described without opinion, advice or any judgement on legality."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -626,14 +934,23 @@
       "pages": [
         17
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section lists what the Authority is responsible for. It raises funds to lend to students and trainees in tertiary education (education after secondary school), and, together with the Cabinet Secretary, sets the criteria for who gets funding. It grants loans to eligible students and trainees, and runs scholarships for eligible students. It also sets up and keeps a data system on tertiary education funding, advises the Cabinet Secretary on funding matters, and does any other function given to it by this Act or another written law.",
+        "sw": "Kifungu hiki kinaorodhesha kazi za Mamlaka (Authority). Mamlaka inakusanya fedha za kukopesha wanafunzi na wanafunzi wa mafunzo (trainees) walio katika elimu ya juu, na kwa kushauriana na Waziri (Cabinet Secretary) inaweka vigezo vya ufadhili. Inatoa mikopo kwa wanafunzi na wanafunzi wa mafunzo wanaostahili, na kusimamia udhamini (scholarships) kwa wanafunzi wanaostahili. Pia inaunda na kudumisha mfumo wa data kuhusu ufadhili wa elimu ya juu, inamshauri Waziri kuhusu masuala ya ufadhili, na kutekeleza kazi nyingine yoyote inayopewa na Sheria hii au sheria nyingine iliyoandikwa.",
+        "sheng": "Section 29 ina-list functions za Authority. Authority ina-mobilise funds za ku-lend students na trainees ambao wako kwa tertiary education, na pamoja na Cabinet Secretary ina-set funding criteria. Pia ina-grant loans kwa eligible students na trainees, na ina-administer scholarships kwa eligible students. Authority ina-set up na ku-maintain data system ya funding ya tertiary education, ina-advise Cabinet Secretary kuhusu funding, na ina-perform any other function ambayo hii Act ama another written law ina-give."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "0fac97cb3e96c86ce7ae3a492a561290914c2d3b8818263dc4426bad901b9cc6"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only lists the Authority's functions; explanation describes each item without opinion, advice or judgement."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -647,14 +964,23 @@
       "pages": [
         18
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "In carrying out its functions under section 29, the Authority has these powers: to manage and administer loans, to administer its own assets, and to recover loans from the people who received them. It sets the loan interest rate in consultation with the Cabinet Secretary. It can open and run bank accounts under the relevant laws, and receive gifts, grants, donations, endowments and other money lawfully given to it. It can raise money from treasury bills, bonds, concessional loans (loans on softer terms), Government grants, savings schemes, unit trusts, commercial partners, loan repayments and any other lawful source. It can also raise private capital and non-traditional education finance, such as domestic pension funds, collective investment schemes, sovereign wealth funds or climate finance. It can set up a savings scheme or product that takes deposits from any person to save towards tertiary education for a specific child, and enter into partnerships with other bodies in or outside Kenya. Lastly, it can enter and inspect business premises and employers to check compliance.",
+        "sw": "Katika kutekeleza majukumu yake chini ya Kifungu cha 29, Mamlaka ina mamlaka ya kusimamia na kuendesha mikopo, kusimamia mali yake, na kukusanya mikopo kutoka kwa wanaonufaika nayo. Inaweka kiwango cha riba ya mikopo kwa kushauriana na Waziri. Inaweza kufungua na kuendesha akaunti za benki kwa mujibu wa sheria husika, na kupokea zawadi, ruzuku, michango, hazina za msaada na fedha nyingine zilizotolewa kisheria. Inaweza kukusanya rasilimali kutoka hati fungani za serikali, dhamana, mikopo nafuu, ruzuku za Serikali, mipango ya akiba, hazina za uwekezaji, washirika wa kibiashara, marejesho ya mikopo na chanzo kingine chochote halali. Pia inaweza kukusanya mtaji wa kibinafsi na vyanzo visivyo vya kawaida vya ufadhili wa elimu, kama vile hazina za pensheni za ndani, mipango ya uwekezaji wa pamoja, hazina za utajiri za mataifa au ufadhili wa tabianchi. Inaweza kuanzisha mpango au bidhaa ya akiba inayopokea amana kutoka kwa mtu yeyote kwa ajili ya elimu ya juu ya mtoto maalum, na kushirikiana na taasisi nyingine ndani au nje ya Kenya. Mwisho, inaweza kuingia na kukagua majengo ya biashara na waajiri ili kuhakikisha utiifu.",
+        "sheng": "Section 30 ina-list powers za Authority kwa functions zake chini ya section 29. Authority ina-manage na ku-administer loans, ina-handle assets zake, na ina-recover loans kutoka kwa loan beneficiaries. Ina-set interest rate ya loans pamoja na Cabinet Secretary, ina-open na ku-operate bank accounts under the relevant laws, na ina-receive gifts, grants, donations, endowments na other money lawfully given to it. Pia ina-raise money kutoka treasury bills, bonds, concessional loans (loans za softer terms), Government grants, savings scheme, unit trusts, commercial partners, loan repayments na any other lawful source. Ina-mobilize private capital na non-traditional sources of education finance kama domestic pension funds, collective investment schemes, sovereign wealth funds ama climate finance. Authority inaweza ku-establish savings scheme ama product ya ku-receive deposits kutoka kwa any person kwa ajili ya tertiary education ya specific child, na ku-enter partnerships na bodies inside ama outside Kenya. Mwisho, inaweza ku-enter na ku-inspect business premises na employers ku-check compliance."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "7d078ff61ebffbd120f553041d3c2fed3a83a224a9b09fc3495b0c509bc8b3c9"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Lists the Authority's powers one by one in plain words, with no opinion on them and no advice."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -669,13 +995,20 @@
         18,
         19
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section sets up the Board of the Authority. It is made up of a Chairperson appointed by the President, three Principal Secretaries (university education, technical and vocational education and training, and finance) and the Attorney-General, each of whom may send a designated representative, four members who are not public officers, and the Chief Executive Officer, who is a member but cannot vote. The Cabinet Secretary appoints the four non-public-officer members by notice in the Gazette (the official government notice). The Chairperson and those four members serve for three years and can be reappointed once for another three years, subject to satisfactory performance.",
+        "sw": "Kifungu hiki kinaunda Bodi ya Mamlaka. Bodi hiyo ina Mwenyekiti anayeteuliwa na Rais, Makatibu Wakuu watatu (elimu ya vyuo vikuu, mafunzo ya ufundi na kiufundi, na fedha) na Mwanasheria Mkuu, ambao kila mmoja anaweza kuwakilishwa na mtu aliyeteuliwa, watu wanne ambao si maafisa wa umma, na Afisa Mkuu Mtendaji ambaye ni mjumbe bila haki ya kupiga kura. Waziri huteua wajumbe hao wanne kupitia tangazo katika Gazeti Rasmi la Serikali. Mwenyekiti na wajumbe hao wanne wanahudumu kwa miaka mitatu, na wanaweza kuteuliwa tena mara moja kwa miaka mitatu mingine, kulingana na utendaji wa kuridhisha.",
+        "sheng": "Section 31 ina-set up Board ya Authority. Board iko na Chairperson ambaye President ana-appoint, three Principal Secretaries (university education, technical and vocational training, na finance), Attorney-General, na four members ambao si public officers, na kila Principal Secretary na Attorney-General anaweza kutuma designated representative. Chief Executive Officer ni member lakini hana vote. Cabinet Secretary ana-appoint hao four members kupitia notice kwa Gazette, na Chairperson na hao four members wana-serve three years, kisha wanaweza kupewa another term moja ya three years kama performance yao ni satisfactory."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "2ca82b01fa383d48555781a5ec3e03e7bb9d6cf9eaac658d670b83ded0d27fdb"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only who sits on the Board, who appoints them and their terms, with no opinion, advice or legal verdict."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -690,13 +1023,20 @@
       "pages": [
         19
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section lists what a person needs to be appointed Chairperson of the Board under section 31 (1) (a). The person must be a Kenyan citizen and hold a degree from a university recognized in Kenya. They must also have at least ten years' experience in resource mobilization, business, financial management, governance or other relevant professional work, and meet the requirements of Chapter Six of the Constitution.",
+        "sw": "Kifungu hiki kinaeleza sifa za mtu kuteuliwa kuwa Mwenyekiti wa Bodi chini ya kifungu cha 31 (1) (a). Mtu huyo anapaswa kuwa raia wa Kenya na kuwa na shahada kutoka chuo kikuu kinachotambuliwa nchini Kenya. Pia anapaswa kuwa na uzoefu wa angalau miaka kumi katika kuchangisha rasilimali, biashara, usimamizi wa fedha, uongozi au taaluma nyingine husika, na kutimiza masharti ya Sura ya Sita ya Katiba.",
+        "sheng": "Section 32 ina-list requirements za person ku-qualify kama Chairperson wa Board under section 31 (1) (a). Person anatakiwa kuwa citizen wa Kenya, ana-hold degree from university recognized in Kenya, na ana at least ten years' experience in resource mobilization, business, financial management, governance ama other relevant professional work. Pia anatakiwa ku-meet requirements za Chapter Six ya Constitution."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "561abb5ebe67e3895f9a9ea585a3a2e4bca88f41d86bc131d7b4842325eec7ed"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "The section only sets out appointment qualifications for a board chairperson, and the explanation describes them without opinion, advice or any view on validity."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -712,13 +1052,20 @@
         19,
         20
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section sets out who can be appointed as a member of the Board under section 31 (1) (f). The person must be a Kenyan citizen, hold a degree from a university recognized in Kenya, and have at least six years' experience in resource mobilization, human resource development, business, financial management, governance, or other relevant professional work. The person must also meet the requirements of Chapter Six of the Constitution.",
+        "sw": "Kifungu hiki kinaweka masharti ya mtu kuteuliwa kuwa mjumbe wa Bodi chini ya kifungu cha 31 (1) (f). Mtu huyo awe raia wa Kenya, awe na shahada kutoka chuo kikuu kinachotambuliwa nchini Kenya, na awe na uzoefu wa angalau miaka sita katika uchangishaji rasilimali, maendeleo ya rasilimali watu, biashara, usimamizi wa fedha, utawala, ama uzoefu mwingine wa kitaaluma unaofaa. Pia atimize mahitaji ya Sura ya Sita ya Katiba.",
+        "sheng": "Section 33 ina-set qualifications za person ku-be appointed kama member wa Board under section 31 (1) (f). Person lazima awe citizen wa Kenya, awe na degree kutoka university recognized in Kenya, na awe na at least six years experience kwa resource mobilization, human resource development, business, financial management, governance ama other relevant professional work. Pia lazima afikie requirements za Chapter Six ya Constitution."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "3613d86e13a9de796aa012529491d6f319603a09b372bc7d219ba6cf02d5c1c6"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only lists appointment qualifications for Board members; described as written, with no opinion, advice or legal verdict."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -733,13 +1080,20 @@
       "pages": [
         20
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 34 says when the office of the Chairperson or a member of the Board becomes vacant, meaning the person no longer holds the post. This happens if they resign by written notice to the appointing authority, or miss three Board meetings in a row without permission (from the Chairperson, or from the Cabinet Secretary in the Chairperson's case). It also happens if they cannot do the job because of physical or mental illness or disability, or are declared bankrupt by a court or make an arrangement with their creditors. Finally, the office falls vacant if they breach the requirements of Chapter Six of the Constitution (on leadership and integrity), or are convicted of an offence and sentenced to prison for six months or more.",
+        "sw": "Kifungu cha 34 kinaeleza wakati ambapo nafasi ya Mwenyekiti au mjumbe wa Bodi inakuwa wazi. Hali hii hutokea akijiuzulu kwa notisi ya maandishi kwa mamlaka ya uteuzi, au akikosa mikutano mitatu mfululizo ya Bodi bila ruhusa (ya Mwenyekiti, au ya Waziri kwa upande wa Mwenyekiti). Pia hutokea akishindwa kutekeleza majukumu kwa sababu ya ulemavu au ugonjwa wa mwili au akili, akitangazwa kufilisika na mahakama, au akiingia katika mpango na wadai wake. Vilevile, nafasi inakuwa wazi akikiuka masharti ya Sura ya Sita ya Katiba, au akihukumiwa kifungo cha miezi sita au zaidi kwa kosa.",
+        "sheng": "Section 34 ina-say when office ya Chairperson ama member wa Board inakuwa vacant. Hii inafanyika kama ana-resign kwa written notice kwa appointing authority, ama anakosa three meetings za Board in a row without permission (from Chairperson, ama from Cabinet Secretary kama ni Chairperson mwenyewe). Pia inafanyika kama hawezi kufanya kazi because of physical ama mental illness, ana-declared bankrupt na court, ama ana-make arrangement na creditors. Office pia inakuwa vacant kama ana-breach requirements za Chapter Six ya Constitution, ama ana-convicted na ku-sentenced prison for six months ama more."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "1d803c4146d5879bd28c7e446bdeb866c1eeb62c5b16e84f75fb7755486e8280"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only lists the grounds for a Board office becoming vacant; described in plain words without opinion, advice or any view on validity."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -754,13 +1108,20 @@
       "pages": [
         20
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section says that the rules in the Schedule to the Bill apply to how the Board runs its business and affairs. It does not set out those rules itself. They are found in the Schedule.",
+        "sw": "Kifungu hiki kinasema kwamba masharti yaliyomo katika Jedwali la Mswada huu yanatumika katika uendeshaji wa shughuli na masuala ya Bodi. Kifungu chenyewe hakielezi masharti hayo. Yanapatikana katika Jedwali.",
+        "sheng": "Section 35 ina-say kwamba rules za Schedule zina-apply kwa jinsi Board ina-run business na affairs zake. Hii section haiweki hizo rules yenyewe, ziko kwenye Schedule."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "673f94e8528be87f1a196fc570ac033bfd58c5135f3a3c0060ac6c7af551995d"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Procedural section that only points to the Schedule for how the Board conducts its business; explained without opinion."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -775,13 +1136,20 @@
       "pages": [
         20
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section lets the Board set up committees whenever it thinks they are appropriate. The Board itself decides what work and responsibilities each committee will have.",
+        "sw": "Kifungu hiki kinaruhusu Bodi kuunda kamati inapoona inafaa. Bodi yenyewe ndiyo huamua kazi na majukumu ambayo kila kamati itakuwa nayo.",
+        "sheng": "Section 36 ina-allow Board ku-set up committees kama inaona ni appropriate. Board ndiyo ina-decide duties za kila committee."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "ac4d7726d531f2a6c278225c03fd346a6f2e121ee1a5071a69125af1ca15d366"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "The section only describes an internal power of the Board, so the explanation stays descriptive."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -796,13 +1164,20 @@
       "pages": [
         20
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 37 lets the Board hand over some of the Authority's powers, functions or duties to one of the Board's committees, or to a member, staff member or agent of the Authority. This covers powers and duties under this Act and under any other written law (a law that is set out in writing, such as other Acts).",
+        "sw": "Kifungu cha 37 kinaruhusu Bodi kukabidhi baadhi ya mamlaka, kazi au majukumu ya Mamlaka kwa kamati yoyote ya Bodi, au kwa mjumbe, mfanyakazi au wakala wa Mamlaka. Hii inahusu mamlaka na majukumu chini ya Sheria hii na chini ya sheria nyingine yoyote iliyoandikwa.",
+        "sheng": "Section 37 ina-allow Board ku-delegate (ku-hand over) powers, functions ama duties za Authority kwa committee yoyote ya Board, ama kwa member, staff ama agent wa Authority. Hii ina-cover powers na duties under hii Act na under any other written law, yaani other Acts na laws zingine."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "86cbac4c96c6f50a68d6566b62c453e29b10ccb2befe39b3819f4a4cdd403240"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only describes who the Board can hand its powers to; no opinion, advice or legal verdict added."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -818,13 +1193,20 @@
         20,
         21
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section says the Authority must have a Chief Executive Officer (CEO), chosen by the Board through an open, transparent and competitive process. The CEO serves a four-year term, and the Board decides the terms and conditions of the job. The CEO can be appointed again for one more four-year term, if their performance is satisfactory.",
+        "sw": "Kifungu hiki kinasema kutakuwa na Afisa Mkuu Mtendaji (CEO), atakayeteuliwa na Bodi kupitia mchakato wa wazi, wa uwazi na wa ushindani. Afisa Mkuu Mtendaji atahudumu kwa muhula wa miaka minne, kwa masharti ya ajira yatakayoamuliwa na Bodi. Anaweza kuteuliwa tena kwa muhula mmoja zaidi wa miaka minne, ikiwa utendaji wake ni wa kuridhisha.",
+        "sheng": "Section 38 ina-provide kwamba kuwe na Chief Executive Officer (CEO), ambaye Board ina-appoint through open, transparent na competitive process. CEO ana-serve term ya four years, na Board ndio ina-set terms na conditions za job yake. Anaweza kupewa one more term ya four years, kama performance yake ni satisfactory."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "10ba313b6d9d6233b99d735248a86b9ce28947fe9b6388b1056b0713ba1e9480"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only describes how the CEO is appointed, the term length and one allowed re-appointment; no opinion added."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -839,13 +1221,20 @@
       "pages": [
         21
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 39 sets out who can be appointed as Chief Executive Officer (CEO) of the Authority. A person needs a bachelor's degree and a master's degree (in finance, business administration, education, social science or another relevant field), both from universities recognized in Kenya. The person also needs at least fifteen years' management experience in a public or private institution, with at least five of those years in a senior position, and has to meet the requirements of Chapter Six of the Constitution (on leadership and integrity).",
+        "sw": "Kifungu cha 39 kinaeleza ni nani anaweza kuteuliwa kuwa Afisa Mkuu Mtendaji wa Mamlaka. Mtu anahitaji shahada ya kwanza na shahada ya uzamili (katika fedha, usimamizi wa biashara, elimu, sayansi ya jamii au fani nyingine husika), zote kutoka vyuo vikuu vinavyotambuliwa nchini Kenya. Pia anahitaji uzoefu wa angalau miaka kumi na mitano katika usimamizi katika taasisi ya umma au ya kibinafsi, ambapo angalau miaka mitano ni katika nafasi ya juu, na kutimiza masharti ya Sura ya Sita ya Katiba (kuhusu uongozi na uadilifu).",
+        "sheng": "Section 39 ina-list qualifications za Chief Executive Officer (CEO) wa Authority. Person ana-need bachelor's degree na master's degree (in finance, business administration, education, social science ama other relevant field), both from university recognized in Kenya. Pia ana-need at least fifteen years experience in management kwa public ama private institution, na at least five years kwa senior position, plus ku-meet requirements za Chapter Six ya Constitution (on leadership and integrity)."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "8fd5795d1de5c2e26a9c12cbbb87fe40ad4c5c1aa2cb8612f26b0d0fecbe5a15"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "The section only lists appointment qualifications for the CEO; the explanation describes them without opinion, advice or any judgment on legality."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -860,13 +1249,20 @@
       "pages": [
         21
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section sets out two duties of the Chief Executive Officer (CEO) of the Authority. The CEO is answerable to the Board of the Authority for running its affairs day to day. The CEO is also the administrator of the Fund, which means the person who manages it.",
+        "sw": "Kifungu hiki kinaeleza majukumu mawili ya Afisa Mkuu Mtendaji (CEO) wa Mamlaka. Yeye anawajibika kwa Bodi ya Mamlaka kwa usimamizi wa shughuli za kila siku za Mamlaka. Pia yeye ndiye msimamizi wa Mfuko.",
+        "sheng": "Section 40 ina-list duties mbili za Chief Executive Officer (CEO) wa Authority. CEO ni responsible kwa Board ya Authority kwa day-to-day management ya affairs za Authority. Pia ni administrator wa Fund, yaani ndiye ana-manage Fund."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "04acf3eb16de88b169774e2ce01a79a07bc74f1906c762dcdfb98522fc7b47ae"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only describes the CEO's duties and who administers the Fund; explained without opinion, advice or legal judgement."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -881,13 +1277,20 @@
       "pages": [
         21
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section says when the office of the Chief Executive Officer (CEO) can become vacant: if the CEO resigns or is removed from office. The CEO may be removed for any of these reasons: breaching chapter six of the Constitution (on leadership and integrity), being declared bankrupt or making an arrangement with creditors, being unable to work because of physical or mental illness, or being convicted of a crime and sentenced to prison for more than six months.",
+        "sw": "Kifungu hiki kinaeleza wakati ofisi ya Afisa Mkuu Mtendaji inaweza kuwa wazi: akijiuzulu au akiondolewa ofisini. Afisa Mkuu Mtendaji anaweza kuondolewa akikiuka Sura ya Sita ya Katiba (kuhusu uongozi na maadili), akitangazwa kuwa muflisi au akiingia katika mpango na wadai wake, akishindwa kufanya kazi kwa sababu ya ugonjwa wa mwili au akili, au akihukumiwa kwa kosa la jinai na kufungwa gerezani kwa zaidi ya miezi sita.",
+        "sheng": "Section 41 ina-explain wakati office ya CEO inaweza kuwa vacant: CEO ana-resign ama anakuwa removed from office. CEO anaweza kuwa removed kama ana-breach chapter six ya Constitution (leadership na integrity), ametangazwa bankrupt ama ameingia arrangement na creditors, hawezi kufanya kazi because ya physical ama mental illness, ama amekuwa convicted ya crime na sentence ya prison ya more than six months."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "ef1d6471449b40319e4f6402f5c21933e4645ba8fd2064cf55ec887505f30184"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only when the CEO office becomes vacant and the listed grounds for removal, with no opinion or advice."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -902,13 +1305,20 @@
       "pages": [
         21
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section lets the Board of the Authority appoint (hire) the staff it needs so that the Authority can do its work. It does not say how many staff or what kinds of posts, so the Board decides what is necessary.",
+        "sw": "Kifungu hiki kinaruhusu Bodi kuajiri wafanyakazi wa Mamlaka kadiri wanavyohitajika ili Mamlaka itekeleze majukumu yake ipasavyo. Kifungu hiki hakitaji idadi wala aina ya wafanyakazi, kwa hivyo Bodi ndiyo huamua kinachohitajika.",
+        "sheng": "Section 42 ina-allow Board ku-appoint staff wa Authority kama ni needed ili Authority i-do work yake vizuri. Hii section haiweki number ya staff, Board ndio ina-decide ni ngapi."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "3925f7a0c4e5d8af170ab251dc14859ad3f1eec5e6dd734ff21a15049330a02b"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only describes the Board's power to appoint staff; no opinion or advice added."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -923,13 +1333,20 @@
       "pages": [
         22
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 43 sets up a fund called the Tertiary Education Fund. The Authority is the body that manages and administers it. This section only creates the fund and does not itself say where its money comes from or what it is used for.",
+        "sw": "Kifungu cha 43 kinaanzisha hazina inayoitwa Hazina ya Elimu ya Juu (Tertiary Education Fund). Hazina hii itasimamiwa na kuendeshwa na Mamlaka (Authority). Kifungu hiki kinaanzisha hazina tu, hakisemi chenyewe pesa zinatoka wapi wala zinatumika kwa nini.",
+        "sheng": "Section 43 ina-establish new fund inaitwa Tertiary Education Fund. Authority ndiyo ina-manage na ku-administer hio fund. Hii section ina-create fund tu, haisemi money inatoka wapi ama inatumika kwa nini."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "925cb25bd9675e039ac70fd1636a844df46faf68afd018fc9c4f5948ec7ff750"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only creates a fund and names who manages it; described without opinion. No group tagged because the text itself changes nothing specific for any group."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -944,14 +1361,23 @@
       "pages": [
         22
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section says what the Fund is for. The Fund exists to provide money that is given out as education loans under this Act.",
+        "sw": "Kifungu cha 44 kinaeleza madhumuni ya Mfuko (Fund). Mfuko huo upo ili kutoa fedha zitakazotolewa kama mikopo ya elimu chini ya Sheria hii.",
+        "sheng": "Section 44 ina-state purpose ya Fund. Fund ni ya ku-provide money ya ku-give out kama education loans under hii Act."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "12f61d5cb421860f5200b70b6b9e0eba11c96255b55d68a7d4497be2939c35b6"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only states the Fund's purpose; the explanation restates it without opinion, advice or any view on legality."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -965,14 +1391,23 @@
       "pages": [
         22
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 45 lists where the money paid into the Fund comes from. There are six sources: money the National Assembly appropriates (sets aside by law); proceeds from investments the Authority makes; repayments of funds disbursed under this Act or the repealed Higher Education Loans Board Act; interest accrued from those repayments; gifts, grants, donations and endowments; and revenue from any other lawful source.",
+        "sw": "Kifungu cha 45 kinaorodhesha vyanzo vya pesa zinazolipwa kwenye Mfuko (Fund). Vyanzo ni sita: pesa zilizoidhinishwa na Bunge la Kitaifa; mapato kutokana na uwekezaji unaofanywa na Mamlaka; marejesho ya fedha zilizotolewa chini ya Sheria hii au Sheria ya Bodi ya Mikopo ya Elimu ya Juu (iliyofutwa); riba iliyotokana na marejesho hayo; zawadi, ruzuku, michango na hazina za msaada (endowments); na mapato kutoka chanzo kingine chochote halali.",
+        "sheng": "Section 45 ina-list where money ya Fund inatoka. Kuna six sources: money ambayo National Assembly ina-set aside kwa Fund, proceeds from investments za Authority, na repayments ya funds ambazo zili-disbursed under this Act ama repealed Higher Education Loans Board Act. Zingine ni interest from hizo repayments, gifts, grants, donations na endowments, pamoja na revenue from any other lawful source."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "5a714c2e51f4bf419dd23b26efdaa2e54450fe9fcc1fe6679b0f258e86497981"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only lists funding sources; described plainly without opinion or advice."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -986,14 +1421,23 @@
       "pages": [
         22
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 46 says every student or trainee admitted to a public or private tertiary institution (college or university level) is eligible for an education loan. To apply, the person must be a Kenyan citizen, must have been admitted to a tertiary institution, and must meet the other requirements of this Act.",
+        "sw": "Kifungu cha 46 kinasema kila mwanafunzi au mkufunzi aliyekubaliwa kujiunga na taasisi ya elimu ya juu, ya umma au ya kibinafsi, anastahili kuomba mkopo wa elimu. Ili kuomba, mwanafunzi au mkufunzi anapaswa kuwa raia wa Kenya, awe amekubaliwa katika taasisi ya elimu ya juu, na atimize masharti ya Sheria hii.",
+        "sheng": "Section 46 ina-say every student ama trainee ambaye ame-get admission kwa public ama private tertiary institution iko na eligibility ya ku-apply education loan. Kuna 3 conditions za ku-qualify: awe citizen wa Kenya, awe ame-get admission kwa tertiary institution, na ame-meet requirements za hii Act."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "c9967fdd30dddefa40b3bd97a2b4e72f8bb01a29b22aefb3f6f7e8965bf55c0e"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes who is eligible to apply for an education loan, without opinion, advice or any view on legality."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -1007,14 +1451,23 @@
       "pages": [
         22
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 47 lets an eligible person apply to the Authority for an education loan for a minor (a person below the legal age of adulthood) who has been admitted to a tertiary institution. The loan is for the minor, and the application is made by the eligible person. This section does not itself say who counts as an eligible person.",
+        "sw": "Kifungu cha 47 kinamruhusu mtu anayestahiki kuomba mkopo wa elimu kutoka kwa Mamlaka (Authority) kwa ajili ya mtoto mdogo ambaye amekubaliwa katika taasisi ya elimu ya juu. Mkopo ni wa mtoto huyo mdogo, lakini ombi linawasilishwa na mtu anayestahiki. Kifungu hiki hakisemi chenyewe ni nani anayehesabiwa kuwa mtu anayestahiki.",
+        "sheng": "Section 47 ina-allow eligible person ku-apply kwa Authority kwa education loan ya minor (child below adult age) ambaye amepata admission kwa tertiary institution. Loan ni ya huyo minor, ila application inafanywa na eligible person. Hii section haisemi eligible person ni nani."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "06763efaff9ccf37997448238db0eb3eb96f7c5d715f00faadd4007b4ff6bdbc"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "The section only describes who may apply for a loan and for whom; the explanation states this without opinion or advice."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -1028,14 +1481,23 @@
       "pages": [
         22
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 48 explains how a student or trainee asks for an education loan. Under subsection (1), once admitted to a tertiary institution (a college or university), a student or trainee who wants funding applies to the Authority in the way the rules set out. Under subsection (2), the Authority reviews the application and tells both the applicant and their tertiary institution its decision within a period the rules set out.",
+        "sw": "Kifungu cha 48 kinaeleza jinsi mwanafunzi au mwanagenzi anavyoomba mkopo wa elimu. Kifungu kidogo cha (1) kinasema kwamba baada ya kupokelewa katika taasisi ya elimu ya juu, mwanafunzi au mwanagenzi anayetaka kufadhiliwa anawasilisha ombi kwa Mamlaka kwa njia iliyoainishwa. Kifungu kidogo cha (2) kinasema Mamlaka inakagua ombi hilo na kumjulisha mwombaji na taasisi yake uamuzi ndani ya muda ulioainishwa.",
+        "sheng": "Section 48 ina-explain jinsi student ama trainee anapata ku-apply kwa education loan. Kwa subsection (1), baada ya admission kwa tertiary institution, student ama trainee ambaye anataka funding ana-apply kwa Authority kwa way ambayo rules zita-set. Kwa subsection (2), Authority ina-review application na ina-tell applicant na tertiary institution yake decision within period ambayo rules zita-set."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "650d9ca0ae064bc793a97d34f743589a6751351713db5e666dfca44e2c197bef"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the application and decision steps only, with no opinion, advice or judgement on legality."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -1049,14 +1511,25 @@
       "pages": [
         23
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 49 sets out what a person with a student loan (a loanee) has to do. Repayment of the loan, with any interest and other charges that have built up, starts within one year after the person finishes studies. A loanee in formal employment tells the employer about the loan when the job starts, and a loanee in informal employment agrees a payment plan with the Authority on how and how often to pay. When the Authority deducts repayments from pay, it can take no more than 25% of the loanee's pay.",
+        "sw": "Kifungu cha 49 kinaeleza majukumu ya mtu mwenye mkopo wa masomo (mkopaji). Mkopaji anaanza kulipa mkopo pamoja na riba iliyokusanyika na gharama nyingine ndani ya mwaka mmoja baada ya kumaliza masomo. Mkopaji aliye katika ajira rasmi anamweleza mwajiri hali ya mkopo wake anapoanza kazi, na aliye katika ajira isiyo rasmi anakubaliana na Mamlaka kuhusu mpango wa malipo, yaani njia na mara ngapi analipa. Mamlaka inapokata malipo kutoka kwa mapato ya mkopaji, haiwezi kukata zaidi ya 25% ya mapato hayo.",
+        "sheng": "Section 49 ina-set obligations za loanee (person ambaye ame-take student loan). Loanee anaanza ku-repay loan na interest na charges zingine within one year baada ya ku-finish studies. Loanee kwa formal employment ana-tell employer about loan status yake when job inaanza, na loanee kwa informal employment ana-agree payment plan na Authority on mode na frequency ya payment. Authority ikifanya deductions kutoka pay ya loanee, haiwezi ku-deduct zaidi ya 25%."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "c9e16fc056598cfcdf29ed8c3115418444527a080403cbb0ceb9cc0ee44a5f36"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the loanee's repayment duties, the disclosure and payment plan rules, and the 25% deduction cap without opinion, advice or any judgement on legality."
+      },
+      "groups": [
+        "employee",
+        "trader",
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -1070,14 +1543,24 @@
       "pages": [
         23
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section sets out what an employer must do when an employee has a student loan from the Authority (a loanee). The employer tells the Authority in writing, or in another way the Authority specifies, when the loanee is employed. The employer deducts the monthly amounts set by the Authority from the loanee's pay until the loan is paid in full or the loanee leaves that job, whichever comes first, and sends them to the Authority within nine days after the end of each month. If an employer makes a deduction but does not send it in time, the Authority charges 5% of the total repayment amount for each month or part of a month it stays unpaid.",
+        "sw": "Kifungu hiki kinaeleza wajibu wa mwajiri wa mkopaji (mtu aliyepewa mkopo na Mamlaka). Mwajiri anaiarifu Mamlaka kwa maandishi, au kwa njia nyingine ambayo Mamlaka itabainisha, mkopaji anapoajiriwa. Mwajiri anakata kiasi cha kila mwezi kilichoamuliwa na Mamlaka kutoka kwa mshahara wa mkopaji hadi deni lilipwe lote au mkopaji aondoke kazini, kutegemea lipi litatangulia, kisha anakipeleka kwa Mamlaka ndani ya siku tisa baada ya mwezi kuisha. Mwajiri akikata lakini asipeleke kwa wakati, Mamlaka inamtoza 5% ya jumla ya malipo ya marejesho kwa kila mwezi au sehemu ya mwezi ambao malipo hayo bado hayajalipwa.",
+        "sheng": "Section 50 ina-set obligations za employer wa loanee (person ambaye amechukua loan from the Authority). Employer ana-inform Authority in writing, ama kwa other way ambayo Authority ina-specify, loanee akianza job. Employer ana-deduct monthly amount ambayo Authority ina-decide kutoka pay ya loanee hadi loan iwe paid in full ama loanee a-leave hio job, whichever comes first, na ana-remit hizo deductions within nine days after end ya kila month. Employer akiwa ame-deduct lakini asi-remit on time, Authority ina-charge 5% ya total repayment kwa kila month ama part ya month ambayo repayment iko unpaid."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "24b5093af51971179e0d60957fd2bcfe754c63ed5b36424f1ca194afa93e424b"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the employer's duties and the 5% charge as the text states them, with no opinion, advice or judgment on legality."
+      },
+      "groups": [
+        "employee",
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -1091,13 +1574,20 @@
       "pages": [
         23
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section says that any money owed to the Authority counts as a debt that the Authority can collect. The Authority can recover it as an ordinary civil debt through a quick court process (called summary recovery). This is in addition to any other way the law already lets the Authority collect the money.",
+        "sw": "Kifungu hiki kinasema kuwa pesa zote zinazodaiwa na Mamlaka (Authority) ni madeni ambayo Mamlaka inaweza kudai. Mamlaka inaweza kurejesha pesa hizo kama deni la madai (civil debt) kwa njia ya haraka mahakamani. Njia hii haizuii njia nyingine ambazo sheria inaruhusu kurejesha pesa hizo.",
+        "sheng": "Section 51 ina-say kwamba all money due kwa Authority ni debt ambayo Authority inaweza ku-recover. Authority inaweza ku-recover hio debt kama civil debt kupitia court process ya haraka, na hio haizuii other ways za ku-recover money."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "86669014baf32016de8799242abb953ec71f1819f48c845381d0bcb57a68895f"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Described only what the section does (debts due to the Authority are recoverable as civil debts), with no opinion, advice or legal verdict."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -1113,14 +1603,23 @@
         23,
         24
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section requires the Placement Service and the Authority to keep one central data repository for the purposes of the Act. They are to collect, analyse, report on, store, share, retrieve and archive information on placement and funding of students or trainees, students and trainees enrolled in tertiary institutions outside Kenya, career guidance, and other matters. The repository must hold information on students funded by the Authority, repayment of loans, and placement of students.",
+        "sw": "Kifungu hiki kinaagiza Placement Service na Authority kuweka hifadhi kuu moja ya data kwa madhumuni ya Sheria hii. Zinatakiwa kukusanya, kuchambua, kuripoti, kuhifadhi, kushiriki, kupata na kuweka kwenye kumbukumbu taarifa kuhusu upangaji na ufadhili wa wanafunzi au wanagenzi, wanafunzi walioandikishwa katika taasisi za elimu ya juu nje ya Kenya, ushauri wa kikazi, na mambo mengine. Hifadhi hiyo lazima iwe na taarifa kuhusu wanafunzi wanaofadhiliwa na Authority, ulipaji wa mikopo, na upangaji wa wanafunzi.",
+        "sheng": "Section 52 ina-require Placement Service na Authority ku-maintain central data repository kwa purposes za Act. Wana-manage data kwa ku-collect, analyse, report, store, share, retrieve na archive information on placement na funding ya students ama trainees, students ambao wame-enroll kwa tertiary institutions outside Kenya, career guidance na other matters. Hii repository ina-contain information on students ambao Authority ina-fund, loan repayment na placement ya students."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "39d7c6da593009d3de97810f0c315ce529c81d8a0b7e8cf5f04cd29a7eb2b5a0"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the duty to keep a central data repository and what it must hold, without opinion, advice or any view on legality."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -1134,13 +1633,20 @@
       "pages": [
         24
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 53 lets the Authority ask any person or organisation to give it data it needs to do its work under this Act, even if another written law says something different. The request has to be in line with the Data Protection Act. Subsection (2) says the Authority is to use the government and third-party databases that already exist when it does its work.",
+        "sw": "Kifungu cha 53 kinaruhusu Mamlaka kumwomba mtu yeyote au shirika limpe data inayohitajika kutekeleza majukumu yake chini ya Sheria hii, hata kama sheria nyingine iliyoandikwa inasema tofauti. Ombi hilo linapaswa kuwa kwa mujibu wa Sheria ya Ulinzi wa Data (Data Protection Act). Kifungu kidogo cha (2) kinaitaka Mamlaka itumie hifadhidata za serikali na za wahusika wengine ambazo tayari zipo.",
+        "sheng": "Section 53 ina-allow Authority ku-request data kutoka kwa any person ama organisation, hata kama kuna other written law inasema tofauti. Hio request ni lazima iwe in line na Data Protection Act, na data ni ya ku-help Authority ifanye kazi yake under hii Act. Subsection (2) ina-require Authority itumie existing databases za government na third parties."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "3df9c463e8db1926863e8d28783ed0b2d08f59cc87f20e17f52b90fda5241a3c"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only describes the Authority's power to request data and its duty to use existing databases; no opinion or verdict added."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -1155,13 +1661,20 @@
       "pages": [
         24
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section says that any dispute that comes up under this Act is sent to the Placement Service or the Authority, depending on which one the matter concerns. That body then handles it through alternative dispute resolution, which means ways of settling a disagreement other than a court case.",
+        "sw": "Kifungu hiki kinasema kwamba mgogoro wowote unaotokea chini ya Sheria hii unapelekwa kwa Placement Service au Mamlaka (Authority), kulingana na suala husika. Mgogoro huo unatatuliwa kupitia njia mbadala za kutatua migogoro.",
+        "sheng": "Section 54 ina-say kwamba any dispute under hii Act ina-go kwa Placement Service ama Authority, depending on which one ina-handle hio matter. Hio dispute ina-resolvewa kupitia alternative dispute resolution, ambayo ni other ways za ku-settle dispute."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "80d8a2dac1a08f9e45e1677ea1fe44e97f820a718f69f1265ba4c3f97e6fe3fe"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only who handles disputes and how, with no opinion, advice or legal verdict."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -1176,13 +1689,20 @@
       "pages": [
         24
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section sets the financial year of the Placement Service and the Authority. It is the twelve months ending on 30 June each year.",
+        "sw": "Kifungu hiki kinaweka mwaka wa fedha wa Huduma ya Upangaji (Placement Service) na Mamlaka (Authority). Ni kipindi cha miezi kumi na miwili kinachoisha tarehe 30 Juni kila mwaka.",
+        "sheng": "Section 55 ina-set financial year ya Placement Service na Authority. Financial year ni period ya twelve months ambayo ina-end 30 June every year."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "38807b29c97772ba2cce134876e92b917560b52ba0415e31dd672dc7f8b57234"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Technical clause fixing a financial year date for two public bodies; described plainly with no opinion."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -1198,14 +1718,23 @@
         24,
         25
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section requires the Placement Service and the Authority to prepare yearly estimates of their income and spending within three months after the end of each financial year. The estimates must provide for loans and scholarships for tertiary students, funding for infrastructure in public tertiary institutions, pay and other staff costs, and upkeep of property. Each Board must approve its estimates before the financial year starts, and after that they cannot be increased without the Board's prior consent. Spending must follow the approved estimates.",
+        "sw": "Kifungu hiki kinaitaka Huduma ya Upangaji (Placement Service) na Mamlaka (Authority) kuandaa makadirio ya kila mwaka ya mapato na matumizi ndani ya miezi mitatu baada ya mwisho wa kila mwaka wa fedha. Makadirio hayo lazima yatoe nafasi ya mikopo na ufadhili wa masomo kwa wanafunzi wa taasisi za elimu ya juu, fedha za miundombinu katika taasisi za umma za elimu ya juu, mishahara na malipo mengine ya wafanyakazi, na utunzaji wa mali. Kila Bodi lazima iidhinishe makadirio yake kabla ya mwaka wa fedha kuanza, na baada ya hapo hayawezi kuongezwa bila idhini ya awali ya Bodi. Matumizi lazima yafuate makadirio yaliyoidhinishwa.",
+        "sheng": "Section 56 ina-require Placement Service na Authority ku-prepare annual estimates za revenue na expenditure within three months after the end ya each financial year. Hizo estimates must include loans na scholarships kwa students wa tertiary institutions, funding ya infrastructure kwa public tertiary institutions, salaries na other staff costs, na maintenance ya property. Each Board ina-approve estimates before financial year i-start, na after approval estimates can't be increased without prior consent ya Board. All expenditure must follow approved estimates."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "0a13af26f8e887265603f0d9e19d6604813fb717a1b6b181f55503547eca9291"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the estimates process and required budget items only, with no opinion or advice. The clause text ends mid-sentence at subsection (4), so only what is written is explained."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -1219,13 +1748,20 @@
       "pages": [
         25
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 57 requires the Placement Service and the Authority to keep proper books and records of their income, spending, assets and debts. Within three months after each financial year ends, each of them must send that year's accounts to the Auditor-General. These must include a statement of income and expenditure for the year and a statement of assets and liabilities as at the last day of the year. The accounts are prepared, audited and reported under the Constitution and the Public Audit Act.",
+        "sw": "Kifungu cha 57 kinaitaka Huduma ya Upangaji (Placement Service) na Mamlaka (Authority) kutunza vitabu na rekodi sahihi za mapato, matumizi, mali na madeni yao. Ndani ya miezi mitatu baada ya mwaka wa fedha kuisha, kila moja inapaswa kuwasilisha hesabu za mwaka huo kwa Mkaguzi Mkuu wa Hesabu za Serikali (Auditor-General). Hesabu hizo ziambatane na taarifa ya mapato na matumizi ya mwaka, na taarifa ya mali na madeni hadi siku ya mwisho ya mwaka. Hesabu hizo huandaliwa, hukaguliwa na kuripotiwa kwa mujibu wa Katiba na Sheria ya Ukaguzi wa Umma (Public Audit Act).",
+        "sheng": "Section 57 ina-require Placement Service na Authority ku-keep proper books and records za income, expenditure, assets na liabilities zao. Within three months after financial year ina-end, kila moja ina-submit accounts za hio year kwa Auditor-General, pamoja na statement ya income and expenditure na statement ya assets and liabilities as at last day ya year. Hizo accounts ni za ku-prepare, ku-audit na ku-report kulingana na Constitution na Public Audit Act."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "d486ba1a58e9e592d78a813828235bfddfe4fa405e2e37ab2e7c26fa73db0526"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only sets record-keeping and audit duties for two public bodies; described in plain terms with no judgement on policy or legality."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -1241,13 +1777,20 @@
         25,
         26
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section says that the Chairperson, a Board member, or an officer, employee or agent of the Placement Service and the Authority cannot be held personally responsible in any action, claim or demand for something they did in good faith to carry out this Act. The same protection covers anyone acting on their directions.",
+        "sw": "Kifungu hiki kinasema kwamba Mwenyekiti, mjumbe wa Bodi, au afisa, mwajiriwa ama wakala wa Huduma ya Upangaji (Placement Service) na Mamlaka hawawezi kuwajibishwa binafsi katika shauri, madai au matakwa yoyote kwa jambo walilofanya kwa nia njema ili kutekeleza masharti ya Sheria hii. Ulinzi huu pia unawahusu watu wanaofanya kazi kwa maagizo yao.",
+        "sheng": "Section 58 ina-say Chairperson, member wa Board, na officer, employee ama agent wa Placement Service na Authority hawawezi ku-be sued personally kwa action, claim ama demand yoyote, kama walifanya hio thing kwa good faith ili ku-execute hii Act. Hio protection pia iko kwa any person anafanya kazi kwa directions zao."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "2385bcd9ded0494ca6dbc91aefca2d04ec8eeaec5c8a25cd6c67344aca35d0dc"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Described only who is covered and what the protection does, with no opinion on it and no comment on its legal effect."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -1262,13 +1805,20 @@
       "pages": [
         26
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section covers the common seal (the official stamp) of the Placement Service and of the Authority. The Chief Executive Officer keeps the seal, and it can only be used when the Board directs. Whenever the seal is put on a document, the Chairperson and the Chief Executive Officer both sign to confirm it.",
+        "sw": "Kifungu hiki kinahusu muhuri wa pamoja (common seal) wa Huduma ya Upangaji (Placement Service) na wa Mamlaka (Authority). Muhuri hutunzwa na Afisa Mkuu Mtendaji, na hautumiwi bila maelekezo ya Bodi. Muhuri unapowekwa kwenye hati, saini za Mwenyekiti na Afisa Mkuu Mtendaji zinathibitisha matumizi hayo.",
+        "sheng": "Section 59 ina-cover common seal (official stamp) ya Placement Service na ya Authority. Chief Executive Officer ndiye ana-keep seal, na seal haiwezi ku-be used bila direction ya Board. Seal ikiwekwa kwa document, Chairperson na Chief Executive Officer wana-sign ku-confirm."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "2299687650d58bab3fd10c3f46942ed553e4eb03a51bf4fdbe47383e8d3e2899"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes who keeps the seal and how its use is authorised and confirmed; no opinion, advice or legal verdict."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -1283,14 +1833,23 @@
       "pages": [
         26
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section changes section 42(1) of the Limitation of Actions Act, the law that sets time limits for taking cases to court. It deletes paragraph (i) and puts in a new paragraph about civil court cases under the Tertiary Education Placement and Funding Act to recover loans owed to the Authority, including any penalty or interest on them. Section 42 is the list of matters that the Limitation of Actions Act does not apply to.",
+        "sw": "Kifungu hiki kinabadilisha kifungu cha 42(1) cha Limitation of Actions Act, sheria inayoweka muda wa kupeleka kesi mahakamani. Kinafuta aya (i) na kuweka aya mpya kuhusu kesi za madai chini ya Tertiary Education Placement and Funding Act za kurejesha mikopo inayodaiwa na Mamlaka (Authority), pamoja na faini au riba yoyote. Kifungu cha 42 ni orodha ya mambo ambayo Limitation of Actions Act haitumiki kwayo.",
+        "sheng": "Section 60 ina-change Section 42(1) ya Limitation of Actions Act, sheria ambayo ina-set time limits za kupeleka cases court. Ina-repeal na ku-replace paragraph (i) na new paragraph ya civil cases chini ya Tertiary Education Placement and Funding Act za ku-recover loans za Authority, pamoja na penalty na interest. Section 42 ni list ya cases ambazo Limitation of Actions Act haina-apply."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "9cf9a3e54ec6b227338b77e35b48a3cb2118794c7a4df9a4cf707fde3f028a25"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Technical amendment to a list in the Limitation of Actions Act; described only what it changes, with no opinion or advice."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -1304,13 +1863,20 @@
       "pages": [
         26
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 61 says this Act does not remove the duty of the Placement Service and the Authority to pay compensation or damages to any person. This covers injury to a person, their property or their interests. It applies whether the harm came from using a power given by the Act, or from failing, wholly or partly, to use that power.",
+        "sw": "Kifungu cha 61 kinasema kwamba Sheria hii haiondoi wajibu wa Placement Service na Authority wa kulipa fidia au gharama za madhara kwa mtu yeyote. Hii inahusu madhara kwa mtu, mali yake au maslahi yake. Inatumika iwe madhara yametokana na kutumia mamlaka yaliyotolewa na Sheria hii, au na kushindwa kuyatumia, kwa ukamilifu au kwa sehemu.",
+        "sheng": "Section 61 ina-say kwamba hii Act haita-remove liability ya Placement Service na Authority ya ku-pay compensation ama damages kwa any person. Hii ni kwa injury kwa person, property yake ama interests zake, kama injury ime-happen kwa sababu ya ku-use powers za hii Act, ama kwa sababu ya ku-fail ku-use hizo powers, wholly ama partially."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "6b6d4dee92d0d8d2f2300912633767d833e86cbad2ed0bc53cde6a1ce84820fa"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only who stays liable for compensation and for what harm; no opinion, advice or verdict on legality."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -1325,13 +1891,20 @@
       "pages": [
         26
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section sets the penalty for any offence under this Act that has no penalty of its own. A person convicted can be fined up to one million shillings. If the person is a natural person (an individual, not a company), the court can instead impose up to two years in prison, or both the fine and the prison term.",
+        "sw": "Kifungu hiki kinaweka adhabu kwa kosa lolote chini ya Sheria hii ambalo halina adhabu nyingine iliyotajwa. Mtu aliyepatikana na hatia anaweza kutozwa faini isiyozidi shilingi milioni moja. Kama ni mtu binafsi (si kampuni), anaweza kufungwa gerezani kwa muda usiozidi miaka miwili, au kupewa adhabu zote mbili.",
+        "sheng": "Section 62 ina-set general penalty kwa offence yoyote chini ya hii Act ambayo haiko na penalty yake yenyewe. Person akiwa convicted anaweza kulipa fine ya hadi one million shillings. Kama ni individual (sio company), court inaweza pia kum-jail kwa hadi two years, ama fine na jail zote mbili."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "aab808aa3764aa38f2706e09de6c5c466a891623736bf6c4f3a44dee967fbc69"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the penalty range only, with no opinion on its fairness or effect."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -1347,14 +1920,23 @@
         26,
         27
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 63 allows the Cabinet Secretary to make regulations to help carry out this Act. The regulations may cover: placement of students and trainees; receiving, processing and approving education loan applications and the forms to be used; review of placement and funding; loans to minors; withdrawing, suspending, recovering, exempting, cancelling and waiving loans; recovering loans from borrowers living outside Kenya; funding students and trainees studying outside Kenya; career guidance; and any other matter needed to give full effect to the Act.",
+        "sw": "Kifungu cha 63 kinampa Waziri mamlaka ya kutunga kanuni za kusaidia kutekeleza Sheria hii. Kanuni hizo zinaweza kuhusu: kupangiwa nafasi kwa wanafunzi na wanagenzi; kupokea, kushughulikia na kuidhinisha maombi ya mikopo ya elimu pamoja na fomu zitakazotumika; mapitio ya upangaji nafasi na ufadhili; mikopo kwa watoto walio chini ya umri wa utu uzima; kusitisha, kusimamisha, kurejesha, kusamehe, kufuta na kuondoa madeni ya mikopo; kurejesha mikopo kutoka kwa wakopaji wanaoishi nje ya Kenya; ufadhili wa wanafunzi na wanagenzi walio nje ya Kenya; ushauri wa kitaaluma wa taaluma; na jambo lingine lolote linalohitajika ili Sheria hii itekelezwe kikamilifu.",
+        "sheng": "Section 63 ina-let Cabinet Secretary ku-make regulations za ku-help hii Act ifanye kazi. Hizo regulations zinaweza ku-cover: placement ya students na trainees; ku-receive, ku-process na ku-approve applications za education loans na forms za kutumia; review ya placement na funding; loans kwa minors; ku-withdraw, ku-suspend, ku-recover, ku-exempt, ku-cancel na ku-waive loans; ku-recover loans kutoka kwa loanees ambao wanaishi outside Kenya; funding ya students na trainees outside Kenya; career guidance; na other matters ambazo zinahitajika ku-give full effect kwa hii Act."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "71c8437316357dfa53ef7770ef1e9c366b547d3b804329d15c0eb7f10a0ccfa7"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the regulation-making power and lists each item it may cover, with no opinion or advice."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -1368,14 +1950,23 @@
       "pages": [
         27
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 64 repeals three pieces of existing law. It removes the whole Higher Education Loans Board Act, Parts VII and VIII of the Universities Act, and Part IX of the Technical and Vocational Education and Training Act. To repeal means to take them out of the law, so they stop being law.",
+        "sw": "Kifungu cha 64 kinafuta sehemu tatu za sheria zilizopo. Kinafuta Sheria nzima ya Higher Education Loans Board (Bodi ya Mikopo ya Elimu ya Juu), Sehemu VII na VIII za Sheria ya Vyuo Vikuu, na Sehemu IX ya Sheria ya Elimu na Mafunzo ya Ufundi na Stadi (TVET). Kufuta kunamaanisha kuziondoa katika sheria, kwa hivyo hazitakuwa sheria tena.",
+        "sheng": "Section 64 ina-repeal three laws: whole Higher Education Loans Board Act, Part VII na Part VIII ya Universities Act, na Part IX ya Technical and Vocational Education and Training Act. Ku-repeal ni ku-remove hizo laws na parts, so zina-stop kuwa law."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "dcd2c218c66da16fd36ff2b3ab470335074100408b22a54e6348ce99c043e6a4"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only which laws and Parts are repealed, with no opinion, advice or legal verdict."
+      },
+      "groups": [
+        "student"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -1390,13 +1981,20 @@
         27,
         28
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section says which new bodies take over from old ones. The Kenya University and Colleges Central Placement Service succeeds the Kenya Universities and Colleges Central Placement Service Board, which was set up under section 55 of the Universities Act (repealed). The Tertiary Education Funding Authority succeeds three bodies: the Higher Education Loans Management Board (Higher Education Loans Board Act, repealed), the Universities Fund Board (section 53 of the Universities Act, repealed) and the Technical and Vocational Education and Training Funding Board (section 47 of the Technical and Vocational Education and Training Act, repealed).",
+        "sw": "Kifungu hiki kinataja vyombo vipya vinavyochukua nafasi ya vyombo vya zamani. Kenya University and Colleges Central Placement Service ni mrithi wa Kenya Universities and Colleges Central Placement Service Board, kilichoanzishwa chini ya kifungu cha 55 cha Sheria ya Vyuo Vikuu (iliyofutwa). Tertiary Education Funding Authority ni mrithi wa vyombo vitatu: Higher Education Loans Management Board (Sheria ya Higher Education Loans Board, iliyofutwa), Universities Fund Board (kifungu cha 53 cha Sheria ya Vyuo Vikuu, kilichofutwa) na Technical and Vocational Education and Training Funding Board (kifungu cha 47 cha Sheria ya Technical and Vocational Education and Training, kilichofutwa).",
+        "sheng": "Section 65 ina-name successors wa old bodies. Kenya University and Colleges Central Placement Service ina-take over kutoka Kenya Universities and Colleges Central Placement Service Board (section 55 ya Universities Act, repealed). Tertiary Education Funding Authority ina-take over kutoka three bodies: Higher Education Loans Management Board (Higher Education Loans Board Act, repealed), Universities Fund Board (section 53 ya Universities Act, repealed) na Technical and Vocational Education and Training Funding Board (section 47 ya Technical and Vocational Education and Training Act, repealed)."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "347895de6cd89d8b2324597d6dc6e051e0159d79ecf1ed0d46e33222ac10c31a"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Transition clause that only names which government bodies succeed which; described without opinion, advice or legal verdict."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -1411,13 +2009,20 @@
       "pages": [
         28
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section moves the property, assets, rights, obligations and debts (liabilities) of the former institutions to the Placement Service and the Authority, each taking over its own share, on the day the Act starts. Property and assets pass over automatically, with no separate transfer papers needed. Any agreement that names a former institution is read as naming the Placement Service or the Authority instead, unless the context requires otherwise. Court cases already under way for or against a former institution are treated as cases for or against the Service or the Authority.",
+        "sw": "Kifungu cha 66 kinahamisha mali, haki, wajibu na madeni ya taasisi za awali kwa Huduma ya Uwekaji (Placement Service) na Mamlaka (Authority), kila moja kwa upande wake, Sheria hii inapoanza kutumika. Mali inahamishwa moja kwa moja bila hati za ziada za uhamisho. Mikataba inayotaja taasisi za awali itasomwa kana kwamba inataja Huduma ya Uwekaji au Mamlaka, na kesi zinazoendelea mahakamani zitahesabiwa kuwa kesi dhidi ya Huduma au Mamlaka.",
+        "sheng": "Section 66 ina-transfer property, assets, rights, obligations na liabilities za former institutions kwa Placement Service na Authority, each one kwa part yake, from the day Act ina-start. Property na assets ina-move automatically, na hakuna further paperwork ya transfer. Agreements zote ambazo zina-mention former institutions zita-be read kama zina-mention Placement Service na Authority, na court cases pending against former institutions zita-be against Service ama Authority."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "a7efbf441508c576042c2a14e9c2377ed8fa75e0c2f92f3de5c17e27a399fb43"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only moves property, rights, liabilities and pending cases between public bodies, described without opinion."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -1432,14 +2037,23 @@
       "pages": [
         28
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section deals with staff of the former institutions. Anyone who was a member of staff of a former institution just before this Act starts is treated as a member of staff of the Service or the Authority, as the case may be. It is a transition rule: the staff become staff of the new bodies, and the section does not describe their pay or terms.",
+        "sw": "Kifungu cha 67 kinahusu wafanyakazi wa taasisi za awali. Mtu yeyote aliyekuwa mfanyakazi wa taasisi ya awali mara moja kabla ya tarehe ya kuanza kutumika kwa Sheria hii atachukuliwa kuwa mfanyakazi wa Huduma (Service) au wa Mamlaka (Authority), kwa mtiririko huo. Hii ni kanuni ya mpito, na kifungu hiki hakieleezi mshahara wala masharti ya kazi.",
+        "sheng": "Section 67 ina-cover staff ya former institutions. Any person ambaye alikuwa staff ya former institution just before date ambayo hii Act ina-start atakuwa counted kama staff ya Service ama Authority, kila moja kwa yake (respectively). Ni transition rule tu, na hii section haisemi chochote kuhusu pay ama terms za staff."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "027196f560bcf67d84cd5d1b42bd0cd8b5ef5e26de2397e01470a37f919592df"
       },
-      "neutral_check": null,
-      "groups": [],
+      "neutral_check": {
+        "ok": true,
+        "note": "Described only the transfer of staff status to the Service and Authority, with no opinion, advice or legal judgement."
+      },
+      "groups": [
+        "employee"
+      ],
       "suggested_articles": [],
       "sheng_swaps": []
     },
@@ -1453,13 +2067,20 @@
       "pages": [
         28
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 68 explains what the words \"former institutions\" mean in this Part of the Bill. They mean four bodies: the Higher Education Loans Management Board (set up under the Higher Education Loans Boards Act), the Universities Fund Board, the Kenya Universities and Colleges Central Placement Service (set up under the Universities Act), and the Technical and Vocational Education and Training Funding Board (set up under the Technical and Vocational Education and Training Act). It is a definitions clause only and does not change anything else.",
+        "sw": "Kifungu cha 68 kinafafanua maana ya maneno \"former institutions\" (taasisi za zamani) katika Sehemu hii ya Mswada. Maneno hayo yanamaanisha taasisi nne: Bodi ya Usimamizi wa Mikopo ya Elimu ya Juu (iliyoanzishwa chini ya Sheria ya Bodi za Mikopo ya Elimu ya Juu), Bodi ya Hazina ya Vyuo Vikuu, Huduma ya Kati ya Upangaji wa Wanafunzi katika Vyuo Vikuu na Vyuo (iliyoanzishwa chini ya Sheria ya Vyuo Vikuu), na Bodi ya Ufadhili wa Mafunzo ya Ufundi na Kiufundi (iliyoanzishwa chini ya Sheria ya Mafunzo ya Ufundi na Kiufundi). Kifungu hiki ni cha tafsiri tu na hakibadilishi kitu kingine.",
+        "sheng": "Section 68 ina-define term \"former institutions\" kwa hii Part ya Bill. Ina-mean four bodies: Higher Education Loans Management Board (chini ya Higher Education Loans Boards Act), Universities Fund Board, Kenya Universities and Colleges Central Placement Service (chini ya Universities Act), na Technical and Vocational Education and Training Funding Board (chini ya Technical and Vocational Education and Training Act). Hii section ni definition only, haifanyi change nyingine."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "c7460aee9762aaa3bd5613779d370d34c18159904256f944b53a2be37f6e5f66"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Definitions clause only; explanation lists the four named bodies with no opinion, advice or legal judgement."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []

@@ -18,7 +18,19 @@
       "scanned": true
     }
   ],
-  "summary": null,
+  "summary": {
+    "text": {
+      "en": "The Public Participation Bill, 2025 sets out how public bodies must involve the public when they make policies and laws. It names the responsible authority in each institution, such as the Clerk of the relevant House for Parliament, the Principal Secretary for a State Department and the Governor for a county executive. Before an exercise, the authority must give notice of the venue, date, time and mode, allow reasonable time for views, analyse the submissions and publish the outcome. The Bill also covers access to documents, use of a language the participants understand, conduct at forums, and the protection of confidential information and personal data. A responsible authority who wilfully fails to follow the principles and guidelines commits an offence and can be fined up to five hundred thousand shillings.",
+      "sw": "Mswada wa Ushiriki wa Umma wa 2025 unaeleza jinsi taasisi za umma zinavyopaswa kuwashirikisha wananchi wanapotunga sera na sheria. Unataja mamlaka husika katika kila taasisi, kama vile Karani wa Bunge husika kwa Bunge, Katibu Mkuu kwa Idara ya Serikali, na Gavana kwa serikali ya kaunti. Kabla ya zoezi, mamlaka hiyo inapaswa kutoa notisi ya mahali, tarehe, saa na njia ya ushiriki, kutoa muda unaofaa wa kutoa maoni, kuchambua maoni yaliyowasilishwa na kuchapisha matokeo. Mswada pia unahusu upatikanaji wa nyaraka, matumizi ya lugha ambayo washiriki wanaelewa, mwenendo katika vikao, na ulinzi wa taarifa za siri na data binafsi. Mamlaka husika inayoshindwa kwa makusudi kufuata kanuni na miongozo inatenda kosa na inaweza kutozwa faini isiyozidi shilingi 500,000.",
+      "sheng": "Public Participation Bill 2025 ina-set out how public bodies wanafaa ku-involve public wakati wana-make policies na laws. Bill ina-name responsible authority kwa kila institution, kama Clerk kwa Parliament na county assemblies, Principal Secretary kwa State Department, na Governor kwa county executive. Kabla ya exercise, responsible authority lazima i-give notice ya venue, date, time na mode, i-allow reasonable time kwa views, ina-analyse submissions na ina-publish outcome. Bill pia ina-cover access to documents, language ambayo participants wanaelewa, conduct kwa forums, na protection ya confidential information na personal data. Responsible authority ambayo wilfully ina-fail ku-follow principles na guidelines ina-commit offence na fine ya hadi 500,000 shillings."
+    },
+    "review": {
+      "status": "draft",
+      "at": null,
+      "sha256": "8e39785f94655e6d04f51e3eccaac8a3d3d3a5ed32d0d72d0430a4f9cf811987"
+    },
+    "sheng_swaps": []
+  },
   "groups": [],
   "clauses": [
     {
@@ -31,13 +43,20 @@
       "pages": [
         3
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section gives the law its short name. It says the law can be cited as the Public Participation Act, 2025. By itself it does not change anyone's rights or duties.",
+        "sw": "Kifungu hiki kinaipa sheria jina lake fupi. Kinasema sheria hii inaweza kutajwa kama Sheria ya Ushiriki wa Umma, 2025 (Public Participation Act, 2025). Kifungu hiki chenyewe hakibadilishi haki wala wajibu wa mtu yeyote.",
+        "sheng": "Section 1 ina-give hii Act short title yake. Inasema Act inaweza ku-cite kama Public Participation Act, 2025. Hii section haifanyi change yoyote kwa rights ama duties za person yeyote."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "6b8d7640330edce60a7d04d32d1acf7e56d83867a258492f624dca3e6c012033"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Short title clause only; the explanation describes the name and states that it changes no rights or duties."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -52,13 +71,20 @@
       "pages": [
         3
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 2 explains three terms used in the Act. \"Public participation\" means involving the public in making or carrying out public policy decisions, including passing laws. \"Responsible authority\" means the person in charge of public participation in the institutions listed in section 6. \"Specific guidelines\" means the public participation guidelines that a responsible authority develops under section 16.",
+        "sw": "Kifungu cha 2 kinaeleza maana ya maneno matatu yanayotumika katika Sheria hii. \"Ushiriki wa umma\" ni mchakato wa kuhusisha umma katika kufanya au kutekeleza maamuzi ya sera za umma, ikiwemo kutunga sheria. \"Mamlaka husika\" ni mtu anayeshughulikia ushiriki wa umma katika taasisi zilizotajwa katika kifungu cha 6. \"Miongozo mahususi\" ni miongozo ya ushiriki wa umma ambayo mamlaka husika inatayarisha chini ya kifungu cha 16.",
+        "sheng": "Section 2 ina-define three terms za hii Act. \"Public participation\" ni process ya ku-involve public kwa ku-make ama ku-implement public policy decisions, including ku-make laws. \"Responsible authority\" ni person ambaye ni in charge ya public participation kwa institutions ambazo ziko listed kwa section 6. \"Specific guidelines\" ni public participation guidelines ambazo responsible authority ina-develop under section 16."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "1ff9b526920d730870a1334c9270edfb46be9b85ebbabc9c8204cfc6cd33122e"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Definitions clause only; the explanation restates the three definitions without opinion, advice or judgement."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -73,13 +99,20 @@
       "pages": [
         3
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 3 states the purpose of the Act: to strengthen, encourage and make easier the involvement of people in governance (how they are governed). It says this purpose comes from Articles 10(2), 69(1)(d), 118, 184(1)(c), 196, 201(a) and 232(1)(d) of the Constitution. This section only states the purpose. It does not set any rule, duty or penalty by itself.",
+        "sw": "Kifungu cha 3 kinaeleza lengo la Sheria hii: kuimarisha, kukuza na kurahisisha ushiriki wa wananchi katika utawala. Kinasema lengo hili linatokana na Ibara za 10(2), 69(1)(d), 118, 184(1)(c), 196, 201(a) na 232(1)(d) za Katiba. Kifungu hiki kinataja lengo tu, hakiweki sheria, wajibu wala adhabu yoyote.",
+        "sheng": "Section 3 ina-state purpose ya hii Act: ku-increase, ku-promote na ku-make easy participation ya people kwa governance. Hii purpose inatokana na Constitution, Articles 10(2), 69(1)(d), 118, 184(1)(c), 196, 201(a) na 232(1)(d). Hii section ina-state purpose tu, haiweki rule, duty ama penalty yoyote."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "ea17f2dbca39d5b08aa75fd034dee233795ac7f8e8a351d2b89613f83c9c41d2"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only states the purpose of the Act and cites the Constitution articles it names; the explanation repeats this without opinion, advice or any judgement."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -94,13 +127,20 @@
       "pages": [
         3
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 4 says who the Act covers and when it applies. The Act applies to responsible authorities and to the public whenever a public participation exercise is held. A responsible authority must make public participation possible on three kinds of matters: making and carrying out public policies, law making, and any other matter that another law requires.",
+        "sw": "Kifungu cha 4 kinaeleza Sheria hii inawahusu nani na inatumika lini. Sheria hii inatumika kwa mamlaka husika na umma kuhusu shughuli za ushirikishwaji wa umma. Mamlaka husika inapaswa kuwezesha ushirikishwaji wa umma kuhusu mambo ya aina tatu: kutunga na kutekeleza sera za umma, michakato ya kutunga sheria, na jambo lingine lolote ambalo sheria nyingine inalihitaji.",
+        "sheng": "Section 4 ina-say who hii Act ina-cover na lini ina-apply. Hii Act ina-apply kwa responsible authorities na public kila time kuna public participation exercise. Responsible authority ina-facilitate public participation kwa three areas: making na implementing public policies, law making, ama any other matter ambayo another law ina-require."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "ac4b7758ad5a6277f8b9d88aafd8bae146d45c6b3742faea1195e31e7fddb6ea"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes who the Act applies to and the matters covered, with no opinion, advice or legal judgement."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -116,13 +156,20 @@
         3,
         4
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 5 sets out four principles that a responsible authority (the body running a public participation exercise) is to be guided by under this Act. The exercise can be done through written submissions, oral hearings, online forums or any other method suited to the situation, and the public is to get a reasonable chance to give their views. How wide, how deep and how long the exercise runs is to match how complex, important and impactful the matter is. Public resources are to be used carefully and responsibly.",
+        "sw": "Kifungu cha 5 kinaweka kanuni nne ambazo mamlaka husika inayoendesha zoezi la ushirikishwaji wa umma chini ya Sheria hii inapaswa kuongozwa nazo. Zoezi linaweza kufanywa kupitia maoni ya maandishi, vikao vya mdomo, mijadala ya mtandaoni au njia nyingine inayofaa, na umma unapaswa kupewa nafasi ya kutosha kutoa maoni. Ukubwa, kina na muda wa zoezi vinapaswa kulingana na uzito na athari ya jambo linalozingatiwa. Rasilimali za umma zinapaswa kutumiwa kwa uangalifu na uwajibikaji.",
+        "sheng": "Section 5 ina-set four principles ambazo responsible authority ina-follow inapofanya public participation chini ya hii Act. Public participation inaweza kufanywa kupitia written submissions, oral hearings, online forums ama any other method ambayo ina-fit context, na public wana-get reasonable chance ya ku-share views. Scope, depth na duration ya exercise ina-match complexity, importance na impact ya matter. Public resources pia zinatumika carefully na responsibly."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "a9e98f7e154127e9ccfcdef37069260983dd218012badf48b4a631563bdbbb6c"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Described the four principles as written, with no opinion on whether they are adequate and no advice to any reader."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -137,13 +184,20 @@
       "pages": [
         4
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section says who the responsible authority is for public participation under this Act, depending on the institution. For Parliament it is the Clerk of the relevant House, for the Judiciary the Chief Registrar of the Judiciary, for the Office of the Attorney-General the Attorney-General, and for the Office of the Director of Public Prosecutions the Director of Public Prosecutions. For a State Department it is the relevant Principal Secretary, for a Constitutional Commission or an Independent Office the Secretary or the Chief Executive Officer, and for a State corporation the Chief Executive Officer. For a county assembly it is the Clerk of the county assembly, and for a county executive the county Governor. In any other case, it is the person or entity making or implementing a public policy decision.",
+        "sw": "Kifungu hiki kinataja mamlaka inayohusika na ushiriki wa umma chini ya Sheria hii, kulingana na taasisi. Kwa Bunge ni Karani wa Bunge husika, kwa Idara ya Mahakama ni Msajili Mkuu wa Idara ya Mahakama, kwa Ofisi ya Mwanasheria Mkuu ni Mwanasheria Mkuu, na kwa Ofisi ya Mkurugenzi wa Mashtaka ya Umma ni Mkurugenzi wa Mashtaka ya Umma. Kwa Idara ya Serikali ni Katibu Mkuu husika, kwa Tume ya Kikatiba au Ofisi Huru ni Katibu au Afisa Mkuu Mtendaji, na kwa shirika la serikali ni Afisa Mkuu Mtendaji. Kwa bunge la kaunti ni Karani wa bunge la kaunti, kwa baraza la utendaji la kaunti ni Gavana wa kaunti, na katika hali nyingine yoyote ni mtu au chombo kinachofanya au kutekeleza uamuzi wa sera ya umma.",
+        "sheng": "Section 6 ina-name responsible authority kwa public participation under hii Act, depending on institution. Kwa Parliament, ni Clerk wa relevant House; kwa Judiciary, ni Chief Registrar wa Judiciary; kwa Office ya Attorney-General, ni Attorney-General; kwa Office ya Director of Public Prosecutions, ni Director of Public Prosecutions. Kwa State Department ni relevant Principal Secretary; kwa Constitutional Commission ama Independent Office ni Secretary ama Chief Executive Officer; kwa State corporation ni Chief Executive Officer. Kwa county assembly ni Clerk wa county assembly, kwa county executive ni county Governor, na kwa any other case ni person ama entity ambayo inafanya ama ina-implement public policy decision."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "a735ace81c8ae2d411b27b1842b9530b23fa89c03fc8b1419b0cfff551599503"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "The section only lists which office holder is responsible for each institution, so the explanation just restates those roles without opinion, advice or legal judgement."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -158,13 +212,20 @@
       "pages": [
         5
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section lists what a responsible authority has to take into account when it carries out public participation. The nine points are: the nature of the matter, how urgent it is, its impact on the public, the need for inclusive and effective representation, the number of people likely to be affected, whether people can get the information and reach the participation forum, the integrity and transparency of the process, the money and staff available, and any other relevant matter.",
+        "sw": "Kifungu hiki kinaorodhesha mambo ambayo mamlaka husika inapaswa kuzingatia inapofanya ushirikishwaji wa umma. Mambo hayo ni: asili ya suala, uharaka wake, athari yake kwa umma, haja ya uwakilishi jumuishi na wenye ufanisi, idadi ya watu wanaoweza kuathirika, uwezo wa umma kupata taarifa na kufikia jukwaa la ushirikishwaji, uadilifu na uwazi wa mchakato, rasilimali za fedha na watu zilizopo, na mambo mengine yoyote yanayohusika.",
+        "sheng": "Section 7 ina-list nine things ambazo responsible authority ina-consider wakati wa public participation: nature ya matter, urgency ya matter, impact ya matter kwa public, need ya inclusive na effective representation, number ya persons ambao wanaweza ku-be affected, ability ya public ku-access information na public participation forum, integrity na transparency ya process, financial na human resources ambazo ziko, na any other relevant considerations."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "6d0d67afb6eabbef946920d8acd436e1a9ec862425e1489766fc661397c0f632"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "The section only lists considerations for an authority and applies to no group in particular; the explanation restates the list without any opinion."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -179,13 +240,20 @@
       "pages": [
         5
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 8 says that before a responsible authority holds a public participation exercise, it has to notify the public about it. The notice has to state the venue, the date, the time and the mode (the way the exercise will be carried out).",
+        "sw": "Kifungu cha 8 kinaitaka mamlaka husika kuujulisha umma kabla ya kuendesha zoezi la ushirikishwaji wa umma. Notisi hiyo inapaswa kutaja mahali, tarehe, saa na njia itakayotumika kuendesha zoezi hilo.",
+        "sheng": "Section 8 ina-require responsible authority ku-notify public before ina-start public participation exercise. Notice ina-include venue, date, time na mode ya exercise hio."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "d41fe9e66f1b0ef35f74ebefb43443d69d9eac6dbed8c0b1fb8bcedbb7dcf819"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the notice duty and its required contents, with no opinion, advice or judgement on legality."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -200,13 +268,20 @@
       "pages": [
         5
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 9 lists the ways a responsible authority may tell the public about a public participation exercise: electronic media (television, radio, internet or mobile phones), official websites and social media, public meetings, public notice boards, or print media. The notice must say what the exercise is about, how long it will run, and whether people may give their views orally, in writing or both.",
+        "sw": "Kifungu cha 9 kinaorodhesha njia ambazo mamlaka husika inaweza kutumia kuwajulisha umma kuhusu zoezi la ushirikishwaji wa umma: vyombo vya habari vya kielektroniki (televisheni, redio, intaneti au simu za mkononi), tovuti rasmi na mitandao ya kijamii, mikutano ya umma, mbao rasmi za matangazo, au vyombo vya habari vya maandishi. Taarifa hiyo lazima ieleze mada ya zoezi, muda wa zoezi, na kama maoni yanaweza kutolewa kwa mdomo, kwa maandishi au kwa njia zote mbili.",
+        "sheng": "Section 9 ina-list ways ambazo responsible authority inaweza ku-use ku-notify public ya public participation exercise: electronic media (TV, radio, internet ama mobile phones), official websites na social media, public meetings, public notice boards ama print media. Notice ina-need ku-state subject ya exercise, how long exercise itakuwa, na kama submissions ni oral, written ama both."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "cbd3efef970eb71a192bcd451baedbf7046cd17daf00cd7487cb7c305591b4aa"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Section only lists notice methods and required notice contents, so it was described directly with no opinion, advice or legal verdict."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -221,13 +296,20 @@
       "pages": [
         6
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 10 lists four ways people can make submissions (their views) at a public participation exercise. These are: in writing through memoranda (formal written statements) or letters; orally; through online platforms; and at public hearings, workshops, seminars and conferences.",
+        "sw": "Kifungu cha 10 kinaorodhesha njia nne za kutoa maoni katika zoezi la ushirikishwaji wa umma: kwa maandishi kupitia memoranda au barua; kwa mdomo; kupitia mifumo ya mtandaoni; na katika vikao vya hadhara, warsha, semina na makongamano.",
+        "sheng": "Section 10 ina-list four ways za ku-make submissions kwa public participation exercise: in writing kwa memoranda ama letters, orally, through online platforms, ama kwa public hearings, workshops, seminars na conferences."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "2754405db8f47be0ab3c1a78ef7c9fdb6b11d2ff284d20fa4b2fcfc554cafc28"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "The section only lists the allowed ways to make submissions, so the explanation just restates each one in plain words with no opinion or advice."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -242,13 +324,20 @@
       "pages": [
         6
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section says that a responsible authority (the body running a public participation process) has to give the public a reasonable amount of time to make submissions, meaning to send in their views or comments. It does not say how many days count as reasonable.",
+        "sw": "Kifungu hiki kinaitaka mamlaka husika (chombo kinachoendesha mchakato wa ushiriki wa umma) kuwapa wananchi muda unaofaa wa kutoa maoni yao wakati wa mchakato huo. Kifungu hiki hakitaji idadi ya siku zinazochukuliwa kuwa muda unaofaa.",
+        "sheng": "Section 11 ina-require responsible authority (body ambayo inaendesha public participation process) ku-give public reasonable time ya ku-make submissions, yaani ku-send views zao. Hii section haisemi ni days ngapi zina-count kama reasonable time."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "93d2883f978fd7802e5817f76e4f9a51198da9580d42b3dc0ffc472ec35258d4"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only what the section requires of a responsible authority, with no opinion on whether the time allowed is enough and no advice."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -263,13 +352,20 @@
       "pages": [
         6
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 12 sets out what a responsible authority has to do after it collects views from the public. It must analyse the submissions it received and take them into account. It must also publish the outcome of the public participation exercise.",
+        "sw": "Kifungu cha 12 kinaeleza wajibu wa mamlaka husika baada ya kupokea maoni ya umma. Mamlaka hiyo inatakiwa kuchambua maoni yaliyowasilishwa na kuyazingatia. Pia inatakiwa kuchapisha matokeo ya zoezi la ushiriki wa umma.",
+        "sheng": "Section 12 ina-say responsible authority lazima i-analyse submissions ambazo public imetuma na i-take them into account. Pia lazima i-publish outcome ya public participation exercise."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "072f7e4ad0241fbcfc4c27fc3217eeee412b0b43cf5e5615169336de36ea0fa8"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Only describes the two duties the section places on a responsible authority, with no opinion on them."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -284,13 +380,20 @@
       "pages": [
         6
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 13 says the authority running a public participation process must make sure the public can take part and give their views on the matter being considered. If the authority holds a public hearing and the participants do not speak English or Kiswahili well, it must take steps to run the hearing in a language they understand.",
+        "sw": "Kifungu hiki kinaitaka mamlaka husika kuhakikisha kwamba umma unaweza kushiriki katika mchakato wa ushiriki wa umma na kutoa maoni kuhusu suala linalozingatiwa. Mamlaka husika ikiandaa kikao cha hadhara na washiriki hawaelewi Kiswahili wala Kiingereza, inapaswa kuchukua hatua za kuendesha kikao hicho kwa lugha wanayoielewa.",
+        "sheng": "Section 13 ina-require responsible authority i-ensure kwamba public iko na access to public participation process na chance ya ku-give views kwa matter ambayo iko under consideration. Kama responsible authority ina-hold public hearing na participants hawa-understand English ama Kiswahili, ina-take measures ku-conduct hio hearing kwa language ambayo participants wana-understand."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "cca30634535c6b9363654079ba502326977d48bad95ddeace1e23ed7850812b2"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes the duty on responsible authorities and the language measure at hearings, with no opinion, advice or verdict."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -305,13 +408,20 @@
       "pages": [
         6
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section says a responsible authority (the body running a public participation exercise) has to help members of the public get access to the documents about the matter being considered in that exercise. It covers the documents that relate to that matter.",
+        "sw": "Kifungu hiki cha 14 kinaitaka mamlaka husika kuwawezesha wananchi kupata nyaraka zinazohusu suala linaloshughulikiwa katika zoezi la ushirikishwaji wa umma.",
+        "sheng": "Section 14 ina-require responsible authority ku-facilitate access ya public kwa documents za matter ambayo iko under consideration kwa public participation exercise."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "172fc40589fce12350ffac6393ad273447e476d363a5b56c7c3b4f446efa8c50"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only what the section requires of a responsible authority, with no opinion, advice or legal judgement."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -326,13 +436,20 @@
       "pages": [
         6
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 15 sets rules for behaviour at a public participation forum. Any person who attends must be courteous (polite), respectful and civil. The responsible authority running the process must help keep order while the public participation is going on.",
+        "sw": "Kifungu cha 15 kinaweka kanuni za mwenendo katika mkutano wa ushirikishwaji wa umma. Mtu yeyote anayehudhuria mkutano huo anatakiwa kuwa mwenye adabu, heshima na ustaarabu. Mamlaka husika inatakiwa kusaidia kudumisha utulivu wakati wa ushirikishwaji huo.",
+        "sheng": "Section 15 ina-cover conduct kwenye public participation forum. Person ambaye ana-attend forum lazima awe courteous, respectful na civil. Responsible authority nayo ina-facilitate order during the forum."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "ced69f1a2566928e4b531551588233dc37248b94fd5b0b4939bd703648c3fc43"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Described only what the section requires of attendees and the responsible authority, with no opinion, advice or legal judgement."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -347,13 +464,20 @@
       "pages": [
         6
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section lets a responsible authority (the body in charge of an institution) write its own specific guidelines for how public participation is carried out in that institution. Those guidelines must follow the general guidelines set out in Part III of the Act.",
+        "sw": "Kifungu cha 16 kinaruhusu mamlaka husika kuandaa miongozo maalum ya kuendesha ushirikishwaji wa umma katika taasisi yake. Miongozo hiyo lazima ilingane na miongozo ya jumla iliyowekwa katika Sehemu ya III ya Sheria hii.",
+        "sheng": "Section 16 ina-allow responsible authority ku-develop specific guidelines za ku-conduct public participation kwa institution yake. Hizo guidelines ni lazima zi-comply na general guidelines ambazo ziko kwa Part III ya Act hii."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "f71fbf0c08272d34d601bacaa866fe21cca22e3e8f77c62246c9104bcf082378"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only who may write guidelines and that they must follow Part III; no opinion or advice."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -368,13 +492,20 @@
       "pages": [
         7
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section says a responsible authority must publish in the Gazette (the government's official notice paper) the specific public participation guidelines it developed under section 16. For Parliament and county assemblies, the guidelines are instead built into the Standing Orders (the written rules of procedure) of that House or county assembly.",
+        "sw": "Kifungu hiki kinaitaka mamlaka husika kuchapisha katika Gazeti Rasmi la Serikali miongozo mahususi ya ushiriki wa umma iliyoandaliwa chini ya kifungu cha 16. Kwa Bunge na mabunge ya kaunti, miongozo hiyo inajumuishwa katika Kanuni za Kudumu za Bunge hilo au za bunge la kaunti husika.",
+        "sheng": "Section 17 ina-require responsible authority ku-publish kwa Gazette hizo specific guidelines on public participation ambazo authority ime-develop under section 16. Kwa Parliament na county assemblies, hizo guidelines zina-be included kwa Standing Orders (rules za jinsi House inafanya kazi) ya hio House ama county assembly."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "5b2523bd659b02cde3dd6b431b85d6a2e5c23979aa3ae8c04357dad7f2de5a3f"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the publication duty and the Standing Orders condition, with no opinion or advice."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -389,13 +520,20 @@
       "pages": [
         7
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 18 says that, under Article 118(1) of the Constitution, Parliament has to do its business openly. Its sittings and those of its committees are open to the public, and it has to make room for public participation in its legislative and other business. If a committee of one House has already held public participation on a Bill, the committee of the other House may use that committee's report, or it may ask for more views on substantive changes made to the Bill later. A committee of the originating House may hold a joint public participation exercise with the matching committee of the other House for a Bill originating from the Party forming the National Government. A committee may also take steps to avoid repeating public participation the originating House's committee has already done.",
+        "sw": "Kifungu cha 18, kwa mujibu wa Ibara ya 118(1) ya Katiba, kinaitaka Bunge kuendesha shughuli zake wazi. Vikao vya Bunge na vya kamati zake viko wazi kwa umma, na Bunge linapaswa kuwezesha ushiriki wa umma katika shughuli zake za kutunga sheria na nyinginezo. Kamati ya Nyumba moja ikishafanya ushiriki wa umma kuhusu Mswada, kamati ya Nyumba nyingine inaweza kutumia ripoti yake, au kutafuta maoni zaidi kuhusu mabadiliko makubwa yaliyofanywa kwenye Mswada. Kamati ya Nyumba ya asili inaweza pia kuendesha ushiriki wa umma wa pamoja na kamati inayolingana ya Nyumba nyingine kwa Mswada unaotoka kwa Chama kinachounda Serikali ya Kitaifa, na kamati inaweza kuchukua hatua za kuepuka kurudia kazi ambayo tayari imefanywa.",
+        "sheng": "Section 18 ina-require Parliament ku-conduct business yake kwa open way, kulingana na Article 118(1) ya Constitution. Sittings za Parliament na committees ziwe open to the public, na Parliament pia ina-facilitate public participation kwa legislative business. Kama committee ya one House imefanya public participation kwa Bill, committee ya other House inaweza ku-use hio report ama ku-seek more views kama Bill ilipata big changes. Committees za two Houses pia zinaweza ku-hold joint public participation kwa Bill inayotoka kwa Party forming the National Government, na committee inaweza ku-take steps za ku-avoid duplicating hio work."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "8ad502db90025fe79b14a4c174c0a8b5cecaca49412456b047b08d421b035f5c"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only what the section requires and allows of Parliament and its committees, with no opinion, advice or legal judgment."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -410,13 +548,20 @@
       "pages": [
         7
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 19 has two parts. First, a responsible authority running public participation under this Act cannot disclose information that is protected by section 6 of the Access to Information Act, sections 48 and 49 of the Kenya Defences Forces Act, or any other written law. Second, when that authority processes personal data under this Act, it has to follow the Data Protection Act.",
+        "sw": "Kifungu cha 19 kina sehemu mbili. Kwanza, mamlaka husika inayoendesha ushirikishwaji wa umma chini ya Sheria hii hairuhusiwi kufichua taarifa zinazolindwa na kifungu cha 6 cha Sheria ya Upatikanaji wa Habari, vifungu vya 48 na 49 vya Sheria ya Vikosi vya Ulinzi vya Kenya, au sheria nyingine yoyote iliyoandikwa. Pili, mamlaka hiyo inaposhughulikia data binafsi chini ya Sheria hii, inapaswa kuzingatia Sheria ya Ulinzi wa Data.",
+        "sheng": "Section 19 ina-say kwamba responsible authority ambayo inafanya public participation haitaruhusiwa ku-disclose information ambayo iko protected na section 6 ya Access to Information Act, sections 48 na 49 za Kenya Defence Forces Act, ama any other written law. Pia, kama authority ina-process personal data kwa hii Act, inatakiwa ku-comply na Data Protection Act."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "4feb272e784f89e14d265b74f1f4b10e46be0e6410f1958448dac74b86f10bf8"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the limits on disclosure and the data protection duty, with no opinion on policy and no view on legality."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -431,13 +576,20 @@
       "pages": [
         8
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section makes it an offence for a responsible authority (the body running a public participation exercise) to deliberately fail to follow the principles and guidelines set out in this Act. If the authority is convicted, a court can fine it up to 500,000 shillings.",
+        "sw": "Kifungu hiki kinaeleza kwamba mamlaka husika inayoendesha ushirikishwaji wa umma inafanya kosa ikishindwa kwa makusudi kufuata kanuni na miongozo iliyowekwa katika Sheria hii. Ikipatikana na hatia, mahakama inaweza kuitoza faini isiyozidi shilingi 500,000.",
+        "sheng": "Section 20 ina-say kwamba responsible authority ambayo inaendesha public participation ina-commit offence kama deliberately ina-fail ku-follow principles na guidelines za hii Act. Kama court ina-convict authority hio, fine ni up to 500,000 shillings."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "17def625e160958965b9fe6338c42747f11b747972fcc2d3d6df9a7ccee2d116"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the offence and the maximum fine for a responsible authority, with no opinion on the policy or its legal standing."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -452,13 +604,20 @@
       "pages": [
         8
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This is a transitional section. It covers any public participation exercise that is already under way on the day the Act comes into force. That exercise carries on, and follows the Act as far as possible.",
+        "sw": "Kifungu cha 21 ni kifungu cha mpito. Kinahusu zoezi lolote la ushiriki wa umma ambalo tayari linaendelea siku Sheria hii inapoanza kutumika. Zoezi hilo linaendelea na kufuata Sheria hii kadiri inavyowezekana.",
+        "sheng": "Section 21 ina-cover public participation exercise ambayo iko in progress wakati hii Act ina-start. Exercise hio ina-continue, na ina-follow hii Act as far as possible."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "de11ed0669866b053696d473404491625ba5cda5af351de717fc4cbf81b1ea7f"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Transitional clause described as written, with no opinion on its effect."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
