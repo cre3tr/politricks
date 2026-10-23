@@ -16,6 +16,7 @@ Run from anywhere; paths are resolved from the repo root, not your current folde
     uv run --project pipeline politricks review finance-act-2026 --flagged      (or --only c2 summary)
     uv run --project pipeline politricks review finance-act-2026 --from-sheet exports/finance-act-2026-review.xlsx
     uv run --project pipeline politricks export finance-act-2026 [--self-test]
+    uv run --project pipeline politricks constitution [--self-test]
 """
 
 from __future__ import annotations
@@ -118,6 +119,11 @@ def _dispatch() -> None:
     p_export.add_argument("bill_id", nargs="?")
     p_export.add_argument("--out", help="where to write the .xlsx (default: exports/<bill-id>-review.xlsx)")
     p_export.add_argument("--self-test", action="store_true", help="offline round-trip in a temp folder (writes nothing real)")
+
+    p_constitution = sub.add_parser(
+        "constitution", help="download + fingerprint the Constitution of Kenya 2010 and split it into 264 articles"
+    )
+    p_constitution.add_argument("--self-test", action="store_true", help="offline run on a small generated PDF (writes nothing real)")
 
     args = parser.parse_args()
 
@@ -230,6 +236,13 @@ def _dispatch() -> None:
         if not args.bill_id:
             parser.error("export needs a bill id (or --self-test)")
         sys.exit(export.run(REPO_ROOT, args.bill_id, Path(args.out).resolve() if args.out else None))
+
+    elif args.command == "constitution":
+        from . import constitution
+
+        if args.self_test:
+            sys.exit(0 if constitution.self_test(REPO_ROOT) else 1)
+        sys.exit(constitution.run(REPO_ROOT))
 
 
 if __name__ == "__main__":
