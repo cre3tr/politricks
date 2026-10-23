@@ -970,4 +970,4 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
   - Every other self-test passes, and check-build passes on all 5 bills.
   - A live `ocr` exits 1 with the install message and writes nothing.
 - **Not run, and not ticked:** Tesseract isn't installed, so no real OCR text exists yet, and the gutter window and page handling are guesses from pages 1-4. Once Tesseract is in, the run order is: `ocr public-participation-bill-2025` → read the audit file → `compare --dry-run` → `compare` (one direct call) → lint, build, check-build → commit.
-- **For the learner:** the What changed row labels ("Imechange", "Ime-drop", "Kifungu kipya", the OCR label in SW/Sheng) need the Sheng ear. Change notes can't be accepted in `review` yet.
+- **For the learner:** the What changed row labels ("Imechange", "Ime-drop", "Kifungu kipya", the OCR label in SW/Sheng) need the Sheng ear. Change notes are walked by `review` as `changes[0]`... (added the same day; scenario N, review 61 → 66).

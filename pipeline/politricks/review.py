@@ -79,6 +79,7 @@ from .lint import (
 from .models import (
     HAND_EDITED,
     Bill,
+    Change,
     Clause,
     GroupEntry,
     NeutralCheck,
@@ -126,8 +127,9 @@ class QuitReview(Exception):
 
 @dataclass
 class Item:
-    """One thing a human can review: the summary, a group entry, a clause, or
-    a civic block (participation, stage_next, challenge; 2026-10-23).
+    """One thing a human can review: the summary, a group entry, a clause, a
+    change note (slice 8), or a civic block (participation, stage_next,
+    challenge; 2026-10-23).
 
     A civic block can hold several texts (a challenge has a name and a text
     per avenue), so it lists them as `units`; its one review covers them all,
@@ -147,7 +149,11 @@ class Item:
     def tri(self) -> Optional[Tri]:
         if self.units is not None:
             return self.units[0][1] if self.units else None
-        return self.owner.explanation if isinstance(self.owner, Clause) else self.owner.text
+        if isinstance(self.owner, Clause):
+            return self.owner.explanation
+        if isinstance(self.owner, Change):
+            return self.owner.note
+        return self.owner.text
 
     def fingerprint(self) -> Optional[str]:
         """What an accept stores: models.current_sha256, or civic_sha256 for a block."""
@@ -169,7 +175,9 @@ class Item:
         path ("participation.requirements", "challenge.avenues[0].name")."""
         if self.civic_kind is not None:
             return finding_item == self.id or finding_item.startswith((self.civic_kind + ".", self.civic_kind + "["))
-        return finding_item == self.id
+        # A change note is named "changes[0]" (changed) or "changes[0].note" (a
+        # banned phrase in it); every other item by its own id.
+        return finding_item == self.id or finding_item.startswith(self.id + ".")
 
     def sync(self, bill: Bill) -> None:
         """Write a civic block back into the bill (a no-op for everything else,
@@ -230,6 +238,10 @@ def _candidates(bill: Bill) -> list[Item]:
         candidates.append(Item(SUMMARY_ID, bill.summary))
     for entry in bill.groups:
         candidates.append(Item(group_item_id(entry.group), entry))
+    for index, change in enumerate(bill.changes):
+        if isinstance(change, Change):
+            # The note is reviewed; before and after are law, shown for context.
+            candidates.append(Item(f"changes[{index}]", change, heading=f"What changed: {change.clause_id}"))
     from . import civic  # imported here: civic imports lint and generate
 
     for kind in civic.KINDS:
@@ -334,6 +346,13 @@ def _describe(item: Item, findings: list[Finding]) -> str:
         lines.append(f"SUGGESTED ARTICLES: {', '.join(str(n) for n in sorted(item.owner.suggested_articles)) or 'none'}")
     elif isinstance(item.owner, GroupEntry):
         lines.append(f"SECTIONS: {', '.join(item.owner.clause_ids) or 'none'}")
+    elif isinstance(item.owner, Change):
+        def preview(text: Optional[str]) -> str:
+            if text is None:
+                return "(not in this version)"
+            return text if len(text) <= LEGAL_PREVIEW_CHARS else text[:LEGAL_PREVIEW_CHARS].rstrip() + " [...]"
+        after_label = "AFTER (read by OCR from a scan)" if item.owner.ocr else "AFTER"
+        lines += ["", f"BEFORE: {preview(item.owner.before)}", f"{after_label}: {preview(item.owner.after)}"]
     status = item.owner.review.status
     if item.changed():
         lines += ["", "status: reviewed, but changed since"]
@@ -1223,6 +1242,52 @@ def self_test(repo_root: Path) -> bool:
     errors = selection_errors(bill, ["participation", "stage_next"])
     check("M. --only names a civic block the bill has, and refuses one it doesn't",
           [error.partition(": ")[0] for error in errors] == ["stage_next"], str(errors))
+
+    # === Scenario N: change notes (slice 8, 2026-10-23) ========================
+    # One untouched AI-draft note, stamped as compare.py stamps it. Before and
+    # after are law (one even says "vote"): only the note is reviewed or linted.
+    def change_bill() -> Bill:
+        bill = fixture_bill(repo_root)
+        change = Change(
+            kind="draft", clause_id="c3", heading="Test", before="The officer may vote.", after="The officer shall vote.",
+            note=Tri(en="This changes may to shall.", sw="Hii inabadilisha may kuwa shall.", sheng="Hii ina-change may kuwa shall."),
+            source_label="A compared with B", ocr=True, after_pages=[2],
+        )
+        change.review = Review(status="draft", sha256=current_sha256(change))
+        bill.changes = [change]
+        return bill
+
+    bill = change_bill()
+    run_n1 = drive(bill, ["a"], only=["changes[0]"])
+    saved_change = run_n1.saves[0].changes[0] if run_n1.saves else None
+    check("N. a change note is walked as changes[0]; before and after are shown, the OCR side labelled",
+          run_n1.result.visited == ["changes[0]"] and "BEFORE: The officer may vote." in run_n1.shown
+          and "AFTER (read by OCR from a scan): The officer shall vote." in run_n1.shown,
+          f"visited {run_n1.result.visited}")
+    check("N. accepting it stores the change's fingerprint, and the save has it",
+          saved_change is not None and saved_change.review.status == "reviewed"
+          and saved_change.review.sha256 == current_sha256(saved_change) and is_reviewed(saved_change),
+          str(saved_change.review if saved_change else None))
+
+    bill = change_bill()
+    run_n2 = drive(bill, ["e", "sheng", "Hii ina-change may iwe shall.", "q"], only=["changes[0]"])
+    edited_change = run_n2.saves[-1].changes[0] if run_n2.saves else None
+    check("N. editing a note changes only the note and makes it a hand-edited draft; the law is untouched",
+          edited_change is not None and edited_change.note.sheng == "Hii ina-change may iwe shall."
+          and edited_change.review.sha256 == HAND_EDITED and edited_change.before == "The officer may vote.",
+          str(edited_change.review if edited_change else None))
+
+    bill = change_bill()
+    bill.changes[0].note.en += " You should object."
+    run_n3 = drive(bill, ["a", "q"])
+    check("N. a banned phrase in a note: walked first and refused, while 'vote' in the law flags nothing",
+          run_n3.result.visited[:1] == ["changes[0]"] and run_n3.result.refused == ["changes[0]"]
+          and not any(f.item.startswith("changes[0]") and f.detail == "vote" for f in lint_bill(bill, phrases)),
+          f"visited {run_n3.result.visited}, refused {run_n3.result.refused}")
+
+    bill = change_bill()
+    check("N. --only refuses a change index the bill doesn't have",
+          [error.partition(": ")[0] for error in selection_errors(bill, ["changes[0]", "changes[5]"])] == ["changes[5]"])
 
     # === Nothing written ========================================================
     check("the real bill file's SHA-256 is unchanged", sha256_file(real_path) == sha_before)
