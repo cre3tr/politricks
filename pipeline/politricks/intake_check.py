@@ -38,6 +38,7 @@ like one of those other documents. Those are counted, not hidden.
 from __future__ import annotations
 
 import difflib
+from datetime import date
 import json
 import re
 import unicodedata
@@ -173,6 +174,23 @@ def _filename(url: str) -> str:
     return unquote(urlsplit(url).path.rsplit("/", 1)[-1])
 
 
+_YEAR = re.compile(r"(?<!\d)(19|20)\d{2}(?!\d)")
+
+
+def year_of(link: PdfLink) -> int | None:
+    """The newest year named in the link text or URL path ("...Bill, 2026",
+    ".../uploads/bill/2018/..."), or None when it names no year."""
+    years = [int(match.group(0)) for match in _YEAR.finditer(f"{link.text} {urlsplit(link.url).path}")]
+    return max(years) if years else None
+
+
+def default_min_year() -> int:
+    """Last year: a weekly proposer is for NEW bills. The listings go back to
+    2013 (Nairobi alone carried 98 PDFs on 2026-10-23), and proposing all of
+    them every week buries the one that matters."""
+    return date.today().year - 1
+
+
 def looks_like_a_bill(link: PdfLink) -> bool:
     haystack = f"{link.text} {_filename(link.url)}"
     return bool(_BILL_WORD.search(haystack)) and not _NOT_A_BILL.search(haystack)
@@ -217,27 +235,33 @@ class ListingResult:
     pdf_total: int = 0
     known: int = 0
     duplicates: int = 0  # already proposed from an earlier listing
+    too_old: int = 0  # bills naming a year before min_year: counted, not proposed
     not_bills: list[str] = field(default_factory=list)
     refused: list[str] = field(default_factory=list)  # PDF links off the allowlist
     proposals: list[Proposal] = field(default_factory=list)
 
 
 def read_listing(
-    listing: Listing, pdfs: list[PdfLink], known: set, proposed: set
+    listing: Listing, pdfs: list[PdfLink], known: set, proposed: set, min_year: Optional[int] = None
 ) -> ListingResult:
     """Sort one page's PDF links. `known` is the registry's URLs (as url_keys),
-    `proposed` is what earlier listings already proposed (updated here)."""
+    `proposed` is what earlier listings already proposed (updated here).
+    A bill naming only years before `min_year` is counted as too old, never
+    proposed; one naming no year at all is still proposed (we can't tell)."""
     from . import fetch
 
     result = ListingResult(listing, pdf_total=len(pdfs))
     for link in pdfs:
         key = url_key(link.url)
+        year = year_of(link)
         if not fetch.is_allowed(link.url):
             result.refused.append(link.url)
         elif key in known:
             result.known += 1
         elif not looks_like_a_bill(link):
             result.not_bills.append(link.text or _filename(link.url))
+        elif min_year is not None and year is not None and year < min_year:
+            result.too_old += 1
         elif key in proposed:
             result.duplicates += 1
         else:
@@ -341,9 +365,12 @@ def proposed_diff(current_text: str, blocks: list[str]) -> str:
 # --------------------------------------------------------------------------
 
 
-def run(repo_root: Path, listings: tuple = LISTINGS) -> int:
+def run(repo_root: Path, listings: tuple = LISTINGS, min_year: Optional[int] = -1) -> int:
     """Read every listing, print what is new. Returns the exit code (see the
-    module docstring). Writes nothing."""
+    module docstring). Writes nothing. `min_year` -1 means last year
+    (`default_min_year`); None proposes every year."""
+    if min_year == -1:
+        min_year = default_min_year()
     import httpx
 
     from . import fetch
@@ -386,13 +413,14 @@ def run(repo_root: Path, listings: tuple = LISTINGS) -> int:
             )
             errors.append(listing.name)
             continue
-        result = read_listing(listing, pdfs, known, proposed_keys)
+        result = read_listing(listing, pdfs, known, proposed_keys, min_year)
         results.append(result)
         print(
             f"read         {label}: HTTP {status}, {result.pdf_total} distinct PDF link(s): "
             f"{result.known} already in sources.yaml, {len(result.proposals)} proposed, "
             f"{len(result.not_bills)} ignored (not a bill), {len(result.refused)} skipped (not official), "
             f"{result.duplicates} already proposed from an earlier listing"
+            + (f", {result.too_old} older than {min_year}" if min_year is not None else "")
         )
 
     for r in results:
@@ -710,5 +738,26 @@ def self_test(check: Checker, repo_root: Path) -> None:
             check("check: a redirect that leaves the allowlist is an ERROR line and exit 1", code == 1 and "ERROR        Nairobi" in out, f"{code}: {out[:400]}")
         finally:
             fetch.fetch_page = real_fetch_page
+
+    # --- the year filter (2026-10-23): old bills are counted, not proposed ----
+    filter_listing = Listing("Test listing", "https://nairobiassembly.go.ke/bills/", "county")
+    links = [
+        PdfLink(text="Nairobi City County Tobacco Control Bill", url="https://nairobiassembly.go.ke/ncca/wp-content/uploads/bill/2018/Tobacco-Bill.pdf"),
+        PdfLink(text="The Nairobi City County Youth Bill, 2026", url="https://nairobiassembly.go.ke/ncca/wp-content/uploads/bill/2026/Youth-Bill-2026.pdf"),
+        PdfLink(text="The Undated Bill", url="https://nairobiassembly.go.ke/ncca/wp-content/uploads/bill/Undated-Bill.pdf"),
+    ]
+    filtered = read_listing(filter_listing, links, set(), set(), min_year=2025)
+    check(
+        "year filter: a 2018 bill (year in the URL path) is counted as too old and not proposed; 2026 and undated ones are proposed",
+        filtered.too_old == 1 and [p.url.split("/")[-1] for p in filtered.proposals] == ["Youth-Bill-2026.pdf", "Undated-Bill.pdf"],
+        f"too_old={filtered.too_old}, proposed={[p.url for p in filtered.proposals]}",
+    )
+    unfiltered = read_listing(filter_listing, links, set(), set(), min_year=None)
+    check(
+        "year filter control: with no minimum year the same 2018 bill IS proposed (so the filter, not the parser, hid it)",
+        unfiltered.too_old == 0 and len(unfiltered.proposals) == 3,
+        f"too_old={unfiltered.too_old}, proposed={len(unfiltered.proposals)}",
+    )
+    check("year filter: the default minimum is last year", default_min_year() == date.today().year - 1)
 
     check("check: the REAL pipeline/sources.yaml is byte-identical (SHA-256) after all of the above", sha256_file(real_registry) == real_hash)
