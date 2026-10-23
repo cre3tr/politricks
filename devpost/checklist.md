@@ -119,7 +119,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   Learner check: Open a clause's suggested article. Does the suggestion feel relevant, and does the sheet make clear you're the judge?
   Commit: `Add suggested constitution articles`
 
-- [ ] **11. Nairobi County bills and motions**
+- [x] **11. Nairobi County bills and motions**
   Becomes usable: Home lists at least one Nairobi City County Assembly bill (bill page and tabs) and one motion (simpler Motion Card), both labelled *county* and fingerprinted from the Assembly's official site.
   Why now: This is PRD build step 6, the last boundary item. It's placed last because the county domain and documents are the least known.
   PRD ref: `prd.md > Automatic Bill Intake` (county)
@@ -905,3 +905,20 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **`politricks review` walks civic blocks** (`review.py`): one item per block, named by its kind (`participation`, `stage_next`, `challenge`). A block's texts are numbered units, and an edit asks which one. Accept stores `civic_sha256` and writes the block back into the bill. An edit makes it a hand-edited draft. `lint` flags a reviewed block whose content changed, so `--flagged` finds it. Self-test scenario M: 7 checks, review 54 → 61. Planted bug (no write-back after accept): 3 FAILs.
 - **The site's civic badges are now real:** `civicSha256` in `src/lib/reviewHash.ts` is the twin of `civic.civic_sha256`, and the shared vectors carry one case per kind (8 in all). A planted twin bug (no `checked_at`) failed `check-build`. A block the learner accepts shows *Reviewed* while it still matches.
 - **Ticked on the mechanical verify**, as slice 4 was. The learner's two parts wait for the integrated checkpoint: check every civic fact against its source, then `politricks review <bill> --only participation stage_next` (and `challenge` for the Finance Act) to accept or edit the translations.
+
+### Slice 11 ticked: Nairobi County bill and motion, 2026-10-23
+
+- **Data:**
+  - Merged from the county builder (`01c5211`): the Nairobi City County Appropriation Bill, 2026 (3 clauses; the money is in two schedules that are not clauses, as with the Finance Act), and the motion "Restoration of Public Infrastructure Damaged by Public and Private Construction Works". The motion was cut verbatim from the fingerprinted Hansard of 3 July 2025, pages 9-10, into one clause.
+  - Generated as drafts: `b9aa5b3`, bill 3/3 plus summary, motion 1/1 plus summary.
+- **Site:** the Motion Card (the summary as its note, then the resolution beside its explanation, no tabs), and *County* and *Motion* tags on home.
+- **Verify:**
+  - Build clean; check-build passes 13 for the bill and 9 for the motion.
+  - The home page holds both titles, with 2 *County* tags and 1 *Motion* tag.
+  - The motion JSON has 1 clause and `participation: null`.
+  - `fetch --check-url https://nairobiassembly.go.ke.evil.com/x.pdf` printed `refused`.
+- **For the learner:**
+  - (a) **The motion's stage.** The Assembly's tracker says "Approved", but the fingerprinted Hansard of 3 July 2025 (p. 12) records "(Motion deferred)", and no later vote was found. The stage line says both, and `status` is `passed` per the tracker. Change the wording in `sources.yaml` if you prefer.
+  - (b) **The county bill's `status: passed`** comes from the Assembly's bills table (passed and assented July 2026), though the PDF is headed "Bill for Introduction".
+  - (c) **The motion's Sheng** opens "Section 1 ina-urge", the prompt's clause rule applied to a motion. Edit it at review.
+  - Learner check at the integrated checkpoint.
