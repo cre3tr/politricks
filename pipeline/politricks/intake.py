@@ -26,11 +26,15 @@ Why generate can be skipped: with no ANTHROPIC_API_KEY set there is nothing to
 call. The chain still runs fetch and extract (the parts that prove a new bill's
 PDF is usable) and says plainly that generate was skipped, instead of failing.
 
-`intake --check` (proposing NEW registry entries from the Parliament and
-Gazette listings) is slice 9/12's job and is not built yet.
+`intake --check` is a different, read-only command: it reads the official
+listings (National Assembly, Senate, Nairobi City County Assembly, Kenya
+Gazette) and PROPOSES new registry entries as a diff on screen. It lives in
+`intake_check.py` and never writes `sources.yaml` or any bill file.
 
 `politricks intake --self-test` runs the chain offline in a temp folder with
-the download stubbed, and checks the failure paths (see `self_test`).
+the download stubbed, and checks the failure paths (see `self_test`). It also
+runs the `--check` checks (`intake_check.self_test`) with the listing pages
+stubbed.
 """
 
 from __future__ import annotations
@@ -261,12 +265,14 @@ def self_test(repo_root: Path) -> bool:
     def snapshot() -> dict[str, str]:
         """SHA-256 of every real bill JSON and every file under sources/."""
         roots = [repo_root / "src" / "data" / "bills", repo_root / "sources"]
-        return {
-            path.relative_to(repo_root).as_posix(): sha256_file(path)
-            for root in roots
-            for path in sorted(root.rglob("*"))
-            if path.is_file()
-        }
+        # `.lock` files are left out: they hold no content, and one held by
+        # another politricks command (a generate run, say) can't even be read
+        # on Windows, which used to crash this test.
+        files = [
+            path for root in roots for path in sorted(root.rglob("*")) if path.is_file() and path.suffix != ".lock"
+        ]
+        files.append(repo_root / "pipeline" / "sources.yaml")  # the registry too: `--check` must never touch it
+        return {path.relative_to(repo_root).as_posix(): sha256_file(path) for path in files}
 
     real_before = snapshot()
     check("control: the real repo has bill JSONs and source files to protect", len(real_before) > 3, str(len(real_before)))
@@ -445,9 +451,14 @@ def self_test(repo_root: Path) -> bool:
         if saved_key is not None:
             os.environ["ANTHROPIC_API_KEY"] = saved_key
 
+    # --- `intake --check`: listings stubbed, read-only -----------------------
+    from . import intake_check
+
+    intake_check.self_test(check, repo_root)
+
     # --- nothing real was written -------------------------------------------
     check(
-        "7. every real bill JSON and source file is byte-identical (SHA-256) before and after",
+        "7. every real bill JSON, source file and pipeline/sources.yaml is byte-identical (SHA-256) before and after",
         snapshot() == real_before,
     )
 
