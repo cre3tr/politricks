@@ -103,6 +103,11 @@ def reset_bill(repo_root: Path) -> Bill:
     bill.groups = [
         GroupEntry(group="trader", text=GROUP_TEXT.model_copy(), clause_ids=["c3"], review=Review(status="draft"))
     ]
+    # The civic blocks and changes[] are emptied too: the real bill gained a
+    # translated challenge block on 2026-10-23, and lint's text-count control
+    # (which walks these loose fields) broke CI because the fixture kept it.
+    bill.participation = bill.stage_next = bill.challenge = None
+    bill.changes = []
     return bill
 
 

@@ -806,15 +806,24 @@ def _quiet(fn, *args, **kwargs) -> tuple[Any, str]:
     return result, buffer.getvalue()
 
 
+# The civic YAMLs as drafted on 2026-10-19, frozen for the self-test. The
+# real files change as facts are checked (they did on 2026-10-23), and a test
+# that asserted on live facts broke CI the moment they did.
+FIXTURE_DIR = Path("pipeline") / "tests" / "fixtures" / "civic"
+
+
 def _temp_root(repo_root: Path, tmp: Path, ids: tuple[str, ...] = ALL_IDS) -> Path:
-    """A throwaway repo root holding copies of the prompts and the given bills and civic files."""
+    """A throwaway repo root holding copies of the prompts, the given bills,
+    and the FROZEN civic fixtures (never the real, changing YAML)."""
     for rel in ("pipeline/prompts/translator.md", "pipeline/prompts/banned.txt"):
         (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(repo_root / rel, tmp / rel)
     for bill_id in ids:
-        for rel in (f"pipeline/civic/{bill_id}.yaml", f"src/data/bills/{bill_id}.json"):
-            (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy(repo_root / rel, tmp / rel)
+        (tmp / "pipeline" / "civic").mkdir(parents=True, exist_ok=True)
+        shutil.copy(repo_root / FIXTURE_DIR / f"{bill_id}.yaml", tmp / "pipeline" / "civic" / f"{bill_id}.yaml")
+        rel = f"src/data/bills/{bill_id}.json"
+        (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(repo_root / rel, tmp / rel)
     return tmp
 
 
@@ -853,6 +862,8 @@ def self_test(repo_root: Path) -> bool:
             check(f"real {bill_id}.yaml validates", True)
         except CivicError as error:
             check(f"real {bill_id}.yaml validates", False, "; ".join(error.problems))
+    # Everything below compares against the frozen fixtures, not the live files.
+    real = {bill_id: load_civic_yaml(repo_root / FIXTURE_DIR / f"{bill_id}.yaml") for bill_id in ALL_IDS}
     expected_units = {PP: 2, TE: 2, FA: 6}
     for bill_id, count in expected_units.items():
         if bill_id in real:

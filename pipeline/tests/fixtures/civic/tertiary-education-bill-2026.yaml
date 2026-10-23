@@ -1,0 +1,46 @@
+# Civic facts for the Tertiary Education, Placement and Funding Bill, 2026
+# (spec.md > Civic Data). English only: `politricks civic` (slice 6) will
+# validate this and have Claude translate it, never write it.
+#
+# DRAFTED BY CLAUDE ON 2026-10-19, NOT YET CHECKED BY IAN (his call, same day:
+# "I draft, you check"). Before slice 6 ships, Ian checks every fact below
+# against the source on its line and deletes this paragraph.
+#
+# Source strength, per fact:
+#   [OFFICIAL] parliament.go.ke documents (Hansard, Bills Tracker).
+#   [NEWS]     a newspaper report of the official notice. The Clerk's notice
+#              itself (dated 18 August 2026, "placed in the print media",
+#              Hansard 6 Oct p. 6) has not been found online yet.
+
+participation:
+  open: false
+  # [OFFICIAL] Hansard 6 Oct 2026, p. 6: "The addendum further extended the
+  # deadline for submission of written memoranda to Friday, 2nd October 2026
+  # at 5.00 p.m." (first deadline: Thursday 24 September 2026, 5.00 p.m.)
+  deadline: 2026-10-02
+  deadline_time: "5pm"
+  # [UNKNOWN] Where to submit (email, postal address, office) is not in any
+  # source read on 2026-10-19. A web search summary named the Clerk's P.O. Box
+  # and the Main Parliament Building, but no page we actually read carries
+  # them for this Bill. Fill these in from the Clerk's notice of 18 August 2026.
+  channels: []
+  # [OFFICIAL] Hansard 6 Oct 2026, p. 6: the Clerk's public notice "invited
+  # members of the public and stakeholders to submit written memoranda"; the
+  # Committee "has held public hearings in all the 47 counties".
+  requirements: >-
+    Written memoranda, as invited by the Clerk of the National Assembly's
+    public notice of 18 August 2026. The Committee also held public hearings
+    in all 47 counties, from 14 September to 2 October 2026.
+  source_url: "https://www.parliament.go.ke/sites/default/files/2026-10/The%20Hansard%20-%20Tuesday,%206%20October%202026.pdf"
+  checked_at: 2026-10-19
+
+stage_next:
+  # [OFFICIAL] Hansard 6 Oct 2026, p. 6-7 (the Committee chair's statement).
+  # Said as plans on that date, so the text keeps the date: the chair also
+  # said the stakeholder week might move by a week.
+  text: >-
+    On 6 October 2026 the Education Committee told the National Assembly it
+    was analysing the views it had received, and planned to go through the
+    Bill clause by clause with major stakeholders from 12 to 16 October. After
+    that, it tables its report in the House for the Second Reading of the Bill.
+  source_url: "https://www.parliament.go.ke/sites/default/files/2026-10/The%20Hansard%20-%20Tuesday,%206%20October%202026.pdf"
