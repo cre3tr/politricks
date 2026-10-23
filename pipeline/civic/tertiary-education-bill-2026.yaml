@@ -19,20 +19,27 @@ participation:
   # at 5.00 p.m." (first deadline: Thursday 24 September 2026, 5.00 p.m.)
   deadline: 2026-10-02
   deadline_time: "5pm"
-  # [UNKNOWN] Where to submit (email, postal address, office) is not in any
-  # source read on 2026-10-19. A web search summary named the Clerk's P.O. Box
-  # and the Main Parliament Building, but no page we actually read carries
-  # them for this Bill. Fill these in from the Clerk's notice of 18 August 2026.
-  channels: []
+  # 2026-10-23, the learner's call "verified facts only". [UNKNOWN] Email,
+  # postal address and office for THIS Bill: no official notice found online
+  # (a search of parliament.go.ke on 2026-10-23 found none; the pages checked
+  # are listed in the spike report of that day). The one channel that IS
+  # official is below.
+  channels:
+    # [OFFICIAL] The "Submit Comments" link on this Bill's row of the National
+    # Assembly bills page. It loads Parliament's own comment form for the Bill
+    # (HTTP 200, 2026-10-23).
+    - type: portal
+      value: "https://www.parliament.go.ke/contact/national_assembly_petition?bill=THE%20TERTIARY%20EDUCATION%2CPLACEMENT%20AND%20FUNDING%20BILL%2C2026"
   # [OFFICIAL] Hansard 6 Oct 2026, p. 6: the Clerk's public notice "invited
   # members of the public and stakeholders to submit written memoranda"; the
   # Committee "has held public hearings in all the 47 counties".
   requirements: >-
     Written memoranda, as invited by the Clerk of the National Assembly's
     public notice of 18 August 2026. The Committee also held public hearings
-    in all 47 counties, from 14 September to 2 October 2026.
+    in all 47 counties, from 14 September to 2 October 2026. Email and postal details
+    for this Bill were not found in an official notice online.
   source_url: "https://www.parliament.go.ke/sites/default/files/2026-10/The%20Hansard%20-%20Tuesday,%206%20October%202026.pdf"
-  checked_at: 2026-10-19
+  checked_at: 2026-10-23
 
 stage_next:
   # [OFFICIAL] Hansard 6 Oct 2026, p. 6-7 (the Committee chair's statement).

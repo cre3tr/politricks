@@ -2086,8 +2086,44 @@
       "sheng_swaps": []
     }
   ],
-  "stage_next": null,
+  "stage_next": {
+    "text": {
+      "en": "On 6 October 2026 the Education Committee told the National Assembly it was analysing the views it had received, and planned to go through the Bill clause by clause with major stakeholders from 12 to 16 October. After that, it tables its report in the House for the Second Reading of the Bill.",
+      "sw": "Tarehe 6 Oktoba 2026 Education Committee iliambia Bunge la Kitaifa kwamba ilikuwa ikichambua maoni iliyopokea, na ilipanga kupitia Mswada kifungu kwa kifungu pamoja na wadau wakuu kuanzia 12 hadi 16 Oktoba. Baada ya hapo, inawasilisha ripoti yake Bungeni kwa ajili ya Kusomwa kwa Mara ya Pili kwa Mswada huo.",
+      "sheng": "On 6 October 2026 Education Committee ili-tell National Assembly kwamba ilikuwa ina-analyse views ambazo ili-receive, na ilikuwa ina-plan ku-go through hii Bill clause by clause na major stakeholders from 12 to 16 October. After hapo, ina-table report yake kwa House for the Second Reading ya hii Bill."
+    },
+    "source_url": "https://www.parliament.go.ke/sites/default/files/2026-10/The%20Hansard%20-%20Tuesday,%206%20October%202026.pdf",
+    "sheng_swaps": [],
+    "review": {
+      "status": "draft",
+      "at": null,
+      "sha256": "e7746750f0e4c4e5411cf27fca4c121b98bb93b6893231890391111dcd1a9326"
+    }
+  },
   "changes": [],
-  "participation": null,
+  "participation": {
+    "open": false,
+    "deadline": "2026-10-02",
+    "deadline_time": "5pm",
+    "channels": [
+      {
+        "type": "portal",
+        "value": "https://www.parliament.go.ke/contact/national_assembly_petition?bill=THE%20TERTIARY%20EDUCATION%2CPLACEMENT%20AND%20FUNDING%20BILL%2C2026"
+      }
+    ],
+    "requirements": {
+      "en": "Written memoranda, as invited by the Clerk of the National Assembly's public notice of 18 August 2026. The Committee also held public hearings in all 47 counties, from 14 September to 2 October 2026. Email and postal details for this Bill were not found in an official notice online.",
+      "sw": "Memoranda zilizoandikwa, kama zilivyoalikwa na tangazo la umma la Clerk of the National Assembly la tarehe 18 Agosti 2026. Kamati pia ilifanya vikao vya hadhara katika kaunti zote 47, kuanzia 14 Septemba hadi 2 Oktoba 2026. Maelezo ya barua pepe na posta kwa Mswada huu hayakupatikana katika tangazo rasmi mtandaoni.",
+      "sheng": "Written memoranda, kwa public notice ya Clerk of the National Assembly ya 18 August 2026, ambayo ina-invite hizo memoranda. Committee pia ili-hold public hearings kwa all 47 counties, from 14 September to 2 October 2026. Email na postal details za hii Bill hazikuwa found kwa official notice online."
+    },
+    "source_url": "https://www.parliament.go.ke/sites/default/files/2026-10/The%20Hansard%20-%20Tuesday,%206%20October%202026.pdf",
+    "checked_at": "2026-10-23",
+    "sheng_swaps": [],
+    "review": {
+      "status": "draft",
+      "at": null,
+      "sha256": "8b7c69d5f42aa3a208c8933493276614b8533e844a09aee8ab9e9ea0722dc8c2"
+    }
+  },
   "challenge": null
 }

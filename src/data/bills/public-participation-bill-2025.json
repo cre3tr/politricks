@@ -623,8 +623,44 @@
       "sheng_swaps": []
     }
   ],
-  "stage_next": null,
+  "stage_next": {
+    "text": {
+      "en": "The Senate debated the Bill at Second Reading on 7 and 8 October 2026. The decision on it (the Division) is still to come. If it passes, the whole Senate goes through it clause by clause (Committee of the Whole House), then holds the Third Reading.",
+      "sw": "Seneti ilijadili Mswada huo katika Kusomwa kwa Mara ya Pili tarehe 7 na 8 Oktoba 2026. Uamuzi kuhusu mswada huo (Division) bado haujafikiwa. Ukipita, Seneti nzima huupitia kifungu kwa kifungu (Kamati ya Bunge Zima), kisha hufanya Kusomwa kwa Mara ya Tatu.",
+      "sheng": "Senate ili-debate hii Bill kwa Second Reading on 7 na 8 October 2026. Decision on it (the Division) iko still to come. If it passes, the whole Senate ina-go through it clause by clause (Committee of the Whole House), then ina-hold Third Reading."
+    },
+    "source_url": "https://www.parliament.go.ke/sites/default/files/2026-10/Bills%20Tracker%20updated%20as%20at%2016.10.2026.pdf",
+    "sheng_swaps": [],
+    "review": {
+      "status": "draft",
+      "at": null,
+      "sha256": "b9e7362cb9b5a2d2d87b654e7d2f4c7b8cbab8f5bf16784065840a1432a8778a"
+    }
+  },
   "changes": [],
-  "participation": null,
+  "participation": {
+    "open": false,
+    "deadline": "2026-09-28",
+    "deadline_time": "5pm",
+    "channels": [
+      {
+        "type": "portal",
+        "value": "https://www.parliament.go.ke/contact/senate_petition?bill=The%20Public%20Participation%20Bill%2C%202025%20%28National%20Assembly%20Bills%20No.%2044%20of%202025%29%20-%20As%20approved%20by%20NA"
+      }
+    ],
+    "requirements": {
+      "en": "Written memoranda to the Clerk of the Senate, for the Standing Committee on Justice, Legal Affairs and Human Rights. Email and postal details for this Bill were not found in an official notice online.",
+      "sw": "Memoranda zilizoandikwa kwa Clerk of the Senate, kwa ajili ya Standing Committee on Justice, Legal Affairs and Human Rights. Maelezo ya barua pepe na posta kwa Mswada huu hayakupatikana katika notisi rasmi mtandaoni.",
+      "sheng": "Written memoranda kwa Clerk of the Senate, for the Standing Committee on Justice, Legal Affairs and Human Rights. Email na postal details za hii Bill hazikuwa found kwa official notice online."
+    },
+    "source_url": "https://www.parliament.go.ke/node/26432",
+    "checked_at": "2026-10-23",
+    "sheng_swaps": [],
+    "review": {
+      "status": "draft",
+      "at": null,
+      "sha256": "7bb73625454c1a2f5e2af82914bdec0e971892a6bb56a402a9f6e8d1d8a5092d"
+    }
+  },
   "challenge": null
 }

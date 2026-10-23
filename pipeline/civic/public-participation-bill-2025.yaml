@@ -1,37 +1,41 @@
 # Civic facts for the Public Participation Bill, 2025 (in the Senate)
-# (spec.md > Civic Data). English only: `politricks civic` (slice 6) will
-# validate this and have Claude translate it, never write it.
+# (spec.md > Civic Data). English only: `politricks civic` validates this and
+# has Claude translate it, never writes it.
 #
 # DRAFTED BY CLAUDE ON 2026-10-19, NOT YET CHECKED BY IAN (his call, same day:
 # "I draft, you check"). Before slice 6 ships, Ian checks every fact below
 # against the source on its line and deletes this paragraph.
 #
+# 2026-10-23, the learner's call "verified facts only": every fact here is on
+# parliament.go.ke itself. The newspaper source and the email/venue channels
+# it carried are gone: no official notice for THIS Bill names them (the
+# Senate news item says "full submission details are contained in the
+# official notice", and that notice was not found online).
+#
 # Source strength, per fact:
-#   [OFFICIAL] parliament.go.ke documents (Senate Bills Tracker).
-#   [NEWS]     a newspaper report of the Senate Clerk's notice (Jeremiah
-#              Nyegenye). The notice itself has not been found online yet, so
-#              `source_url` below is the news report, which spec.md does not
-#              allow at ship time: replace it with the notice.
+#   [OFFICIAL] parliament.go.ke (Senate news item, Senate Bills Tracker, the
+#              Senate bills page's own "Submit Comments" form for this Bill).
 
 participation:
   open: false
-  # [NEWS] Eastleigh Voice, 14 Sep 2026: "submissions must be received by
-  # 5:00 p.m. on Monday, September 28, 2026."
+  # [OFFICIAL] parliament.go.ke/node/26432, "SENATE INVITES PUBLIC VIEWS ON
+  # THE PUBLIC PARTICIPATION BILL, 2025", posted 23 Sep 2026: "submit their
+  # views to the Clerk of the Senate on or before Monday, 28th September 2026
+  # at 5.00 p.m." Checked again 2026-10-23.
   deadline: 2026-09-28
   deadline_time: "5pm"
   channels:
-    # [NEWS] same report. The two addresses were decoded from the page's
-    # email-protection markup, not read as plain text.
-    - type: email
-      value: "clerk.senate@parliament.go.ke (copy to senatejlahrc@parliament.go.ke)"
-    - type: venue
-      value: "Office of the Clerk of the Senate, Main Parliament Buildings, Nairobi"
+    # [OFFICIAL] The "Submit Comments" link on this Bill's row of the Senate
+    # bills page (parliament.go.ke/the-senate/house-business/bills). It loads
+    # Parliament's own comment form for the Bill (HTTP 200, 2026-10-23).
+    - type: portal
+      value: "https://www.parliament.go.ke/contact/senate_petition?bill=The%20Public%20Participation%20Bill%2C%202025%20%28National%20Assembly%20Bills%20No.%2044%20of%202025%29%20-%20As%20approved%20by%20NA"
   requirements: >-
-    Written memoranda addressed to the Clerk of the Senate,
-    P.O. Box 41842-00100, Nairobi, for the Standing Committee on Justice,
-    Legal Affairs and Human Rights.
-  source_url: "https://eastleighvoice.co.ke/news/400271/senate-sets-september-28-deadline-for-kenyans-to-submit-views-on-public-participation-bill"
-  checked_at: 2026-10-19
+    Written memoranda to the Clerk of the Senate, for the Standing Committee on
+    Justice, Legal Affairs and Human Rights. Email and postal details for this
+    Bill were not found in an official notice online.
+  source_url: "https://www.parliament.go.ke/node/26432"
+  checked_at: 2026-10-23
 
 stage_next:
   # [OFFICIAL] Senate Bills Tracker "updated as at 16th October, 2026", row

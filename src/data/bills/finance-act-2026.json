@@ -1686,5 +1686,59 @@
   "stage_next": null,
   "changes": [],
   "participation": null,
-  "challenge": null
+  "challenge": {
+    "avenues": [
+      {
+        "name": {
+          "en": "A High Court petition",
+          "sw": "Ombi kwa Mahakama Kuu",
+          "sheng": "Petition kwa High Court"
+        },
+        "text": {
+          "en": "Under Article 258 of the Constitution, every person has the right to go to court claiming that the Constitution has been contravened, or is threatened with contravention. Under Article 165, the High Court hears questions on whether any law is inconsistent with the Constitution.",
+          "sw": "Chini ya Ibara ya 258 ya Katiba, kila mtu ana haki ya kwenda mahakamani akidai kwamba Katiba imekiukwa, au inatishiwa kukiukwa. Chini ya Ibara ya 165, Mahakama Kuu husikiliza maswali kuhusu iwapo sheria yoyote inakinzana na Katiba.",
+          "sheng": "Under Article 258 ya Katiba, kila person iko na right ya ku-go to court ku-claim kwamba Katiba imekuwa contravened, ama iko under threat ya kuwa contravened. Under Article 165, High Court ina-hear questions about kama law yoyote haiendani na Katiba."
+        },
+        "source_url": "https://www.parliament.go.ke/sites/default/files/2017-05/The_Constitution_of_Kenya_2010.pdf"
+      },
+      {
+        "name": {
+          "en": "A Bill of Rights claim in court",
+          "sw": "Dai la haki chini ya Mswada wa Haki mahakamani",
+          "sheng": "Claim ya Bill of Rights kwa court"
+        },
+        "text": {
+          "en": "Under Article 22, every person has the right to go to court claiming that a right or fundamental freedom in the Bill of Rights has been denied, violated or infringed, or is threatened.",
+          "sw": "Chini ya Ibara ya 22, kila mtu ana haki ya kwenda mahakamani akidai kwamba haki au uhuru wa msingi katika Mswada wa Haki umenyimwa, umekiukwa au umevunjwa, au unatishiwa.",
+          "sheng": "Under Article 22, kila person iko na right ya ku-go to court ku-claim kwamba right ama fundamental freedom kwa Bill of Rights ime-denied, ime-violated ama ime-infringed, ama iko under threat."
+        },
+        "source_url": "https://www.parliament.go.ke/sites/default/files/2017-05/The_Constitution_of_Kenya_2010.pdf"
+      },
+      {
+        "name": {
+          "en": "A petition to Parliament",
+          "sw": "Ombi kwa Bunge",
+          "sheng": "Petition kwa Parliament"
+        },
+        "text": {
+          "en": "Under Article 119, every person has a right to petition Parliament to consider any matter within its authority, including to amend or repeal any law.",
+          "sw": "Chini ya Ibara ya 119, kila mtu ana haki ya kuwasilisha ombi kwa Bunge lishughulikie jambo lolote lililo ndani ya mamlaka yake, ikiwa ni pamoja na kurekebisha au kufuta sheria yoyote.",
+          "sheng": "Under Article 119, kila person iko na right ya ku-petition Parliament ku-consider matter yoyote iko within authority ya Parliament, including ku-change ama ku-remove law yoyote."
+        },
+        "source_url": "https://www.parliament.go.ke/sites/default/files/2017-05/The_Constitution_of_Kenya_2010.pdf"
+      }
+    ],
+    "checked_at": "2026-10-19",
+    "sheng_swaps": [
+      {
+        "word": "Katiba",
+        "english": "Constitution"
+      }
+    ],
+    "review": {
+      "status": "draft",
+      "at": null,
+      "sha256": "c0df98c4096fa392a609ab11dfe02d241435cd75ba5dabc2ae8d2d8d9d48c587"
+    }
+  }
 }
