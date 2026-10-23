@@ -18,7 +18,19 @@
       "scanned": false
     }
   ],
-  "summary": null,
+  "summary": {
+    "text": {
+      "en": "This is a motion in the Nairobi City County Assembly. It urges the County Executive Committee Member to urgently prepare and submit Regulations under the Nairobi City County Transport Act, 2020. The Regulations would set out procedures, rules, offences and sanctions for damage to public infrastructure, especially roads, during public or private construction works. The motion notes that heavy construction equipment can be heavier than roads can bear, leaving potholes and standing water, and it refers to the Constitution, the Kenya Roads Act, 2007 and the Nairobi City County Transport Act, 2020. The motion itself does not create any offence or penalty.",
+      "sw": "Hii ni hoja katika Bunge la Kaunti ya Nairobi. Inamhimiza Mjumbe wa Kamati Tendaji ya Kaunti kutayarisha na kuwasilisha kwa haraka Kanuni chini ya Sheria ya Uchukuzi ya Kaunti ya Jiji la Nairobi, 2020. Kanuni hizo zingeweka taratibu, sheria, makosa na adhabu kuhusu uharibifu wa miundombinu ya umma, hasa barabara, wakati wa ujenzi wa umma au wa kibinafsi. Hoja inataja kwamba mitambo mizito ya ujenzi inaweza kuwa na uzito kuliko barabara zinavyoweza kuhimili, na hivyo kuacha mashimo na maji yaliyotuama, na inarejelea Katiba, Sheria ya Barabara ya Kenya, 2007 na Sheria ya Uchukuzi ya Kaunti ya Jiji la Nairobi, 2020. Hoja yenyewe haiweki kosa wala adhabu yoyote.",
+      "sheng": "Hii motion ni ya Nairobi City County Assembly, na ina-urge County Executive Committee Member ku-prepare na ku-submit regulations chini ya Nairobi City County Transport Act, 2020. Hizo regulations zita-provide procedures, rules, offences na sanctions kwa damage ya public infrastructure, especially roads, wakati wa public ama private construction works. Hii motion ina-note kwamba construction companies wana-use heavy equipment ambayo tonnage yake can be higher than roads zinaweza tolerate, na hio ina-leave potholes na stagnant water. Pia ina-refer kwa Constitution, Kenya Roads Act, 2007 na Nairobi City County Transport Act, 2020. Hii motion doesn't create offences ama sanctions yenyewe, ina-ask tu regulations ziwe made."
+    },
+    "review": {
+      "status": "draft",
+      "at": null,
+      "sha256": "f9006d3be502cea3c2594db220e494d844dea30fefebc07817b6422e7f943e5c"
+    },
+    "sheng_swaps": []
+  },
   "groups": [],
   "clauses": [
     {
@@ -32,13 +44,20 @@
         9,
         10
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This is a motion of the Nairobi City County Assembly. It urges the County Executive Committee Member to quickly write and submit regulations under the Nairobi City County Transport Act, 2020. The regulations would set procedures, rules, offences and penalties for damage to public infrastructure, especially roads, during public or private construction works. The motion's opening part refers to the Constitution, the Kenya Roads Act, 2007 and Section 41(8) of the Nairobi City County Transport Act, 2020, and says heavy construction equipment can damage roads near building sites.",
+        "sw": "Kifungu hiki ni hoja ya Bunge la Kaunti ya Jiji la Nairobi. Hoja hii inamtaka Mjumbe wa Kamati Tendaji ya Kaunti (County Executive Committee Member) aandae na awasilishe kwa haraka kanuni chini ya Sheria ya Uchukuzi ya Jiji la Nairobi, 2020. Kanuni hizo zitaweka taratibu, sheria, makosa na adhabu kuhusu uharibifu wa miundombinu ya umma, hasa barabara, wakati wa kazi za ujenzi za umma au za kibinafsi. Sehemu ya mwanzo ya hoja inataja Katiba, Sheria ya Barabara ya Kenya ya 2007 na kifungu cha 41(8) cha Sheria ya Uchukuzi ya Jiji la Nairobi, 2020, na inasema vifaa vizito vya ujenzi vinaweza kuharibu barabara karibu na maeneo ya ujenzi.",
+        "sheng": "Section 1 ina-urge County Executive Committee Member ku-formulate na ku-submit regulations za Nairobi City County Transport Act, 2020 haraka. Regulations hizo zita-set procedures, rules, offences na penalties kwa damage ya public infrastructure, especially roads, during public ama private construction works. Motion ina-mention Constitution, Kenya Roads Act, 2007 na Section 41(8) ya Nairobi City County Transport Act, 2020, na ina-say heavy equipment ya construction companies inaweza ku-damage roads near sites."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "e0a30f5fef91a0deefa396df79b622b48e6d121957a1c1b6484660c53e52892e"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Described only what the motion urges and what it cites. The motion's own words of concern were reported as its stated reasons, without any opinion added."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []

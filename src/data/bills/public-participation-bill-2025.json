@@ -79,14 +79,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "6031572234053201e87989b85b7d1fc0f0b3506678bebbfeb3feb97d4d599de6"
+        "sha256": "e1c36c0dacf74a9fdec2079cedfe3bead24338f59714f079b982fe0b65cfe8d8"
       },
       "neutral_check": {
         "ok": true,
         "note": "Definitions clause only; the explanation restates the three definitions without opinion, advice or judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        1,
+        10,
+        118,
+        196
+      ],
       "sheng_swaps": []
     },
     {
@@ -107,14 +112,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "a6e3fb26d66285737da57cb4573a1dbc2d71abbcfcc9a4f8999d9a0cf22de5b2"
+        "sha256": "9d45f3ec803733b1f200644ee7dec7304fa04d8f6e7d643e33a3b04fcbae0dbf"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only states the purpose of the Act and cites the Constitution articles it names; the explanation repeats this without opinion, advice or any judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        118,
+        196,
+        201
+      ],
       "sheng_swaps": []
     },
     {
@@ -135,14 +145,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "99b43b97727de21742445e834e0bdd27794d6734c23e429388d55969649d6e57"
+        "sha256": "1d2bf698e2e1e6980ed3825d83d7acaa12ca46073ad75c8063c208158bd4234c"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes who the Act applies to and the matters covered, with no opinion, advice or legal judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        1,
+        10,
+        118,
+        196
+      ],
       "sheng_swaps": []
     },
     {
@@ -164,14 +179,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "86b87a61928e9d6f10650ec03d0aea0c282f94ac88955351347c7f70343aa3eb"
+        "sha256": "91447e3c1267a5fa8bf342665888f27c8351a4d0d10b4cbaf67836b745ba9cc2"
       },
       "neutral_check": {
         "ok": true,
         "note": "Described the four principles as written, with no opinion on whether they are adequate and no advice to any reader."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        118,
+        196,
+        201
+      ],
       "sheng_swaps": []
     },
     {
@@ -192,14 +212,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "ec55b13b9e8a656501e3dcd7b339f08b05b60095b5ac70b3382cdd3d56b93dc2"
+        "sha256": "b2dae6eb38507754dc2bffe76b33f97696e11550e7f71151a2ce974efb7bc3ab"
       },
       "neutral_check": {
         "ok": true,
         "note": "The section only lists which office holder is responsible for each institution, so the explanation just restates those roles without opinion, advice or legal judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        118,
+        196,
+        232
+      ],
       "sheng_swaps": []
     },
     {
@@ -220,14 +245,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "6700f0399e9fad61ce0e89b1a805f128d8ba680b4699eb2b4b1f14544c5d6151"
+        "sha256": "ffd9b5414a7de181db14f519a328420c8b08846405d7043e7815767cbac3d482"
       },
       "neutral_check": {
         "ok": true,
         "note": "The section only lists considerations for an authority and applies to no group in particular; the explanation restates the list without any opinion."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        35,
+        118,
+        196
+      ],
       "sheng_swaps": []
     },
     {
@@ -248,14 +278,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "d792d400cb22a017d1195a969f5ff9a54718cd57f4cae6bba293390c3b2c1560"
+        "sha256": "ccf8af885de95e4cf4d1b1de73c9f0fdb69620072ec94707a9cc51b766671549"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only the notice duty and its required contents, with no opinion, advice or judgement on legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        35,
+        118,
+        196
+      ],
       "sheng_swaps": []
     },
     {
@@ -276,14 +311,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "59a215cef888aa79e5fb0775a9b98ea32415ead54b22f0f8f54c6643e4229fcd"
+        "sha256": "904d37f171d94fde7d5d3bf60b516bdf92f51ce7455d621d9a54fbfbf9646c65"
       },
       "neutral_check": {
         "ok": true,
         "note": "Section only lists notice methods and required notice contents, so it was described directly with no opinion, advice or legal verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        35,
+        118,
+        196
+      ],
       "sheng_swaps": []
     },
     {
@@ -304,14 +344,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "f956854858f94aa1325e603b81c6d2eb2016cbe418125be5ff17f30c7eba22c4"
+        "sha256": "0a4d367a99957556f846d5e46b1273348abba8b9529a4217e776800d21e014cb"
       },
       "neutral_check": {
         "ok": true,
         "note": "The section only lists the allowed ways to make submissions, so the explanation just restates each one in plain words with no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        35,
+        118,
+        119
+      ],
       "sheng_swaps": []
     },
     {
@@ -332,14 +377,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "de1fea7a86ae07f12657ecded18d44a39537c782f7ae64c91e8d84955fce8695"
+        "sha256": "351d172c1e12a08ad9e2a1b13e68149b66c9e516643f5cda3148974071274ec3"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only what the section requires of a responsible authority, with no opinion on whether the time allowed is enough and no advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        118,
+        119,
+        196
+      ],
       "sheng_swaps": []
     },
     {
@@ -360,14 +410,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "1df272b6f11e2ac631285f4b0141d705e37ec5880d7bbffbfb0b4ee2ea101ba8"
+        "sha256": "d50f9732607490692fb3d294e7f5ba2ee1cca3246de48385b351bdec6ca55de8"
       },
       "neutral_check": {
         "ok": true,
         "note": "Only describes the two duties the section places on a responsible authority, with no opinion on them."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        35,
+        118,
+        196
+      ],
       "sheng_swaps": []
     },
     {
@@ -388,14 +443,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "b5ed4706647edcb3d89a50661e45b86ea3aef4a89b8932fa19d3d8c0ef5c70c2"
+        "sha256": "732a2bba1fadb627f5b7308a672f3b0966af9bbe20c9df241573cc05b7c42c3b"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes the duty on responsible authorities and the language measure at hearings, with no opinion, advice or verdict."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        7,
+        10,
+        35,
+        118
+      ],
       "sheng_swaps": []
     },
     {
@@ -416,14 +476,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "5ee8ce798e188ef86f7c8ac022845f833c91d14521c5400b82bec830b1967b3c"
+        "sha256": "7ffed7a6824c4b8863fdfe64551f3b2f23cde73f88ce248c9289890cc42d1ca3"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only what the section requires of a responsible authority, with no opinion, advice or legal judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        35,
+        118,
+        196
+      ],
       "sheng_swaps": []
     },
     {
@@ -444,14 +509,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "2bde499b3be034e8959e75ee55a2ac9ddce1098bb18fade646cb05b98200b6cb"
+        "sha256": "a4b569918074e806beec1bf8ee37ef1d6940db251284385868be24e323680c15"
       },
       "neutral_check": {
         "ok": true,
         "note": "Described only what the section requires of attendees and the responsible authority, with no opinion, advice or legal judgement."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        33,
+        37,
+        118
+      ],
       "sheng_swaps": []
     },
     {
@@ -472,14 +542,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "e6ceba464de680cd45ec5e43aab60a68d8d1ab079b1d6f8281585fbe5c04c247"
+        "sha256": "3213441f112575e125bdc1184ca8af04a2a58585c25838303a64484f82600f4f"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only who may write guidelines and that they must follow Part III; no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        118,
+        196,
+        201
+      ],
       "sheng_swaps": []
     },
     {
@@ -500,14 +575,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "724757138572d6b3c248757d4586352fc705cdb4ba825fbc7576509d7511f7ee"
+        "sha256": "fe92f56f9c535ee78c2ad8ad16963d20757e113c7bc7d8e8a40b533fe08b3aee"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only the publication duty and the Standing Orders condition, with no opinion or advice."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        118,
+        124,
+        196
+      ],
       "sheng_swaps": []
     },
     {
@@ -528,14 +608,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "4688edc7a6ea8585c39d179bd7abb1e8030d36c951275bf51ca22a5870047b5b"
+        "sha256": "4c42acfd0c0f1b3c4c1937a13f1676d0db821d0544bb624fbd92a3dd62f79060"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only what the section requires and allows of Parliament and its committees, with no opinion, advice or legal judgment."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        94,
+        118,
+        124
+      ],
       "sheng_swaps": []
     },
     {
@@ -556,14 +641,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "1cb1a2c46af9caa029ae9b85e99ec3c6c3a76cff037fa0cd14a3d153020a116d"
+        "sha256": "9f0e6ec2b643ad9d5928b2935748f33f6e2d7bf8608dfa094632bcc83546c9b9"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only the limits on disclosure and the data protection duty, with no opinion on policy and no view on legality."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        24,
+        31,
+        35,
+        118
+      ],
       "sheng_swaps": []
     },
     {
@@ -584,14 +674,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "4edb896a62d8e3c57c108bb6483396d05d3d1474d87c74694aab181cc11d3b37"
+        "sha256": "bdba2072a04e1ee977da4e26c71c38fe8f5959c060e5c8f044e6f2f07a7de0bb"
       },
       "neutral_check": {
         "ok": true,
         "note": "Describes only the offence and the maximum fine for a responsible authority, with no opinion on the policy or its legal standing."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        118,
+        196,
+        201
+      ],
       "sheng_swaps": []
     },
     {
@@ -612,14 +707,19 @@
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": "0ea7430a1082397d061c9f28a471fb96c2876b359416662d4f3c8c4dd050d9d0"
+        "sha256": "d30cf5febb9b454a1e327cecc978ec47429ea9daa69e6a911c5f606a9b9fe774"
       },
       "neutral_check": {
         "ok": true,
         "note": "Transitional clause described as written, with no opinion on its effect."
       },
       "groups": [],
-      "suggested_articles": [],
+      "suggested_articles": [
+        10,
+        118,
+        119,
+        196
+      ],
       "sheng_swaps": []
     }
   ],

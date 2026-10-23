@@ -18,7 +18,19 @@
       "scanned": false
     }
   ],
-  "summary": null,
+  "summary": {
+    "text": {
+      "en": "This bill lets the Nairobi City County Treasury take KSh. 49,271,943,291 out of the County Revenue Fund for county services in the year ending 30th June, 2027. That money is treated as appropriated (set aside for spending) from 1st July, 2026, for the purposes listed in the Schedule. The text says the County Assembly authorised the amount on 28th July, 2026, under Article 224 of the Constitution. It also allows other money, called Appropriations in Aid, to be used for the same Schedule purposes under Article 206(1)(b) of the Constitution. The first section only gives the short title: the Nairobi City County Appropriation Act, 2026.",
+      "sw": "Mswada huu unaruhusu Hazina ya Kaunti ya Jiji la Nairobi kutoa KSh. 49,271,943,291 kutoka Hazina ya Mapato ya Kaunti kwa huduma za mwaka unaoisha tarehe 30 Juni, 2027. Fedha hizo zinachukuliwa kuwa zimetengwa kuanzia tarehe 1 Julai, 2026, kwa madhumuni yaliyoorodheshwa kwenye Jedwali. Maandishi yanasema Bunge la Kaunti liliidhinisha kiasi hicho tarehe 28 Julai, 2026, kwa mujibu wa Ibara ya 224 ya Katiba. Pia unaruhusu fedha nyingine, zinazoitwa Appropriations in Aid, zitumike kwa madhumuni yale yale ya Jedwali chini ya Ibara ya 206(1)(b) ya Katiba. Kifungu cha 1 kinatoa tu jina fupi: Nairobi City County Appropriation Act, 2026.",
+      "sheng": "Nairobi City County Appropriation Act, 2026 ina-allow County Treasury ku-issue KSh. 49,271,943,291 kutoka County Revenue Fund kwa services za year ending 30th June, 2027. Hio pesa ina-count kama appropriated kuanzia 1st July, 2026, kwa purposes ambazo ziko kwa Schedule. Text pia ina-say County Assembly ili-approve hio amount on 28th July, 2026, under Article 224 ya Constitution. Section 3 ina-allow appropriations in aid ziwe applied kwa hizo purposes za Schedule, under Article 206(1)(b) ya Constitution."
+    },
+    "review": {
+      "status": "draft",
+      "at": null,
+      "sha256": "2652fde7505f43d361ed7e977ac4694c21c79c8a5fdc8dd9890ac02593dca018"
+    },
+    "sheng_swaps": []
+  },
   "groups": [],
   "clauses": [
     {
@@ -31,13 +43,20 @@
       "pages": [
         2
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section gives the law its short title. The law can be referred to as the Nairobi City County Appropriation Act, 2026. It is only a name for citing the law and does not change anything else.",
+        "sw": "Kifungu cha 1 kinatoa jina fupi la sheria hii. Sheria inaweza kutajwa kama Nairobi City County Appropriation Act, 2026. Ni jina la kutaja sheria tu, na kifungu hiki hakibadilishi jambo lingine lolote.",
+        "sheng": "Section 1 ina-give Act short title: Nairobi City County Appropriation Act, 2026. Ni name tu ya ku-cite Act, na hio section haiko na other effect."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "a98334d5ac8ff9ca04df65f440539bca042f647ad45e557ad00d7cc5253bbc50"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Short title clause only; the explanation just states the name and that it has no other effect."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -52,13 +71,20 @@
       "pages": [
         2
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "Section 2 allows the County Treasury to take KSh 49,271,943,291 out of the County Revenue Fund and spend it on county services for the year ending 30 June 2027. The money is treated as set aside (appropriated) from 1 July 2026 for the purposes listed in the Schedule. Subsection (2) says the amount was authorised by the Nairobi City County Assembly on 28 July 2026, under Article 224 of the Constitution.",
+        "sw": "Kifungu cha 2 kinaruhusu Hazina ya Kaunti kutoa KSh 49,271,943,291 kutoka Mfuko wa Mapato ya Kaunti na kuzitumia kwa huduma za mwaka unaoisha tarehe 30 Juni 2027. Pesa hizo zinachukuliwa kuwa zimetengwa kwa matumizi kuanzia tarehe 1 Julai 2026 kwa madhumuni yaliyotajwa kwenye Jedwali. Kifungu kidogo cha (2) kinasema kiasi hicho kiliidhinishwa na Bunge la Kaunti ya Jiji la Nairobi tarehe 28 Julai 2026, kwa mujibu wa Kifungu cha 224 cha Katiba.",
+        "sheng": "Section 2 ina-allow County Treasury ku-take amount ya KSh 49,271,943,291 kutoka County Revenue Fund na ku-spend kwa services za year ending 30 June 2027. Amount hio ina-count kama appropriated (set aside for spending) from 1 July 2026, kwa purposes ambazo ziko kwa Schedule. Subsection (2) ina-say amount hio ilipewa go-ahead na Nairobi City County Assembly on 28 July 2026, under Article 224 ya Constitution."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "22e7500e0fc345e23a9ffa7008ad84922697a175652383a0c8b0109b275ed076"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only the issue and appropriation of the sum, the dates and the Assembly authorisation, with no opinion on the spending."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
@@ -73,13 +99,20 @@
       "pages": [
         2
       ],
-      "explanation": null,
+      "explanation": {
+        "en": "This section lets the county spend extra money on top of the amount granted by section 4. The extra money is called Appropriations in Aid, and it comes from money directed to be used this way under Article 206(1)(b) of the Constitution. It can only be spent on the services and purposes listed in the Schedule, up to the sums given there.",
+        "sw": "Kifungu hiki kinaruhusu fedha za ziada zitumike, mbali na kiasi kilichotolewa na kifungu cha 4. Fedha hizo ni zile zilizoelekezwa kutumika kama Appropriations in Aid chini ya Ibara ya 206(1)(b) ya Katiba. Zinatumika kwa huduma na malengo yaliyotajwa katika Jedwali, kwa kiasi kilichobainishwa humo.",
+        "sheng": "Section 3 ina-allow county ku-spend extra money, on top ya sum ambayo section 4 ina-grant. Hio money ni appropriations in aid under Article 206(1)(b) ya Constitution. Inaenda kwa services na purposes ambazo ziko kwa Schedule, kwa amounts zilizoandikwa huko."
+      },
       "review": {
         "status": "draft",
         "at": null,
-        "sha256": null
+        "sha256": "8d0a51e4d33b9f7a34ca1f2a50c37ba56444fba7ce3929a74c5903aa570d63c9"
       },
-      "neutral_check": null,
+      "neutral_check": {
+        "ok": true,
+        "note": "Describes only what the section allows: extra spending from Appropriations in Aid for Schedule purposes, with no opinion."
+      },
       "groups": [],
       "suggested_articles": [],
       "sheng_swaps": []
