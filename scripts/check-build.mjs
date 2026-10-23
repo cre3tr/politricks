@@ -89,7 +89,7 @@ function check(label, condition, detail = "") {
 // Node 24 loads the .ts file directly (its imports are type-only).
 // ---------------------------------------------------------------------------
 const reviewHash = await import(new URL("../src/lib/reviewHash.ts", import.meta.url).href);
-const { clauseSha256, summarySha256, groupSha256, civicSha256, displayStatus } = reviewHash;
+const { clauseSha256, summarySha256, groupSha256, civicSha256, changeSha256, displayStatus } = reviewHash;
 const { vectors } = JSON.parse(
   readFileSync(fileURLToPath(new URL("../pipeline/tests/fixtures/review_hash_vectors.json", import.meta.url)), "utf-8")
 );
@@ -100,6 +100,7 @@ const twin = {
   "civic-participation": (item) => civicSha256("participation", item),
   "civic-stage_next": (item) => civicSha256("stage_next", item),
   "civic-challenge": (item) => civicSha256("challenge", item),
+  change: changeSha256,
 };
 const got = await Promise.all(vectors.map((vector) => twin[vector.kind](vector.item)));
 const mismatched = vectors.filter((vector, i) => got[i] !== vector.sha256);
@@ -236,6 +237,90 @@ if (bill.summary) {
   }
 } else {
   check("the bill has no summary, so the page has no summary block", summaryBlock === null);
+}
+
+// ---------------------------------------------------------------------------
+// The What changed tab (slice 8, src/components/ChangeRow.astro):
+//   <article class="change-row" data-change-id="c2" data-change-kind="changed" data-ocr="true"> ... </article>
+// One row per changes[] entry, in order. Each row is checked on its own: both
+// legal texts and the note's three languages are inside it, its badge is what
+// badge.ts gives for its DISPLAY status (changeSha256 twin), and a row whose
+// "after" was read by OCR carries the label AND a link to the OCR source's PDF
+// (a row without that label, or a label on a row that wasn't OCR, fails).
+// A bill with no changes shows the honest one-version note and no rows.
+// ---------------------------------------------------------------------------
+const OCR_LABEL = "Read by OCR from a scanned official copy: check the PDF";
+const rows = new Map();
+const rowIds = [];
+const rowTags = new Map();
+for (const match of html.matchAll(/<article class="change-row" data-change-id="([^"]+)"([^>]*)>([\s\S]*?)<\/article>/g)) {
+  rowIds.push(match[1]);
+  rowTags.set(match[1], match[2]);
+  rows.set(match[1], match[3]);
+}
+const ocrSource = bill.sources.find((source) => source.ocr) ?? null;
+check(
+  `What changed: one row per change, in order (${bill.changes.length} expected)`,
+  JSON.stringify(rowIds) === JSON.stringify(bill.changes.map((change) => change.clause_id)),
+  `page has ${rowIds.length} row(s): ${rowIds.join(", ")}`
+);
+if (bill.kind === "motion") {
+  // A county motion has no tabs (MotionCard): no What changed panel, no rows.
+  check("What changed: a motion has no tabs, so no change rows and no one-version note", bill.changes.length === 0 && rowIds.length === 0 && !pageText.includes("Only one version so far."));
+} else if (bill.changes.length === 0) {
+  check("What changed: no changes, so the page says there is only one version so far", pageText.includes("Only one version so far."));
+}
+for (const change of bill.changes) {
+  const row = rows.get(change.clause_id);
+  if (row === undefined) {
+    check(`change ${change.clause_id} has its own row`, false, "no <article class=\"change-row\"> with that data-change-id");
+    continue;
+  }
+  const rowText = htmlToText(row);
+  const kind = change.before === null ? "added" : change.after === null ? "dropped" : "changed";
+  const wanted = [change.before, change.after].filter((text) => text !== null).map(htmlToText).concat(triTexts(change.note));
+  check(
+    `change ${change.clause_id} (${kind}): ${kind === "added" ? "the later text" : kind === "dropped" ? "the earlier text" : "both texts"} and the note (EN/SW/Sheng) are inside its own row`,
+    wanted.every((text) => rowText.includes(text)),
+    `missing: ${wanted.filter((text) => !rowText.includes(text)).map((text) => JSON.stringify(text.slice(0, 40))).join(", ")}`
+  );
+  // The row's own marker must agree with the data, and a missing side must be
+  // SAID ("Not in the first version" / "Not in the later version"), not left blank.
+  const missingSide = kind === "added" ? "Not in the first version." : kind === "dropped" ? "Not in the later version." : null;
+  check(
+    `change ${change.clause_id}: the row is marked "${kind}" (data-change-kind) and ${missingSide ? `says "${missingSide}"` : "has both sides"}`,
+    rowTags.get(change.clause_id).includes(`data-change-kind="${kind}"`) &&
+      (missingSide ? rowText.includes(missingSide) : !rowText.includes("Not in the")),
+    rowTags.get(change.clause_id)
+  );
+  checkBadge(`change ${change.clause_id}`, displayStatus(change.review, await changeSha256(change)), true, row);
+  if (badgesIn(row).some((badge) => badge.label === expectedBadge.reviewed.label)) {
+    const fingerprint = await changeSha256(change);
+    check(
+      `change ${change.clause_id} shows "Reviewed" only because its fingerprint matches`,
+      change.review.status === "reviewed" && change.review.sha256 === fingerprint,
+      `stored ${change.review.sha256}, recomputed ${fingerprint}`
+    );
+  }
+  const link = [...row.matchAll(/<a href="([^"]*)"[^>]*data-ocr-link[^>]*>([\s\S]*?)<\/a>/g)];
+  if (change.ocr) {
+    check(
+      `change ${change.clause_id}: the OCR'd "after" carries the label "${OCR_LABEL}", linked to the OCR source's PDF`,
+      ocrSource !== null && link.length === 1 && htmlToText(link[0][2]).includes(OCR_LABEL) && link[0][1].startsWith(ocrSource.url.replace(/&/g, "&amp;")),
+      `links: ${link.map((l) => l[1]).join(", ")}`
+    );
+  } else {
+    check(`change ${change.clause_id}: not read by OCR, so it carries no OCR label`, link.length === 0 && !rowText.includes(OCR_LABEL));
+  }
+}
+// The OCR source is only the "after" of a comparison: "Text shown" must list the
+// sources the CLAUSES came from and not it.
+const textShown = html.match(/<p class="text-shown"[^>]*>([\s\S]*?)<\/p>/);
+if (ocrSource) {
+  check(
+    "the OCR source is not listed under \"Text shown\" (the clauses were not cut from it)",
+    textShown !== null && !htmlToText(textShown[1]).includes(ocrSource.label)
+  );
 }
 
 for (const source of bill.sources) {

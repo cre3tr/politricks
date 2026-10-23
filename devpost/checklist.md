@@ -956,3 +956,18 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
   - Closed panel, SW: "Ushiriki haupo wazi kwa sasa". Match failed, Sheng: "Hatukuweza ku-personalise saa hii".
 - **Glossary:** "inconsistent with the Constitution" is now SW `haiendani na Katiba` (or `haipelekani`) and Sheng `hai-skizani na constitution` (or `hai-mesh`), in `translator.md`. The Finance Act's challenge block was re-translated under it (`civic --force`, one direct call) and now uses both terms. The civic self-test checks the new wording.
 - **`explainer.md`:** a county motion's Sheng now opens `Hii motion ina-...`. The existing motion draft still says "Section 1 ina-urge", for the learner to fix at review.
+
+### Slice 8 built, waiting on Tesseract, 2026-10-23
+
+- **Merged from the slice 8 builder (`8840fba`):**
+  - `politricks ocr` (scan at 300 dpi, Tesseract, margin split, OCR text committed with the PDF's SHA-256).
+  - `politricks compare` (order-preserving alignment; BORDERLINE noise threshold; one direct call for trilingual notes as drafts).
+  - Typed `changes[]` (Pydantic and Zod), and a `changeSha256` twin with 3 new shared vectors (11 in all, unchanged on regenerate after the merge).
+  - `ChangeRow` and the What changed tab, where every OCR "after" is labelled "Read by OCR from a scanned official copy: check the PDF" and linked to the PDF page.
+- **Tests:**
+  - ocr 42 and compare 66 self-test checks.
+  - Planted bugs, each alone: `NOISE_CHARS` 2 → 0 gave 14 FAILs; a changed OCR label failed check-build.
+  - Every other self-test passes, and check-build passes on all 5 bills.
+  - A live `ocr` exits 1 with the install message and writes nothing.
+- **Not run, and not ticked:** Tesseract isn't installed, so no real OCR text exists yet, and the gutter window and page handling are guesses from pages 1-4. Once Tesseract is in, the run order is: `ocr public-participation-bill-2025` → read the audit file → `compare --dry-run` → `compare` (one direct call) → lint, build, check-build → commit.
+- **For the learner:** the What changed row labels ("Imechange", "Ime-drop", "Kifungu kipya", the OCR label in SW/Sheng) need the Sheng ear. Change notes can't be accepted in `review` yet.

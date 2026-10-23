@@ -31,7 +31,7 @@ from pathlib import Path
 from typing import Iterator, Optional
 
 from .hashing import normalise, sha256_file
-from .models import Bill, NeutralCheck, Review, ShengSwap, bill_path, changed_since_review, is_reviewed, load_bill
+from .models import Bill, Change, NeutralCheck, Review, ShengSwap, bill_path, changed_since_review, is_reviewed, load_bill
 from .selftest import FIXTURE_BILL_ID, FIXTURE_DRAFT_IDS, Checker, fixture_bill, mark_reviewed
 
 LANGS = ("en", "sw", "sheng")
@@ -174,6 +174,15 @@ def _find_tris(node: object, path: str) -> Iterator[tuple[str, dict]]:
             yield from _find_tris(value, f"{path}[{index}]")
 
 
+def _plain(value: object) -> object:
+    """Typed models (a Change) as plain dicts, so the shape walk sees one thing."""
+    if isinstance(value, list):
+        return [_plain(item) for item in value]
+    if hasattr(value, "model_dump"):
+        return value.model_dump(mode="json")  # type: ignore[union-attr]
+    return value
+
+
 def _tri_texts(item: str, tri: object) -> Iterator[tuple[str, str, str]]:
     values = tri if isinstance(tri, dict) else tri.model_dump()  # type: ignore[union-attr]
     for lang in LANGS:
@@ -190,7 +199,10 @@ def iter_texts(bill: Bill) -> Iterator[tuple[str, str, str]]:
         if clause.explanation is not None:
             yield from _tri_texts(clause.id, clause.explanation)
     for name in _LOOSE_FIELDS:
-        for where, tri in _find_tris(getattr(bill, name), name):
+        # `changes` is typed since slice 8 (models.Change). Only its `note` is a
+        # Tri, so `before` and `after` (legal text, which may say "vote") are
+        # strings to this walk and are never scanned.
+        for where, tri in _find_tris(_plain(getattr(bill, name)), name):
             yield from _tri_texts(where, tri)
 
 
@@ -224,6 +236,10 @@ def lint_bill(bill: Bill, phrases: list[str]) -> list[Finding]:
     flagged_items = [(SUMMARY_ID, bill.summary)] if bill.summary is not None else []
     flagged_items += [(group_item_id(entry.group), entry) for entry in bill.groups]
     flagged_items += [(clause.id, clause) for clause in bill.clauses if clause.explanation is not None]
+    # Change notes (slice 8): named by their place in changes[], like lint's
+    # own text paths ("changes[0].note"). A loose dict (lint's own self-test
+    # feeds some) has no review to check.
+    flagged_items += [(f"changes[{i}]", change) for i, change in enumerate(bill.changes) if isinstance(change, Change)]
     for item, holder in flagged_items:
         if holder.sheng_swaps and not is_reviewed(holder):
             swaps = ", ".join(f'"{swap.word}" (English: "{swap.english}")' for swap in holder.sheng_swaps)
@@ -528,6 +544,41 @@ def self_test(repo_root: Path) -> bool:
         }
     ]
     check("5. changes[].before/after (legal text) are never scanned", lint_bill(bill, phrases) == [])
+
+    # --- 5a. the typed Change (slice 8): notes are linted, before/after never
+    from .models import Tri, current_sha256
+
+    typed = Change(
+        kind="draft", clause_id="c3", heading="Rules.", before_number="3", after_number="3",
+        before="3. A person who may vote and who you should ask is illegal.",
+        after="3. unconstitutional, kinyume cha katiba, make sure you must.",
+        note=Tri(en="One word changed.", sw="Neno moja limebadilishwa.", sheng="Neno moja imebadilika."),
+        source_label="a compared with b", ocr=True, after_pages=[2],
+    )
+    typed.review = Review(status="draft", sha256=current_sha256(typed))
+    bill = base.model_copy(deep=True)
+    bill.changes = [typed]
+    texts = [(item, lang) for item, lang, _text in iter_texts(bill) if item.startswith("changes[")]
+    check("5a. positive control: lint walks the note of a typed Change (3 languages) and nothing else",
+          texts == [("changes[0].note", "en"), ("changes[0].note", "sw"), ("changes[0].note", "sheng")], str(texts))
+    check("5a. a typed Change whose before/after are full of banned words and whose note is clean: no findings",
+          lint_bill(bill, phrases) == [], str(lint_bill(bill, phrases)))
+    bill.changes = [typed.model_copy(update={"note": Tri(en="You should read it.", sw="x", sheng="y")})]
+    findings = lint_bill(bill, phrases)
+    check("5a. the same Change with a banned phrase in its NOTE is caught and named changes[0].note",
+          [(f.item, f.lang, f.detail) for f in findings] == [("changes[0].note", "en", "you should*")], str(findings))
+    reviewed = typed.model_copy(deep=True)
+    reviewed.review = Review(status="reviewed", at="2026-10-23", sha256=current_sha256(reviewed))
+    bill.changes = [reviewed]
+    check("5a. a reviewed Change that still matches its fingerprint is clean", lint_bill(bill, phrases) == [])
+    reviewed.after = "3. Quite different words."
+    findings = lint_bill(bill, phrases)
+    check("5a. a reviewed Change whose texts moved since is flagged 'changed since review'",
+          [(f.item, f.kind) for f in findings] == [("changes[0]", "changed")], str(findings))
+    swapped = typed.model_copy(update={"sheng_swaps": [ShengSwap(word="mahakama", english="court")]})
+    bill.changes = [swapped]
+    check("5a. a Change note with a Sheng swap is flagged until reviewed",
+          [(f.item, f.kind) for f in lint_bill(bill, phrases)] == [("changes[0]", "sheng")], str(lint_bill(bill, phrases)))
 
     # --- 5b. the shared vectors: the live Explain API (src/lib/banned.ts) is
     # checked against the same file by scripts/check-api.mjs, so the two

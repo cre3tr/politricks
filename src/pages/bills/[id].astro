@@ -7,6 +7,7 @@
 import { z } from "zod";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ClauseCard from "../../components/ClauseCard.astro";
+import ChangeRow from "../../components/ChangeRow.astro";
 import GroupsPanel from "../../components/GroupsPanel.astro";
 import BillTabs from "../../components/BillTabs.astro";
 import ParticipationPanel from "../../components/ParticipationPanel.astro";
@@ -72,6 +73,15 @@ const pageArticles = suggested.map((number) => {
   return article;
 });
 
+// The text the clauses above were cut from. A source read by OCR (slice 8) is
+// not one of them: it is only the "after" of the What changed tab, and listing
+// it under "Text shown" would claim the clauses came from it.
+const clauseSources = bill.sources.filter((source) => !source.ocr);
+const ocrSource = bill.sources.find((source) => source.ocr) ?? null;
+// What the What changed tab compares, said once above the rows.
+const changesSourceLabel = bill.changes[0]?.source_label ?? "";
+const changesHaveOcr = bill.changes.some((change) => change.ocr);
+
 const summaryBadge = bill.summary
   ? badgeFor(displayStatus(bill.summary.review, await summarySha256(bill.summary)))
   : null;
@@ -90,7 +100,7 @@ const summaryBadge = bill.summary
         the label carries the caveat that this is the first-published text, not
         the version now before the Senate. */}
     <p class="text-shown">
-      Text shown: {bill.sources.map((source) => source.label).join("; ")}
+      Text shown: {clauseSources.map((source) => source.label).join("; ")}
     </p>
 
     {
@@ -150,15 +160,38 @@ const summaryBadge = bill.summary
     </div>
     </section>
 
-    {/* Slice 8 fills this from changes[]; until then, the honest empty note. */}
+    {/* From changes[] (slice 8, `politricks compare`); a bill with none keeps
+        the honest one-version note. */}
     <section id="what-changed" class="tab-panel" aria-labelledby="tab-what-changed">
       <h2 class="section-heading">What changed</h2>
       {
-        bill.changes.length === 0 && (
+        bill.changes.length === 0 ? (
           <>
             <p data-l="en" lang="en">Only one version so far. We'll show the changes when the next draft is published.</p>
             <p data-l="sw" lang="sw">Kuna toleo moja tu kwa sasa. Tutaonyesha mabadiliko toleo lijalo likichapishwa.</p>
             <p data-l="sheng" lang="sw-x-sheng">Kuna version moja tu saa hii. Tuta-show changes next draft ikitoka.</p>
+          </>
+        ) : (
+          <>
+            <p class="changes-intro" data-changes-intro>
+              <span data-l="en" lang="en">Versions: {changesSourceLabel}.</span>
+              <span data-l="sw" lang="sw">Matoleo: {changesSourceLabel}.</span>
+              <span data-l="sheng" lang="sw-x-sheng">Versions: {changesSourceLabel}.</span>
+            </p>
+            <p class="changes-intro">
+              <span data-l="en" lang="en">
+                Only the clauses that differ are listed.{changesHaveOcr ? " A clause that is not listed has no difference we could tell apart from a scanning error." : " A clause that is not listed reads the same in both versions."}
+              </span>
+              <span data-l="sw" lang="sw">
+                Ni vifungu vinavyotofautiana tu vilivyoorodheshwa.{changesHaveOcr ? " Kifungu ambacho hakijaorodheshwa hakina tofauti tunayoweza kutofautisha na kosa la kuskani." : " Kifungu ambacho hakijaorodheshwa kinasomeka sawa katika matoleo yote mawili."}
+              </span>
+              <span data-l="sheng" lang="sw-x-sheng">
+                Ni clauses zinazo-differ tu zimeorodheshwa.{changesHaveOcr ? " Clause ambayo haijaorodheshwa haina difference tunaweza kutofautisha na scanning error." : " Clause ambayo haijaorodheshwa inasoma sawa kwa versions zote mbili."}
+              </span>
+            </p>
+            <div class="change-list" data-change-list>
+              {bill.changes.map((change) => <ChangeRow change={change} ocrSource={ocrSource} />)}
+            </div>
           </>
         )
       }
@@ -349,5 +382,10 @@ const summaryBadge = bill.summary
     border-style: dashed;
     border-color: var(--muted);
     color: var(--muted);
+  }
+  .changes-intro {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin: 0.25rem 0 0.75rem;
   }
 </style>

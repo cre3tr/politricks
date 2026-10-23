@@ -68,6 +68,10 @@ export const SourceSchema = z
     file: z.string(),
     // True when the official file's text came from a scan (see models.py).
     scanned: z.boolean(),
+    // True when the file is a scan with NO text layer, read by OCR (slice 8):
+    // it is the "after" of a comparison, never the source of the clauses.
+    // Absent in the JSON (models.py leaves it out) unless true.
+    ocr: z.boolean().default(false),
   })
   .strict();
 export type Source = z.infer<typeof SourceSchema>;
@@ -118,7 +122,6 @@ export type GroupEntry = z.infer<typeof GroupEntrySchema>;
 // `politricks civic` (pipeline/politricks/civic.py) from the hand-checked
 // YAML in pipeline/civic/. Facts are copied from the YAML; only the Tri
 // texts are Claude's translations, reviewed like any other draft.
-// `changes[]` (slice 8) is still typed loosely.
 const ChannelSchema = z
   .object({ type: z.enum(["email", "portal", "venue"]), value: z.string() })
   .strict();
@@ -154,6 +157,37 @@ export const ChallengeSchema = z
   .strict();
 export type Challenge = z.infer<typeof ChallengeSchema>;
 
+// One difference between two versions of a bill (devpost/spec.md > Data Model,
+// `changes[]`), written by `politricks compare` (pipeline/politricks/compare.py,
+// models.py twin: Change). `before` is the earlier version's legal text word for
+// word; `after` the later one's, and when `ocr` is true it was READ BY OCR from a
+// scan, so ChangeRow labels it on every row and links the PDF. A clause only the
+// later version has is `before: null` ("added"); one only the earlier has is
+// `after: null` ("dropped"). Only `note` is Claude's; it is a draft until reviewed.
+export const ChangeSchema = z
+  .object({
+    kind: z.enum(["draft", "current_law", "act"]),
+    // The earlier version's clause id ("c7"), or "added:<number>".
+    clause_id: z.string(),
+    heading: z.string(),
+    before_number: z.string().nullable(),
+    after_number: z.string().nullable(),
+    before: z.string().nullable(),
+    after: z.string().nullable(),
+    note: TriSchema,
+    review: ReviewSchema,
+    source_label: z.string(),
+    ocr: z.boolean(),
+    after_pages: z.array(z.number()),
+    sheng_swaps: ShengSwaps,
+  })
+  .strict()
+  .refine((change) => change.before !== null || change.after !== null, {
+    message: "a change needs a before or an after text",
+  })
+  .refine((change) => !change.ocr || change.after !== null, { message: "ocr: true needs an after text" });
+export type Change = z.infer<typeof ChangeSchema>;
+
 export const BillSchema = z
   .object({
     id: z.string(),
@@ -169,7 +203,7 @@ export const BillSchema = z
     groups: z.array(GroupEntrySchema),
     clauses: z.array(ClauseSchema),
     stage_next: StageNextSchema.nullable(),
-    changes: z.array(z.record(z.string(), z.unknown())),
+    changes: z.array(ChangeSchema),
     participation: ParticipationSchema.nullable(),
     challenge: ChallengeSchema.nullable(),
   })
