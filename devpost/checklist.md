@@ -868,3 +868,11 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
   - The stale note appears for a `checked_at` more than 7 days back. That check re-ran the same expression in the console, not the page's own script.
 - **Civic badges** show "AI draft" for drafts. Anything else shows "Changed since review" until a TypeScript twin of `civic_sha256` exists, so the site never claims a review it can't check.
 - **Why not ticked:** the slice's build step "run `review` on the civic translations" can't happen until `politricks review` walks the civic blocks (deferred until after the other slices, 2026-10-23). The learner also still has to check the civic facts.
+
+### Slice 7 started: Vercel project, 2026-10-23
+
+- **Vercel project `politricks`** created through the Vercel connector (`prj_tDmuRJRgV4OV9gSqvlk8avUW3JVk`, Hobby plan, team `team_HBFNWovYoe2NjNKvxdS5zxLP`). It is linked to GitHub `cre3tr/politricks`, and its production branch is `main`. Pushes to `build/poc` make preview deployments.
+- **`vercel.json`** pins `buildCommand: "npm run build"` and `installCommand: "npm ci"`. The README covers run steps and "verify a fingerprint yourself".
+- **Left for the learner:**
+  - Add `ANTHROPIC_API_KEY` in Vercel → Project → Settings → Environment Variables. A separate key with a low spend limit is suggested, because Match and Explain are public endpoints. Until it is set, both answer 502 and the page falls back quietly.
+  - Merging `build/poc` into `main` makes the production deployment.
