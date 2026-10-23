@@ -1,0 +1,232 @@
+name: Weekly update
+
+# The scheduled update (devpost/spec.md > Scheduled Update). Once a week, or on
+# demand from the Actions tab, it runs the same pipeline a person would:
+#   intake --check -> verify -> generate (only where a clause has no
+#   explanation) -> lint
+# and opens ONE pull request labelled "needs review" if anything in the repo
+# changed. It never merges anything, and it never marks anything "reviewed":
+# that is Ian's gate, in `politricks review`. If nothing changed, no PR opens.
+#
+# TWO THINGS MUST BE SET BY HAND, ONCE (this file cannot set either):
+#   1. Repo secret ANTHROPIC_API_KEY (Settings > Secrets and variables >
+#      Actions). Without it the generate step SKIPS, says so in the PR body and
+#      the run log, and everything else still runs.
+#   2. Settings > Actions > General > Workflow permissions > tick "Allow GitHub
+#      Actions to create and approve pull requests". Without it the final step
+#      fails with "GitHub Actions is not permitted to create or approve pull
+#      requests".
+#
+# Also true of every scheduled workflow: GitHub only fires `schedule` (and only
+# shows "Run workflow") from the DEFAULT branch, so this does nothing until it
+# is on main. And a PR opened with the built-in GITHUB_TOKEN does not trigger
+# ci.yml; the PR will show no checks until a person pushes to it or closes and
+# reopens it.
+#
+# Kenya Law has answered 403 to every client since 2026-10-07, and all three
+# bills' sources live there. A source or listing that can't be read is
+# reported as UNREACHABLE (never as "unchanged" or "nothing new"), the run
+# still succeeds, and every UNREACHABLE line is copied to the top of the PR
+# body and the run summary. A run where nothing could be checked looks
+# different from a run where nothing changed.
+
+on:
+  schedule:
+    # Mondays 03:00 UTC (06:00 in Nairobi), well clear of working hours.
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+# contents: push the branch. pull-requests: open the PR and add the label.
+permissions:
+  contents: write
+  pull-requests: write
+
+# Two overlapping runs would both write auto/weekly-update.
+concurrency:
+  group: weekly-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    # generate waits on a Batches job (2-7 minutes per bill, measured).
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node is not set up here, unlike ci.yml: nothing below runs it. The
+      # Astro build and check-build belong to ci.yml.
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: pipeline/uv.lock
+
+      # --locked fails if uv.lock no longer matches pyproject.toml. Python comes
+      # from pipeline/.python-version (3.14).
+      - name: Install pipeline
+        run: uv sync --project pipeline --locked
+
+      # Every step below writes its output and exit code into this folder,
+      # which is OUTSIDE the checkout, so create-pull-request can never commit
+      # a report file. Later steps read it to build the PR body.
+      - name: Prepare report folder
+        run: |
+          mkdir -p "$RUNNER_TEMP/report"
+          echo "REPORT=$RUNNER_TEMP/report" >> "$GITHUB_ENV"
+
+      # Read-only: it only PROPOSES new sources.yaml entries, as a diff printed
+      # to the log. Nothing is written, so a proposal reaches Ian only through
+      # the PR body. Exit 1 = a listing could not be parsed, or none could be
+      # read at all; the final step turns that into a red run.
+      - name: Intake check (proposes new bills, writes nothing)
+        run: |
+          set +e
+          uv run --project pipeline politricks intake --check > "$REPORT/intake.txt" 2>&1
+          echo $? > "$REPORT/intake.code"
+          cat "$REPORT/intake.txt"
+
+      # Re-downloads every official source and compares fingerprints. A changed
+      # source sets source_changed in that bill's JSON (that edit IS the diff
+      # the PR carries). UNREACHABLE sources change nothing. Exit 1 = a source
+      # CHANGED (content for the PR) or a real error (red run, see last step).
+      - name: Verify source fingerprints
+        run: |
+          set +e
+          uv run --project pipeline politricks verify > "$REPORT/verify.txt" 2>&1
+          echo $? > "$REPORT/verify.code"
+          cat "$REPORT/verify.txt"
+
+      # Costs real credit, so it runs only for a bill that has a clause with no
+      # explanation, and only when the secret is set. The count comes from jq
+      # and is printed either way, so a skipped run still says what is waiting.
+      # Caution: `generate` asks for every clause that is not reviewed or
+      # hand-edited, so on a bill that qualifies it redrafts the existing AI
+      # drafts too. Those redrafts show up in the PR diff for Ian to read.
+      - name: Generate explanations where a clause has none
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          set +e
+          out="$REPORT/generate.txt"
+          worst=0
+          : > "$out"
+          shopt -s nullglob
+          bills=(src/data/bills/*.json)
+          if [ ${#bills[@]} -eq 0 ]; then
+            echo "FAILED: no bills in src/data/bills" | tee -a "$out"
+            worst=2
+          fi
+          for file in "${bills[@]}"; do
+            id=$(basename "$file" .json)
+            missing=$(jq '[.clauses[] | select(.explanation == null)] | length' "$file")
+            echo "$id: $missing clause(s) without an explanation" | tee -a "$out"
+            # If jq failed, the count is empty: that is a broken count, never
+            # "zero" and never a reason to spend credit. Report it and move on.
+            case "$missing" in
+              ''|*[!0-9]*)
+                echo "$id: FAILED to count clauses without an explanation, generate not run" | tee -a "$out"
+                worst=2
+                continue
+                ;;
+            esac
+            if [ "$missing" -eq 0 ]; then
+              continue
+            fi
+            if [ -z "$ANTHROPIC_API_KEY" ]; then
+              echo "$id: SKIPPED, the ANTHROPIC_API_KEY repo secret is not set" | tee -a "$out"
+              continue
+            fi
+            uv run --project pipeline politricks generate "$id" 2>&1 | tee -a "$out"
+            code=${PIPESTATUS[0]}
+            echo "$id: generate exit code $code" | tee -a "$out"
+            if [ "$code" -gt "$worst" ]; then worst=$code; fi
+          done
+          echo $worst > "$REPORT/generate.code"
+
+      # Findings are for the human reviewer, so a non-zero exit does not fail
+      # the job. (Today lint is red whenever reviewed text has changed since
+      # review; see CLAUDE.md.) Exit 2 = no bills to scan, a real problem.
+      - name: Lint every bill
+        run: |
+          set +e
+          uv run --project pipeline politricks lint > "$REPORT/lint.txt" 2>&1
+          echo $? > "$REPORT/lint.code"
+          cat "$REPORT/lint.txt"
+
+      # The PR body, built from the four outputs. The UNREACHABLE lines go
+      # FIRST and are grepped out separately: intake's own output is long and
+      # is cut at 12,000 characters, and its UNREACHABLE lines come last.
+      # The same text goes to the run summary, so a week with no PR still
+      # leaves a readable record of what was and wasn't checked.
+      - name: Build the PR body
+        run: |
+          section() {
+            echo "## $1"
+            echo
+            echo '```text'
+            head -c "$3" "$2"
+            if [ "$(wc -c < "$2")" -gt "$3" ]; then
+              echo
+              echo "... cut here; the full text is in the run log"
+            fi
+            echo '```'
+            echo
+          }
+          {
+            echo "Automated weekly update. Nothing here is merged or marked reviewed automatically."
+            echo
+            echo "Exit codes: intake --check $(cat "$REPORT/intake.code"), verify $(cat "$REPORT/verify.code"), generate $(cat "$REPORT/generate.code"), lint $(cat "$REPORT/lint.code")"
+            echo
+            echo "## Not checked (UNREACHABLE)"
+            echo
+            echo '```text'
+            grep -h "UNREACHABLE" "$REPORT/intake.txt" "$REPORT/verify.txt" || echo "none: every listing and source answered"
+            echo '```'
+            echo
+            # On 2026-10-23 a live run proposed 147 entries (every PDF on three
+            # listings), so the diff alone would fill the cut. These lines are
+            # the per-listing results, which stay readable whatever the diff holds.
+            grep -E "^(intake --check|read |UNREACHABLE|NOT CHECKED|PARSE FAILED|ERROR |PROPOSED|FAILED|[0-9]+ of [0-9]+ listing)" "$REPORT/intake.txt" > "$REPORT/intake-summary.txt" || echo "(no summary lines found in the intake output)" > "$REPORT/intake-summary.txt"
+            section "Intake: results per listing" "$REPORT/intake-summary.txt" 6000
+            section "Intake: proposed new bills (sources.yaml is NOT changed; apply by hand if wanted)" "$REPORT/intake.txt" 12000
+            section "Verify: source fingerprints" "$REPORT/verify.txt" 8000
+            section "Generate" "$REPORT/generate.txt" 8000
+            section "Lint findings (for the reviewer; they did not fail the job)" "$REPORT/lint.txt" 12000
+          } > "$REPORT/pr-body.md"
+          cat "$REPORT/pr-body.md" >> "$GITHUB_STEP_SUMMARY"
+          cat "$REPORT/pr-body.md"
+
+      # No diff, no PR. add-paths limits the commit to the files this pipeline
+      # is meant to change (bill JSON: generate's drafts, verify's
+      # source_changed flag), so a stray file can't ride along. The "needs
+      # review" label does not exist in the repo yet; GitHub's add-labels API
+      # normally creates a missing label, but that is unconfirmed here, so the
+      # safe move is `gh label create "needs review"` before the first run.
+      # The action is pinned to a full commit SHA, which a retagged release
+      # can't move.
+      - name: Open the pull request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          branch: auto/weekly-update
+          add-paths: src/data/bills/*.json
+          commit-message: "Weekly update: bill drafts and source checks"
+          title: "Weekly update: needs review"
+          body-path: ${{ env.REPORT }}/pr-body.md
+          labels: needs review
+          delete-branch: true
+
+      # Runs after the PR step, so a tooling problem never costs Ian the PR.
+      # What turns the run red: intake --check or generate exiting non-zero,
+      # lint exiting 2, or verify exiting non-zero with an ERROR or FAILED line
+      # (a CHANGED source is content for the PR, not a failure).
+      - name: Fail the run if the pipeline itself broke
+        if: ${{ !cancelled() }}
+        run: |
+          bad=0
+          if [ "$(cat "$REPORT/intake.code")" != 0 ]; then echo "intake --check exited $(cat "$REPORT/intake.code")"; bad=1; fi
+          if [ "$(cat "$REPORT/generate.code")" != 0 ]; then echo "generate exited $(cat "$REPORT/generate.code")"; bad=1; fi
+          if [ "$(cat "$REPORT/lint.code")" -ge 2 ]; then echo "lint exited $(cat "$REPORT/lint.code")"; bad=1; fi
+          if [ "$(cat "$REPORT/verify.code")" != 0 ] && grep -E "(: ERROR \(|^FAILED:)" "$REPORT/verify.txt"; then
+            echo "verify reported a real error (lines above)"; bad=1
+          fi
+          exit $bad
