@@ -131,11 +131,14 @@ const summaryBadge = bill.summary
     <section id="what-it-does" class="tab-panel" aria-labelledby="tab-what-it-does">
     <h2 class="section-heading">What it does</h2>
 
-    <GroupsPanel bill={bill} />
-
     {
       bill.summary && (
-        <section class="summary-card" aria-label="Summary">
+        <section class="summary-card" aria-labelledby="in-short-heading">
+          <h2 id="in-short-heading" class="summary-heading">
+            <span data-l="en" lang="en">In short</span>
+            <span data-l="sw" lang="sw">Kwa ufupi</span>
+            <span data-l="sheng" lang="sw-x-sheng">Kwa ufupi</span>
+          </h2>
           {summaryBadge && (
             <span class={`badge ${summaryBadge.className}`}>{summaryBadge.label}</span>
           )}
@@ -152,8 +155,11 @@ const summaryBadge = bill.summary
       )
     }
 
-    {/* The Match script below fills this note and floats matching cards to the
-        top of the list; with no words, or if the call fails, nothing moves. */}
+    <GroupsPanel bill={bill} />
+
+    {/* The Match script below fills this note, floats matching cards to the
+        top of the list, tags them "Matches you" and opens the top three; with
+        no words, or if the call fails, nothing moves. */}
     <p class="match-status" data-match-status hidden></p>
     <div class="clause-list" data-clause-list data-bill-id={bill.id}>
       {bill.clauses.map((clause) => <ClauseCard clause={clause} billId={bill.id} />)}
@@ -283,6 +289,17 @@ const summaryBadge = bill.summary
       card.querySelector<HTMLElement>(".match-note")?.removeAttribute("hidden");
       list.prepend(card);
     });
+    // The top 3 cards that really exist open by themselves (ids can name a
+    // clause this page doesn't have). Opening an unexplained card also starts
+    // its Explain call (ClauseCard's script listens for the toggle).
+    ids
+      .map((id) => list.querySelector<HTMLElement>(`[data-clause-id="${CSS.escape(id)}"]`))
+      .filter((card): card is HTMLElement => card !== null)
+      .slice(0, 3)
+      .forEach((card) => {
+        const details = card.querySelector<HTMLDetailsElement>(":scope > details");
+        if (details) details.open = true;
+      });
     say({
       en: `Sections matching "${words}" come first.`,
       sw: `Vifungu vinavyolingana na "${words}" vimewekwa kwanza.`,
@@ -360,6 +377,22 @@ const summaryBadge = bill.summary
     border-radius: 4px;
     padding: 1rem;
     margin-bottom: 1.5rem;
+  }
+  .summary-heading {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem;
+  }
+  .summary-heading :global([data-l]) {
+    display: none;
+  }
+  :global(html:not([data-lang])) .summary-heading :global([data-l="en"]),
+  :global(html[data-lang="en"]) .summary-heading :global([data-l="en"]),
+  :global(html[data-lang="sw"]) .summary-heading :global([data-l="sw"]),
+  :global(html[data-lang="sheng"]) .summary-heading :global([data-l="sheng"]) {
+    display: inline;
   }
   .badge {
     display: inline-block;
