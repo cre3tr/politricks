@@ -8,6 +8,8 @@ every bill page, so anyone can check the source themselves.
 Explanations are written by Claude and reviewed by a person before they are
 marked *Reviewed*. Anything not yet reviewed says so on the page.
 
+Live: https://poli-tricks.vercel.app
+
 ## Run the site
 
 Requirements: Node 22+ (24 recommended), Python 3.12+, [uv](https://docs.astral.sh/uv/).

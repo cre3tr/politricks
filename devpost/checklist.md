@@ -89,7 +89,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   Learner check: Open the public link on your actual phone, over mobile data, and walk the demo path: welcome → Finance Bill → a Sheng clause → Have your say on a live bill.
   Commit: `Deploy to Vercel with README`
 
-- [ ] **8. What changed: drafts and current law**
+- [x] ~~**8. What changed: drafts and current law**~~ **Cut by the learner at the 2026-10-25 cut-off** (see Revisions). The code is merged; it was never run on real data.
   Becomes usable: *What changed* shows, for each Finance Act 2026 section that amends another Act, the current law beside the amendment. For a bill amending an Act, it shows the current law beside the amendment. Bills with one version show the honest note plus a current-law comparison.
   Why now: This is PRD build step 3, and it depends on the fetch, extract and review machinery from slices 1–3.
   PRD ref: `prd.md > What Changed`
@@ -983,3 +983,8 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
   - lint shows 0 findings over 507 texts; every self-test passes; check-api 19; `npm run build` passes; check-build passes on all 5 bills.
   - The built pages show *Reviewed* on all 9 accepted cards, and *AI draft* on an untouched control card in each of the 3 bills (Finance c3, PP c6, Tertiary c10).
 - **Cut-off:** the Sun 25 Oct 20:00 EAT cut-off passed during these reviews. Slices 7, 8 and 12 are still open; whether to finish or cut each one is the learner's call, to be recorded here.
+
+### Slice 8 cut; slice 7 key and domain in place, 2026-10-25
+- **Slice 8 cut (learner's call, after the Sun 25 Oct 20:00 EAT cut-off):** Tesseract wasn't installed in time, so `ocr` and `compare` never ran on real data. The code (`ocr.py`, `compare.py`, typed `changes[]`, `ChangeRow`, the What changed tab, review of change notes) stays merged and tested by its self-tests in CI. Every bill's `changes[]` is empty, so the tab shows its empty-state note. Resuming later needs only the run order in the slice 8 entry above.
+- **Slice 7, learner's steps done:** `ANTHROPIC_API_KEY` added in Vercel (Production, sensitive), and the production domain set to `https://poli-tricks.vercel.app`.
+- **Production check before the redeploy (deployment `80f338a`):** home 200 with all three bill titles; `/bills/finance-act-2026` 200 with the Finance Act PDF's full SHA-256; `POST /api/match` with empty words 400 (control). A real Match returned **502 upstream**, because the key was added about 100 s after that deployment was built and Vercel gives env vars only to new deployments. Rechecked on the next deployment (below or in the next entry).
