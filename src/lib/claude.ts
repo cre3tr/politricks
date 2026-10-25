@@ -49,6 +49,14 @@ function getClient(): Anthropic {
   if (client) return client;
   const apiKey = getSecret("ANTHROPIC_API_KEY");
   if (!apiKey) throw new UpstreamError("ANTHROPIC_API_KEY is not set");
+  // TEMPORARY (2026-10-26, slice 7): production rejects the key with a 401 while
+  // the same key works locally. Log its shape once per instance, to the private
+  // function log only, so the stored value can be compared with the local one.
+  // Remove once Match answers 200 in production.
+  console.info(
+    `[claude] key shape: length=${apiKey.length} prefix=${apiKey.slice(0, 11)} last4=${apiKey.slice(-4)} ` +
+      `whitespace=${/\s/.test(apiKey)} quotes=${/["']/.test(apiKey)}`,
+  );
   // maxRetries 0: a retry would blow the timeouts above, and the page has
   // its own quiet fallback.
   client = new Anthropic({ apiKey, maxRetries: 0 });
