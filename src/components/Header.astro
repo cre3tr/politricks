@@ -4,6 +4,9 @@
 // wordmark, the flag palette tokens for the stripe, "no orange/yellow as a
 // dominant colour" is why the stripe is black/red/green with white
 // separators rather than a literal Kenyan-flag black/red/green/white block.
+//
+// Sticky (learner's call at the final review, 2026-10-26): the language
+// switch stays in reach while reading a long bill.
 import LanguageToggle from "./LanguageToggle.astro";
 ---
 <header class="site-header">
@@ -21,6 +24,15 @@ import LanguageToggle from "./LanguageToggle.astro";
 </header>
 
 <style>
+  /* Pinned to the top. The article sheet is a native <dialog>, which renders
+     in the top layer, so it still opens above this. */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--paper);
+    box-shadow: 0 1px 0 #e2ded8;
+  }
   .flag-stripe {
     display: flex;
     height: 6px;
@@ -46,10 +58,10 @@ import LanguageToggle from "./LanguageToggle.astro";
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 1rem;
   }
   .wordmark {
-    font-family: var(--font-display);
+    font-family: var(--font-wordmark);
     font-size: 1.5rem;
     letter-spacing: 0.04em;
     color: var(--flag-black);

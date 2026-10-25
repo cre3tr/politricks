@@ -40,6 +40,15 @@ const { title } = Astro.props;
   </head>
   <body>
     <Header />
+    <!-- The hackathon notice, every page (learner's wording, 2026-10-26). -->
+    <div class="demo-banner" role="note">
+      <p data-l="en" lang="en">Hackathon demo: proof of concept, not a finished service/product.</p>
+      <p data-l="sw" lang="sw">Onyesho la hackathon: uthibitisho wa dhana, si huduma au bidhaa iliyokamilika. Hakiki vyanzo rasmi kabla ya kuchukua hatua.</p>
+      <p data-l="sheng" lang="sw">Hii ni demo ya hackathon, project bado haijaisha. Check official sources kabla u-act</p>
+    </div>
     <slot />
+    <footer class="site-footer">
+      <p>A demo for the Devpost Build With AI Basics hackathon, October 2026</p>
+    </footer>
   </body>
 </html>

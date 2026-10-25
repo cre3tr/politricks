@@ -92,7 +92,9 @@ const checked = (iso: string) =>
         {
           active.map((bill) => (
             <li>
-              <a class="bill-card" href={`/bills/${bill.id}`}>
+              {/* Green only while comments are open; a closed bill is grey with a
+                  badge (learner's call at the final review, 2026-10-26). */}
+              <a class:list={["bill-card", { "bill-closed": daysLeft(bill) === null }]} href={`/bills/${bill.id}`}>
                 <span class="chamber">
                   {CHAMBER[bill.chamber]}
                   {bill.chamber === "county" && <span class="tag">County</span>}
@@ -101,7 +103,11 @@ const checked = (iso: string) =>
                 <span class="title">{bill.title}</span>
                 <span class="stage">{bill.stage}</span>
                 {daysLeft(bill) === null ? (
-                  <span class="window">Participation not open</span>
+                  <span class="closed-badge">
+                    <span data-l="en" lang="en">Comments closed</span>
+                    <span data-l="sw" lang="sw">Maoni yamefungwa</span>
+                    <span data-l="sheng" lang="sw">Comments zime-fungwa</span>
+                  </span>
                 ) : (
                   <span class="window window-open">
                     {daysLeft(bill)} day(s) left to have your say (by {checked(bill.participation!.deadline!)})
@@ -283,6 +289,18 @@ const checked = (iso: string) =>
   }
   section[aria-labelledby="passed-heading"] .bill-card {
     border-left-color: var(--flag-black);
+  }
+  .bill-card.bill-closed {
+    border-left-color: #b8b3ab;
+  }
+  .closed-badge {
+    justify-self: start;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--muted);
+    background: #eeebe6;
+    border-radius: 999px;
+    padding: 0.1rem 0.6rem;
   }
   .bill-card:hover,
   .bill-card:focus-visible {
