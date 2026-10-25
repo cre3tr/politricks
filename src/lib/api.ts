@@ -34,6 +34,17 @@ export interface ExplainAnswer {
 // error, a refusal, output that failed to parse. Always becomes a 502.
 export class UpstreamError extends Error {}
 
+// One line in the function log for every 502, so a failure in production says
+// why (Vercel runtime logs). The reader still sees only the quiet fallback.
+// Name, HTTP status and message only: an Anthropic error's message is the API's
+// own error text, which never contains the key.
+export function logUpstream(helper: string, error: unknown): void {
+  const status = typeof error === "object" && error !== null ? (error as { status?: unknown }).status : undefined;
+  const name = error instanceof Error ? error.name : typeof error;
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`[${helper}] upstream ${name}${status ? ` ${status}` : ""}: ${message.slice(0, 300)}`);
+}
+
 export interface ApiDeps {
   bills: Map<string, Bill>;
   phrases: string[];
@@ -60,7 +71,8 @@ export async function handleMatch(body: unknown, deps: ApiDeps): Promise<ApiResu
   let ids: string[];
   try {
     ids = await deps.match(bill, words);
-  } catch {
+  } catch (error) {
+    logUpstream("match", error);
     return { status: 502, body: { error: "upstream" } };
   }
   // Only ids that exist in this bill, each once, at most 8: the page trusts
@@ -86,7 +98,8 @@ export async function handleExplain(body: unknown, deps: ApiDeps): Promise<ApiRe
   let answer: ExplainAnswer;
   try {
     answer = await deps.explain(bill, clause);
-  } catch {
+  } catch (error) {
+    logUpstream("explain", error);
     return { status: 502, body: { error: "upstream" } };
   }
   // The same doctrine the pipeline's lint enforces: a banned phrase in ANY of
