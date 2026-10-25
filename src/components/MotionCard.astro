@@ -6,8 +6,8 @@
 // official record, beside its explanation.
 //
 // A motion's JSON holds exactly one clause whose text is the resolution, so
-// the card reuses ClauseCard for that part: the same legal-text-beside-
-// explanation layout, review badge and per-card language flip. The note is
+// the card reuses ClauseCard for that part: the same tap-to-open row, review
+// badge and per-card language flip, opened by default (it is the only row). The note is
 // the bill's `summary`, rendered with the same `summary-card` markup as a
 // bill page, so scripts/check-build.mjs checks it the same way.
 import type { Bill } from "../lib/schema";
@@ -31,7 +31,12 @@ const summaryBadge = bill.summary ? badgeFor(displayStatus(bill.summary.review, 
   </p>
   {
     bill.summary && (
-      <section class="summary-card" aria-label="Summary">
+      <section class="summary-card" aria-labelledby="in-short-heading">
+        <h2 id="in-short-heading" class="summary-heading">
+          <span data-l="en" lang="en">In short</span>
+          <span data-l="sw" lang="sw">Kwa ufupi</span>
+          <span data-l="sheng" lang="sw-x-sheng">Kwa ufupi</span>
+        </h2>
         {summaryBadge && <span class={`badge ${summaryBadge.className}`}>{summaryBadge.label}</span>}
         <p data-l="en" lang="en">{bill.summary.text.en}</p>
         <p data-l="sw" lang="sw">{bill.summary.text.sw}</p>
@@ -39,7 +44,7 @@ const summaryBadge = bill.summary ? badgeFor(displayStatus(bill.summary.review, 
       </section>
     )
   }
-  {resolution ? <ClauseCard clause={resolution} billId={bill.id} /> : <p>The motion text is not loaded yet.</p>}
+  {resolution ? <ClauseCard clause={resolution} billId={bill.id} open /> : <p>The motion text is not loaded yet.</p>}
 </section>
 
 <style>
@@ -64,6 +69,22 @@ const summaryBadge = bill.summary ? badgeFor(displayStatus(bill.summary.review, 
     border-radius: 4px;
     padding: 1rem;
     margin-bottom: 1.5rem;
+  }
+  .summary-heading {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem;
+  }
+  .summary-heading :global([data-l]) {
+    display: none;
+  }
+  :global(html:not([data-lang])) .summary-heading :global([data-l="en"]),
+  :global(html[data-lang="en"]) .summary-heading :global([data-l="en"]),
+  :global(html[data-lang="sw"]) .summary-heading :global([data-l="sw"]),
+  :global(html[data-lang="sheng"]) .summary-heading :global([data-l="sheng"]) {
+    display: inline;
   }
   .badge {
     display: inline-block;

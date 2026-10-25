@@ -1,9 +1,14 @@
 ---
-// One clause: legal text beside its explanation (devpost/spec.md > Clause
-// Card). The legal text sits FIRST in the DOM — in a normal CSS grid that
-// makes it the top-left cell, which is "above on mobile" (one column) and
-// "beside, on the left, on desktop" (two columns) for free, with no extra
-// ordering rules needed.
+// One clause as a tap-to-open row (devpost/spec.md > Clause Card; reshaped
+// 2026-10-26 after the learner's final review: a phone screen of fully open
+// cards overwhelmed).
+//
+// Closed, a card is one row: the section number, its heading and its badge.
+// Opened (a native <details>, so it works with no JavaScript and every word
+// stays in the served HTML for search engines and scripts/check-build.mjs),
+// it shows the explanation in the current language, the per-card language
+// flip and the suggested-article chips. The official legal text sits behind a
+// second toggle inside the opened card, "Show the legal text".
 import type { Clause } from "../lib/schema";
 import { splitHighlights } from "../lib/highlight";
 import { badgeFor } from "../lib/badge";
@@ -12,9 +17,11 @@ import { clauseSha256, displayStatus } from "../lib/reviewHash";
 interface Props {
   clause: Clause;
   billId: string;
+  /** Start opened. A county motion has one clause, so its card opens by default. */
+  open?: boolean;
 }
 
-const { clause, billId } = Astro.props;
+const { clause, billId, open = false } = Astro.props;
 const segments = splitHighlights(clause.text);
 
 // No explanation yet: no badge at all (there is nothing to badge), just the
@@ -31,98 +38,123 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
   data-text-sha256={clause.text_sha256}
   data-needs-explain={clause.explanation ? undefined : ""}
 >
-  {/* Shown by the bill page's Match script on cards that match the reader's own words. */}
-  <p class="match-note" hidden>
-    <span data-l="en" lang="en">Matches what you wrote</span>
-    <span data-l="sw" lang="sw">Inalingana na ulichoandika</span>
-    <span data-l="sheng" lang="sw-x-sheng">Ina-match ulichoandika</span>
-  </p>
-  <header class="clause-header">
-    <h3>
-      <span class="clause-number">Section {clause.number}</span>
-      <span class="clause-heading">{clause.heading}</span>
-      {/* A transcribed heading was typed by hand from the printed page (the
-          scan garbled it). Say so quietly — honesty about provenance, even for
-          a signpost that isn't legal text. */}
-      {clause.heading_source === "transcribed" && (
-        <span class="heading-note" title="The scan garbled this heading, so it was typed by hand from the printed page. The legal text below is unchanged.">
-          heading transcribed from the printed page
+  <details class="pt-details clause-details" open={open}>
+    <summary class="clause-summary">
+      <h3 class="clause-title">
+        <span class="clause-number">Section {clause.number}</span>
+        <span class="clause-heading">{clause.heading}</span>
+        {/* A transcribed heading was typed by hand from the printed page (the
+            scan garbled it). Say so quietly — honesty about provenance, even for
+            a signpost that isn't legal text. */}
+        {clause.heading_source === "transcribed" && (
+          <span class="heading-note" title="The scan garbled this heading, so it was typed by hand from the printed page. The legal text is unchanged.">
+            heading transcribed from the printed page
+          </span>
+        )}
+      </h3>
+      <span class="summary-side">
+        {/* Shown by the bill page's Match script on cards that match the reader's own words. */}
+        <span class="match-note" hidden>
+          <span data-l="en" lang="en">Matches you</span>
+          <span data-l="sw" lang="sw">Inakuhusu</span>
+          <span data-l="sheng" lang="sw-x-sheng">Inakuhusu</span>
         </span>
-      )}
-    </h3>
-    <div class="clause-header-row">
-      {badge && <span class={`badge ${badge.className}`}>{badge.label}</span>}
+        {badge && <span class={`badge ${badge.className}`}>{badge.label}</span>}
+        <span class="chevron" aria-hidden="true"></span>
+      </span>
+    </summary>
+
+    <div class="clause-body">
       <div class="card-lang-flip" role="group" aria-label={`Language for section ${clause.number}`}>
         <button type="button" data-card-lang-btn="en">EN</button>
         <button type="button" data-card-lang-btn="sw">SW</button>
         <button type="button" data-card-lang-btn="sheng">SHENG</button>
       </div>
-    </div>
-  </header>
 
-  <div class="clause-grid">
-    <blockquote lang="en" class="legal-text">
-      {segments.map((segment) => {
-        if (segment.kind === "change") return <span class="hl-change">{segment.text}</span>;
-        if (segment.kind === "amount") return <span class="hl-amount">{segment.text}</span>;
-        return segment.text;
-      })}
-    </blockquote>
+      <div class="explanation">
+        {
+          clause.explanation ? (
+            <>
+              <p data-l="en" lang="en">
+                {clause.explanation.en}
+              </p>
+              <p data-l="sw" lang="sw">
+                {clause.explanation.sw}
+              </p>
+              <p data-l="sheng" lang="sw-x-sheng">
+                {clause.explanation.sheng}
+              </p>
+            </>
+          ) : (
+            <>
+              {/* Filled by the Explain call below when it answers 200. */}
+              <span class="badge badge-draft live-draft-label" hidden></span>
+              <p data-l="en" lang="en">
+                Explanation not ready yet.
+              </p>
+              <p data-l="sw" lang="sw">
+                Maelezo bado hayajakamilika.
+              </p>
+              <p data-l="sheng" lang="sw-x-sheng">
+                Maelezo bado hayako ready.
+              </p>
+            </>
+          )
+        }
+      </div>
 
-    <div class="explanation">
+      {/* Suggested articles (slice 10): each chip opens the Article Sheet. They
+          are suggestions for the reader to judge, never a ruling. */}
       {
-        clause.explanation ? (
-          <>
-            <p data-l="en" lang="en">
-              {clause.explanation.en}
-            </p>
-            <p data-l="sw" lang="sw">
-              {clause.explanation.sw}
-            </p>
-            <p data-l="sheng" lang="sw-x-sheng">
-              {clause.explanation.sheng}
-            </p>
-          </>
-        ) : (
-          <>
-            {/* Filled by the Explain call below when it answers 200. */}
-            <span class="badge badge-draft live-draft-label" hidden></span>
-            <p data-l="en" lang="en">
-              Explanation not ready yet.
-            </p>
-            <p data-l="sw" lang="sw">
-              Maelezo bado hayajakamilika.
-            </p>
-            <p data-l="sheng" lang="sw-x-sheng">
-              Maelezo bado hayako ready.
-            </p>
-          </>
+        clause.suggested_articles.length > 0 && (
+          <div class="article-chips">
+            <span class="article-chips-label">Suggested articles:</span>
+            {clause.suggested_articles.map((number) => (
+              <button type="button" class="article-chip" data-article={number}>
+                Article {number}
+              </button>
+            ))}
+          </div>
         )
       }
-    </div>
-  </div>
 
-  {/* Suggested articles (slice 10): each chip opens the Article Sheet. They
-      are suggestions for the reader to judge, never a ruling. */}
-  {
-    clause.suggested_articles.length > 0 && (
-      <div class="article-chips">
-        <span class="article-chips-label">Suggested articles:</span>
-        {clause.suggested_articles.map((number) => (
-          <button type="button" class="article-chip" data-article={number}>
-            Article {number}
-          </button>
-        ))}
-      </div>
-    )
-  }
+      {/* The official text, word for word. Second toggle, closed by default. */}
+      <details class="pt-details legal-details">
+        <summary class="legal-summary">
+          <span class="legal-label when-closed">
+            <span data-l="en" lang="en">Show the legal text</span>
+            <span data-l="sw" lang="sw">Onyesha maandishi ya sheria</span>
+            <span data-l="sheng" lang="sw-x-sheng">Cheki legal text</span>
+          </span>
+          <span class="legal-label when-open">
+            <span data-l="en" lang="en">Hide the legal text</span>
+            <span data-l="sw" lang="sw">Ficha maandishi ya sheria</span>
+            <span data-l="sheng" lang="sw-x-sheng">Ficha legal text</span>
+          </span>
+          <span class="chevron" aria-hidden="true"></span>
+        </summary>
+        <blockquote lang="en" class="legal-text">
+          {segments.map((segment) => {
+            if (segment.kind === "change") return <span class="hl-change">{segment.text}</span>;
+            if (segment.kind === "amount") return <span class="hl-amount">{segment.text}</span>;
+            return segment.text;
+          })}
+        </blockquote>
+      </details>
+    </div>
+  </details>
 </article>
 
 <script>
   // One script, deduped by Astro across every ClauseCard on the page —
-  // wires ALL cards' per-card flip buttons via a single querySelectorAll
-  // pass rather than one closure per card instance.
-  document.querySelectorAll<HTMLElement>(".clause-card").forEach((card) => {
+  // wires ALL cards via querySelectorAll passes rather than one closure per
+  // card instance.
+  import { getCached, getLang, setCached } from "../lib/storage";
+
+  const cards = Array.from(document.querySelectorAll<HTMLElement>(".clause-card"));
+
+  // Per-card language flip.
+  cards.forEach((card) => {
     const buttons = card.querySelectorAll<HTMLButtonElement>("[data-card-lang-btn]");
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -139,9 +171,13 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
   // per clause and language; anything else (or 60 s with no answer) leaves
   // the trilingual "not ready" text in place. Every clause on today's bills
   // has an explanation, so this only runs for a newly added bill.
-  import { getCached, getLang, setCached } from "../lib/storage";
-
-  document.querySelectorAll<HTMLElement>(".clause-card[data-needs-explain]").forEach(async (card) => {
+  //
+  // It now runs when the card is OPENED, not on page load: a collapsed card
+  // makes no call, so a page full of unexplained clauses costs at most one
+  // call per card the reader actually opens (the old code called for all).
+  async function explain(card: HTMLElement) {
+    if (card.dataset.explainStarted) return;
+    card.dataset.explainStarted = "";
     const lang = getLang() ?? "en";
     const key = `pt.draft.${card.dataset.clauseId}.${lang}`;
     let draft = getCached<{ text: string; label: string }>(key);
@@ -173,10 +209,132 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
       label.textContent = draft.label;
       label.hidden = false;
     }
+  }
+
+  cards
+    .filter((card) => card.hasAttribute("data-needs-explain"))
+    .forEach((card) => {
+      const details = card.querySelector<HTMLDetailsElement>(":scope > details");
+      if (!details) return;
+      // Already open (a motion's card, or one the Match script opened first).
+      if (details.open) explain(card);
+      details.addEventListener("toggle", () => {
+        if (details.open) explain(card);
+      });
+    });
+
+  // A link to #clause-c3 (the groups panel's "Section 3") lands on a closed
+  // card: open it. Opening happens in the click handler, before the browser
+  // scrolls, so the card is at its final size when the jump happens.
+  function openCard(id: string): HTMLElement | null {
+    if (!id.startsWith("clause-")) return null;
+    const card = document.getElementById(id);
+    const details = card?.querySelector<HTMLDetailsElement>(":scope > details");
+    if (!card || !details) return null;
+    details.open = true;
+    return card;
+  }
+  document.addEventListener("click", (event) => {
+    const link = (event.target as Element | null)?.closest?.<HTMLAnchorElement>('a[href^="#clause-"]');
+    if (link) openCard(link.getAttribute("href")!.slice(1));
   });
+  window.addEventListener("hashchange", () => openCard(location.hash.slice(1))?.scrollIntoView());
+  openCard(location.hash.slice(1))?.scrollIntoView();
+
+  // Fade/slide in as a card scrolls into view. The DEFAULT state is visible:
+  // `reveal-pending` (the hidden state) is only ever added here, to cards that
+  // start below the fold, so with JS off, the observer missing, a hidden tab
+  // or reduced motion the page is simply fully visible. If the observer
+  // never reports at all, everything is revealed after 1.5 s.
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduceMotion && "IntersectionObserver" in window && document.visibilityState === "visible") {
+    let observerAnswered = false;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        observerAnswered = true;
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.remove("reveal-pending");
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "0px 0px -6% 0px" },
+    );
+    cards.forEach((card) => {
+      if (card.getBoundingClientRect().top <= window.innerHeight) return;
+      card.classList.add("reveal-pending");
+      observer.observe(card);
+    });
+    setTimeout(() => {
+      if (!observerAnswered) cards.forEach((card) => card.classList.remove("reveal-pending"));
+    }, 1500);
+  }
 </script>
 
 <style>
+  .clause-card {
+    border: 1px solid var(--muted);
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+    transition:
+      opacity 0.45s ease-out,
+      transform 0.45s ease-out;
+  }
+  /* Added by the script only, to cards below the fold; removed on arrival. */
+  .clause-card.reveal-pending {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  .clause-card.matched {
+    border-color: var(--flag-green);
+    border-width: 2px;
+    animation: pt-match-flash 1.8s ease-out;
+  }
+  @keyframes pt-match-flash {
+    from {
+      background-color: color-mix(in srgb, var(--flag-green) 18%, var(--paper));
+      box-shadow: 0 0 0 6px color-mix(in srgb, var(--flag-green) 35%, transparent);
+    }
+    to {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+
+  /* --- The tap-to-open row ----------------------------------------------- */
+  .clause-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 2.75rem; /* 44px tap target */
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    list-style: none;
+    transition:
+      background-color 0.15s,
+      transform 0.12s;
+  }
+  .clause-summary::-webkit-details-marker {
+    display: none;
+  }
+  .clause-summary:active {
+    background-color: color-mix(in srgb, var(--matatu-brown) 12%, var(--paper));
+    transform: scale(0.99);
+  }
+  .clause-title {
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 1.05rem;
+    overflow-wrap: anywhere;
+  }
+  .clause-number {
+    color: var(--flag-red);
+    margin-right: 0.5rem;
+  }
   /* Small, muted provenance note under a hand-transcribed heading. Normal
      case and body font so it reads as a footnote, not part of the heading. */
   .heading-note {
@@ -188,30 +346,14 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
     letter-spacing: 0;
     color: var(--muted);
   }
-  .clause-card {
-    border: 1px solid var(--muted);
-    border-radius: 4px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  .clause-header h3 {
-    font-family: var(--font-display);
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    font-size: 1.1rem;
-    margin: 0 0 0.4rem;
-  }
-  .clause-number {
-    color: var(--flag-red);
-    margin-right: 0.5rem;
-  }
-  .clause-header-row {
+  .summary-side {
     display: flex;
+    flex: 0 0 auto;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
+    justify-content: flex-end;
     flex-wrap: wrap;
-    margin-bottom: 0.75rem;
+    gap: 0.4rem;
+    max-width: 45%;
   }
   .badge {
     display: inline-block;
@@ -236,54 +378,62 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
     border-color: var(--muted);
     color: var(--muted);
   }
+  /* "Matches you": a small filled tag, switched on by the Match script. The
+     language spans inside are display:block (global.css), which is fine in a
+     flex row: only one is ever visible. */
+  .match-note {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: var(--flag-green);
+    color: var(--paper);
+    white-space: nowrap;
+  }
+  .match-note[hidden] {
+    display: none;
+  }
+  /* The open/closed arrow, drawn with borders so it needs no icon file. */
+  .chevron {
+    flex: 0 0 auto;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-right: 2px solid var(--flag-black);
+    border-bottom: 2px solid var(--flag-black);
+    transform: rotate(45deg);
+    margin: 0 0.25rem 0.2rem;
+    transition: transform 0.2s ease-out;
+  }
+  details[open] > summary .chevron {
+    transform: rotate(225deg);
+    margin-bottom: 0;
+    margin-top: 0.2rem;
+  }
+
+  /* --- The opened card ------------------------------------------------------ */
+  .clause-body {
+    padding: 0 1rem 1rem;
+  }
   .card-lang-flip {
     display: flex;
     gap: 0.25rem;
+    margin-bottom: 0.75rem;
   }
   .card-lang-flip button {
-    font-size: 0.7rem;
-    padding: 0.1rem 0.4rem;
+    font-size: 0.75rem;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0 0.7rem;
     border: 1px solid var(--muted);
     background: var(--paper);
     cursor: pointer;
+    transition: transform 0.12s;
   }
-  .clause-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  @media (min-width: 768px) {
-    .clause-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-  .legal-text {
-    max-height: 24rem; /* Tailwind's max-h-96, written directly since this
-                            block sits outside Tailwind's class scanning. */
-    overflow: auto;
-    margin: 0;
-    padding: 0.5rem;
-    background: color-mix(in srgb, var(--paper) 92%, var(--flag-black));
-    font-size: 0.95rem;
-    white-space: pre-wrap;
+  .card-lang-flip button:active {
+    transform: scale(0.94);
   }
   .explanation p {
     margin: 0 0 0.5rem;
-  }
-  .match-note {
-    margin: 0 0 0.5rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--flag-green);
-  }
-  .match-note :global([data-l]) {
-    display: none;
-  }
-  :global(html:not([data-lang])) .match-note :global([data-l="en"]),
-  :global(html[data-lang="en"]) .match-note :global([data-l="en"]),
-  :global(html[data-lang="sw"]) .match-note :global([data-l="sw"]),
-  :global(html[data-lang="sheng"]) .match-note :global([data-l="sheng"]) {
-    display: inline;
   }
   .article-chips {
     display: flex;
@@ -303,10 +453,122 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
     border-radius: 999px;
     padding: 0.2rem 0.7rem;
     cursor: pointer;
-    min-height: 2rem;
+    min-height: 2.75rem;
+    transition: transform 0.12s;
   }
-  .clause-card.matched {
-    border-color: var(--flag-green);
-    border-width: 2px;
+  .article-chip:active {
+    transform: scale(0.95);
+  }
+
+  /* --- The second toggle: the official legal text ------------------------- */
+  .legal-details {
+    margin-top: 1rem;
+  }
+  .legal-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+    padding: 0.4rem 0.75rem;
+    border: 1px solid var(--muted);
+    border-radius: 4px;
+    cursor: pointer;
+    list-style: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition:
+      background-color 0.15s,
+      transform 0.12s;
+  }
+  .legal-summary::-webkit-details-marker {
+    display: none;
+  }
+  .legal-summary:active {
+    background-color: color-mix(in srgb, var(--matatu-brown) 12%, var(--paper));
+    transform: scale(0.99);
+  }
+  /* Only the label for the current state shows. */
+  .legal-details:not([open]) .when-open,
+  .legal-details[open] .when-closed {
+    display: none;
+  }
+  .legal-text {
+    max-height: 24rem; /* Tailwind's max-h-96, written directly since this
+                            block sits outside Tailwind's class scanning. */
+    overflow: auto;
+    margin: 0.5rem 0 0;
+    padding: 0.5rem;
+    background: color-mix(in srgb, var(--paper) 92%, var(--flag-black));
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  /* --- Opening and closing -------------------------------------------------
+     Browsers with ::details-content (Chromium 131+) animate height and
+     opacity both ways. Anywhere else the content just fades in on open, and
+     closing is instant: nothing is lost either way. */
+  @supports selector(::details-content) {
+    .pt-details {
+      interpolate-size: allow-keywords;
+    }
+    .pt-details::details-content {
+      height: 0;
+      opacity: 0;
+      overflow: clip;
+      transition:
+        height 0.28s ease-out,
+        opacity 0.28s ease-out,
+        content-visibility 0.28s allow-discrete;
+    }
+    .pt-details[open]::details-content {
+      height: auto;
+      opacity: 1;
+    }
+  }
+  @supports not selector(::details-content) {
+    .pt-details[open] > :not(summary) {
+      animation: pt-open 0.25s ease-out;
+    }
+  }
+  @keyframes pt-open {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+
+  /* Reduced motion: no slide, no fade, no press, no flash. State changes
+     still happen, just instantly. */
+  @media (prefers-reduced-motion: reduce) {
+    .clause-card,
+    .clause-card.reveal-pending {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .clause-card.matched {
+      animation: none;
+    }
+    .clause-summary,
+    .legal-summary,
+    .card-lang-flip button,
+    .article-chip,
+    .chevron {
+      transition: none;
+    }
+    .clause-summary:active,
+    .legal-summary:active,
+    .card-lang-flip button:active,
+    .article-chip:active {
+      transform: none;
+    }
+    .pt-details::details-content {
+      transition: none;
+    }
+    .pt-details[open] > :not(summary) {
+      animation: none;
+    }
   }
 </style>

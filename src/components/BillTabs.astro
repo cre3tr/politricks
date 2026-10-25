@@ -79,6 +79,39 @@ const tabs = [
     background: var(--flag-black);
     color: var(--paper);
   }
+  /* Press feedback on tap. */
+  .bill-tabs button {
+    transition:
+      background-color 0.15s,
+      color 0.15s,
+      transform 0.12s;
+  }
+  .bill-tabs button:active {
+    transform: scale(0.95);
+  }
+  /* A short fade whenever a panel becomes the visible one (display:none to
+     shown restarts the animation). Opacity only, so no stacking surprises for
+     the sticky header or in-page anchors. Without JS every panel is shown and
+     this is a one-time fade on load. */
+  :global(.tab-panel:not([hidden])) {
+    animation: pt-tab-fade 0.22s ease-out;
+  }
+  @keyframes pt-tab-fade {
+    from {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bill-tabs button {
+      transition: none;
+    }
+    .bill-tabs button:active {
+      transform: none;
+    }
+    :global(.tab-panel:not([hidden])) {
+      animation: none;
+    }
+  }
   .bill-tabs :global([data-l]) {
     display: none;
   }
