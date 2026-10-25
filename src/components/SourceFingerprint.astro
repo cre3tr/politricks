@@ -85,7 +85,7 @@ const { sources } = Astro.props;
   }
   .source-fingerprint h2 {
     font-family: var(--font-display);
-    text-transform: uppercase;
+    font-weight: 700;
     letter-spacing: 0.03em;
     font-size: 1.1rem;
   }
@@ -102,5 +102,10 @@ const { sources } = Astro.props;
   }
   code {
     word-break: break-all;
+  }
+  /* A Kenya Law URL is one 400px "word": let it wrap, or the whole page
+     scrolls sideways on a 375px phone (found at the final review). */
+  a {
+    overflow-wrap: anywhere;
   }
 </style>

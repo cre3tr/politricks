@@ -72,6 +72,11 @@ body {
 .demo-banner p {
   margin: 0;
 }
+/* The header is sticky (FR1), so a jump to a clause (#clause-c12, the groups
+   panel's section links) must stop below it, not under it. */
+.clause-card {
+  scroll-margin-top: 5rem;
+}
 .site-footer {
   margin-top: 3rem;
   border-top: 1px solid #e2ded8;
