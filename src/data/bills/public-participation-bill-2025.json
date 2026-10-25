@@ -173,13 +173,13 @@
       ],
       "explanation": {
         "en": "Section 5 sets out four principles that a responsible authority (the body running a public participation exercise) is to be guided by under this Act. The exercise can be done through written submissions, oral hearings, online forums or any other method suited to the situation, and the public is to get a reasonable chance to give their views. How wide, how deep and how long the exercise runs is to match how complex, important and impactful the matter is. Public resources are to be used carefully and responsibly.",
-        "sw": "Kifungu cha 5 kinaweka kanuni nne ambazo mamlaka husika inayoendesha zoezi la ushirikishwaji wa umma chini ya Sheria hii inapaswa kuongozwa nazo. Zoezi linaweza kufanywa kupitia maoni ya maandishi, vikao vya mdomo, mijadala ya mtandaoni au njia nyingine inayofaa, na umma unapaswa kupewa nafasi ya kutosha kutoa maoni. Ukubwa, kina na muda wa zoezi vinapaswa kulingana na uzito na athari ya jambo linalozingatiwa. Rasilimali za umma zinapaswa kutumiwa kwa uangalifu na uwajibikaji.",
+        "sw": "Kifungu cha 5 kinaweka kanuni nne ambazo mamlaka husika inayoendesha zoezi la ushirikishwaji wa umma chini ya Sheria hii inapaswa kuongozwa nazo. Zoezi linaweza kufanywa kupitia maoni ya maandishi, vikao vya mdomo, mijadala ya mtandaoni au njia nyingine inayofaa, na umma upewe nafasi ya kutosha kutoa maoni. \nUkubwa, kina na muda wa zoezi vinapaswa kulingana na uzito na athari ya jambo linalozingatiwa. Rasilimali za umma zinapaswa kutumiwa kwa uangalifu na uwajibikaji.",
         "sheng": "Section 5 ina-set four principles ambazo responsible authority ina-follow inapofanya public participation chini ya hii Act. Public participation inaweza kufanywa kupitia written submissions, oral hearings, online forums ama any other method ambayo ina-fit context, na public wana-get reasonable chance ya ku-share views. Scope, depth na duration ya exercise ina-match complexity, importance na impact ya matter. Public resources pia zinatumika carefully na responsibly."
       },
       "review": {
-        "status": "draft",
-        "at": null,
-        "sha256": "91447e3c1267a5fa8bf342665888f27c8351a4d0d10b4cbaf67836b745ba9cc2"
+        "status": "reviewed",
+        "at": "2026-10-25",
+        "sha256": "778a0efc0ae8718bba76691a35177b377632c1517ff286c09574e59061ff5e08"
       },
       "neutral_check": {
         "ok": true,
@@ -436,14 +436,14 @@
         6
       ],
       "explanation": {
-        "en": "Section 13 says the authority running a public participation process must make sure the public can take part and give their views on the matter being considered. If the authority holds a public hearing and the participants do not speak English or Kiswahili well, it must take steps to run the hearing in a language they understand.",
+        "en": "Section 13 says the authority running a public participation process must ensure the public can take part and give their views on the matter being considered. If the authority holds a public hearing and the participants do not speak English or Kiswahili well, it must take steps to run the hearing in a language they understand.",
         "sw": "Kifungu hiki kinaitaka mamlaka husika kuhakikisha kwamba umma unaweza kushiriki katika mchakato wa ushiriki wa umma na kutoa maoni kuhusu suala linalozingatiwa. Mamlaka husika ikiandaa kikao cha hadhara na washiriki hawaelewi Kiswahili wala Kiingereza, inapaswa kuchukua hatua za kuendesha kikao hicho kwa lugha wanayoielewa.",
         "sheng": "Section 13 ina-require responsible authority i-ensure kwamba public iko na access to public participation process na chance ya ku-give views kwa matter ambayo iko under consideration. Kama responsible authority ina-hold public hearing na participants hawa-understand English ama Kiswahili, ina-take measures ku-conduct hio hearing kwa language ambayo participants wana-understand."
       },
       "review": {
-        "status": "draft",
-        "at": null,
-        "sha256": "732a2bba1fadb627f5b7308a672f3b0966af9bbe20c9df241573cc05b7c42c3b"
+        "status": "reviewed",
+        "at": "2026-10-25",
+        "sha256": "9e4f1b49f0343712d7549d6b5a3c1f7538f56b7a6403275408f3408d777ab115"
       },
       "neutral_check": {
         "ok": true,

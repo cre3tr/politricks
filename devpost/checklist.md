@@ -39,7 +39,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   Learner check: Reload the Finance Bill page and read three clauses in Sheng. Do Claude's explanations sound natural and neutral? Note anything to fix in review.
   Commit: `Generate Claude explanations for Finance Act 2026`
 
-- [ ] **3. Nothing ships without your review, and banned phrases can't get in**
+- [x] **3. Nothing ships without your review, and banned phrases can't get in**
   Becomes usable: `politricks lint` fails on any banned phrase or neutrality flag. `politricks review` walks every draft text, flagged items first, and marks each one reviewed. The page shows *Reviewed* badges for reviewed clauses and *AI draft* for the rest.
   Why now: Your doctrine (neutral, Sheng reviewed by you, never "unconstitutional") has to be mechanical before more content piles up. Every later slice's content goes through this gate.
   PRD ref: `prd.md > What It Does` (neutral), `prd.md > Non-Goals`, `scope.md > Quality Guardrails`
@@ -59,7 +59,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   Learner check: In a private window, open the bill page, go through the welcome screen as yourself (pick groups, type a few of your own words), and see what floats to the top. Then open "See everyone" and confirm nothing is hidden.
   Commit: `Add first-visit profile, groups-first view and live helpers`
 
-- [ ] **5. Home shows the two live bills**
+- [x] **5. Home shows the two live bills**
   Becomes usable: `/` lists the Tertiary Education, Placement and Funding Bill 2026 and the Public Participation Bill 2025, with title, chamber, stage and *last checked*, and each opens its own bill page with explained clauses.
   Why now: This gives the core journey its real front door, and it proves the pipeline generalises beyond the Finance Bill (different bill layouts, and a Senate bill).
   PRD ref: `prd.md > Home: Active Bills and Una'tafuta?`, `prd.md > The Core Journey` (steps 2–3)
@@ -971,3 +971,15 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
   - A live `ocr` exits 1 with the install message and writes nothing.
 - **Not run, and not ticked:** Tesseract isn't installed, so no real OCR text exists yet, and the gutter window and page handling are guesses from pages 1-4. Once Tesseract is in, the run order is: `ocr public-participation-bill-2025` → read the audit file → `compare --dry-run` → `compare` (one direct call) → lint, build, check-build → commit.
 - **For the learner:** the What changed row labels ("Imechange", "Ime-drop", "Kifungu kipya", the OCR label in SW/Sheng) need the Sheng ear. Change notes are walked by `review` as `changes[0]`... (added the same day; scenario N, review 61 → 66).
+
+### Slices 3 and 5 ticked: the learner's reviews, 2026-10-25
+- **Learner's review (Ian, in `politricks review`):**
+  - Slice 5: fixed the 6 banned texts (PP c5 sw "unapaswa" → "upewe", PP c13 en "make sure" → "ensure", Tertiary c9 and c31 en and sheng "vote" → "voting rights") and accepted them.
+  - Slice 5: re-accepted Finance Act c2, which had changed since review only because the articles pass added article 210 ("Imposition of tax").
+  - Slice 3 learner check: reviewed the Sheng of 4 demo clauses (Finance Act c2, c7, c12 and c20), with one Sheng fix in c7 ("inakua-deducted").
+- **Checks before commit:**
+  - A word-level diff of every edited text against `HEAD` caught two doubled words that Ian's edits left (PP c5 sw "umma umma", Tertiary c9 sheng "lakini lakini"). They were already accepted, so Ian fixed and re-accepted them through `review --only`. A doubled-word scan of the bills afterwards finds only valid reduplication ("ile ile", "moja moja") and scanned legal-text noise.
+  - The field-by-field diff of all 5 bills shows 29 changed fields, all in the 9 clauses Ian accepted (texts he edited, plus review stamps). The two county bills are unchanged.
+  - lint shows 0 findings over 507 texts; every self-test passes; check-api 19; `npm run build` passes; check-build passes on all 5 bills.
+  - The built pages show *Reviewed* on all 9 accepted cards, and *AI draft* on an untouched control card in each of the 3 bills (Finance c3, PP c6, Tertiary c10).
+- **Cut-off:** the Sun 25 Oct 20:00 EAT cut-off passed during these reviews. Slices 7, 8 and 12 are still open; whether to finish or cut each one is the learner's call, to be recorded here.

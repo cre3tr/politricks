@@ -139,8 +139,8 @@
       },
       "review": {
         "status": "reviewed",
-        "at": "2026-10-22",
-        "sha256": "9525bdbf00472abfa341d76cddea43f77dbc5b67637dee845064ca89853b5792"
+        "at": "2026-10-25",
+        "sha256": "94106de40e39bd479f3c5dba1067a4134d1cfb336a8b3d56ba91815b264f92e3"
       },
       "neutral_check": {
         "ok": true,
@@ -292,12 +292,12 @@
       "explanation": {
         "en": "This section changes section 10(1) of the Income Tax Act by adding two new items to the list, straight after item (m): (n) sale of scrap metal and (o) winnings. These two items now sit in the list of payments that section 10 covers, where tax is deducted at source, meaning before the money reaches the person receiving it. This section does not itself give any tax rates.",
         "sw": "Kifungu hiki kinarekebisha kifungu cha 10(1) cha Sheria ya Kodi ya Mapato kwa kuongeza vipengele viwili vipya mara baada ya kipengele (m): (n) uuzaji wa vyuma chakavu na (o) zawadi za ushindi. Vipengele hivi vinaingia kwenye orodha ya malipo yanayohusika na kifungu cha 10, ambapo kodi hukatwa chanzoni, yaani kabla pesa hazijamfikia mpokeaji. Kifungu hiki chenyewe hakitaji viwango vyovyote vya kodi.",
-        "sheng": "Section 7 ina-change section 10(1) ya Income Tax Act kwa ku-add two new items kwa list, right after (m): (n) sale ya scrap metal na (o) winnings. Hizi items mbili sasa ziko kwa list ya payments ambazo section 10 inacover, ambapo tax ina-deducted at source, yaani kabla pesa i-reach the person receiving it. Hii section yenyewe haina rates za tax."
+        "sheng": "Section 7 ina-change section 10(1) ya Income Tax Act kwa ku-add two new items kwa list, right after (m): (n) sale ya scrap metal na (o) winnings. Hizi items mbili sasa ziko kwa list ya payments ambazo section 10 inacover, ambapo tax inakua-deducted at source, yaani kabla pesa i-reach the person receiving it. Hii section yenyewe haina rates za tax."
       },
       "review": {
-        "status": "draft",
-        "at": null,
-        "sha256": "hand-edited"
+        "status": "reviewed",
+        "at": "2026-10-25",
+        "sha256": "00ad492b2e90a1f133a7c039eee49f2c39f6be64cc9f56c8fa89df91cbc731a8"
       },
       "neutral_check": {
         "ok": true,
@@ -453,8 +453,8 @@
         "sheng": "Section 12 ina-make three small technical changes kwa section 18D ya Income Tax Act. Kila change ina-update tu reference kwenda subsection nyingine. Kwa subsection (1), reference ya subsection (3) inakuwa reference ya subsection (2). Kwa subsections (2) na (5), reference ya subsection (1) inakuwa reference ya subsections (1) na (1A)."
       },
       "review": {
-        "status": "draft",
-        "at": null,
+        "status": "reviewed",
+        "at": "2026-10-25",
         "sha256": "b700305b67cdeaf795a092b0ffd6e868e3ce90bd2cc6a96e8e664ebf648c2bba"
       },
       "neutral_check": {
@@ -693,9 +693,9 @@
         "sheng": "Section 20 ina-change table ya rates kwenye paragraph 1(1) ya Second Schedule ya Income Tax Act, kwa njia mbili. Kwanza, kwa item (iv), ina-add condition kwa rate: kama investment ni above ten billion shillings, rate ni 100% kwa first year ya use. Pili, kwa item (a)(viii), ina-add words \"per year, in equal instalments\" baada ya 10%, kwa hivyo 10% ina-apply every year in equal parts."
       },
       "review": {
-        "status": "draft",
-        "at": null,
-        "sha256": "hand-edited"
+        "status": "reviewed",
+        "at": "2026-10-25",
+        "sha256": "4d1e7ed5f46123e80843112c096e54f24e42ac5ad02eaa5de1aba0df984058e2"
       },
       "neutral_check": {
         "ok": true,

@@ -394,14 +394,14 @@
         11
       ],
       "explanation": {
-        "en": "Section 9 sets up a Board to run the Placement Service. The Board has a Chairperson appointed by the President, the Principal Secretaries for university education, technical and vocational education and training, and finance, the Attorney-General (each of whom may send a designated representative), and four independent persons. The Chief Executive Officer sits on the Board but has no vote. The Cabinet Secretary appoints the four independent persons by notice in the Gazette, and the Chairperson and the independent persons serve three years, with one possible further term if their performance is satisfactory.",
+        "en": "Section 9 sets up a Board to run the Placement Service. The Board has a Chairperson appointed by the President, the Principal Secretaries for university education, technical and vocational education and training, and finance, the Attorney-General (each of whom may send a designated representative), and four independent persons. The Chief Executive Officer sits on the Board but has no voting rights. The Cabinet Secretary appoints the four independent persons by notice in the Gazette, and the Chairperson and the independent persons serve three years, with one possible further term if their performance is satisfactory.",
         "sw": "Kifungu cha 9 kinaunda Bodi ya Huduma ya Upangaji (Placement Service). Bodi hiyo ina Mwenyekiti anayeteuliwa na Rais, Makatibu Wakuu wa elimu ya chuo kikuu, mafunzo ya ufundi na kitaaluma (TVET) na fedha, pamoja na Mwanasheria Mkuu (kila mmoja anaweza kutuma mwakilishi aliyeteuliwa), na watu wanne huru. Afisa Mkuu Mtendaji ni mwanachama wa Bodi lakini hana haki ya kupiga kura. Waziri huteua wanachama hao wanne huru kwa notisi katika Gazeti la Serikali, na Mwenyekiti na wanachama huru hukaa madarakani kwa miaka mitatu, wakiweza kuteuliwa tena mara moja kama utendaji wao unaridhisha.",
-        "sheng": "Section 9 ina-create Board ya Placement Service. Board iko na Chairperson ambaye President ana-appoint, Principal Secretaries wa university education, TVET na finance, Attorney-General, na four independent persons. Kila Principal Secretary na Attorney-General wanaweza kutuma designated representative. Chief Executive Officer ni member wa Board lakini hana vote. Cabinet Secretary ana-appoint hao four independent persons kwa notice kwenye Gazette, na Chairperson na hao independent persons wana-serve three years, na wanaweza kupewa one more term kama performance yao ni satisfactory."
+        "sheng": "Section 9 ina-create Board ya Placement Service. Board iko na Chairperson ambaye President ana-appoint, Principal Secretaries wa university education, TVET na finance, Attorney-General, na four independent persons. Kila Principal Secretary na Attorney-General wanaweza kutuma designated representative. Chief Executive Officer ni member wa Board lakini hana voting rights. Cabinet Secretary ana-appoint hao four independent persons kwa notice kwenye Gazette, na Chairperson na hao independent persons wana-serve three years, na wanaweza kupewa one more term kama performance yao ni satisfactory."
       },
       "review": {
-        "status": "draft",
-        "at": null,
-        "sha256": "031dcd8d7e117da72c1c0eb10eb26082a7bbc9b0a44899af619e71d71a393626"
+        "status": "reviewed",
+        "at": "2026-10-25",
+        "sha256": "6f1a9099b220524bfc43899122344caf8a61defcb8be2caa47120a3a294f53a8"
       },
       "neutral_check": {
         "ok": true,
@@ -1128,14 +1128,14 @@
         19
       ],
       "explanation": {
-        "en": "This section sets up the Board of the Authority. It is made up of a Chairperson appointed by the President, three Principal Secretaries (university education, technical and vocational education and training, and finance) and the Attorney-General, each of whom may send a designated representative, four members who are not public officers, and the Chief Executive Officer, who is a member but cannot vote. The Cabinet Secretary appoints the four non-public-officer members by notice in the Gazette (the official government notice). The Chairperson and those four members serve for three years and can be reappointed once for another three years, subject to satisfactory performance.",
+        "en": "This section sets up the Board of the Authority. It is made up of a Chairperson appointed by the President, three Principal Secretaries (university education, technical and vocational education and training, and finance) and the Attorney-General, each of whom may send a designated representative, four members who are not public officers, and the Chief Executive Officer, who is a member without voting rights. The Cabinet Secretary appoints the four non-public-officer members by notice in the Gazette (the official government notice). The Chairperson and those four members serve for three years and can be reappointed once for another three years, subject to satisfactory performance.",
         "sw": "Kifungu hiki kinaunda Bodi ya Mamlaka. Bodi hiyo ina Mwenyekiti anayeteuliwa na Rais, Makatibu Wakuu watatu (elimu ya vyuo vikuu, mafunzo ya ufundi na kiufundi, na fedha) na Mwanasheria Mkuu, ambao kila mmoja anaweza kuwakilishwa na mtu aliyeteuliwa, watu wanne ambao si maafisa wa umma, na Afisa Mkuu Mtendaji ambaye ni mjumbe bila haki ya kupiga kura. Waziri huteua wajumbe hao wanne kupitia tangazo katika Gazeti Rasmi la Serikali. Mwenyekiti na wajumbe hao wanne wanahudumu kwa miaka mitatu, na wanaweza kuteuliwa tena mara moja kwa miaka mitatu mingine, kulingana na utendaji wa kuridhisha.",
-        "sheng": "Section 31 ina-set up Board ya Authority. Board iko na Chairperson ambaye President ana-appoint, three Principal Secretaries (university education, technical and vocational training, na finance), Attorney-General, na four members ambao si public officers, na kila Principal Secretary na Attorney-General anaweza kutuma designated representative. Chief Executive Officer ni member lakini hana vote. Cabinet Secretary ana-appoint hao four members kupitia notice kwa Gazette, na Chairperson na hao four members wana-serve three years, kisha wanaweza kupewa another term moja ya three years kama performance yao ni satisfactory."
+        "sheng": "Section 31 ina-set up Board ya Authority. Board iko na Chairperson ambaye President ana-appoint, three Principal Secretaries (university education, technical and vocational training, na finance), Attorney-General, na four members ambao si public officers, na kila Principal Secretary na Attorney-General anaweza kutuma designated representative. Chief Executive Officer ni member lakini hana voting rights. Cabinet Secretary ana-appoint hao four members kupitia notice kwa Gazette, na Chairperson na hao four members wana-serve three years, kisha wanaweza kupewa another term moja ya three years kama performance yao ni satisfactory."
       },
       "review": {
-        "status": "draft",
-        "at": null,
-        "sha256": "730fe616f9e4dac83f6fb702bf03d3da266b3697def9d4e3f86746d8a2c62a5a"
+        "status": "reviewed",
+        "at": "2026-10-25",
+        "sha256": "f2d4abd712f82a5cd30f65372c251e793de60ddc3bb251c46375376ceecfc9c3"
       },
       "neutral_check": {
         "ok": true,
