@@ -141,8 +141,8 @@ Build mode: fast — with human-readable comments in the code (learner request)
 
 ## Hands-on Checkpoints
 
-- [ ] Early usable behavior explored — after slice 2 (the kernel page): look and feel, Sheng tone, clause-beside-explanation layout. Feedback here shapes every later page.
-- [ ] Integrated core journey explored — after slice 6 (minimum demoable line): welcome → home → bill → What it does → Have your say, end to end.
+- [x] Early usable behavior explored — after slice 2 (the kernel page): look and feel, Sheng tone, clause-beside-explanation layout. Feedback here shapes every later page.
+- [ ] Integrated core journey explored — after slice 6 (minimum demoable line): welcome → home → bill → What it does → Have your say, end to end. **Folded into the final kick-the-tires** (Revisions, 2026-10-26).
 - [ ] Final kick-the-tires exploration and feedback completed
 
 ## Final Review
@@ -995,3 +995,16 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
   - `99af580` makes every 502 from a model call log one line (helper, error name, HTTP status, the API's message; never the key). Kept: it is how a production failure gets diagnosed.
   - `ae1d9fe` logged the stored key's shape (length, prefix, last 4, whitespace) to the private log. It showed what Vercel actually held: 68 characters of other text with spaces, then the key with its 7 dashes stripped and the last 2 characters cut (97), then the key with only the last 2 cut (104), then the right value (106). Removed once Match answered 200.
 - **Not ticked yet:** the learner check (the public link on the learner's phone, over mobile data: welcome, Finance Act, a Sheng clause, Have your say).
+
+### Checkpoints and the final review plan, 2026-10-26
+- **Early checkpoint: done, ticked from the record.** The learner opened the kernel page on 2026-10-13 and 2026-10-14 and gave the feedback that shaped every later page: the em dashes in visible copy ("Em dashes and Sheng feedback, 2026-10-13") and the Sheng rules now standing in `explainer.md` ("First review sitting, paused, 2026-10-14").
+- **Integrated checkpoint: not held as its own session.** Its journey (welcome, home, bill, What it does, Have your say) is the same as slice 7's learner check on the phone, so it is folded into one hands-on session with the final kick-the-tires instead of being held separately or ticked unperformed (5-build, "When the Checklist Is Complete"). Its box stays unticked until that session.
+- **Final review plan (5-build steps 1-5):**
+  1. Verify (agent): every self-test, check-api, lint, build, check-build on all 5 bills, plus the production checks on `poli-tricks.vercel.app`. Deviations recorded here: slice 8 cut; Kenya Law still 403 (verify reports UNREACHABLE); the Public Participation Bill's approved text not processed; Explain cannot fire on live data because every clause has an explanation; civic blocks still drafts (Ian's optional review).
+  2. Kick the tires (learner): the public link on the learner's phone over mobile data, then free exploration (script in the session).
+  3. Interview: open questions on anything broken, confusing or worth changing.
+  4. Agree and revise: each agreed fix becomes an unchecked item under Final Review, is built, verified, committed, and retried by the learner.
+  5. Finish: the box is ticked only when the learner says the PoC is ready.
+- **Then:** the Code Tour and App Map (`devpost/app-map.html`), then `6-ship`.
+- **Step 1, verify: done.** CI on `d6bdc00` (runs 40242659766 on `main`, 40242656746 on `build/poc`): `test` green (all 13 self-tests, check-api 19, `npm run build`, check-build on all 5 bills) and `content` green (lint 0 findings). Production on `poli-tricks.vercel.app`: home 200 with all three titles; Match 200 on the Finance Act, Tertiary and Public Participation bills (2.5-3.4 s); empty words 400; Explain on an explained clause 409; the Finance Act PDF's SHA-256 on its page; 0 `sk-ant-` in served HTML.
+
