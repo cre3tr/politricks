@@ -147,6 +147,12 @@ Build mode: fast — with human-readable comments in the code (learner request)
 
 ## Final Review
 
+- [ ] FR1. Sticky header: wordmark and EN/SW/SHENG stay pinned while scrolling; the active language is visibly filled in.
+- [ ] FR2. Hackathon notice: a thin banner under the header and a footer line, on every page (learner's wording, 2026-10-26).
+- [ ] FR3. Fonts: Anton for the wordmark only; headings bold normal-case sans; body 17px with more spacing; legal text quieter.
+- [ ] FR4. Home: an active bill wears the green stripe only while comments are open; closed ones are grey with a "Comments closed" badge.
+- [ ] FR5. Bill page summary first: "In short" and "What it means for you" on top; each clause a tap-to-open row, legal text behind "Show the legal text"; Match results float up and are marked.
+- [ ] FR6. Light motion (cards, tabs, taps, matched clauses), off under reduced motion.
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
