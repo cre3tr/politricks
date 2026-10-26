@@ -1032,3 +1032,11 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **Learner, 2026-10-26 (late morning):** GitHub configured (secret `ANTHROPIC_API_KEY` set 08:12 UTC; "Allow GitHub Actions to create and approve pull requests" on, read back via the API). FR7 "looks better", ticked; the header wordmark was missed, so FR8 moves it to Bricolage Grotesque and retires Anton (its file, licence, @font-face and preload removed; 18,612 bytes less on every first load). Learner: "Ready if you are. Shipping on schedule."
 - **New feature, for after the hackathon (learner: "not for demo"):** the language switch should switch EVERY piece of text on the site, not just the explanations, tabs and notices. Added to `scope.md` > Later.
 - **Learning wrap-up done** (see Code Tour and App Map).
+
+### Slice 12: weekly workflow verified live, 2026-10-26
+- **Settings (learner):** repo secret `ANTHROPIC_API_KEY` (08:12 UTC) and "Allow GitHub Actions to create and approve pull requests" on; both read back via the API.
+- **First run on `main` (run 40291557483) went red** at the final gate: `intake --check exited 1`, because the Kenya Gazette index answered GitHub's runner with HTTP 200 and no PDF links (PARSE FAILED) while the three Parliament and Nairobi listings read fine. Fixed in `052fcc5`: the Gazette listing is `optional`, so its failure is printed with a NOT CHECKED line and copied to the top of the PR body, but the exit code stays 0; required listings keep the strict rule (intake self-test 54, the new check fails when the Gazette is made required again).
+- **Re-run on `main` (run 40292417440): green**, 3 of 4 listings read (the Gazette reported, optional), 5 sources unchanged, `pull-request-operation = none`: no PR when nothing changed.
+- **Run on the throwaway branch `test/slice-12-pr-check` (run 40292941195)**, where the county Appropriation Bill's stored source SHA-256 was set to 64 zeros: green, verify reported `CHANGED (expected 000000000000..., got 16871b4e7adb...)`, and the workflow opened PR #9 "Weekly update: needs review", labelled *needs review*, into the throwaway branch (never `main`).
+- **Waiting for:** the learner's check (open PR #9: is it clear what changed and what to review?); then PR #9 is closed and both test branches deleted, and slice 12 ticked.
+
