@@ -94,7 +94,8 @@ uv run --project pipeline politricks verify                # re-download all sou
 **Submission:** a public GitHub repo plus the short demo video. The deployed URL is a bonus, not a substitute.
 - Repository: https://github.com/cre3tr/politricks (public since 2026-10-26)
 - Live site: https://poli-tricks.vercel.app
-- Demo video: not yet recorded.
+- Demo video: https://youtube.com/shorts/yPwZ9tQnuJ4 (uploaded 2026-10-26, scheduled to go public 23:45 EAT)
+- License: MIT (`LICENSE`), added 2026-10-26 because the submission form requires one.
 
 ## Look and Feel
 Carries `prd.md > Look and Feel` and `scope.md > Inspiration & Identity`.

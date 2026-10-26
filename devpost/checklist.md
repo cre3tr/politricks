@@ -1071,3 +1071,13 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
   - A first comparison showed 926 against 918. The baseline had come from a stale `node_modules` holding the optional `@img/sharp-wasm32`, which `npm ci` doesn't install on Windows.
 - **Done when merged:** Dependabot reads only `main`, so #37-#41 close after this PR is merged and GitHub rescans. Merging redeploys production, so it waits for the learner, after the submission.
 
+### Video and license, 2026-10-26
+- **Video:** recorded on the phone, filming the monitor (136 s, portrait). Uploaded as a YouTube Short, `yPwZ9tQnuJ4`, scheduled to go public at 23:45 EAT. YouTube's oEmbed answers 403 for it until then; control: a known public video returns 200. Frames checked every 2 to 6 s: welcome (about 45 s), home, the Finance Act's summary, the *What changed* tab with the source fingerprint, the challenge avenues, and the group explanations in Kiswahili, Sheng and English. No credentials or private windows were in the sampled frames. The audio was not checked from here.
+- **The form requires an open-source license** that GitHub detects on the repo page. There was none, so the learner chose **MIT** (`LICENSE`, holder "Cre3tr", `b81efed`). The README says the license doesn't cover the fonts (OFL) or the official documents in `sources/`. GitHub's API without login reports `spdx_id: MIT`.
+- **Dependabot:** PR #10 (`deps/dependabot-2026-10-26`) clears 5 of 6 alerts and carries its own Revisions entry. It is left open until the learner has submitted.
+
+### Submitted, 2026-10-26
+- **The learner submitted on Devpost** (learner: "Submitted."). Before the deadline, the submission had the public repo, the live site, the YouTube video, the MIT license URL, and the learner's own project details and exit survey.
+- **PR #10 merged afterwards**, as agreed: `main` was merged into it first, and this file's two same-evening entries conflicted and were both kept.
+
+

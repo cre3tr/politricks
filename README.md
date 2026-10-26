@@ -72,3 +72,9 @@ file. A mismatch means the official file has changed since it was fetched;
 - `src/`: the Astro site. `src/lib/api.ts` and `src/pages/api/` are the live helpers.
 - `pipeline/`: the Python pipeline, prompts (`pipeline/prompts/`) and civic facts (`pipeline/civic/`), each with its source, drafted by Claude and not yet checked by a person.
 - `sources/`: the fingerprinted official PDFs.
+
+## License
+
+The code is MIT (`LICENSE`). Two things in this repository are not covered by it:
+- The fonts in `public/fonts/` keep their own SIL Open Font License (the OFL files sit next to them).
+- The official documents in `sources/`, and the legal text quoted from them, are publications of the Government of Kenya, Parliament and the Nairobi City County Assembly.
