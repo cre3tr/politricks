@@ -147,12 +147,12 @@ Build mode: fast — with human-readable comments in the code (learner request)
 
 ## Final Review
 
-- [ ] FR1. Sticky header: wordmark and EN/SW/SHENG stay pinned while scrolling; the active language is visibly filled in.
-- [ ] FR2. Hackathon notice: a thin banner under the header and a footer line, on every page (learner's wording, 2026-10-26).
-- [ ] FR3. Fonts: Anton for the wordmark only; headings bold normal-case sans; body 17px with more spacing; legal text quieter.
-- [ ] FR4. Home: an active bill wears the green stripe only while comments are open; closed ones are grey with a "Comments closed" badge.
-- [ ] FR5. Bill page summary first: "In short" and "What it means for you" on top; each clause a tap-to-open row, legal text behind "Show the legal text"; Match results float up and are marked.
-- [ ] FR6. Light motion (cards, tabs, taps, matched clauses), off under reduced motion.
+- [x] FR1. Sticky header: wordmark and EN/SW/SHENG stay pinned while scrolling; the active language is visibly filled in.
+- [x] FR2. Hackathon notice: a thin banner under the header and a footer line, on every page (learner's wording, 2026-10-26).
+- [x] FR3. Fonts: Anton for the wordmark only; headings bold normal-case sans; body 17px with more spacing; legal text quieter.
+- [x] FR4. Home: an active bill wears the green stripe only while comments are open; closed ones are grey with a "Comments closed" badge.
+- [x] FR5. Bill page summary first: "In short" and "What it means for you" on top; each clause a tap-to-open row, legal text behind "Show the legal text"; Match results float up and are marked.
+- [x] FR6. Light motion (cards, tabs, taps, matched clauses), off under reduced motion.
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
@@ -1022,4 +1022,6 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
   - Copy: the learner's wording for the banner, badge and footer; SW "Oyesho" read as "Onyesho" (flagged to the learner); the EN banner has no "check official sources" sentence while SW and Sheng do (flagged). New strings for the learner's Sheng check: "In short" / "Kwa ufupi", "Show/Hide the legal text" / "Onyesha/Ficha maandishi ya sheria" / "Cheki/Ficha legal text", "Matches you" / "Inakuhusu".
 - **Verified:** `npm run build` 0 errors; check-build on all 5 bills exits 0 with 123/15/11/53/147 PASS lines (equal to the builder's); check-api 19. At 375px in the browser: scrollWidth 375 (was 428), header still at top after scrolling 3000px, headings 700 weight with no text-transform, body 17px, all 55 cards closed on load; renderer live (33 rAF ticks in 500 ms). The builder's headless-Chrome run covered Match opening the top 3, Explain firing only on open, and reduced motion.
 - **Not ticked:** each FR item waits for the learner's retry on the phone.
+- **Learner's retry, 2026-10-26:** "All six good." FR1-FR6 ticked. Shipping work (6-ship) is slotted from 20:00 EAT tonight, before the 00:00 EAT deadline (learner's call).
+- **App map generated, 2026-10-26:** `devpost/app-map.html` from commit `9f88167`: overview, the Match action traced through `[id].astro`, `api.ts` `handleMatch` and `claude.ts` `callMatch` (a reference route, not yet walked with the learner), "start here" pointers, and the scoping practice (the cut-off and kernel that made the slice 8 cut one line). All 26 paths and search anchors checked against the code (a fake anchor as the negative control was reported missing). Opened offline in the browser pane. The learning activity itself and its boxes wait for the learner.
 

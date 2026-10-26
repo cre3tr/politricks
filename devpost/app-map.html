@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PoliTricks App Map</title>
+<style>
+  :root { --ink: #111; --muted: #5f5a52; --line: #ddd8d0; --paper: #fff; --soft: #f5f3ef; --green: #006600; --red: #bb0000; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink: #eee; --muted: #b5afa6; --line: #3a3733; --paper: #161514; --soft: #22201e; --green: #5fbf5f; --red: #ff6b6b; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+  h1 { font-size: 1.8rem; margin: 0 0 0.25rem; }
+  h2 { font-size: 1.25rem; margin: 2rem 0 0.5rem; }
+  p.meta { color: var(--muted); margin-top: 0; }
+  code { background: var(--soft); padding: 0.05rem 0.3rem; border-radius: 4px; font-size: 0.9em; overflow-wrap: anywhere; }
+  pre { background: var(--soft); padding: 0.75rem; border-radius: 6px; overflow-x: auto; font-size: 0.85rem; }
+  ol.route > li { margin-bottom: 1rem; }
+  .card { border: 1px solid var(--line); border-left: 6px solid var(--green); border-radius: 6px; padding: 0.75rem 1rem; margin: 0.75rem 0; }
+  details { border: 1px solid var(--line); border-radius: 6px; padding: 0.5rem 0.75rem; margin: 0.5rem 0; }
+  summary { cursor: pointer; font-weight: 700; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+  td, th { border-top: 1px solid var(--line); padding: 0.4rem 0.3rem; text-align: left; vertical-align: top; }
+  svg { width: 100%; height: auto; }
+  svg text { fill: var(--ink); font: 12px -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+  svg .box { fill: var(--soft); stroke: var(--line); }
+  svg .ext { fill: var(--paper); stroke: var(--muted); stroke-dasharray: 4 3; }
+  svg .arrow { stroke: var(--muted); stroke-width: 1.5; fill: none; marker-end: url(#head); }
+  svg .back { stroke: var(--green); }
+  a { color: inherit; }
+</style>
+</head>
+<body>
+<main>
+<h1>PoliTricks App Map</h1>
+<p class="meta">A snapshot of the code at commit <code>9f88167</code> (26 Oct 2026). The code can move on after this; paths and names were checked against that commit.</p>
+
+<h2>What the app is</h2>
+<p>PoliTricks explains Kenyan bills in English, Kiswahili and Sheng. Every explanation sits beside the clause's official text, and the official PDF's SHA-256 fingerprint is on the page, so a reader can check the AI against the source. It has three parts:</p>
+<ul>
+  <li><strong>A Python pipeline</strong> (<code>pipeline/politricks/</code>, command <code>politricks</code>): fetches and fingerprints the official PDFs, cuts them into clauses word for word, asks Claude for explanations, lints them for banned phrases, and walks a human through review.</li>
+  <li><strong>The bill files</strong> (<code>src/data/bills/*.json</code>): everything the site shows. Nothing reaches a reader except through these files.</li>
+  <li><strong>An Astro site</strong> (<code>src/</code>): prebuilt pages from those files, plus two small live helpers, Match and Explain, that call Claude at request time.</li>
+</ul>
+
+<h2>One action, end to end: "what hits me?"</h2>
+<p>On a bill page, a reader who typed their own words at the welcome screen (for example "I sell mitumba Gikomba") sees the clauses that fit them float to the top, tagged <em>Matches you</em>, with the top three opened.</p>
+<svg viewBox="0 0 720 250" role="img" aria-labelledby="dg-title dg-desc">
+  <title id="dg-title">Match, from the reader's words to reordered clause cards</title>
+  <desc id="dg-desc">The bill page sends the words to POST /api/match; the route calls handleMatch, which calls callMatch, which asks the Claude API; the answer is filtered to known clause ids and the page floats those cards to the top.</desc>
+  <defs><marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+  <rect class="box" x="10" y="20" width="200" height="70" rx="6"/>
+  <text x="22" y="44">1. Bill page script</text>
+  <text x="22" y="62">src/pages/bills/[id].astro</text>
+  <text x="22" y="78">fetch("/api/match")</text>
+  <rect class="box" x="260" y="20" width="200" height="70" rx="6"/>
+  <text x="272" y="44">2. Route and handler</text>
+  <text x="272" y="62">src/pages/api/match.ts</text>
+  <text x="272" y="78">src/lib/api.ts handleMatch</text>
+  <rect class="box" x="510" y="20" width="200" height="70" rx="6"/>
+  <text x="522" y="44">3. The Claude call</text>
+  <text x="522" y="62">src/lib/claude.ts</text>
+  <text x="522" y="78">callMatch</text>
+  <rect class="ext" x="510" y="150" width="200" height="60" rx="6"/>
+  <text x="522" y="176">Claude API (Sonnet 5.5)</text>
+  <text x="522" y="194">key read at run time</text>
+  <rect class="box" x="10" y="150" width="200" height="60" rx="6"/>
+  <text x="22" y="176">Result on screen</text>
+  <text x="22" y="194">cards float up, "Matches you"</text>
+  <path class="arrow" d="M210 55 H255" style="color: var(--muted)"/>
+  <path class="arrow" d="M460 55 H505" style="color: var(--muted)"/>
+  <path class="arrow" d="M610 90 V145" style="color: var(--muted)"/>
+  <path class="arrow back" d="M505 185 H330 V100" style="color: var(--green)"/>
+  <path class="arrow back" d="M300 100 V180 H215" style="color: var(--green)"/>
+  <text x="335" y="140">ids, filtered to clauses</text>
+  <text x="335" y="156">this bill has (max 8)</text>
+</svg>
+
+<h2>Reference route (3 stops)</h2>
+<p>A route to follow in your editor. It is a reference: it was prepared for you, not walked together.</p>
+<ol class="route">
+  <li><strong><code>src/pages/bills/[id].astro</code></strong>, search for <code>fetch("/api/match"</code>. The page sends the saved words and the bill id. When the answer comes back it adds the <code>matched</code> class, shows the <em>Matches you</em> tag, calls <code>list.prepend(card)</code> for each match and opens the first three. If the call fails or times out, nothing moves: the page stays as it was.</li>
+  <li><strong><code>src/lib/api.ts</code></strong>, search for <code>export async function handleMatch</code>. A plain function, so <code>scripts/check-api.mjs</code> can test every status code offline with a stubbed Claude. It answers 400 for an unknown bill or empty words, 502 if the model call fails (and logs why with <code>logUpstream</code>, never the key), and otherwise keeps only ids that exist in this bill, each once, at most <code>MAX_MATCHES</code> (8). The route in <code>src/pages/api/match.ts</code> only turns HTTP into this call.</li>
+  <li><strong><code>src/lib/claude.ts</code></strong>, search for <code>async function callMatch</code>. Builds the request: the matcher prompt (<code>pipeline/prompts/matcher.md</code>, the same file the pipeline uses), the bill's English explanations in a cached block, and the reader's words. The answer must parse as a strict schema, or it becomes a 502. The key comes from <code>getSecret("ANTHROPIC_API_KEY")</code> at run time, so a build never contains it.</li>
+</ol>
+
+<h2>To change this, start here</h2>
+<table>
+  <tr><th>You want to change</th><th>Start here</th></tr>
+  <tr><td>The hackathon banner or footer</td><td><code>src/layouts/BaseLayout.astro</code> (search <code>demo-banner</code>)</td></tr>
+  <tr><td>Badge wording (AI draft, Reviewed...)</td><td><code>src/lib/badge.ts</code>; <code>scripts/check-build.mjs</code> reads it, so the check follows</td></tr>
+  <tr><td>Phrases an explanation must never contain</td><td><code>pipeline/prompts/banned.txt</code>; add a case to <code>pipeline/tests/fixtures/banned_vectors.json</code></td></tr>
+  <tr><td>How Claude explains a clause</td><td><code>pipeline/prompts/explainer.md</code> (used by the pipeline and the live Explain helper)</td></tr>
+  <tr><td>Add a bill</td><td><code>pipeline/sources.yaml</code>, then <code>politricks intake</code>, <code>lint</code>, <code>review</code></td></tr>
+  <tr><td>Colours and fonts</td><td><code>src/styles/global.css</code> (the <code>:root</code> tokens, <code>--font-display</code>, <code>--font-wordmark</code>)</td></tr>
+  <tr><td>A clause card's layout</td><td><code>src/components/ClauseCard.astro</code>; keep <code>data-clause-id</code> straight after <code>class</code></td></tr>
+</table>
+
+<h2>A practice to reuse: decide the cut before you need it</h2>
+<div class="card">
+  <p><strong>The decision.</strong> On 23 Oct, with 12 slices planned, the build set a cut-off in advance: Sunday 25 Oct, 20:00 EAT. Any slice not done by then gets a recorded cut, and Monday is for shipping only. The kernel it protected is the one in <code>devpost/scope.md</code> under "The Unique Kernel": a clause in Sheng, beside its official text.</p>
+  <p><strong>The evidence.</strong> <code>devpost/checklist.md</code>, Revisions "Deadline and &quot;all 12&quot;, 2026-10-23" sets the rule. When slice 8 (What changed) was still blocked on an OCR install at the cut-off, cutting it took one line: "Cut 8". Its code stays merged and tested, the tab shows an honest one-version note, and Monday stayed free for review fixes and shipping (Revisions "Slice 8 cut; slice 7 key and domain in place, 2026-10-25").</p>
+  <p><strong>On the next project.</strong> Write the cut-off and the kernel down on day one, next to the slice list. When the deadline arrives, the question is no longer "can we squeeze it in?" but "is it past the line?", and the kernel says what must still work after anything is cut.</p>
+</div>
+
+<h2>Run it again</h2>
+<pre>npm ci
+npm run dev                          # http://localhost:4321
+npm run build                        # type check, then build
+node scripts/check-build.mjs finance-act-2026
+uv run --project pipeline politricks lint</pre>
+<p>Match and Explain need <code>ANTHROPIC_API_KEY</code> in <code>.env</code> (copy <code>.env.example</code>); without it the site still works and the helpers fall back quietly. Live: <a href="https://poli-tricks.vercel.app">poli-tricks.vercel.app</a>.</p>
+
+<details>
+  <summary>Where the rest of the record lives</summary>
+  <p><code>devpost/scope.md</code>, <code>prd.md</code> and <code>spec.md</code> are the plan; <code>devpost/checklist.md</code> is the build log with every decision under Revisions; <code>CLAUDE.md</code> holds the gotchas and line maps; <code>TESTING.md</code> lists the tests and their controls.</p>
+</details>
+</main>
+</body>
+</html>
