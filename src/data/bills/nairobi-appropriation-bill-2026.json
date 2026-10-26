@@ -6,7 +6,7 @@
   "status": "passed",
   "stage": "Passed by the Nairobi City County Assembly on 28 July 2026 (all three readings the same day); assent recorded 31 July 2026",
   "stage_checked_at": "2026-10-23",
-  "source_changed": false,
+  "source_changed": true,
   "sources": [
     {
       "label": "The Nairobi City County Appropriation Bill 2026 (Assembly Bill No. 7 of 2026)",
