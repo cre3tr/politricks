@@ -92,6 +92,9 @@ uv run --project pipeline politricks verify                # re-download all sou
 **Deployment (your choice: Vercel):** connect the GitHub repo in Vercel and set `ANTHROPIC_API_KEY`. Each push to `main` deploys. It's free-tier sized.
 
 **Submission:** a public GitHub repo plus the short demo video. The deployed URL is a bonus, not a substitute.
+- Repository: https://github.com/cre3tr/politricks (public since 2026-10-26)
+- Live site: https://poli-tricks.vercel.app
+- Demo video: not yet recorded.
 
 ## Look and Feel
 Carries `prd.md > Look and Feel` and `scope.md > Inspiration & Identity`.
