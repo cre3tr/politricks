@@ -159,16 +159,19 @@ const blocks = await Promise.all(
     gap: 0.75rem;
   }
   .group-block {
-    border-left: 4px solid var(--matatu-brown);
-    padding: 0.5rem 0.75rem;
-    background: color-mix(in srgb, var(--matatu-brown) 6%, var(--paper));
+    border: 1px solid var(--rule);
+    border-left: 5px solid var(--matatu-brown);
+    border-radius: 4px var(--radius-card) var(--radius-card) 4px;
+    box-shadow: var(--shadow-card);
+    padding: 0.7rem 0.9rem;
+    background: var(--tint-brown);
   }
   .group-block h3 {
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: 0.02em;
-    font-size: 1rem;
-    margin: 0 0 0.25rem;
+    letter-spacing: -0.005em;
+    font-size: 1.05rem;
+    margin: 0 0 0.3rem;
   }
   .sections {
     display: flex;
@@ -176,41 +179,32 @@ const blocks = await Promise.all(
     gap: 0.5rem;
     font-size: 0.85rem;
   }
+  /* The section numbers: flag red, bold, underlined so they read as links. */
   .sections a {
     color: var(--flag-red);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
   .see-everyone {
     margin-top: 0.75rem;
-    border: 1px solid var(--flag-black);
+    border: 2px solid var(--flag-black);
     background: var(--paper);
-    padding: 0.4rem 1rem;
-    border-radius: 4px;
+    font-weight: 600;
+    padding: 0.4rem 1.1rem;
+    border-radius: 999px;
     cursor: pointer;
-    min-height: 2.5rem;
+    min-height: 2.75rem;
+  }
+  .see-everyone:hover {
+    background: var(--flag-black);
+    color: var(--paper);
   }
   .none-mine {
     color: var(--muted);
     font-size: 0.9rem;
   }
-  .badge {
-    display: inline-block;
-    font-size: 0.75rem;
-    padding: 0.1rem 0.45rem;
-    border-radius: 3px;
-    border: 1px solid var(--muted);
-    color: var(--muted);
-  }
-  .badge-draft {
-    border-color: var(--matatu-brown);
-    color: var(--matatu-brown);
-  }
-  .badge-reviewed {
-    border-color: var(--flag-green);
-    color: var(--flag-green);
-  }
-  .badge-sample {
-    border-style: dashed;
-  }
+  /* The review badges are in global.css (FR7). */
   /* Inline language spans in headings, labels and buttons. */
   :is(h2, h3, .chips-label, .none-mine, .see-everyone) :global([data-l]) {
     display: none;

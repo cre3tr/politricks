@@ -14,6 +14,21 @@
   --paper: #ffffff;
   --matatu-brown: #6b3f22;
   --muted: #5f5a52;
+
+  /* Derived, never new hues: light tints and shadows, all mixed from the six
+     tokens above (FR7). Text on a tint keeps WCAG AA (4.5:1); the ratios
+     were measured and are in the FR7 commit message. */
+  --tint-green: color-mix(in srgb, var(--flag-green) 8%, var(--paper));
+  --tint-red: color-mix(in srgb, var(--flag-red) 6%, var(--paper));
+  --tint-brown: color-mix(in srgb, var(--matatu-brown) 9%, var(--paper));
+  --rule: color-mix(in srgb, var(--flag-black) 14%, var(--paper));
+  --radius-card: 12px;
+  --shadow-card:
+    0 1px 2px color-mix(in srgb, var(--flag-black) 10%, transparent),
+    0 6px 16px -8px color-mix(in srgb, var(--flag-black) 22%, transparent);
+  --shadow-card-hover:
+    0 1px 2px color-mix(in srgb, var(--flag-black) 14%, transparent),
+    0 10px 22px -8px color-mix(in srgb, var(--flag-black) 30%, transparent);
 }
 
 /* Bridge the raw tokens into Tailwind's theme, so `bg-flag-red` etc. work,
@@ -26,11 +41,14 @@
   --color-paper: var(--paper);
   --color-matatu-brown: var(--matatu-brown);
   --color-muted: var(--muted);
-  /* Headings: the phone's own sans, set bold. Anton is for the wordmark only
-     (learner's call at the final review, 2026-10-26: tall condensed capitals
-     were hard to read on a small screen). */
+  /* Headings: Bricolage Grotesque (variable), with the phone's own sans as
+     the fallback while it loads. Anton is for the wordmark only (learner's
+     call at the final review, 2026-10-26: tall condensed capitals were hard
+     to read on a small screen; FR7 then asked for a font with more
+     character than the system sans). */
   --font-display:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   --font-wordmark: "Anton", Impact, "Arial Narrow", sans-serif;
 }
 
@@ -47,11 +65,33 @@
   font-display: swap;
 }
 
+/* Bricolage Grotesque and Inter (FR7), both variable fonts, self-hosted and
+   Latin subset only, exactly like Anton: public/fonts/*.woff2 copied from
+   @fontsource-variable/bricolage-grotesque and @fontsource-variable/inter
+   (the wght-axis files), licences beside them (BRICOLAGE-GROTESQUE-OFL.txt,
+   INTER-OFL.txt). One file each covers every weight (Bricolage 200-800,
+   Inter 100-900). Nothing loads from Google or a CDN. `font-display: swap`
+   as above; the system stack in the font variables is the fallback. */
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/fonts/bricolage-grotesque-latin-wght.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-latin-wght.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
-  /* System font stack for body text: costs zero bytes to load, per the
-     spec's "civic-tech clean" base. Anton is reserved for headers/labels. */
+  /* Inter for body text, the system stack as the fallback while it loads
+     (and for any glyph outside the Latin subset). */
   font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.65;
   font-size: 17px;
   background: var(--paper);
@@ -83,6 +123,111 @@ body {
   color: var(--muted);
   font-size: 0.85rem;
   padding: 1rem 1rem 2rem;
+}
+
+/* --- Shared polish (FR7) ---------------------------------------------------
+   Rules several pages and components used to repeat, written once here
+   (Iron Law X). Only palette tokens and tints of them: no orange or yellow. */
+
+/* Section headings carry a short flag-red bar underneath. It is a drawn
+   block, not text, so it adds nothing to the HTML or the copy. */
+.section-heading,
+.home h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  font-size: 1.45rem;
+  margin: 2rem 0 0.9rem;
+}
+.section-heading::after,
+.home h2::after {
+  content: "";
+  display: block;
+  width: 2.75rem;
+  height: 4px;
+  margin-top: 0.4rem;
+  border-radius: 2px;
+  background: var(--flag-red);
+}
+
+/* Review-status pills. Colour carries the meaning (green Reviewed, brown AI
+   draft, dashed grey Sample) and the label text says it too, so nothing
+   depends on colour alone. */
+.badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+  padding: 0.12rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--muted);
+  background: color-mix(in srgb, var(--muted) 8%, var(--paper));
+  color: var(--muted);
+}
+.badge-draft {
+  border-color: var(--matatu-brown);
+  background: var(--tint-brown);
+  color: var(--matatu-brown);
+}
+.badge-reviewed {
+  border-color: var(--flag-green);
+  background: var(--tint-green);
+  color: var(--flag-green);
+}
+.badge-sample {
+  border-style: dashed;
+  border-color: var(--muted);
+  color: var(--muted);
+}
+
+/* "In short": a pull-quote. Green tint, a thick green left edge and slightly
+   larger text, so it is the first thing read on a bill page. Used by the bill
+   page and the county Motion Card. */
+.summary-card {
+  background: var(--tint-green);
+  border-left: 6px solid var(--flag-green);
+  border-radius: 4px var(--radius-card) var(--radius-card) 4px;
+  padding: 1rem 1.1rem 0.9rem;
+  margin-bottom: 1.5rem;
+}
+.summary-heading {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--flag-green);
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem;
+}
+.summary-card .badge {
+  margin-bottom: 0.5rem;
+}
+.summary-card p {
+  font-size: 1.12rem;
+  line-height: 1.6;
+  margin: 0.25rem 0 0;
+}
+
+/* Cards (clause cards, bill cards on home, group notes): softer corners and
+   a quiet shadow. Hover and keyboard focus are clear but do not move
+   anything, so there is no new motion. */
+.clause-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+.clause-card:hover {
+  border-color: color-mix(in srgb, var(--flag-green) 55%, var(--paper));
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* One focus ring everywhere: thick, green, offset. Inputs and buttons keep
+   their own sizes; this only adds the outline. */
+:where(a, button, summary, input, [tabindex]):focus-visible {
+  outline: 3px solid var(--flag-green);
+  outline-offset: 2px;
 }
 
 /* --- The matatu highlighter (devpost/spec.md > Look and Feel) -----------

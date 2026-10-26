@@ -64,19 +64,7 @@ const summaryBadge = bill.summary ? badgeFor(displayStatus(bill.summary.review, 
   :global(html[data-lang="sheng"]) .motion-label :global([data-l="sheng"]) {
     display: inline;
   }
-  .summary-card {
-    border: 1px solid var(--flag-black);
-    border-radius: 4px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  .summary-heading {
-    font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    font-size: 1.1rem;
-    margin: 0 0 0.5rem;
-  }
+  /* .summary-card, .summary-heading and the review badges are in global.css (FR7). */
   .summary-heading :global([data-l]) {
     display: none;
   }
@@ -85,14 +73,5 @@ const summaryBadge = bill.summary ? badgeFor(displayStatus(bill.summary.review, 
   :global(html[data-lang="sw"]) .summary-heading :global([data-l="sw"]),
   :global(html[data-lang="sheng"]) .summary-heading :global([data-l="sheng"]) {
     display: inline;
-  }
-  .badge {
-    display: inline-block;
-    font-size: 0.75rem;
-    padding: 0.15rem 0.5rem;
-    border-radius: 3px;
-    border: 1px solid var(--matatu-brown);
-    color: var(--matatu-brown);
-    margin-bottom: 0.5rem;
   }
 </style>

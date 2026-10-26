@@ -207,19 +207,28 @@ const checked = (iso: string) =>
   .tag {
     display: inline-block;
     margin-left: 0.35rem;
-    padding: 0 0.4rem;
+    padding: 0 0.55rem;
     border: 1px solid var(--matatu-brown);
-    border-radius: 3px;
+    border-radius: 999px;
+    background: var(--tint-brown);
     color: var(--matatu-brown);
     font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
   }
   .search input {
     width: 100%;
     box-sizing: border-box;
-    padding: 0.7rem;
+    padding: 0.8rem 1rem;
     font-size: 1rem;
     border: 2px solid var(--flag-black);
-    border-radius: 6px;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+  .search input:focus-visible {
+    border-color: var(--flag-green);
+    outline-offset: 1px;
   }
   .search-help {
     font-size: 0.85rem;
@@ -238,12 +247,30 @@ const checked = (iso: string) =>
     margin: 0 auto;
     padding: 1.5rem 1rem 3rem;
   }
+  /* The title gets presence: bigger, heavier, tight, with a three-part bar
+     underneath in the flag's own black, red and green (same order as the
+     header stripe). */
   .home-title {
     font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    font-size: 2rem;
-    margin: 0 0 0.25rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    font-size: 2.9rem;
+    margin: 0 0 0.9rem;
+  }
+  .home-title::after {
+    content: "";
+    display: block;
+    width: 5rem;
+    height: 6px;
+    margin-top: 0.6rem;
+    border-radius: 3px;
+    background: linear-gradient(
+      90deg,
+      var(--flag-black) 0 33.3%,
+      var(--flag-red) 33.3% 66.6%,
+      var(--flag-green) 66.6% 100%
+    );
   }
   .empty {
     color: var(--muted);
@@ -257,16 +284,13 @@ const checked = (iso: string) =>
     color: var(--flag-green);
   }
   .lede {
-    color: var(--muted);
-    margin-bottom: 1.5rem;
+    color: var(--flag-black);
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-bottom: 1.75rem;
   }
-  h2 {
-    font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    font-size: 1.5rem;
-    margin: 1.75rem 0 0.75rem;
-  }
+  /* The h2s ("Una'tafuta?", Open, Passed) share the section-heading look in
+     global.css (.home h2). */
   .bill-list {
     list-style: none;
     padding: 0;
@@ -279,10 +303,11 @@ const checked = (iso: string) =>
   .bill-card {
     display: grid;
     gap: 0.25rem;
-    padding: 0.9rem 1rem;
-    border: 1px solid #ddd;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--rule);
     border-left: 6px solid var(--flag-green);
-    border-radius: 6px;
+    border-radius: 4px var(--radius-card) var(--radius-card) 4px;
+    box-shadow: var(--shadow-card);
     color: var(--flag-black);
     text-decoration: none;
     background: var(--paper);
@@ -302,9 +327,20 @@ const checked = (iso: string) =>
     border-radius: 999px;
     padding: 0.1rem 0.6rem;
   }
+  /* Hover and keyboard focus: a darker edge and a deeper shadow, and the
+     title turns flag red so the whole card reads as the link. No movement. */
   .bill-card:hover,
   .bill-card:focus-visible {
     border-color: var(--flag-black);
+    box-shadow: var(--shadow-card-hover);
+  }
+  .bill-card:hover .title,
+  .bill-card:focus-visible .title {
+    color: var(--flag-red);
+  }
+  .bill-card.bill-closed:hover .title,
+  .bill-card.bill-closed:focus-visible .title {
+    color: inherit;
   }
   .chamber {
     font-size: 0.8rem;
@@ -313,8 +349,11 @@ const checked = (iso: string) =>
     color: var(--muted);
   }
   .title {
+    font-family: var(--font-display);
     font-weight: 700;
-    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    font-size: 1.2rem;
   }
   .stage {
     font-size: 0.95rem;
@@ -327,8 +366,9 @@ const checked = (iso: string) =>
     display: inline-block;
     background: var(--flag-black);
     color: var(--paper);
-    padding: 0 0.4rem;
-    border-radius: 3px;
+    padding: 0 0.55rem;
+    border-radius: 999px;
+    font-weight: 600;
     margin-right: 0.25rem;
   }
 </style>

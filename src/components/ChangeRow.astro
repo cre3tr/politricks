@@ -154,15 +154,16 @@ const kindLabel = {
 
 <style>
   .change-row {
-    border: 1px solid var(--muted);
-    border-radius: 4px;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
     padding: 1rem;
     margin-bottom: 1.5rem;
   }
   .change-header h3 {
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.005em;
     font-size: 1.1rem;
     margin: 0 0 0.4rem;
   }
@@ -196,8 +197,8 @@ const kindLabel = {
   }
   .change-kind {
     font-weight: 700;
-    padding: 0.15rem 0.5rem;
-    border-radius: 3px;
+    padding: 0.15rem 0.65rem;
+    border-radius: 999px;
     border: 1px solid currentColor;
   }
   .kind-changed {
@@ -212,25 +213,7 @@ const kindLabel = {
   .renumbered {
     color: var(--muted);
   }
-  .badge {
-    display: inline-block;
-    font-size: 0.75rem;
-    padding: 0.15rem 0.5rem;
-    border-radius: 3px;
-    border: 1px solid var(--muted);
-    color: var(--muted);
-  }
-  .badge-draft {
-    border-color: var(--matatu-brown);
-    color: var(--matatu-brown);
-  }
-  .badge-reviewed {
-    border-color: var(--flag-green);
-    color: var(--flag-green);
-  }
-  .badge-sample {
-    border-style: dashed;
-  }
+  /* The review badges are in global.css (FR7). */
   /* One column on a phone, with "Before" directly above "After"; two columns
      from 768px, as in ClauseCard. */
   .versions {
