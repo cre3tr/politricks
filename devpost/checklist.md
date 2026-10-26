@@ -1060,8 +1060,24 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **Open:** making the repo public (learner's call), the video, and the learner's own submission copy.
 - **Later the same evening:** the learner wrote the project details (spelling and grammar pass only) and entered the Built with tags. On the learner's go-ahead, the repo's website link was set to `https://poli-tricks.vercel.app` and the repo was made **public**. Checked without login: the repo page 200; the API says `"private": false`, homepage `poli-tricks.vercel.app`; the raw README on `main` carries the 22.22 fix; `devpost/learner-profile.md` is 404 (control). URLs recorded in `spec.md` "Submission". Still open: the video (learner recording), the exit survey, Submit.
 
+### Dependabot alerts cleared, 2026-10-26
+- **Measured:** 6 open alerts on `main` once the repo went public (`gh api repos/cre3tr/politricks/dependabot/alerts?state=open`): #37 zod `< 4.6.6` (high, runtime), #1 path-to-regexp `>= 4.0.0, < 6.3.0` (high, runtime), and #38-#41 fast-uri `< 3.1.9` (2 medium, 2 low, dev).
+- **fast-uri 3.1.8 to 3.1.9:** an in-range lockfile bump (`ajv@8.20.0` takes `^3.0.1`). It is dev-only, under `@astrojs/check`'s YAML language server.
+- **zod: an `overrides` entry, a deliberate decision.** The root `zod` was already 4.6.7. The alert is the nested copy that `@vercel/cli-config@0.3.1` pins at exactly `4.1.11`, and its latest version (0.3.3) still does, so no upgrade fixes it. Added `"overrides": {"@vercel/cli-config": {"zod": "$zod"}}`. That copy now follows the root range and isn't frozen at a version, and `npm ls zod` shows it `deduped` to 4.6.7. Reachability was low anyway: it validates the Vercel CLI's own config files, not visitor input. Under 4.6.7, `authConfigSchema` still parses its default config and rejects a wrong type. **Remove the override when** `@vercel/cli-config` declares zod >= 4.6.6.
+- **path-to-regexp: still blocked, rechecked.** `@vercel/routing-utils` is still 6.6.0, the latest, and pins 6.1.0 exactly. The 2026-10-19 recheck trigger (slice 4's API routes) was run: a build with `FORCE_PATH_TO_REGEXP_LOG=1` still compiles only `/_astro/(.*)`, identical under 6.1.0 and 6.3.0. Alert #1 stays open with that reason. Dismissing it on GitHub is the learner's call.
+- **Target check:** the GitHub advisory database has none for `fast-uri@3.1.9` or `zod@4.6.7`. Controls: `fast-uri@3.1.8` returned its 4 advisories and `zod@4.1.11` returned its 1.
+- **Verified:** all 13 self-tests pass, check-api passes 19, lint finds 0, `npm run build` exits 0 with 0 errors, and check-build exits 0 for all 5 bills (123/15/11/53/147 PASS).
+- **Output unchanged:** from clean `npm ci` installs, the old and new lockfiles each build 918 files. The only file that differs is `entry.mjs`, and only by Astro's random per-build tokens (the middleware secret UUID and the manifest key). With those normalised, the diff is empty.
+  - A first comparison showed 926 against 918. The baseline had come from a stale `node_modules` holding the optional `@img/sharp-wasm32`, which `npm ci` doesn't install on Windows.
+- **Done when merged:** Dependabot reads only `main`, so #37-#41 close after this PR is merged and GitHub rescans. Merging redeploys production, so it waits for the learner, after the submission.
+
 ### Video and license, 2026-10-26
 - **Video:** recorded on the phone, filming the monitor (136 s, portrait). Uploaded as a YouTube Short, `yPwZ9tQnuJ4`, scheduled to go public at 23:45 EAT. YouTube's oEmbed answers 403 for it until then; control: a known public video returns 200. Frames checked every 2 to 6 s: welcome (about 45 s), home, the Finance Act's summary, the *What changed* tab with the source fingerprint, the challenge avenues, and the group explanations in Kiswahili, Sheng and English. No credentials or private windows were in the sampled frames. The audio was not checked from here.
 - **The form requires an open-source license** that GitHub detects on the repo page. There was none, so the learner chose **MIT** (`LICENSE`, holder "Cre3tr", `b81efed`). The README says the license doesn't cover the fonts (OFL) or the official documents in `sources/`. GitHub's API without login reports `spdx_id: MIT`.
 - **Dependabot:** PR #10 (`deps/dependabot-2026-10-26`) clears 5 of 6 alerts and carries its own Revisions entry. It is left open until the learner has submitted.
+
+### Submitted, 2026-10-26
+- **The learner submitted on Devpost** (learner: "Submitted."). Before the deadline, the submission had the public repo, the live site, the YouTube video, the MIT license URL, and the learner's own project details and exit survey.
+- **PR #10 merged afterwards**, as agreed: `main` was merged into it first, and this file's two same-evening entries conflicted and were both kept.
+
 

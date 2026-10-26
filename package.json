@@ -21,5 +21,10 @@
     "@astrojs/check": "^0.9.10",
     "@fontsource/anton": "^5",
     "typescript": "^6.0.3"
+  },
+  "overrides": {
+    "@vercel/cli-config": {
+      "zod": "$zod"
+    }
   }
 }
