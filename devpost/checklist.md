@@ -153,6 +153,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
 - [x] FR4. Home: an active bill wears the green stripe only while comments are open; closed ones are grey with a "Comments closed" badge.
 - [x] FR5. Bill page summary first: "In short" and "What it means for you" on top; each clause a tap-to-open row, legal text behind "Show the legal text"; Match results float up and are marked.
 - [x] FR6. Light motion (cards, tabs, taps, matched clauses), off under reduced motion.
+- [ ] FR7. Type and colour with character: Bricolage Grotesque headings, Inter body (both self-hosted, OFL), the flag red and green as bold accents, a standout "In short" box, and polish. The learner: readable, but "really flat"; the point is to spark curiosity.
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
@@ -1024,4 +1025,5 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **Not ticked:** each FR item waits for the learner's retry on the phone.
 - **Learner's retry, 2026-10-26:** "All six good." FR1-FR6 ticked. Shipping work (6-ship) is slotted from 20:00 EAT tonight, before the 00:00 EAT deadline (learner's call).
 - **App map generated, 2026-10-26:** `devpost/app-map.html` from commit `9f88167`: overview, the Match action traced through `[id].astro`, `api.ts` `handleMatch` and `claude.ts` `callMatch` (a reference route, not yet walked with the learner), "start here" pointers, and the scoping practice (the cut-off and kernel that made the slice 8 cut one line). All 26 paths and search anchors checked against the code (a fake anchor as the negative control was reported missing). Opened offline in the browser pane. The learning activity itself and its boxes wait for the learner.
+- **Learner, 2026-10-26 morning:** not ready yet. The type reads "really flat"; it must be readable and presentable, because the point is to spark curiosity. *Have your say* works. Agreed as FR7: Bricolage Grotesque + Inter, more colour and polish.
 
