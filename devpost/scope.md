@@ -47,6 +47,7 @@ The learner chose to keep all of the following, and says time is not a hard cons
 ## Later
 - **Fiscal flag:** mark changes that touch a tax, levy, rate or fee, with before → after figures. This is the first stretch goal.
 - **Drafted comment / memorandum:** "how and when" was chosen for the proof of concept instead.
+- **Whole-site language switch** (learner, 2026-10-26, "not for demo"): every label and heading follows EN/SW/Sheng, not only the explanations, tabs and notices.
 - **Production path:** once real users rely on it, it gets wrapped in the full framework (learner's own §6 rule) as a separate step from the hackathon build.
 
 ## Explicitly Cut

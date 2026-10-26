@@ -42,31 +42,18 @@
   --color-matatu-brown: var(--matatu-brown);
   --color-muted: var(--muted);
   /* Headings: Bricolage Grotesque (variable), with the phone's own sans as
-     the fallback while it loads. Anton is for the wordmark only (learner's
-     call at the final review, 2026-10-26: tall condensed capitals were hard
-     to read on a small screen; FR7 then asked for a font with more
-     character than the system sans). */
+     the fallback while it loads. Learner's calls at the final review,
+     2026-10-26: Anton's tall condensed capitals were hard to read on a small
+     screen; FR7 asked for a font with more character than the system sans;
+     FR8 moved the wordmark to it too, so Anton is gone. */
   --font-display:
     "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
-  --font-wordmark: "Anton", Impact, "Arial Narrow", sans-serif;
-}
-
-/* Anton, self-hosted, Latin subset only (see public/fonts/anton-latin.woff2,
-   copied from @fontsource/anton — licence: public/fonts/ANTON-OFL.txt).
-   `font-display: swap` shows the fallback font immediately and swaps in
-   Anton once it loads, so text is never invisible while waiting on a font —
-   important on the cheap mobile data this site is built for. */
-@font-face {
-  font-family: "Anton";
-  src: url("/fonts/anton-latin.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+  --font-wordmark: var(--font-display);
 }
 
 /* Bricolage Grotesque and Inter (FR7), both variable fonts, self-hosted and
-   Latin subset only, exactly like Anton: public/fonts/*.woff2 copied from
+   Latin subset only: public/fonts/*.woff2 copied from
    @fontsource-variable/bricolage-grotesque and @fontsource-variable/inter
    (the wght-axis files), licences beside them (BRICOLAGE-GROTESQUE-OFL.txt,
    INTER-OFL.txt). One file each covers every weight (Bricolage 200-800,

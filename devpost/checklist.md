@@ -153,20 +153,21 @@ Build mode: fast — with human-readable comments in the code (learner request)
 - [x] FR4. Home: an active bill wears the green stripe only while comments are open; closed ones are grey with a "Comments closed" badge.
 - [x] FR5. Bill page summary first: "In short" and "What it means for you" on top; each clause a tap-to-open row, legal text behind "Show the legal text"; Match results float up and are marked.
 - [x] FR6. Light motion (cards, tabs, taps, matched clauses), off under reduced motion.
-- [ ] FR7. Type and colour with character: Bricolage Grotesque headings, Inter body (both self-hosted, OFL), the flag red and green as bold accents, a standout "In short" box, and polish. The learner: readable, but "really flat"; the point is to spark curiosity.
+- [x] FR7. Type and colour with character: Bricolage Grotesque headings, Inter body (both self-hosted, OFL), the flag red and green as bold accents, a standout "In short" box, and polish. The learner: readable, but "really flat"; the point is to spark curiosity.
+- [ ] FR8. The POLITRICKS wordmark in Bricolage Grotesque too (learner: "forgot the header text"); Anton retired.
 - [ ] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
 
-- [ ] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
-- [ ] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
-- [ ] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
+- [x] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
+- [x] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
+- [x] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
 
-Activity and evidence: 
-Route and stops: 
-Edit outcome: 
-Reflection: 
-Activity mode: 
+Activity and evidence: brief evidence-based recap (focused route, chosen because the learner is plan-first and wanted tighter scoping). The connection: the cut-off set in advance on 2026-10-23 (Revisions "Deadline and "all 12"") turned the slice 8 cut into one line ("Cut 8", Revisions "Slice 8 cut; slice 7 key and domain in place"), protecting the kernel in `scope.md` "The Unique Kernel" and freeing Monday for 8 review fixes. A recap, not hands-on practice.
+Route and stops: not toured. The app map carries a 3-stop reference route for Match (`[id].astro` fetch, `api.ts` handleMatch, `claude.ts` callMatch).
+Edit outcome: not applicable (recap route; no edit offered).
+Reflection: offered and answered (kept in the ignored learner profile).
+Activity mode: focused alternative, as a recap. App map: `devpost/app-map.html` (commit 9f88167 snapshot; open the file in a browser), shown to the learner 2026-10-26.
 
 ## Revisions
 
@@ -1028,3 +1029,6 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **Learner, 2026-10-26 morning:** not ready yet. The type reads "really flat"; it must be readable and presentable, because the point is to spark curiosity. *Have your say* works. Agreed as FR7: Bricolage Grotesque + Inter, more colour and polish.
 - **FR7 built, 2026-10-26:** by a Sonnet builder in a worktree (`42f051b`), diff reviewed and merged. Bricolage Grotesque (headings, 41,344 bytes) and Inter (body, 48,256 bytes), variable Latin subsets from `@fontsource-variable` 5.3.0, self-hosted in `public/fonts/` with their OFL files and preloaded; no package added (package.json and lock unchanged). Flag-red accent under section headings and on the active tab, a green-tint "In short" pull-quote, softer cards with shadows and focus states, red section numbers, pill badges; badge, summary and section-heading styles now live once in global.css. Contrast measured in Chrome: every new text and background pair is at least 5.75:1 (AA needs 4.5). Verified after the merge: build 0 errors, check-build 123/15/11/53/147 PASS with 0 FAIL, check-api 19; the builder measured scrollWidth 375 on every page at 375px and all three fonts loaded. Not done: "Changed since review" still shares the AI draft badge colour (needs a `badge.ts` change). Waits for the learner's retry.
 
+- **Learner, 2026-10-26 (late morning):** GitHub configured (secret `ANTHROPIC_API_KEY` set 08:12 UTC; "Allow GitHub Actions to create and approve pull requests" on, read back via the API). FR7 "looks better", ticked; the header wordmark was missed, so FR8 moves it to Bricolage Grotesque and retires Anton (its file, licence, @font-face and preload removed; 18,612 bytes less on every first load). Learner: "Ready if you are. Shipping on schedule."
+- **New feature, for after the hackathon (learner: "not for demo"):** the language switch should switch EVERY piece of text on the site, not just the explanations, tabs and notices. Added to `scope.md` > Later.
+- **Learning wrap-up done** (see Code Tour and App Map).
