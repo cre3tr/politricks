@@ -60,24 +60,42 @@ const tabs = [
     display: flex;
     gap: 0.25rem;
     margin-top: 1.5rem;
-    border-bottom: 2px solid var(--flag-black);
+    border-bottom: 2px solid var(--rule);
     overflow-x: auto;
+    /* The tabs still scroll sideways when the labels are long, but no
+       scrollbar is drawn: it would sit on top of the red bar under the open
+       tab. The label cut off at the right edge is the cue to swipe. */
+    scrollbar-width: none;
+  }
+  .bill-tabs::-webkit-scrollbar {
+    display: none;
   }
   .bill-tabs button {
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: 0.03em;
-    font-size: 0.95rem;
-    padding: 0.5rem 0.8rem;
+    letter-spacing: 0;
+    font-size: 1rem;
+    padding: 0.5rem 0.9rem;
     border: none;
+    border-radius: 8px 8px 0 0;
     background: var(--paper);
+    color: var(--muted);
     cursor: pointer;
     white-space: nowrap;
     min-height: 2.75rem;
   }
+  .bill-tabs button:hover {
+    background: var(--tint-red);
+    color: var(--flag-black);
+  }
+  /* The open tab: black text and a thick flag-red bar along its foot. */
   .bill-tabs button[aria-selected="true"] {
-    background: var(--flag-black);
-    color: var(--paper);
+    background: var(--paper);
+    color: var(--flag-black);
+    box-shadow: inset 0 -4px 0 var(--flag-red);
+  }
+  .bill-tabs button:focus-visible {
+    outline-offset: -3px;
   }
   /* Press feedback on tap. */
   .bill-tabs button {

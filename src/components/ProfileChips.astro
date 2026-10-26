@@ -45,11 +45,12 @@ const { mode } = Astro.props;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    border: 1px solid var(--flag-black);
+    border: 2px solid var(--flag-black);
     border-radius: 999px;
-    padding: 0.35rem 0.8rem;
+    padding: 0.3rem 0.9rem;
     background: var(--paper);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
     /* Big enough to hit with a thumb on a small phone. */
     min-height: 2.5rem;
@@ -64,12 +65,21 @@ const { mode } = Astro.props;
   :global(html[data-lang="sheng"]) .chip :global([data-l="sheng"]) {
     display: inline;
   }
+  .chip:hover {
+    background: var(--tint-green);
+  }
+  /* A chosen group turns green (white on #060 is 7.2:1). */
   .chip:has(input:checked),
   .chip[aria-pressed="true"] {
-    background: var(--flag-black);
+    background: var(--flag-green);
+    border-color: var(--flag-green);
     color: var(--paper);
   }
   .chip input {
     accent-color: var(--flag-green);
+  }
+  .chip:has(input:focus-visible) {
+    outline: 3px solid var(--flag-green);
+    outline-offset: 2px;
   }
 </style>

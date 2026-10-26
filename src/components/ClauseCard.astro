@@ -272,10 +272,10 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
 </script>
 
 <style>
+  /* Border, radius, shadow and hover are in global.css (FR7). An opened card
+     gets a green edge so the open one is easy to find in a long list. */
   .clause-card {
-    border: 1px solid var(--muted);
-    border-radius: 4px;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.9rem;
     transition:
       opacity 0.45s ease-out,
       transform 0.45s ease-out;
@@ -289,6 +289,9 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
     border-color: var(--flag-green);
     border-width: 2px;
     animation: pt-match-flash 1.8s ease-out;
+  }
+  .clause-card:has(> details[open]) {
+    border-left: 5px solid var(--flag-green);
   }
   @keyframes pt-match-flash {
     from {
@@ -307,15 +310,23 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
     justify-content: space-between;
     gap: 0.75rem;
     min-height: 2.75rem; /* 44px tap target */
-    padding: 0.6rem 1rem;
+    padding: 0.7rem 1rem;
     cursor: pointer;
     list-style: none;
+    border-radius: calc(var(--radius-card) - 1px);
     transition:
       background-color 0.15s,
       transform 0.12s;
   }
   .clause-summary::-webkit-details-marker {
     display: none;
+  }
+  .clause-summary:hover {
+    background-color: var(--tint-green);
+  }
+  /* Inside the card, so the rounded corners do not clip it. */
+  .clause-summary:focus-visible {
+    outline-offset: -3px;
   }
   .clause-summary:active {
     background-color: color-mix(in srgb, var(--matatu-brown) 12%, var(--paper));
@@ -327,13 +338,25 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
     margin: 0;
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: -0.005em;
+    line-height: 1.3;
     font-size: 1.05rem;
-    overflow-wrap: anywhere;
+    /* break-word, not anywhere: a word moves to the next line before it is
+       split mid-word. The title has min-width 0, so a very long word still
+       cannot widen the page. */
+    overflow-wrap: break-word;
   }
+  /* The section number, in flag red and heavier than the heading. */
   .clause-number {
     color: var(--flag-red);
+    font-weight: 800;
     margin-right: 0.5rem;
+    /* "Section 3" stays on one line, even beside a wide badge. Inline-block
+       also gives the line a break point after it: the markup has no space
+       between the number and the heading, so without it the first word of
+       the heading was split mid-word to fill the line. */
+    display: inline-block;
+    white-space: nowrap;
   }
   /* Small, muted provenance note under a hand-transcribed heading. Normal
      case and body font so it reads as a footnote, not part of the heading. */
@@ -355,29 +378,9 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
     gap: 0.4rem;
     max-width: 45%;
   }
-  .badge {
-    display: inline-block;
-    font-size: 0.75rem;
-    padding: 0.15rem 0.5rem;
-    border-radius: 3px;
-    border: 1px solid var(--muted);
-    color: var(--muted);
-  }
-  .badge-draft {
-    border-color: var(--matatu-brown);
-    color: var(--matatu-brown);
-  }
-  .badge-reviewed {
-    border-color: var(--flag-green);
-    color: var(--flag-green);
-  }
-  /* Sample items are visually distinct from the other two on purpose — a
-     dashed border reads as "placeholder", never as a finished state. */
-  .badge-sample {
-    border-style: dashed;
-    border-color: var(--muted);
-    color: var(--muted);
-  }
+  /* The review badges (Reviewed, AI draft, Sample) are in global.css. Sample
+     stays dashed on purpose: a dashed border reads as "placeholder", never
+     as a finished state. */
   /* "Matches you": a small filled tag, switched on by the Match script. The
      language spans inside are display:block (global.css), which is fine in a
      flex row: only one is ever visible. */
@@ -425,6 +428,8 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
     min-width: 2.75rem;
     padding: 0 0.7rem;
     border: 1px solid var(--muted);
+    border-radius: 8px;
+    font-weight: 600;
     background: var(--paper);
     cursor: pointer;
     transition: transform 0.12s;
@@ -449,7 +454,7 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
   .article-chip {
     border: 1px solid var(--matatu-brown);
     color: var(--matatu-brown);
-    background: var(--paper);
+    background: var(--tint-brown);
     border-radius: 999px;
     padding: 0.2rem 0.7rem;
     cursor: pointer;
@@ -472,7 +477,7 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
     min-height: 2.75rem;
     padding: 0.4rem 0.75rem;
     border: 1px solid var(--muted);
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     list-style: none;
     font-size: 0.9rem;
@@ -498,7 +503,8 @@ const badge = clause.explanation ? badgeFor(displayStatus(clause.review, await c
                             block sits outside Tailwind's class scanning. */
     overflow: auto;
     margin: 0.5rem 0 0;
-    padding: 0.5rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
     background: color-mix(in srgb, var(--paper) 92%, var(--flag-black));
     font-size: 0.95rem;
     white-space: pre-wrap;

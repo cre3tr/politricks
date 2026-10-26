@@ -125,12 +125,29 @@ import { MAX_WORDS } from "../lib/guard";
     margin: 0 auto;
     padding: 1rem;
   }
+  /* More presence: bigger and heavier, with the flag's black, red and green
+     as a short bar underneath (same as the home title). */
   h1 {
     font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    font-size: 2rem;
-    margin: 0.5rem 0;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    font-size: 2.7rem;
+    margin: 0.75rem 0 0.9rem;
+  }
+  h1::after {
+    content: "";
+    display: block;
+    width: 5rem;
+    height: 6px;
+    margin-top: 0.6rem;
+    border-radius: 3px;
+    background: linear-gradient(
+      90deg,
+      var(--flag-black) 0 33.3%,
+      var(--flag-red) 33.3% 66.6%,
+      var(--flag-green) 66.6% 100%
+    );
   }
   h1 :global([data-l]),
   .words-label :global([data-l]),
@@ -155,10 +172,14 @@ import { MAX_WORDS } from "../lib/guard";
     margin-top: 0.5rem;
   }
   input[type="text"] {
-    border: 1px solid var(--muted);
-    border-radius: 4px;
-    padding: 0.6rem;
+    border: 2px solid var(--muted);
+    border-radius: var(--radius-card);
+    padding: 0.7rem 0.9rem;
     font-size: 1rem;
+  }
+  input[type="text"]:focus-visible {
+    border-color: var(--flag-green);
+    outline-offset: 1px;
   }
   .counter {
     margin: 0;
@@ -176,19 +197,27 @@ import { MAX_WORDS } from "../lib/guard";
     gap: 0.75rem;
   }
   .actions button {
-    padding: 0.6rem 1.4rem;
+    padding: 0.6rem 1.6rem;
     font-size: 1rem;
-    border-radius: 4px;
+    font-weight: 700;
+    border-radius: 999px;
     cursor: pointer;
     min-height: 2.75rem;
   }
+  /* Save is the one main action, so it takes the green. */
   .save {
-    background: var(--flag-black);
+    background: var(--flag-green);
     color: var(--paper);
-    border: 1px solid var(--flag-black);
+    border: 2px solid var(--flag-green);
+  }
+  .save:hover {
+    background: color-mix(in srgb, var(--flag-green) 82%, var(--flag-black));
   }
   .skip {
     background: var(--paper);
-    border: 1px solid var(--muted);
+    border: 2px solid var(--muted);
+  }
+  .skip:hover {
+    background: var(--tint-red);
   }
 </style>
