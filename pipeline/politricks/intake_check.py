@@ -26,7 +26,9 @@ Rules this module keeps:
 Exit code: 0 when at least one listing was read, even if another was
 unreachable. 1 when a reachable page could not be parsed, a redirect left the
 allowlist, or NO listing could be read at all (a run that checked nothing must
-not look like a clean run).
+not look like a clean run). The exception is a listing marked `optional`
+(the Gazette): its parse failure is printed, with a NOT CHECKED line, but
+doesn't make the exit code 1.
 
 The listing layouts are [UNKNOWN] in the spec, so the parser asks for very
 little: every `<a href>` whose path ends in `.pdf`. Parliament's pages also
@@ -57,6 +59,9 @@ class Listing:
     name: str
     url: str
     chamber: Optional[str]  # None: the listing doesn't say (the Gazette)
+    # A listing known to be unreliable: its PARSE FAILED is still printed and
+    # copied to the top of the weekly PR, but it doesn't fail the run.
+    optional: bool = False
 
 
 LISTINGS = (
@@ -75,7 +80,11 @@ LISTINGS = (
         "https://nairobiassembly.go.ke/bills/",
         "county",
     ),
-    Listing("Kenya Gazette index", "https://new.kenyalaw.org/gazettes/", None),
+    # Optional (2026-10-26): Kenya Law has answered 403 to every client here
+    # since 2026-10-07, and on the first live weekly run it answered GitHub's
+    # runner with a 200 page holding no PDF links. One blocked page turned the
+    # whole run red while the three Parliament and Nairobi listings read fine.
+    Listing("Kenya Gazette index", "https://new.kenyalaw.org/gazettes/", None, optional=True),
 )
 
 # What counts as a bill. "bill" as a word, with letters (not digits or "_")
@@ -388,6 +397,7 @@ def run(repo_root: Path, listings: tuple = LISTINGS, min_year: Optional[int] = -
     results: list[ListingResult] = []
     unreachable: list[str] = []
     errors: list[str] = []
+    soft_errors: list[str] = []  # PARSE FAILED on an optional listing
     proposed_keys: set = set()
     for listing in listings:
         label = f"{listing.name} ({listing.url})"
@@ -410,8 +420,9 @@ def run(repo_root: Path, listings: tuple = LISTINGS, min_year: Optional[int] = -
             print(
                 f"PARSE FAILED {label}: HTTP {status} but no PDF links found "
                 f"(the page layout may have changed)"
+                + (" [optional listing: reported, does not fail the run]" if listing.optional else "")
             )
-            errors.append(listing.name)
+            (soft_errors if listing.optional else errors).append(listing.name)
             continue
         result = read_listing(listing, pdfs, known, proposed_keys, min_year)
         results.append(result)
@@ -442,9 +453,12 @@ def run(repo_root: Path, listings: tuple = LISTINGS, min_year: Optional[int] = -
 
     for name in unreachable:
         print(f"NOT CHECKED: {name} was UNREACHABLE, so nothing can be said about it")
+    for name in soft_errors:
+        print(f"NOT CHECKED: {name} could not be parsed, so nothing can be said about it")
     print(
         f"{len(results)} of {len(listings)} listing(s) read, {len(unreachable)} UNREACHABLE, "
-        f"{len(errors)} failed; {len(proposals)} entr{'y' if len(proposals) == 1 else 'ies'} proposed. "
+        f"{len(errors) + len(soft_errors)} failed ({len(soft_errors)} optional); "
+        f"{len(proposals)} entr{'y' if len(proposals) == 1 else 'ies'} proposed. "
         f"sources.yaml and the bill files were not touched."
     )
     if errors:
@@ -731,6 +745,21 @@ def self_test(check: Checker, repo_root: Path) -> None:
                 "check: a reachable page with no PDF links is a PARSE FAILED line and exit 1, but the other listings are still read",
                 code == 1 and f"PARSE FAILED {'Senate bills'} ({SENATE_URL})" in out and "THE NEW NATIONAL BILL, 2026" in out,
                 f"{code}: {out[:500]}",
+            )
+            # The same failure on the OPTIONAL Gazette listing is reported, with
+            # a NOT CHECKED line, but leaves the exit code 0. The Senate check
+            # above is the control: a required listing still fails the run.
+            reset_pages()
+            pages[GAZETTE_URL] = (200, "<html><body><p>No links here.</p></body></html>")
+            code, out = go()
+            check(
+                "check: an optional listing (the Gazette) with no PDF links is PARSE FAILED and NOT CHECKED, but exit 0",
+                code == 0
+                and f"PARSE FAILED Kenya Gazette index ({GAZETTE_URL})" in out
+                and "[optional listing: reported, does not fail the run]" in out
+                and "NOT CHECKED: Kenya Gazette index could not be parsed" in out
+                and "1 failed (1 optional)" in out,
+                f"{code}: {out[-500:]}",
             )
             reset_pages()
             pages[NAIROBI_URL] = ValueError("refused: https://example.com/ is not on the official allowlist")

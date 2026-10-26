@@ -177,10 +177,10 @@ jobs:
             echo
             echo "Exit codes: intake --check $(cat "$REPORT/intake.code"), verify $(cat "$REPORT/verify.code"), generate $(cat "$REPORT/generate.code"), lint $(cat "$REPORT/lint.code")"
             echo
-            echo "## Not checked (UNREACHABLE)"
+            echo "## Not checked (UNREACHABLE or PARSE FAILED)"
             echo
             echo '```text'
-            grep -h "UNREACHABLE" "$REPORT/intake.txt" "$REPORT/verify.txt" || echo "none: every listing and source answered"
+            grep -h -E "UNREACHABLE|PARSE FAILED" "$REPORT/intake.txt" "$REPORT/verify.txt" || echo "none: every listing and source answered"
             echo '```'
             echo
             # On 2026-10-23 a live run proposed 147 entries (every PDF on three
