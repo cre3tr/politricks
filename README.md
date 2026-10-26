@@ -12,7 +12,7 @@ Live: https://poli-tricks.vercel.app
 
 ## Run the site
 
-Requirements: Node 22+ (24 recommended), Python 3.12+, [uv](https://docs.astral.sh/uv/).
+Requirements: Node 22.22+ (24 recommended), Python 3.12+, [uv](https://docs.astral.sh/uv/).
 
 ```bash
 npm ci
@@ -46,8 +46,8 @@ uv run --project pipeline politricks review <bill-id>     # a person accepts or 
 uv run --project pipeline politricks verify               # re-download sources, compare fingerprints
 ```
 
-Every command has an offline `--self-test`. The CI workflow
-(`.github/workflows/ci.yml`) runs them all, plus `node scripts/check-api.mjs`,
+Most commands have an offline `--self-test` (`fetch`, `probe` and `samples`
+do not). The CI workflow (`.github/workflows/ci.yml`) runs every self-test, plus `node scripts/check-api.mjs`,
 the build and `node scripts/check-build.mjs <bill-id>` for each bill.
 
 ## Verify a fingerprint yourself
@@ -70,5 +70,5 @@ file. A mismatch means the official file has changed since it was fetched;
 
 - `devpost/`: the plan (`scope.md`, `prd.md`, `spec.md`) and the build log (`checklist.md`).
 - `src/`: the Astro site. `src/lib/api.ts` and `src/pages/api/` are the live helpers.
-- `pipeline/`: the Python pipeline, prompts (`pipeline/prompts/`) and hand-checked civic facts (`pipeline/civic/`).
+- `pipeline/`: the Python pipeline, prompts (`pipeline/prompts/`) and civic facts (`pipeline/civic/`), each with its source, drafted by Claude and not yet checked by a person.
 - `sources/`: the fingerprinted official PDFs.

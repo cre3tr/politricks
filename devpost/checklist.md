@@ -1049,3 +1049,13 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **Final review ticked:** feedback resolved, checks pass (CI green on `beb13d8`), and the learner confirmed ready ("Ready if you are. Shipping on schedule.").
 - **Slices:** 11 of 12 done and slice 8 recorded as cut. `5-build` is complete; `6-ship` starts at 20:00 EAT tonight, as the learner slotted it.
 
+### 6-ship: review before going public, 2026-10-26
+- **Repo still private** (`gh repo view`: `PRIVATE`; the URL is 404 without login). `main`, `build/poc` and `origin` all at `a4d7d72`.
+- **History scan, 118 commits:** no API key (the `sk-ant-` prefix appears 8 times, always a prefix or placeholder, never followed by a key); no GitHub, AWS, Google or Slack key shapes, no private-key headers; the only env file ever added is `.env.example` (empty `ANTHROPIC_API_KEY=`); every author email is a GitHub noreply address. `devpost/learner-profile.md` is gitignored and in no commit. The only files in history but not in HEAD are the retired Anton font and its licence.
+- **Cold read of the tracked docs (Sonnet, citations checked):** nothing secret or deeply personal. Kept as they are: bare `haven-ea` path pointers (no content copied), Vercel project/team ids and Anthropic/GitHub run ids (identifiers, not credentials), the learner's first name, and small billing notes. No file calls a bill unconstitutional or illegal.
+- **Official PDFs: kept in the public repo (learner's decision).** This closes the `[UNKNOWN]` in `spec.md` "Storing official PDFs in the repo". All six are already in git history, so removing them from HEAD would not unpublish them; only a history rewrite would. They stay, because re-hashing the source is the point of the fingerprint. Kenya's Copyright Act exempts written laws (the Act, the Constitution) [MEDIUM]; bills and the Hansard are published for public participation [LOW].
+- **README corrected:** Node 22.22+ (Astro 7.4.0 needs `>=22.22.0`); `fetch`, `probe` and `samples` have no `--self-test`; the civic facts are drafted by Claude and not yet checked by a person (all three YAML headers say so, and the Finance Act's challenge block is a `draft`).
+- **Production smoke test before recording:** `/`, `/welcome`, `/bills/finance-act-2026` 200; Match with empty words 400 (control); "I sell mitumba at Gikomba" returned 8 clause ids in 2.6 s.
+- **Submission form (from the learner's screenshots):** About the project (Markdown), Built with (tags), Try it out links, an optional image gallery, and a required YouTube or Vimeo video link; no length limit shown. The learner records on the phone.
+- **Open:** making the repo public (learner's call), the video, and the learner's own submission copy.
+
