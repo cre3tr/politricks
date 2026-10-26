@@ -79,7 +79,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   Learner check: Enter the civic facts yourself from the official notices, then open each bill's *Have your say* tab and check every date and channel against the notice you typed it from.
   Commit: `Add sourced Have your say for all bills`
 
-- [ ] **7. It's live on Vercel**
+- [x] **7. It's live on Vercel**
   Becomes usable: A public URL serving the full minimum demoable line, with both live helpers working in production.
   Why now: It's right after the demoable line, so you can share a real link (Discord, early testers) while there's still time to use the feedback. It also surfaces deploy-only failures (functions, environment variables) before more is stacked on top.
   PRD ref: `prd.md > What We're Building` (steps 1–2)
@@ -129,7 +129,7 @@ Build mode: fast — with human-readable comments in the code (learner request)
   Learner check: Open the county motion and the county bill. Is it obvious they're county items, and does the motion's simpler card make sense?
   Commit: `Add Nairobi County bills and motions`
 
-- [ ] **12. It keeps itself current (weekly PR)**
+- [x] **12. It keeps itself current (weekly PR)**
   Becomes usable: A GitHub Action runs weekly or on demand: intake check, verify, generate, lint. It then opens a *needs review* PR, and never auto-merges.
   Why now: Maintenance comes last, because it automates commands that must all exist and pass first.
   PRD ref: `prd.md > Automatic Bill Intake`, `scope.md > Later` (production path)
@@ -142,8 +142,8 @@ Build mode: fast — with human-readable comments in the code (learner request)
 ## Hands-on Checkpoints
 
 - [x] Early usable behavior explored — after slice 2 (the kernel page): look and feel, Sheng tone, clause-beside-explanation layout. Feedback here shapes every later page.
-- [ ] Integrated core journey explored — after slice 6 (minimum demoable line): welcome → home → bill → What it does → Have your say, end to end. **Folded into the final kick-the-tires** (Revisions, 2026-10-26).
-- [ ] Final kick-the-tires exploration and feedback completed
+- [x] Integrated core journey explored — after slice 6 (minimum demoable line): welcome → home → bill → What it does → Have your say, end to end. **Folded into the final kick-the-tires** (Revisions, 2026-10-26).
+- [x] Final kick-the-tires exploration and feedback completed
 
 ## Final Review
 
@@ -154,8 +154,8 @@ Build mode: fast — with human-readable comments in the code (learner request)
 - [x] FR5. Bill page summary first: "In short" and "What it means for you" on top; each clause a tap-to-open row, legal text behind "Show the legal text"; Match results float up and are marked.
 - [x] FR6. Light motion (cards, tabs, taps, matched clauses), off under reduced motion.
 - [x] FR7. Type and colour with character: Bricolage Grotesque headings, Inter body (both self-hosted, OFL), the flag red and green as bold accents, a standout "In short" box, and polish. The learner: readable, but "really flat"; the point is to spark curiosity.
-- [ ] FR8. The POLITRICKS wordmark in Bricolage Grotesque too (learner: "forgot the header text"); Anton retired.
-- [ ] Final review complete — feedback resolved and learner confirms ready to ship
+- [x] FR8. The POLITRICKS wordmark in Bricolage Grotesque too (learner: "forgot the header text"); Anton retired.
+- [x] Final review complete — feedback resolved and learner confirms ready to ship
 
 ## Code Tour and App Map
 
@@ -1039,4 +1039,13 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **Re-run on `main` (run 40292417440): green**, 3 of 4 listings read (the Gazette reported, optional), 5 sources unchanged, `pull-request-operation = none`: no PR when nothing changed.
 - **Run on the throwaway branch `test/slice-12-pr-check` (run 40292941195)**, where the county Appropriation Bill's stored source SHA-256 was set to 64 zeros: green, verify reported `CHANGED (expected 000000000000..., got 16871b4e7adb...)`, and the workflow opened PR #9 "Weekly update: needs review", labelled *needs review*, into the throwaway branch (never `main`).
 - **Waiting for:** the learner's check (open PR #9: is it clear what changed and what to review?); then PR #9 is closed and both test branches deleted, and slice 12 ticked.
+
+### Build complete: slices, checkpoints and final review ticked, 2026-10-26
+- **Learner:** "PR #9 is clear and the header looks right." PR #9 closed with a note; `auto/weekly-update` and `test/slice-12-pr-check` deleted on GitHub.
+- **Slice 12 ticked:** settings read back, a green run on `main` with no PR, a green run with a planted wrong fingerprint that opened PR #9 labelled *needs review*, and the learner's check of that PR.
+- **Slice 7 ticked:** production checks recorded on 2026-10-26 (Match 200 on three bills, controls 400/409, fingerprint on the page), and the learner check was the phone session on the live URL that produced FR1-FR8 ("Have your say works"). Over mobile data was not separately confirmed.
+- **FR8 ticked** on the learner's "the header looks right".
+- **Checkpoints:** the integrated journey (folded into the final kick-the-tires, as recorded) and the final kick-the-tires are ticked: two rounds of phone feedback, eight agreed revisions, each retried by the learner.
+- **Final review ticked:** feedback resolved, checks pass (CI green on `beb13d8`), and the learner confirmed ready ("Ready if you are. Shipping on schedule.").
+- **Slices:** 11 of 12 done and slice 8 recorded as cut. `5-build` is complete; `6-ship` starts at 20:00 EAT tonight, as the learner slotted it.
 
