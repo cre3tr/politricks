@@ -1081,3 +1081,7 @@ The learner sent `finance_act_2026_reference_alignment.md`, a clause-by-clause c
 - **PR #10 merged afterwards**, as agreed: `main` was merged into it first, and this file's two same-evening entries conflicted and were both kept.
 
 
+
+### `@fontsource/anton` removed from `package.json`, 2026-10-29
+- **Found by** an AntiGravity portfolio audit, confirmed by Claude Code. FR8 retired Anton and removed its file, licence, `@font-face` and preload, but left the `@fontsource/anton` devDependency behind. The only mentions left in source are two comments saying Anton is gone (`Header.astro:3`, `global.css:46-48`).
+- **Removed** with `npm uninstall`, which took 1 package and 11 lines out of the lockfile. Gates: `npm run build` exit 0, `check-api.mjs` 19 passed and 0 failed, `check-build` exit 0 with 0 FAIL lines for all five bills (finance-act-2026 123 PASS, nairobi-appropriation-bill-2026 15, nairobi-motion-public-infrastructure-2025 11, public-participation-bill-2025 53, tertiary-education-bill-2026 147). Not run: the pipeline self-tests and content `lint`, which an npm devDependency can't reach.
