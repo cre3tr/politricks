@@ -192,7 +192,7 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 
 **`pipeline/politricks/reviewlock.py`:** `bill_lock(path)` (context manager; raises `BillLocked`). `cli.main` turns a `BillLocked` from fetch/extract/samples/verify into "FAILED", exit 1.
 
-**`pipeline/civic/*.yaml`:** civic facts for slice 6, DRAFTED by Claude on 2026-10-19 and not yet checked by Ian. Each fact carries its source and an `[OFFICIAL]`/`[NEWS]`/`[UNKNOWN]` note. `deadline_time` is an addition to the spec's schema; `civic.py` (slice 6) doesn't exist yet.
+**`pipeline/civic/*.yaml`:** civic facts for slice 6, DRAFTED by Claude on 2026-10-19 and not yet checked by Ian. Each fact carries its source and an `[OFFICIAL]`/`[NEWS]`/`[UNKNOWN]` note. `deadline_time` is an addition to the spec's schema; `pipeline/politricks/civic.py` reads them (map above).
 
 **`pipeline/politricks/models.py` (275), review fingerprints:** `current_sha256` 161, `legacy_clause_sha256_v1` 187 (migration only), `is_v1_stamped` 199, `is_reviewed` 208, `changed_since_review` 214, `HAND_EDITED` 221, `is_hand_edited` 224, `is_protected` 234, `draft_review` 240.
 
