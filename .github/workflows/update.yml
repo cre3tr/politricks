@@ -23,12 +23,15 @@ name: Weekly update
 # ci.yml; the PR will show no checks until a person pushes to it or closes and
 # reopens it.
 #
-# Kenya Law has answered 403 to every client since 2026-10-07, and all three
-# bills' sources live there. A source or listing that can't be read is
+# Kenya Law has blocked local requests since 2026-10-07 (this runner got
+# through on 2026-10-26), and all three bills' sources live there. A source or listing that can't be read is
 # reported as UNREACHABLE (never as "unchanged" or "nothing new"), the run
 # still succeeds, and every UNREACHABLE line is copied to the top of the PR
 # body and the run summary. A run where nothing could be checked looks
 # different from a run where nothing changed.
+# KNOWN FAILURE, 2026-11-02: the runner now gets an AWS WAF challenge
+# (HTTP 202, empty HTML) where local requests used to get a 403. verify reports that as ERROR, so the final
+# gate fails every run until verify learns it (devpost/checklist.md, Revisions).
 
 on:
   schedule:
