@@ -5,7 +5,9 @@ copy is never overwritten) and compares fingerprints. Each source ends in
 exactly ONE of four states:
     unchanged    — same bytes as when we fetched it
     CHANGED      — the official file is different now (marks the bill source_changed)
-    UNREACHABLE  — the site answered with an HTTP error (403, 404, 5xx) or the
+    UNREACHABLE  — the site answered with an HTTP error (403, 404, 5xx), with a
+                   bot challenge instead of the file (fetch.BotChallenge: a
+                   WAF header, or a success code with an empty body), or the
                    network failed (timeout, DNS, TLS). We learned NOTHING about
                    the file, so it is never "unchanged" and never sets
                    source_changed. The line carries the HTTP status.
@@ -19,6 +21,11 @@ weekly job (.github/workflows/update.yml) that treated that as a failure would
 fail every week and say nothing useful; one that treated it as "unchanged"
 would claim a check that never happened. Same rule as `intake --check`
 (intake_check.py): silence and "nothing changed" must not look the same.
+
+The bot challenge joined UNREACHABLE on 2026-11-02, when Kenya Law's AWS WAF
+started answering both GitHub's runner and local requests with HTTP 202, an
+`x-amzn-waf-action: challenge` header and an empty body. That reached this
+module as "not a PDF", so the weekly run went red on an outage.
 
 Exit code: 1 if any source is CHANGED or ERROR. Otherwise 0 — even when some
 or all sources are UNREACHABLE — but then the LAST line says how many were not
@@ -36,7 +43,7 @@ from pathlib import Path
 
 import httpx
 
-from .fetch import download_pdf
+from .fetch import BotChallenge, download_pdf
 from .hashing import sha256_bytes, sha256_file
 from .models import Source, load_bill, save_bill
 from .reviewlock import bill_lock
@@ -64,6 +71,10 @@ def check_source(source: Source) -> tuple[str, str]:
     except httpx.HTTPError as error:
         # Timeout, DNS, TLS, connection reset: the request never got an answer.
         return UNREACHABLE, f"network error, {type(error).__name__}: {error}"
+    except BotChallenge as error:
+        # A bot check instead of the file. Caught before the general branch,
+        # because BotChallenge is a ValueError like a real not-a-PDF answer.
+        return UNREACHABLE, error.detail
     except Exception as error:  # noqa: BLE001 - anything else is reported as a real error
         return ERROR, f"{type(error).__name__}: {error}"
     if sha256_bytes(body) == source.sha256:
@@ -142,7 +153,9 @@ def self_test(repo_root: Path) -> bool:
        unchanged, a copy with ONE bit flipped reports CHANGED.
     2. verify_all against a temp copy of that bill, stubbed network:
        intact -> unchanged, exit 0 · 403 -> UNREACHABLE line, exit 0, bill file
-       byte-identical · timeout -> UNREACHABLE · altered -> CHANGED, exit 1,
+       byte-identical · WAF challenge (through the REAL download_pdf, only
+       the HTTP transport stubbed) -> UNREACHABLE, exit 0, while a real HTML
+       page stays ERROR · timeout -> UNREACHABLE · altered -> CHANGED, exit 1,
        source_changed set · not a PDF -> ERROR, exit 1 · CHANGED + UNREACHABLE
        together -> exit 1 · everything UNREACHABLE -> exit 0 with the
        "not checked" line last.
@@ -278,6 +291,98 @@ def self_test(repo_root: Path) -> bool:
                 ": unchanged" not in out and "0 unchanged" in out and "2 UNREACHABLE" in out,
                 out,
             )
+
+            # b2) Kenya Law's AWS WAF bot challenge, live since 2026-11-02.
+            # This one runs through the REAL download_pdf: only fetch._client
+            # is swapped for one whose transport answers the way CloudFront
+            # did (HTTP 202, x-amzn-waf-action: challenge, empty text/html), so
+            # the detection in fetch.py is tested along with the verify branch.
+            # PLANTED-BUG CONTROL: delete the `except BotChallenge` branch in
+            # check_source, or the WAF check in download_pdf, and these go red
+            # (the challenge comes back as ERROR, as it did in run 41428992465).
+            from . import fetch as fetch_module
+
+            transport_calls: list[str] = []
+            replies: dict[str, object] = {}  # url -> a function that builds the response
+
+            def handler(req: httpx.Request) -> httpx.Response:
+                transport_calls.append(str(req.url))
+                return replies[str(req.url)]()  # type: ignore[operator]
+
+            def waf_challenge() -> httpx.Response:
+                return httpx.Response(
+                    202,
+                    headers={"x-amzn-waf-action": "challenge", "content-type": "text/html; charset=UTF-8"},
+                    content=b"",
+                )
+
+            def a_pdf() -> httpx.Response:
+                return httpx.Response(200, headers={"content-type": "application/pdf"}, content=good_bytes)
+
+            def empty_200() -> httpx.Response:
+                return httpx.Response(200, headers={"content-type": "text/html"}, content=b"")
+
+            def html_page() -> httpx.Response:
+                return httpx.Response(200, headers={"content-type": "text/html"}, content=b"<html><body>Not found</body></html>")
+
+            key_one, key_two = str(httpx.URL(url_one)), str(httpx.URL(url_two))
+
+            def waf_scenario(first: object, second: object) -> tuple[int, str, list[str]]:
+                temp_json.write_bytes(pristine)
+                replies.clear()
+                replies[key_one] = first
+                replies[key_two] = second
+                transport_calls.clear()
+                code, out = go()
+                return code, out, list(transport_calls)
+
+            real_client = fetch_module._client
+            fetch_module._client = lambda: httpx.Client(transport=httpx.MockTransport(handler), follow_redirects=False)
+            this_module.download_pdf = real_download
+            try:
+                code, out, seen = waf_scenario(waf_challenge, waf_challenge)
+                lines = out.splitlines()
+                check(
+                    "WAF challenge: every source gets its own UNREACHABLE line saying so",
+                    sum(1 for l in lines if l.endswith(": UNREACHABLE (WAF challenge (HTTP 202))")) == 2,
+                    out,
+                )
+                check("WAF challenge: exit code 0, and no ERROR line", code == 0 and ": ERROR (" not in out, f"{code}: {out}")
+                check("WAF challenge: the last line says how many were not checked", lines[-1:] == ["2 source(s) UNREACHABLE, not checked"], out)
+                check("WAF challenge: the bill file is byte-identical (source_changed not set)", temp_json.read_bytes() == pristine)
+                check(
+                    "WAF challenge positive control: the stubbed transport really was asked for both URLs",
+                    seen == [key_one, key_two],
+                    str(seen),
+                )
+                check(
+                    "WAF challenge control: never reported or counted as unchanged",
+                    ": unchanged" not in out and "0 unchanged" in out and "2 UNREACHABLE" in out,
+                    out,
+                )
+
+                # A success code with an empty body and no WAF header is a bot
+                # check too: there is no file in it to compare.
+                code, out, seen = waf_scenario(empty_200, a_pdf)
+                check(
+                    "empty 200: UNREACHABLE, the intact source still unchanged, exit 0",
+                    code == 0 and ": UNREACHABLE (empty answer, no file (HTTP 200))" in out
+                    and out.count(": unchanged") == 1 and temp_json.read_bytes() == pristine and len(seen) == 2,
+                    f"{code}: {out}",
+                )
+
+                # Narrowness, through the same real path as scenario g below: a
+                # 200 HTML page WITH a body and no WAF header is still ERROR.
+                code, out, seen = waf_scenario(html_page, a_pdf)
+                check(
+                    "real HTML page (body, no WAF header): still ERROR, exit 1",
+                    code == 1 and ": ERROR (ValueError: not a PDF" in out and "UNREACHABLE (" not in out
+                    and temp_json.read_bytes() == pristine and len(seen) == 2,
+                    f"{code}: {out}",
+                )
+            finally:
+                fetch_module._client = real_client
+                this_module.download_pdf = stub_download
 
             # c) a network failure is UNREACHABLE too
             code, out, _ = scenario(timeout, good_bytes)
