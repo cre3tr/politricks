@@ -55,7 +55,7 @@ Check counts: see the newest entry under Changes. Verify prints `unchanged` /
 | K1 control | Every self-test ends by asserting the real bill's SHA-256 is unchanged, but no one has planted a write to prove that assert can fail. | A self-test that writes to real data would pass silently, and real data holds Ian's reviews. |
 | K15 in the build | Lint isn't part of `npm run build` until slice 4 adds the TS matcher. | A banned phrase in a hand-edit ships unless lint is run by hand. |
 | K12, K13 tooling | The probe and control-copy scripts live in a session scratchpad. | The next bill's probe, or the next badge change, has to rebuild them, and may skip it. |
-| K12 for fetch | Kenya Law has blocked local requests since 2026-10-07 (403; GitHub's runner still got through on 2026-10-26), and both get an AWS WAF challenge as of 2026-11-02; live `fetch`/`verify`/`intake` can't be probed. | A changed Kenya Law page shape is found only when it's back. The block's own shape already changed once, and `verify` read the new one as ERROR. |
+| K12 for fetch | Kenya Law has blocked local requests since 2026-10-07 (403; GitHub's runner still got through on 2026-10-26), and both get an AWS WAF challenge as of 2026-11-02; live `fetch`/`verify`/`intake` can't be probed. | A changed Kenya Law page shape is found only when it's back. The block's own shape already changed once, and `verify` read the new one as ERROR until 2026-11-02, when `verify --self-test` scenario b2 started holding the challenge to UNREACHABLE (planted bug: removing the `except BotChallenge` branch turns 5 checks red). A third shape (say, a challenge page with a body and no WAF header) would still read as ERROR. |
 
 ## Not applicable
 
