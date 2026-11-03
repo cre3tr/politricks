@@ -63,6 +63,12 @@ uv run --env-file .env --project pipeline politricks generate <id>   # the pipel
 - **Windows and shells:**
   - Write any backslash-bearing pattern with the Write tool, never through a Bash heredoc. A `\b` once landed as a 0x08 byte.
   - Worktrees holding `pipeline/.venv` exceed MAX_PATH. Delete them with a `\\?\`-prefixed path, then `git worktree prune`.
+  - **`src/data/bills/` also holds empty `<bill>.json.lock` files** (the bill lock, gitignored). A script that reads every file there must filter to `.json`, or `JSON.parse` fails on the first lock file.
+  - **Reading a file from another ref under Git Bash:** `git show origin/main:path` reaches git as `origin\main;path` and fails "ambiguous argument". Prefix the command with `MSYS_NO_PATHCONV=1`.
+- **OpenTimestamps (spike, 2026-11-04; scope and decisions: `devpost/ots-scope.md`):**
+  - **Use the `opentimestamps` library, never the `ots` CLI.** The CLI (`opentimestamps-client` 0.8.0) crashes on import on Windows: `python-bitcoinlib` can't find OpenSSL through `ctypes` (`LoadLibrary() argument 1 must be str, not None`). The library alone stamps and upgrades fine on Python 3.14.
+  - **A proof is finished by different hosts from the ones it was sent to.** A stamp sent to `a.pool.opentimestamps.org` and the other pool hosts comes back naming backend calendars (`alice.` / `bob.btc.calendar.opentimestamps.org`, `btc.calendar.catallaxy.com`, `finney.calendar.eternitywall.com`), and upgrading must reach those. A network allowlist needs both sets.
+  - Spike scripts and a pending proof of the Finance Act PDF are in `devpost/ots-spike/`; run them with `uv run --no-project --python 3.14 --with opentimestamps python <script>`.
 - **The Browser pane** paints no frames while hidden, so rAF and screenshots stall. Measure styles and layout instead.
 - **Live generation (Sonnet 5.5, Batches):**
   - **Timing:** a batch takes 2–7 minutes, whether it holds 1 or 55 requests. The summary is a separate direct call afterwards.
