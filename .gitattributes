@@ -5,3 +5,4 @@
 # Fingerprinted source files must never be rewritten by git (line endings etc.)
 *.pdf   binary
 *.woff2 binary
+*.ots   binary

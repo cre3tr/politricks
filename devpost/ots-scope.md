@@ -1,6 +1,15 @@
 # OpenTimestamps for official sources: scope
 
-**Status:** proposed 2026-11-04, not decided. Ian decides; nothing here is built.
+**Status:** decided 2026-11-04 (Ian took all five recommendations in §5). Spike part 1 done the
+same day (§2.1); part 2 waits on Bitcoin. Nothing in the pipeline, workflow or site is built yet.
+
+**Current path:**
+1. ✅ Spike part 1: library installs on Python 3.14, a real stamp of the Finance Act PDF, binding
+   checked offline (`devpost/ots-spike/`).
+2. ⏳ Spike part 2, from 2026-11-05: run the upgrade until it names a Bitcoin block, then check the
+   proof on opentimestamps.org. Command in §2.1.
+3. Build `politricks stamp` (§2.2), the `stamp.yml` workflow (§2.3), the site line (§2.4), the README
+   (§2.5), then the backfill (§2.6).
 **Why it exists:** the first cloud session (2026-11-03) was BLOCKED on this. Its container's network
 allowlist refused every calendar host. The session suggested running stamping on GitHub's runners,
 and Ian asked for that bigger build to be scoped. Budget: the PoliTricks line has about $17 of its
@@ -38,22 +47,39 @@ record and no bill JSON, and `constitution.py` keeps its own `sha256` in `src/da
 (`ConstitutionFile`, `extra="forbid"`, `constitution.py:122`) *(review)*. Stamping it needs a second
 record type and a second place on the site. It is a follow-up, not this build.
 
-1. **Spike, before any code (local, no credits, about an hour plus a day's wait).**
-   - Install `opentimestamps-client` under the pipeline's Python 3.14 (`pipeline/.python-version`;
-     `pyproject.toml` allows 3.12+, but 3.14 is what runs).
-   - `ots stamp` one PDF, wait for Bitcoin, `ots upgrade`, then check it on opentimestamps.org.
-   - Confirm three things the plan assumes from general knowledge: the proof is named
-     `<file>.pdf.ots`; `upgrade` leaves a `.bak` beside it *(review)*; and how many calendar answers
-     the client needs by default.
-   - Exit: one complete proof that a verifier other than our code accepts. If the library won't run on
-     3.14, stop and decide between an older Python for this step and writing the small part of the
-     protocol we need.
+1. **Spike, before any code (local, no credits).** Scripts and the proof are in `devpost/ots-spike/`.
+   - **Part 1, done 2026-11-04 on Ian's machine (Windows, Python 3.14.3):**
+     - **The `ots` command-line tool does not run on Windows.** `opentimestamps-client` 0.8.0 installs,
+       but `ots` crashes on import: `python-bitcoinlib` loads OpenSSL through `ctypes` and finds none
+       (`TypeError: LoadLibrary() argument 1 must be str, not None`, from `bitcoin/rpc.py`). So the
+       `.bak`-on-upgrade and default-calendar-count questions were never reached through it.
+     - **The `opentimestamps` library works, and it is the path.** `opentimestamps` 0.5.0 (with
+       `python-bitcoinlib` 0.12.2 and `pycryptodomex` 3.24.1 as its dependencies) stamped and upgraded
+       without the CLI. `spike_stamp.py` sent the Finance Act PDF to 4 calendars: **4 of 4 answered**.
+       The proof is 875 bytes. Our code sets the minimum of 2 answers itself, and writes no `.bak`.
+     - **It binds to the right bytes.** `spike_check.py`: the proof's file digest equals the PDF's
+       SHA-256 (`809ed38b…19af`, the same value `src/data/bills/finance-act-2026.json` shows on the
+       page), and a copy with one byte flipped does not match.
+     - **Pool hosts are not the hosts that finish the proof.** The stamp went to
+       `a.pool.opentimestamps.org`, `b.pool.opentimestamps.org`, `a.pool.eternitywall.com` and
+       `ots.btc.catallaxy.com`. The pending proof names `alice.btc.calendar.opentimestamps.org`,
+       `bob.btc.calendar.opentimestamps.org`, `btc.calendar.catallaxy.com` and
+       `finney.calendar.eternitywall.com`, and the upgrade has to reach those. Any network allowlist
+       needs both sets.
+     - `spike_upgrade.py`, run straight after: all 4 answered "Pending confirmation in Bitcoin
+       blockchain", and the proof was left byte-identical.
+   - **Part 2, from 2026-11-05:**
+     `uv run --no-project --python 3.14 --with opentimestamps python devpost/ots-spike/spike_upgrade.py devpost/ots-spike/finance-act-2026.act.pdf.ots`
+     until it prints a block, then drop `sources/finance-act-2026/act.pdf` and that proof on
+     opentimestamps.org. Exit: one complete proof that a verifier other than our code accepts.
 2. **Pipeline command: `politricks stamp`** (`pipeline/politricks/stamp.py`, `cli.py`).
    - One pass, idempotent: stamp every bill source that has no proof, upgrade every pending proof,
      leave complete proofs alone. A stamp adds a random nonce, so idempotency rests on "a proof file
      exists", never on re-deriving one *(review)*. A second run with nothing to do writes nothing.
-   - Proof file: `sources/<bill-id>/<file>.ots` (e.g. `act.pdf.ots`). Upgrade through the library,
-     or delete the `.bak`, so no stray file appears.
+   - Built on the `opentimestamps` library, never the `ots` CLI (it crashes on Windows; §2.1). The
+     spike scripts are the starting code.
+   - Proof file: `sources/<bill-id>/<file>.ots` (e.g. `act.pdf.ots`). Upgrading through the library
+     writes no `.bak`.
    - Outcomes per source, in the style of `verify`: `STAMPED`, `PENDING`, `COMPLETE` (with the block
      height the proof names), `UNREACHABLE` (calendars didn't answer: no proof file, no field, exit 0,
      listed last) and `ERROR` (exit 1).
@@ -119,6 +145,11 @@ block a merge, and running a Bitcoin node.
   would make a correct proof fail to verify the day the official file changes *(review)*.
 - **Two locks, one file.** `stamp` running while `generate` holds a bill must refuse, not wait or
   overwrite. That's what `bill_lock` already does, if `stamp` takes it.
+- **Reaching for the `ots` CLI.** It's the obvious tool and it crashes on Windows (§2.1). A workflow
+  step that shells out to `ots` would work on Linux and fail for Ian locally.
+- **An allowlist with only the pool hosts.** Stamping works through them, but the upgrade calls the
+  backend calendars the proof names (§2.1). A cloud environment, firewall or proxy that allows only
+  the pool hosts stamps fine and then never completes.
 - **Untested self-tests.** Reading the code, `intake --self-test` snapshots `sources/` before and
   after and `ocr --self-test` only globs `*.ocr.*`, so new `.ots` files shouldn't break them
   *(review)*. Not yet checked: whether `lint`, `export` or `review` self-tests fix the key set on
@@ -128,15 +159,21 @@ block a merge, and running a Bitcoin node.
 
 | Risk | Likelihood | Impact | Guard |
 |---|---|---|---|
-| `opentimestamps-client` doesn't run on Python 3.14, or is unmaintained | `[UNKNOWN]` | the build stalls | the spike, before any code |
+| The library doesn't work on Python 3.14 | settled 2026-11-04: `opentimestamps` 0.5.0 works; the CLI doesn't on Windows | none if the CLI is never used | build on the library |
+| The library goes unmaintained | `[UNKNOWN]` | a future Python breaks it | pinned in `uv.lock`; the protocol subset we use is small |
 | The page over-claims what a stamp proves | medium on a first draft | credibility, the site's whole point | §1 copy, reviewed by Ian before merge |
 | A stale or stuck proof (re-fetch, slow review) | medium if unhandled | a false or never-finished claim | `sha256` on the record; the separate branch |
 | A public calendar goes away before a proof is upgraded | low | that proof restamps; nothing false shown | daily upgrade on the timestamps branch |
 | The explorer linked for a block disappears | low | a dead link; the proof still stands | link only |
-| New dependency (`opentimestamps-client`, `python-bitcoinlib`) | low | supply chain | pinned in `uv.lock`, reviewed like any dependency |
+| New dependency (`opentimestamps`, `python-bitcoinlib`, `pycryptodomex`) | low | supply chain | pinned in `uv.lock`, reviewed like any dependency |
 | Cost | low | about $6–10 of the $17 left, at the one measured $3 a session `[LOW]` | spike first; stop past $10 |
 
-## 5. Decisions for Ian before building
+## 5. Decisions
+
+**Decided 2026-11-04: Ian took the recommended option on all five.** The block number with no date;
+the spike locally; a separate `stamp.yml` on `auto/timestamps`; the constitution left for later; the
+library accepted. The spike then narrowed the last one: `opentimestamps`, not `opentimestamps-client`
+(§2.1). The options as they were put:
 
 1. **Copy:** "the proof places this file's fingerprint in Bitcoin block N, check it yourself", with
    a block number and no date (recommended)? Or pay for a block-time lookup to show a date?
@@ -158,5 +195,6 @@ Read from `main` at `d945747` on 2026-11-04: `.github/workflows/update.yml` (ste
 sources are rebuilt and merged); `constitution.py:69-75, 122-128`; `.gitattributes` (`*.pdf binary`,
 no `.ots`); and the tracked `public/` (only `public/fonts`). `src/lib/reviewHash.ts` hashes civic
 blocks' `source_url`s, not the bill's `sources[]`, so a `timestamp` field moves no review stamp
-`[MEDIUM]`: read, not tested. The OpenTimestamps behaviour (the `.pdf.ots` name, `.bak` on upgrade,
-verify needing a node, the default calendar count) is general knowledge `[MEDIUM]`; the spike tests it.
+`[MEDIUM]`: read, not tested. Measured in the spike (§2.1): the library on 3.14, the CLI's Windows
+crash, 4 of 4 calendars, the digest binding, and the pool-to-backend host split. Still general
+knowledge `[MEDIUM]`: that `ots verify` needs a Bitcoin node, and how long confirmation takes.
