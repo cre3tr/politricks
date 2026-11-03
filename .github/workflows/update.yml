@@ -29,9 +29,11 @@ name: Weekly update
 # still succeeds, and every UNREACHABLE line is copied to the top of the PR
 # body and the run summary. A run where nothing could be checked looks
 # different from a run where nothing changed.
-# KNOWN FAILURE, 2026-11-02: the runner now gets an AWS WAF challenge
-# (HTTP 202, empty HTML) where local requests used to get a 403. verify reports that as ERROR, so the final
-# gate fails every run until verify learns it (devpost/checklist.md, Revisions).
+# Since 2026-11-02 the runner gets an AWS WAF challenge (HTTP 202, an
+# x-amzn-waf-action header, empty HTML) where local requests used to get a
+# 403. verify reports that as UNREACHABLE too ("WAF challenge (HTTP 202)").
+# Before verify learned it, it was ERROR and run 41428992465 went red
+# (devpost/checklist.md, Revisions).
 
 on:
   schedule:

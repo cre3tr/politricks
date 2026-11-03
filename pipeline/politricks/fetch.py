@@ -58,10 +58,33 @@ def _client() -> httpx.Client:
     )
 
 
+class BotChallenge(ValueError):
+    """The site answered with a bot check instead of the file.
+
+    Kenya Law's AWS WAF has answered this way since 2026-11-02: HTTP 202, an
+    `x-amzn-waf-action: challenge` header and an empty body. That is a
+    success code, so raise_for_status() lets it through, but we learned
+    nothing about the file. It is a ValueError so every caller that already
+    refuses a non-PDF still refuses this; `verify` catches it first and
+    reports UNREACHABLE (an outage), not ERROR (a real problem).
+    """
+
+    def __init__(self, url: str, status: int, action: str | None):
+        self.status = status
+        self.action = action
+        if action:
+            self.detail = f"WAF challenge (HTTP {status})"
+        else:
+            self.detail = f"empty answer, no file (HTTP {status})"
+        super().__init__(f"{self.detail}: {url}")
+
+
 def download_pdf(url: str) -> tuple[bytes, str]:
     """Download a PDF from an allowlisted URL. Returns (bytes, final_url).
 
-    Raises ValueError if any hop leaves the allowlist or the body isn't a PDF.
+    Raises ValueError if any hop leaves the allowlist or the body isn't a PDF,
+    and its subclass BotChallenge if the answer was a bot check (a WAF header,
+    or a success code with an empty body).
     """
     current = url
     with _client() as client:
@@ -75,6 +98,12 @@ def download_pdf(url: str) -> tuple[bytes, str]:
                 continue
             response.raise_for_status()
             body = response.content
+            # Checked before the PDF test: a challenge is "no answer yet", not
+            # "the wrong answer". A non-empty HTML page with no WAF header
+            # still falls through to the not-a-PDF error below.
+            action = response.headers.get("x-amzn-waf-action")
+            if action or not body:
+                raise BotChallenge(current, response.status_code, action)
             if not body.startswith(b"%PDF-"):
                 kind = response.headers.get("content-type", "unknown")
                 raise ValueError(f"not a PDF (content-type {kind}): {current}")
