@@ -24,6 +24,9 @@
   "overrides": {
     "@vercel/cli-config": {
       "zod": "$zod"
+    },
+    "@vercel/nft": {
+      "glob": "^14.0.2"
     }
   }
 }
